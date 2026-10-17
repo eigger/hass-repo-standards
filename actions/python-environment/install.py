@@ -20,6 +20,7 @@ from packaging.version import Version
 def minimum_requirements(requirements: list[str], packages: list[str]):
     selected = {canonicalize_name(p) for p in packages}
     found = set()
+    active = set()
     exact = []
     expected = {}
     for text in requirements:
@@ -34,12 +35,18 @@ def minimum_requirements(requirements: list[str], packages: list[str]):
         spec = specs[0]
         version = Version(spec.version)
         if req.marker and not req.marker.evaluate():
+            print(f"Skipping {req.name}: marker is inactive in this environment ({text})")
             continue
+        active.add(name)
         extras = "[" + ",".join(sorted(req.extras)) + "]" if req.extras else ""
         exact.append(f"{req.name}{extras}=={version}")
         expected[name] = version
     if selected - found:
         raise ValueError(f"Minimum packages absent from manifest: {sorted(selected - found)}")
+    if selected and not active:
+        raise ValueError(
+            "Every selected minimum package has an inactive marker in this environment"
+        )
     return exact, expected
 
 

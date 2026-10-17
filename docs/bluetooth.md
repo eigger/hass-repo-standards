@@ -17,7 +17,7 @@ ESPHome은 Wi-Fi와 Bluetooth의 무선 자원 경쟁을 줄이는 방법으로 
 
 XIAO W5500은 [ESPHome 공식 설치 목록](https://esphome.io/projects/?type=bluetooth)에서 **V1.2만 지원**한다고 명시합니다. 구형 보드는 인터럽트 배선·RF 관련 차이가 있으므로 구매 옵션과 리비전을 확인합니다. [Seeed 공식 설정 안내](https://wiki.seeedstudio.com/esphome_xiao_w5500_ethernet_adapter/)
 
-AtomS3U는 **USB-A 커넥터가 달린 동글 형태**의 제품입니다. 이 문서에서는 ESPHome Bluetooth proxy로 사용하는 구성을 안내합니다. [M5Stack 제품 문서](https://docs.m5stack.com/en/core/AtomS3U)와 [AtomS3U ESPHome 보드 예제](https://github.com/m5stack/esphome-yaml/blob/main/examples/kit/atoms3u.yaml)를 참고하고, Generic ESP32용 펌웨어를 그대로 사용하지 않습니다.
+AtomS3U는 **USB-A 커넥터가 달린 동글 형태**의 제품입니다. 이 문서에서는 ESPHome Bluetooth proxy로 사용하는 구성을 안내합니다. [M5Stack 제품 문서](https://docs.m5stack.com/en/core/AtomS3U)를 참고하고, Generic ESP32용 펌웨어를 그대로 사용하지 않습니다. 이 기기는 ESPHome 공식 Bluetooth proxy 설치 목록의 대상이 아니라 사용자 구성입니다. 기존 AtomS3U 설정에 `wifi.on_connect`의 `ble.disable` 동작이나 `esp32_improv`가 있으면 삭제한 뒤 `bluetooth_proxy`를 합칩니다. 남겨 두면 Wi-Fi 연결 뒤 BLE가 꺼져 프록시로 동작하지 않습니다.
 
 이 추천은 모든 통합·장치 조합을 실물 검증했다는 의미는 아닙니다. 기존에 안정적으로 동작하는 로컬 어댑터가 있으면 교체가 필수는 아닙니다. 가격·재고나 판매 링크를 리포마다 복제하지 않고 이 공통 문서로 연결합니다.
 

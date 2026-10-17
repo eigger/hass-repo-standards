@@ -41,6 +41,6 @@ python3 scripts/sync_badges.py ../hass-example --check
 python3 scripts/sync_badges.py ../hass-example --write
 ```
 
-`--check`는 불일치 시 exit 1, `--write`는 관리 영역만 갱신합니다. `release: true`, `hacs: default`, `analytics: true`는 운영자가 원격 근거를 확인한 뒤 명시합니다. 스크립트는 원격 Release·목록·Analytics 존재 여부를 검증하지 않습니다. 예시 설정은 templates/integration/.hass-standards.json에 있습니다.
+`--check`는 불일치 시 exit 1, `--write`는 관리 영역만 갱신합니다. `release: true`, `hacs: default`, `analytics: true`는 운영자가 원격 근거를 확인한 뒤 명시합니다. 스크립트는 원격 Release·목록·Analytics 존재 여부를 검증하지 않습니다. `hacs: default`에는 `hacs_default_evidence`, `analytics: true`에는 `analytics_evidence`(URL·확인일)가 필요합니다. 번역 README는 `readmes`에 함께 나열하고 설치 앵커가 다르면 `installation_links`({"README.ko.md": "#설치"})로 지정합니다. 저장소 파일 링크는 각 README 위치 기준으로 계산합니다. 예시 설정은 templates/integration/.hass-standards.json에 있습니다.
 
 [Analytics 근거](https://www.home-assistant.io/integrations/analytics), [Release 배지 옵션](https://shields.io/badges/git-hub-release).

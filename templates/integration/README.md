@@ -3,7 +3,7 @@
 이 폴더는 복사 후 값과 환경을 검토하는 **채택 예시**입니다. 실제 통합 skeleton이나 바로 배포할 코드가 아닙니다.
 
 1. `.github/workflows`의 main을 실제 기본 브랜치로 바꿉니다.
-2. example domain, Python 버전, package 목록, requirements 경로를 실제 환경으로 바꾸고 통합의 필수 테스트는 `test-profile: ha`로 지정합니다. 현재 YAML의 unit 예시는 이전 환경 검사 예시이므로 그대로 채택하지 않습니다.
+2. example domain, Python 버전, package 목록, requirements 경로를 실제 환경으로 바꾸고 통합의 필수 테스트는 `test-profile: ha`로 지정합니다. `update_dependencies.yml`의 `validation-command`도 `tests/components/<domain>/`를 실행하도록 바꾸고 `test-profile: ha`를 지정합니다. 현재 YAML의 unit 예시는 이전 환경 검사 예시이므로 그대로 채택하지 않습니다.
 3. 각 `@main`을 검토한 main의 commit SHA로 바꿉니다.
 4. 테스트/린트 requirements와 기존 pyproject.toml을 정리합니다. Ruff 설정은 현재 코드에 맞게 채택합니다.
 5. 테스트는 `tests/components/<domain>/`에 배치하고 실제 HA fixture·config entry·플랫폼 로딩으로 검증합니다. 최소 package matrix는 사용하는 package만 넣으며 두 환경 모두 실제 HA 테스트를 실행합니다. 최소 HA는 별도 환경에서 검증합니다.

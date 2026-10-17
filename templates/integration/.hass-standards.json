@@ -6,6 +6,8 @@
   "release": false,
   "analytics": false,
   "installation_link": "#installation",
+  "hacs_default_evidence": "",
+  "analytics_evidence": "",
   "tests_workflow": "tests.yml",
   "validate_workflow": "validate.yml"
 }

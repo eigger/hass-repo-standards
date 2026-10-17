@@ -34,5 +34,6 @@
 - [ESP32 BLE tracker](https://esphome.io/components/esp32_ble_tracker/): active scan의 의미.
 - [ESPHome 공식 프로젝트](https://esphome.io/projects/?type=bluetooth): 기기·리비전 지원과 설치 경로.
 - [Seeed XIAO W5500](https://wiki.seeedstudio.com/esphome_xiao_w5500_ethernet_adapter/): V1.2 보드와 proxy 구성.
+- [M5Stack AtomS3U](https://docs.m5stack.com/en/core/AtomS3U): 제조사 자료이며 ESPHome 공식 Bluetooth proxy 목록의 대상이 아님. 확인일 2026-10-17.
 - [BLE ESL 한국어 README](https://github.com/eigger/hass-ble-esl/blob/main/README.ko.md#설치): 기존 설치 안내의 출발점.
 - [blesession 계약](https://github.com/eigger/blesession/blob/main/docs/contract.md): 라이브러리와 통합 책임, 진단 정보.

@@ -28,7 +28,7 @@ def simple_spec(requirement: Requirement) -> tuple[str, Version]:
 
 def fetch_package(name: str) -> dict:
     url = f"https://pypi.org/pypi/{canonicalize_name(name)}/json"
-    request = urllib.request.Request(url, headers={"User-Agent": "hass-repo-standards/0.1.1"})
+    request = urllib.request.Request(url, headers={"User-Agent": "hass-repo-standards"})
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.load(response)
 

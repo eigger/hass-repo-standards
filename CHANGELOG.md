@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-17 — Bluetooth 추천 기기 정리
+
+- Olimex 추천을 제거하고 XIAO W5500 V1.2를 기본 추천으로, USB-A 동글 형태의 M5Stack AtomS3U를 추가하고 구매 링크를 병기.
+- AtomS3U는 ESPHome 공식 목록 대상이 아님을 밝히고, 기존 설정의 `ble.disable`·`esp32_improv`를 삭제하고 합치도록 안내.
+- M5Stack 제품 문서를 docs/sources.md에 추가.
+
 ## 2026-10-17 — 중앙 적용 현황과 에이전트 진입 지침
 
 - GitHub 목록 기준 통합 25개와 다른 유형 4개의 중앙 적용 현황표 추가. 실제 적용 실적은 미착수로 시작하고 archive·중복·원격 확인 대상을 구분.

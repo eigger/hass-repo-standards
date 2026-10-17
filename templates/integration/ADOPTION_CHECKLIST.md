@@ -1,6 +1,6 @@
 # 공통 규칙 적용 체크리스트
 
-이 파일은 통합 리포로 복사해 사용하는 **미확인 템플릿**입니다. 기존 통합·공통 CI가 전환됐다는 의미가 아닙니다. [사용법과 판정 기준](https://github.com/eigger/hass-repo-standards/blob/main/docs/checklist.md)을 읽고, 아래 규칙은 `STANDARDS.md`에 기록한 표준 커밋에서 확인합니다. 태그·릴리스 대신 `main`의 검토 커밋을 기준으로 합니다.
+이 파일은 통합 리포로 복사해 사용하는 **미확인 템플릿**입니다. 기존 통합·공통 CI가 전환됐다는 의미가 아닙니다. [사용법과 판정 기준](https://github.com/eigger/hass-repo-standards/blob/main/docs/checklist.md)을 읽고, 아래 규칙은 `STANDARDS.md`에 기록한 표준 커밋에서 확인합니다. 태그·릴리스 대신 `main`의 검토 커밋을 기준으로 하며, 위 사용법 링크의 `main`은 채택 시 검토한 커밋 SHA로 바꿉니다.
 
 ## 검토 대상
 

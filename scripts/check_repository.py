@@ -30,6 +30,8 @@ def check():
     documents = [
         ROOT / "README.md",
         ROOT / "CONTRIBUTING.md",
+        ROOT / "AGENTS.md",
+        *sorted((ROOT / "templates/integration").glob("*.md")),
         *sorted((ROOT / "docs").glob("*.md")),
     ]
     for file in documents:

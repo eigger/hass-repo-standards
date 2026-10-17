@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -18,7 +19,7 @@ def git(repo: Path, *args):
     return result.stdout.strip() if result.returncode == 0 else ""
 
 
-def render(repo: Path, config: dict):
+def render(repo: Path, config: dict, readme: Path | None = None):
     repository = config.get("repository")
     if not repository:
         origin = git(repo, "remote", "get-url", "origin")
@@ -41,6 +42,11 @@ def render(repo: Path, config: dict):
     domain = json.loads(manifests[0].read_text(encoding="utf-8"))["domain"]
     hacs = json.loads((repo / "hacs.json").read_text(encoding="utf-8"))
     base = f"https://github.com/{repository}"
+    # Repository-file links are relative to the README that receives the block.
+    prefix = os.path.relpath(repo, readme.parent).replace(os.sep, "/") if readme else "."
+    prefix = "" if prefix == "." else prefix + "/"
+    links = config.get("installation_links", {})
+    install = links.get(readme.relative_to(repo).as_posix()) if readme else None
     badges = []
 
     def badge(label, url, link):
@@ -54,7 +60,7 @@ def render(repo: Path, config: dict):
     badge(
         "HACS " + status.title(),
         f"https://img.shields.io/badge/HACS-{status.title()}-41BDF5?style=flat-square",
-        config.get("installation_link", "#installation"),
+        install or config.get("installation_link", "#installation"),
     )
     if config.get("release", False):
         badge(
@@ -67,7 +73,7 @@ def render(repo: Path, config: dict):
         badge(
             "Home Assistant minimum",
             f"https://img.shields.io/badge/HA-{text}-41BDF5?style=flat-square",
-            "hacs.json",
+            prefix + "hacs.json",
         )
     for label, key, default in [
         ("Tests", "tests_workflow", "tests.yml"),
@@ -85,7 +91,7 @@ def render(repo: Path, config: dict):
         badge(
             "License",
             f"https://img.shields.io/github/license/{repository}?style=flat-square",
-            "LICENSE",
+            prefix + "LICENSE",
         )
     if config.get("analytics", False):
         if not config.get("analytics_evidence"):
@@ -94,7 +100,7 @@ def render(repo: Path, config: dict):
             {
                 "style": "flat-square",
                 "color": "41BDF5",
-                "label": "Analytics",
+                "label": "Usage",
                 "query": f"$.{domain}.total",
                 "url": "https://analytics.home-assistant.io/custom_integrations.json",
             }
@@ -125,7 +131,7 @@ def main():
     root = args.repository_path.resolve()
     config_file = root / ".hass-standards.json"
     config = json.loads(config_file.read_text(encoding="utf-8")) if config_file.exists() else {}
-    block = render(root, config)
+    render(root, config)  # Validate configuration even when no README is listed.
     # Preflight every language before mutating any file.
     updates = []
     for name in config.get("readmes", ["README.md"]):
@@ -133,7 +139,7 @@ def main():
         if not path.is_relative_to(root) or path.suffix.lower() != ".md":
             raise ValueError("README paths must be Markdown files inside the repository")
         original = path.read_text(encoding="utf-8")
-        updated = replace_block(original, block)
+        updated = replace_block(original, render(root, config, path))
         if original != updated:
             updates.append((path, updated))
     for path, updated in updates:
