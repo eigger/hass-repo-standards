@@ -6,5 +6,8 @@
 
 - domain, 기본 브랜치, 지원 HA와 dependency 버전은 실제 메타데이터를 확인합니다.
 - 배지 관리 주석 밖의 내용과 기존 언어·이전 안내를 보존합니다.
+- 통합 테스트는 tests/components/<domain>/ 구조와 실제 HA fixture·config entry·플랫폼 로딩을 사용합니다. 가짜 HA 모듈로 대체하지 않으며 외부 통신 경계만 mock합니다.
+- 의존성은 manifest의 requirements/dependencies/after_dependencies와 테스트 requirements를 구분하고 실제 HA 환경에서 설치·동작을 검증합니다.
 - 통합 동작 변경에는 해당 회귀 테스트를 실행합니다.
+- blesession/proxy 통합의 README는 공통 Bluetooth 설정·추천 기기로 연결하고 기기 고유 조건을 적습니다.
 - manifest dependency 변경 시 연산자·extras·marker와 최소 버전 계약을 유지합니다.

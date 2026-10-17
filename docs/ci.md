@@ -29,7 +29,7 @@
 
 **CI-06 필수**: lint와 test 의존성은 버전 관리된 requirements/lock 파일에서 설치합니다. 통합 런타임 요구사항은 manifest에서 읽고 한 번의 pip resolver 호출로 테스트 요구사항과 함께 설치합니다. 여러 `pip install`로 충돌을 가리는 것을 피하고 `pip check`를 실행합니다. 생성 파일은 RUNNER_TEMP에 둡니다.
 
-**CI-07 필수**: Python과 HA/pytest 플러그인은 실제 호환 조합을 입력합니다. `unit`/`ha`, 최소/현재 라이브러리, 최소 HA 검증을 구분합니다. cache key에는 requirements와 manifest를 포함합니다. format은 `ruff format --check .`, lint는 `ruff check .`를 기본으로 하되 외부 복사 코드 제외는 pyproject에 명시합니다.
+**CI-07 필수**: Python과 HA/pytest 플러그인은 실제 호환 조합을 입력합니다. 통합의 필수 검사는 `ha`로 실행하고 pytest 대상은 `tests/components/<domain>/`로 맞춥니다. 실제 HA fixture·통합 로딩을 사용하며 `unit`은 독립 도구 등의 보조 검사로만 둡니다. 최소/현재 라이브러리와 최소 HA 환경을 구분합니다. cache key에는 requirements와 manifest를 포함합니다. format은 `ruff format --check .`, lint는 `ruff check .`를 기본으로 하되 외부 복사 코드 제외는 pyproject에 명시합니다.
 
 **CI-08 필수**: PR title/body/branch 같은 표현식은 shell에 직접 삽입하지 않고 env로 전달합니다. `pull_request_target`에서 외부 PR 코드를 checkout해 실행하지 않습니다. 일반 테스트에 secrets를 요구하지 않습니다. 재사용 workflow에 `secrets: inherit`를 기본으로 쓰지 않습니다.
 
@@ -40,6 +40,10 @@
 **CI-10 필수**: GITHUB_TOKEN으로 만든 PR의 push/PR 이벤트가 다른 workflow를 자동 실행한다고 가정하지 않습니다. 공통 updater는 변경한 tree에서 선택 package의 정확한 새 하한과 지정한 검증을 먼저 실행하며, 추가 required checks는 수동 dispatch 또는 GitHub App 토큰 등 별도 운영 방식으로 충족합니다. dispatch 실패를 경고만 하고 모든 검증이 끝났다고 표시하지 않습니다. 본 구현은 PAT/App 비밀키를 요구하지 않습니다.
 
 **CI-11 필수**: release는 검증한 같은 commit/tag에서 수행하고 별도 job만 contents:write를 받습니다. 산출물·manifest·tag 일치를 확인합니다. 이 공통 규칙 리포는 통합 릴리스 자동 배포를 제공하지 않습니다.
+
+**CI-12 필수**: 테스트 의존성 추가·업데이트 PR도 [실제 HA 테스트 기준](testing.md)과 [의존성 추가 절차](dependencies.md)를 따릅니다. HA 패키지 설치·환경 summary·stub 테스트의 성공만으로 통합 검증을 완료하지 않습니다. 필요한 HA 구성요소와 package 요구사항을 설치하고 실제 entry·플랫폼 테스트를 실행합니다.
+
+현재 workflow/action의 기본값과 실행용 템플릿이 이 규칙을 자동 강제하는 것은 아닙니다. 이번에는 규칙만 변경하며, 공통 CI 구현과 각 리포 전환은 별도 작업으로 진행합니다.
 
 ## 입력과 경계
 

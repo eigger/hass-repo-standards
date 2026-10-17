@@ -20,10 +20,10 @@
 ## 이관 순서
 
 1. 현재 CI를 읽기 전용으로 조사하고 기본 브랜치·지원 HA·테스트 환경을 확인합니다.
-2. 기존 검사가 통과하는 상태를 보존한 채 requirements 파일과 Ruff 설정을 정리합니다.
-3. Validate와 Python CI를 공통 workflow로 전환합니다. 필요한 브라우저·최소 HA job은 유지합니다.
+2. 기존 회귀 테스트를 보존하며 Core 대응 구현과 tests/components/<domain>/ 배치, 실제 HA fixture·entry 로딩 검증으로 전환할 계획을 기록합니다.
+3. 의존성 선언·HA 테스트 환경을 정리한 뒤 Validate와 실제 HA 기반 Python CI로 전환합니다. 필요한 브라우저·최소 HA job은 유지합니다.
 4. 의존성 업데이트 bot은 dry-run으로 기존 변화와 비교하고 전환합니다.
-5. README 배지와 AGENTS.md의 표준 참조를 추가합니다.
+5. README 배지와 AGENTS.md의 표준 참조를 추가하고, 해당하는 BLE 통합은 공통 Bluetooth 설정·추천 기기로 연결합니다.
 6. 실제 원격 CI를 통과한 뒤 required checks 이름을 저장소 설정에 반영합니다.
 
 `needs`/job 이름 변경으로 branch protection이 영구 대기하지 않도록 채택 PR에서 확인합니다. 이 표준 자체는 저장소 설정을 자동 변경하지 않습니다.

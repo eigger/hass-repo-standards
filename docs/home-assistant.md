@@ -2,6 +2,23 @@
 
 공식 API 근거는 [공식 자료](sources.md)를 참고합니다. 아래 필수 항목은 이 프로젝트가 채택한 구현 기준입니다. Core 전용 제출 규칙과 커스텀 통합의 의무를 혼동하지 않습니다.
 
+## Core와 구조를 맞추는 기준
+
+**HA-13 필수**: HACS 배포용 커스텀 통합도 HA Core 편입을 고려한 모듈 구성·공개 API·생명주기·테스트 구조로 작성합니다. Core 코드를 통째로 복사하거나 별도 HA 호환 계층을 만드는 방식으로 구조를 맞추지 않습니다. 배포 경로와 커스텀 메타데이터 차이를 제외한 구현 방식은 Core를 기준으로 합니다.
+
+| 항목 | HA Core | HACS 커스텀 통합의 공통 기준 |
+|---|---|---|
+| 구현 경로 | `homeassistant/components/<domain>/` | `custom_components/<domain>/` |
+| 내부 모듈 | `__init__`, config flow, coordinator, entity, 플랫폼 등 | 필요한 모듈을 같은 역할·이름으로 구성 |
+| 테스트 | `tests/components/<domain>/` | 동일한 domain 계층과 파일 배치 |
+| 테스트 런타임 | Core 테스트 fixture·helper | 실제 HA + custom component pytest fixture·helper |
+| HA API | Core의 공개 API와 config entry 생명주기 | 같은 API·로딩·설정·플랫폼 경로 사용 |
+| 의존성 | 통합 manifest의 패키지·HA 구성요소 선언 | 같은 의미로 선언, tests/CI에서 실제 설치·로딩 |
+| 배포 메타데이터 | Core 소스·배포 체계 | 커스텀 manifest.version, hacs.json, 설치 문서 유지 |
+| 번역·품질 정보 | Core의 번역·품질 관리 체계 | 커스텀에 필요한 번역 유지, 공식 품질 등급 자가 표기 금지 |
+
+필요한 파일만 추가합니다. 공통 entity 동작이 있으면 `entity.py`, API 경계가 필요하면 `api.py`, 진단을 제공하면 `diagnostics.py`를 두며 모든 통합에 빈 파일을 강제하지 않습니다. 엔티티 플랫폼 파일과 테스트 파일은 서로 대응시킵니다. 구체적인 테스트 트리는 [테스트 규칙](testing.md)에 정의합니다.
+
 ## 구조와 메타데이터
 
 **HA-01 필수**: 배포 경로는 `custom_components/<domain>/`입니다. domain은 디렉터리·manifest·상수에서 일치해야 합니다. 공개된 domain과 unique ID 형식은 사용자 데이터 계약으로 취급합니다. 변경은 릴리스 문서와 마이그레이션 계획을 동반합니다.

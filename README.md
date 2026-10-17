@@ -9,16 +9,19 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 | 문서 | 내용 |
 |---|---|
 | [적용과 변경 관리](docs/adoption.md) | 필수·권장 구분, 기존 리포 이관, 예외 |
-| [Home Assistant 개발](docs/home-assistant.md) | 구조, 설정, async, 엔티티, BLE, 오류 처리 |
+| [Home Assistant 개발](docs/home-assistant.md) | Core와 대응하는 구조, 설정, async, 엔티티, BLE |
 | [HACS와 배포](docs/hacs.md) | manifest, hacs.json, 버전과 배포 구조 |
 | [README와 배지](docs/documentation.md) | 문서 순서, 언어, 배지 조건·순서·스타일 |
-| [테스트와 호환성](docs/testing.md) | 실제 HA와 stub 구분, 최소 버전, 회귀 테스트 |
+| [테스트와 호환성](docs/testing.md) | tests/components/domain 구조, 실제 HA fixture·로딩, 최소 버전 |
 | [CI 작성 규칙](docs/ci.md) | 공통 workflow, 권한, 이벤트, timeout, 확장 |
-| [의존성 관리](docs/dependencies.md) | imagespec·blesession, 연산자, 업데이트 PR, 최소 버전 테스트 |
+| [의존성 관리](docs/dependencies.md) | 선언 위치·추가 절차, HA 테스트 의존성, 업데이트·최소 버전 |
+| [Bluetooth 공통 설정](docs/bluetooth.md) | proxy 설정, 추천 기기·리비전, blesession 통합의 README 연결 |
 | [릴리스·유지보수](docs/releases.md) | 버전, 변경 기록, 이관, 지원 상태 |
 | [전체 리포 CI 조사](docs/ci-audit.md) | 로컬 hass* 전체 workflow 비교와 이관 계획 |
 | [초기 구현 검증](docs/validation.md) | 테스트 환경과 확인 범위 |
 | [공식 자료](docs/sources.md) | 확인한 공식 문서와 확인일 |
+
+현재 규칙은 HACS 커스텀 통합도 Core와 유사한 구현·테스트 구조를 사용하도록 정의합니다. 기존 통합 리포와 공통 CI 구현·실행용 템플릿의 전환은 별도 작업으로 진행합니다.
 
 ## 공통 CI
 

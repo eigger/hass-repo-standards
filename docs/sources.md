@@ -9,6 +9,8 @@
 | [Fetching data](https://developers.home-assistant.io/docs/integration_fetching_data/) | polling/push/coordinator |
 | [Blocking operations](https://developers.home-assistant.io/docs/asyncio_blocking_operations/) | event loop와 executor |
 | [Integration Quality Scale](https://developers.home-assistant.io/docs/core/integration-quality-scale/) | 품질 개선 참고; 자가 인증 금지 |
+| [Core 구현 예시](https://github.com/home-assistant/core/tree/63e9f9bf2eb899e8313257b2b22e63140f17c76f/homeassistant/components/airgradient) | 모듈 역할과 구조 참고 |
+| [Core 테스트 예시](https://github.com/home-assistant/core/tree/63e9f9bf2eb899e8313257b2b22e63140f17c76f/tests/components/airgradient) | tests/components/domain, fixture·플랫폼·snapshot 배치 |
 | [HA testing](https://developers.home-assistant.io/docs/development_testing/) | 테스트 실행 개념 |
 | [Custom component pytest](https://github.com/MatthewFlamm/pytest-homeassistant-custom-component) | 커스텀 통합 fixture와 버전 호환 |
 | [HACS general](https://www.hacs.xyz/docs/publish/start/) | hacs.json, 최소 HA, 리포 메타데이터 |
@@ -24,3 +26,13 @@
 | [Shields Release](https://shields.io/badges/git-hub-release) | release 배지 옵션 |
 | [Shields Workflow](https://shields.io/badges/git-hub-actions-workflow-status) | branch와 상태 배지 |
 | [Shields Downloads](https://shields.io/badges/git-hub-downloads-all-assets-all-releases) | release asset 집계 의미 |
+
+## Bluetooth 설정 자료
+
+- [HA Bluetooth](https://www.home-assistant.io/integrations/bluetooth/): 로컬·원격 어댑터와 연결/스캔.
+- [ESPHome Bluetooth proxy](https://esphome.io/components/bluetooth_proxy/): active 연결, 수신 성능, 연결 용량.
+- [ESP32 BLE tracker](https://esphome.io/components/esp32_ble_tracker/): active scan의 의미.
+- [ESPHome 공식 프로젝트](https://esphome.io/projects/?type=bluetooth): 기기·리비전 지원과 설치 경로.
+- [Seeed XIAO W5500](https://wiki.seeedstudio.com/esphome_xiao_w5500_ethernet_adapter/): V1.2 보드와 proxy 구성.
+- [BLE ESL 한국어 README](https://github.com/eigger/hass-ble-esl/blob/main/README.ko.md#설치): 기존 설치 안내의 출발점.
+- [blesession 계약](https://github.com/eigger/blesession/blob/main/docs/contract.md): 라이브러리와 통합 책임, 진단 정보.

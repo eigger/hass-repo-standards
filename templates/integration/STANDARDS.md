@@ -3,8 +3,10 @@
 - 표준: https://github.com/eigger/hass-repo-standards/tree/main
 - 참조 커밋 SHA: 채택 시 검토한 main의 전체 SHA 입력
 - 채택일: 실제 채택 PR 날짜 입력
-- profile: integration / unit 또는 integration / ha 중 선택
+- profile: integration / ha (실제 HA fixture·통합 로딩 필수)
 - 실제 기본 브랜치: 채택 시 입력
+- 테스트 경로: tests/components/<domain>/
+- HA 테스트 환경: 실제 HA/Python/pytest-homeassistant-custom-component 조합 입력
 - 최소 HA 검증 환경: HA/Python/플러그인 버전 또는 미검증 사유
 - 최소 package 검증: 해당 package와 버전
 
