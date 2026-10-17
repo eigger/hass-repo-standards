@@ -1,0 +1,36 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+name: Update manifest requirements
+description: Preserve extras and operators while proposing stable PyPI updates
+inputs:
+  domain:
+    description: Integration domain
+    required: true
+  packages:
+    description: JSON array of selected package names
+    required: true
+  allow-major:
+    description: Allow reviewed major updates
+    default: 'false'
+outputs:
+  updated:
+    description: Whether the manifest changed
+    value: ${{ steps.update.outputs.updated }}
+runs:
+  using: composite
+  steps:
+  - shell: bash
+    run: python -m pip install packaging==26.3
+  - id: update
+    shell: bash
+    env:
+      ACTION_PATH: ${{ github.action_path }}
+      DOMAIN: ${{ inputs.domain }}
+      PACKAGES: ${{ inputs.packages }}
+      ALLOW_MAJOR: ${{ inputs.allow-major }}
+    run: 'args=()
+
+      if [[ "$ALLOW_MAJOR" == "true" ]]; then args+=(--allow-major); fi
+
+      [[ "$DOMAIN" =~ ^[a-z0-9_]+$ ]] || exit 1
+
+      python "$ACTION_PATH/update.py" --manifest "custom_components/$DOMAIN/manifest.json" --packages "$PACKAGES" --write "${args[@]}"'

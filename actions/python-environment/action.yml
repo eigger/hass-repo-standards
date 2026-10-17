@@ -1,0 +1,57 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+name: HA Python environment
+description: Install test, integration and HA requirements consistently
+inputs:
+  domain:
+    description: Integration domain
+    required: true
+  python-version:
+    description: Python compatible with selected HA/test environment
+    required: true
+  requirements:
+    description: Caller test requirements file
+    required: true
+  dependency-mode:
+    description: current or minimum
+    default: current
+  minimum-packages:
+    description: JSON array of packages for exact minimum checks
+    default: '[]'
+  ha-components:
+    description: Space separated installed HA component names
+    default: ''
+  constraints:
+    description: Optional caller constraints file
+    default: ''
+  expected-ha-version:
+    description: Optional exact installed HA version assertion
+    default: ''
+  test-profile:
+    description: unit or ha
+    default: unit
+runs:
+  using: composite
+  steps:
+  - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+    with:
+      python-version: ${{ inputs.python-version }}
+      cache: pip
+      cache-dependency-path: '${{ inputs.requirements }}
+
+        custom_components/${{ inputs.domain }}/manifest.json
+
+        ${{ inputs.constraints }}'
+  - shell: bash
+    run: python -m pip install packaging==26.3
+  - shell: bash
+    env:
+      ACTION_PATH: ${{ github.action_path }}
+      INPUT_DOMAIN: ${{ inputs.domain }}
+      INPUT_REQUIREMENTS: ${{ inputs.requirements }}
+      INPUT_DEPENDENCY_MODE: ${{ inputs.dependency-mode }}
+      INPUT_MINIMUM_PACKAGES: ${{ inputs.minimum-packages }}
+      INPUT_HA_COMPONENTS: ${{ inputs.ha-components }}
+      INPUT_CONSTRAINTS: ${{ inputs.constraints }}
+      INPUT_EXPECTED_HA_VERSION: ${{ inputs.expected-ha-version }}
+      INPUT_TEST_PROFILE: ${{ inputs.test-profile }}
+    run: python "$ACTION_PATH/install.py"
