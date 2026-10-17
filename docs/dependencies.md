@@ -68,4 +68,4 @@ python3 actions/update-manifest/update.py --manifest ../hass-example/custom_comp
 
 Dependabot은 GitHub Actions와 일반 requirements 갱신을 맡습니다. manifest updater와 같은 파일을 동시에 수정하는 bot은 두지 않습니다.
 
-이번 변경에서는 의존성 선언·추가·테스트 규칙만 정의합니다. 실행용 requirements 파일·설치 action·각 통합 manifest의 변경은 이후 채택 작업에서 진행합니다.
+설치 action은 `ha`에서 실제 HA와 `pytest-homeassistant-custom-component`의 설치를 확인하고 버전을 보고합니다. 실행용 requirements 예시는 채택할 통합의 실제 지원 범위에 맞춰 검토합니다. 각 통합 manifest는 해당 통합의 채택 범위에서만 변경합니다.

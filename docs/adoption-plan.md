@@ -1,12 +1,12 @@
 # 공통 규칙 적용 권장 순서
 
-**2026-10-17 기준 계획**입니다. [중앙 현황](adoption-status.md)의 활성 HA 통합 **24개**를 아래 순서로 권장합니다. 이번 단계는 목록과 순서를 정하는 작업이며 개별 통합의 적용·테스트를 시작하거나 현황표의 상태를 변경하지 않았습니다.
+**2026-10-17 기준 계획**입니다. [중앙 현황](adoption-status.md)의 적용 대상 HA 통합 **22개**를 아래 순서로 권장합니다. hass-kibble 첫 파일럿을 시작했습니다. 나머지 통합은 아직 착수하지 않으며 진행·검증 결과는 중앙 현황표에서 관리합니다.
 
 근거는 [기존 CI 조사](ci-audit.md), [로컬 조사 스냅샷](ci-inventory.json), 그리고 이번에 읽은 로컬 checkout의 `manifest.json`, 테스트 디렉터리·`conftest.py`, `tests.yml`입니다. 로컬 파일은 원격 최신 상태와 다를 수 있으며, 아래 평가는 테스트 실행 결과나 CI 성공 판정이 아닙니다. 착수 시 원격 기본 브랜치·사용자 변경·실제 지원 범위를 다시 확인합니다.
 
 ## 선행 작업과 파일럿
 
-현재 공통 CI의 `unit` 기본값과 실행용 템플릿은 [실제 HA 테스트 규칙](testing.md)의 필수 구조·로딩 검증으로 아직 전환되지 않았습니다. **첫 파일럿과 함께 공통 workflow·환경·템플릿을 보완하고 검증한 다음** 나머지에 확산합니다. caller 교체만으로 채택을 완료하지 않습니다.
+공통 CI는 기존 caller 호환을 위해 `unit` 기본값을 유지하고, 실행용 템플릿은 `ha`와 최소/현재 HA별 별도 job을 명시합니다. [실제 HA 테스트 규칙](testing.md)에 따라 파일럿에서 실제 로딩 검증을 확인합니다. **첫 파일럿과 함께 공통 workflow·환경·템플릿을 보완하고 검증한 다음** 나머지에 확산합니다. caller 교체만으로 채택을 완료하지 않습니다.
 
 첫 파일럿은 **hass-kibble**을 권장합니다. manifest의 외부 Python 요구사항과 HA 구성요소 의존성이 없고, BLE·전용 UI 없이 HTTP 조회·coordinator·sensor·button 경로로 기본 패턴을 확인할 수 있습니다. 기존 HA stub 테스트를 실제 fixture·config entry·플랫폼 로딩으로 바꾸는 기준 사례가 됩니다. 이는 코드 전체가 가장 작다는 판정이 아니라, 공유 환경을 처음 검증할 때 특수 의존성이 적다는 판단입니다.
 
@@ -38,9 +38,7 @@
 | 7 · 전용 기능 보존 | [hass-ble-esl](https://github.com/eigger/hass-ble-esl) | 실제 HA fixture와 imagespec+blesession 유지, editor 전용 job·브라우저 환경, frontend/http/panel/websocket 의존성 |
 | 7 | [hass-esphome-ota](https://github.com/eigger/hass-esphome-ota) | 이미 있는 tests/components 구조 보존, 실제 로딩 범위 확인, panel·HTTP·WebSocket·빌드/게시·진단 회귀 |
 | 7 | [hass-sip](https://github.com/eigger/hass-sip) | HA stub 교체, ffmpeg/llm/logbook/tts 및 assist_pipeline/stt 후행 의존성, 외부 음성·SIP 경계 분리 |
-| 8 · 테스트/CI 기반 추가 | [hass-cyx-rgb-led](https://github.com/eigger/hass-cyx-rgb-led) | 로컬에 테스트·CI 없음: 실제 HA fixture·로딩 테스트와 Validate부터 작성 |
-| 8 | [hass-divoom](https://github.com/eigger/hass-divoom) | 로컬 CI 없음: 기존 테스트 범위 확인 후 실제 HA 검증·공통 CI 추가 |
-| 8 | [hass-jaalee](https://github.com/eigger/hass-jaalee) | Validate는 존재, 테스트 없음: Bluetooth 실제 HA 테스트 기반 추가 |
+| 8 · 테스트/CI 기반 추가 | [hass-jaalee](https://github.com/eigger/hass-jaalee) | Validate는 존재, 테스트 없음: Bluetooth 실제 HA 테스트 기반 추가 |
 | 8 | [hass-melk-light](https://github.com/eigger/hass-melk-light) | 로컬에 테스트·CI 없음: Bluetooth 의존성·실제 HA 테스트·검증 workflow 추가 |
 
 ## 별도 범위와 제외
@@ -51,6 +49,7 @@
 | hassble-android | 별도 Android 작업으로 문서·CI 원칙 적용. Gradle·서명·APK/AAB 전용 흐름 유지 |
 | hassble-config | 별도 YAML/schema 작업으로 문서·CI 원칙 적용 |
 | hassio-apps | 별도 앱 작업으로 pins·add-on linter·업데이트 흐름을 검토 |
+| hass-cyx-rgb-led, hass-divoom | 사용자 요청으로 공통화 대상에서 제외. 별도 요청 전 수정하지 않음 |
 | hass-gicisky | 보관·hass-ble-esl 이전 리포이므로 신규 이관에서 제외 |
 | hass-coolled | hass-ble-led-sign과 같은 원격의 로컬 checkout이므로 중복 배정하지 않음 |
 | hass-timemore | GitHub 목록 미확인. 원격 존재·접근 및 실제 유지 대상을 확인한 뒤 추가 여부 결정 |

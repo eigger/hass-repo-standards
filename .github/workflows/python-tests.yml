@@ -57,10 +57,10 @@ name: Python tests
         type: string
         default: unit
       pytest-args:
-        description: Trusted repository-controlled pytest arguments
+        description: Trusted pytest arguments; empty selects tests/components/domain for ha
         required: false
         type: string
-        default: tests/ -v
+        default: ''
 permissions:
   contents: read
 jobs:
@@ -108,10 +108,14 @@ jobs:
         test-profile: ${{ inputs.test-profile }}
     - env:
         PYTEST_ARGS: ${{ inputs.pytest-args }}
-      run: 'python - <<''PY''
-
+        TEST_PROFILE: ${{ inputs.test-profile }}
+        DOMAIN: ${{ inputs.domain }}
+      run: |
+        python - <<'PYTEST'
         import os, shlex, subprocess, sys
-
-        subprocess.run([sys.executable, "-m", "pytest", *shlex.split(os.environ["PYTEST_ARGS"])], check=True)
-
-        PY'
+        arguments = shlex.split(os.environ["PYTEST_ARGS"])
+        if not arguments:
+            target = "tests/components/" + os.environ["DOMAIN"] + "/" if os.environ["TEST_PROFILE"] == "ha" else "tests/"
+            arguments = [target, "-v"]
+        subprocess.run([sys.executable, "-m", "pytest", *arguments], check=True)
+        PYTEST

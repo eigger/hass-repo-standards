@@ -4,7 +4,7 @@
 
 ## 초기 등록 범위
 
-**2026-10-17** GitHub 목록 기준으로 HA 통합 리포 25개(보관 리포 1개 포함)와 다른 유형 4개를 등록했습니다. 이 작업에서 확인된 개별 통합의 공통 규칙 적용 실적은 아직 없습니다. 초기 `미착수`는 중앙에 작업 시작이 등록되지 않았다는 뜻이며, 해당 리포의 기존 기능·테스트 품질이 미흡하다고 판정한 것이 아닙니다. 전체 적용률을 자동 집계하지 않습니다.
+**2026-10-17** GitHub 목록 기준으로 HA 통합 리포 25개(보관 리포 1개 포함)와 다른 유형 4개를 등록했습니다. 등록 이후 hass-kibble 파일럿을 시작했으며 결과는 아래 행에 기록합니다. 현재 적용 대상 HA 통합은 22개이며, 보관 리포 1개와 사용자 지정 2개는 제외합니다. 초기 `미착수`는 중앙에 작업 시작이 등록되지 않았다는 뜻이며, 해당 리포의 기존 기능·테스트 품질이 미흡하다고 판정한 것이 아닙니다. 전체 적용률을 자동 집계하지 않습니다.
 
 ## 상태 기준
 
@@ -26,14 +26,14 @@
 | [hass-ble-esl](https://github.com/eigger/hass-ble-esl) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-ble-led-sign](https://github.com/eigger/hass-ble-led-sign) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-catprinter](https://github.com/eigger/hass-catprinter) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
-| [hass-cyx-rgb-led](https://github.com/eigger/hass-cyx-rgb-led) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
-| [hass-divoom](https://github.com/eigger/hass-divoom) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
+| [hass-cyx-rgb-led](https://github.com/eigger/hass-cyx-rgb-led) / `master` | 적용 제외 | — | 2026-10-17 사용자 명시 | 사용자 요청으로 공통화 대상에서 제외. 별도 요청 전 수정하지 않음 | 2026-10-17 / 미배정 |
+| [hass-divoom](https://github.com/eigger/hass-divoom) / `master` | 적용 제외 | — | 2026-10-17 사용자 명시 | 사용자 요청으로 공통화 대상에서 제외. 별도 요청 전 수정하지 않음 | 2026-10-17 / 미배정 |
 | [hass-esphome-ota](https://github.com/eigger/hass-esphome-ota) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-garage](https://github.com/eigger/hass-garage) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-gicisky](https://github.com/eigger/hass-gicisky) / `master` | 적용 제외 | — | GitHub archived 상태 확인 | hass-ble-esl로 이전. 별도 요청 전 이관 대상에서 제외 | 2026-10-17 / 미배정 |
 | [hass-icscale](https://github.com/eigger/hass-icscale) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-jaalee](https://github.com/eigger/hass-jaalee) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
-| [hass-kibble](https://github.com/eigger/hass-kibble) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
+| [hass-kibble](https://github.com/eigger/hass-kibble) / `master` | 진행 중 | 첫 파일럿: 실제 HA 테스트·공통 CI·문서/지침 적용 중 | 기준 SHA·검증 커밋은 확정 후 기록 | 구현·공통 도구 보완 후 독립 리뷰 및 최소/현재 HA 검증 | 2026-10-17 / 조율 root · 구현 implement_kibble_pilot · 공통 도구 implement_shared_pilot_support · 독립 리뷰 review_kibble_pilot |
 | [hass-kma](https://github.com/eigger/hass-kma) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-kocom-smarthome](https://github.com/eigger/hass-kocom-smarthome) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-lywsd02](https://github.com/eigger/hass-lywsd02) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |

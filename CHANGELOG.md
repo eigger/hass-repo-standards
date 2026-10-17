@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-17 — hass-kibble 파일럿 지원
+
+- hass-kibble 첫 적용을 등록하고 hass-cyx-rgb-led·hass-divoom은 사용자 요청으로 제외합니다. 적용 대상 HA 통합은 22개입니다.
+- 공통 HA 환경에서 실제 테스트 플러그인 설치·버전을 확인하고, 생략한 pytest 경로는 domain 구조로 결정합니다. 기존 unit caller는 유지합니다.
+- 실행용 템플릿에 정확한 최소/현재 HA별 Python·requirements·버전 검사와 실제 HA 테스트 경로를 반영합니다. 예시 버전은 각 통합의 실제 지원 범위에 맞춰 변경해야 합니다.
+
+
 ## 2026-10-17 — Bluetooth 추천 기기 정리
 
 - Olimex 추천을 제거하고 XIAO W5500 V1.2를 기본 추천으로, USB-A 동글 형태의 M5Stack AtomS3U를 추가하고 구매 링크를 병기.

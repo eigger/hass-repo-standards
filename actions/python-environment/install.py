@@ -75,6 +75,21 @@ def pip(*arguments):
     subprocess.run([sys.executable, "-m", "pip", *arguments], check=True)
 
 
+def environment_versions(profile: str) -> tuple[str, str]:
+    """Require the real HA distribution and its test plugin for HA jobs."""
+    if profile not in {"unit", "ha"}:
+        raise ValueError("test-profile must be unit or ha")
+    versions = {}
+    for package in ("homeassistant", "pytest-homeassistant-custom-component"):
+        try:
+            versions[package] = importlib.metadata.version(package)
+        except importlib.metadata.PackageNotFoundError:
+            versions[package] = "not installed"
+        if profile == "ha" and versions[package] == "not installed":
+            raise ValueError(f"ha profile requires installed {package}")
+    return versions["homeassistant"], versions["pytest-homeassistant-custom-component"]
+
+
 def main():
     domain = os.environ["INPUT_DOMAIN"]
     if not re.fullmatch(r"[a-z0-9_]+", domain):
@@ -120,14 +135,7 @@ def main():
         if actual != version:
             raise ValueError(f"Minimum not installed: {name} {actual} != {version}")
     profile = os.environ.get("INPUT_TEST_PROFILE", "unit")
-    if profile not in {"unit", "ha"}:
-        raise ValueError("test-profile must be unit or ha")
-    try:
-        ha_version = importlib.metadata.version("homeassistant")
-    except importlib.metadata.PackageNotFoundError:
-        ha_version = "not installed"
-    if profile == "ha" and ha_version == "not installed":
-        raise ValueError("ha profile requires installed Home Assistant")
+    ha_version, plugin_version = environment_versions(profile)
     expected_ha = os.environ.get("INPUT_EXPECTED_HA_VERSION", "")
     if expected_ha and (
         ha_version == "not installed" or Version(ha_version) != Version(expected_ha)
@@ -135,7 +143,8 @@ def main():
         raise ValueError(f"Wrong Home Assistant version: {ha_version} != {expected_ha}")
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     report = (
-        f"Python {platform.python_version()} | profile {profile} | deps {mode} | HA {ha_version}\n"
+        f"Python {platform.python_version()} | profile {profile} | deps {mode} | "
+        f"HA {ha_version} | pytest HA plugin {plugin_version}\n"
     )
     print(report)
     if summary:

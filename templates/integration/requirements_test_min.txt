@@ -1,0 +1,3 @@
+# Example minimum HA pair; replace with the actual declared minimum.
+homeassistant==2025.3.0
+pytest-homeassistant-custom-component==0.13.221

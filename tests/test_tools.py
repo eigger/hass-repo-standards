@@ -181,6 +181,68 @@ class DependencyUpdates(unittest.TestCase):
             self.assertEqual(path.read_text(), original)
 
 
+class HAEnvironment(unittest.TestCase):
+    def test_workflow_selects_domain_tests_and_preserves_explicit_or_unit_arguments(self):
+        workflow = audit.yaml.load(
+            (ROOT / ".github/workflows/python-tests.yml").read_text(), Loader=audit.Loader
+        )
+        command = workflow["jobs"]["test"]["steps"][-1]["run"]
+        script = command.split("\n", 1)[1].rsplit("PYTEST", 1)[0]
+        for profile, explicit, expected in (
+            ("ha", "", ["tests/components/example/", "-v"]),
+            ("unit", "", ["tests/", "-v"]),
+            (
+                "ha",
+                "tests/components/example/test_sensor.py -q",
+                ["tests/components/example/test_sensor.py", "-q"],
+            ),
+        ):
+            with (
+                self.subTest(profile=profile, arguments=explicit),
+                patch.dict(
+                    "os.environ",
+                    {"TEST_PROFILE": profile, "DOMAIN": "example", "PYTEST_ARGS": explicit},
+                ),
+                patch("subprocess.run") as run,
+            ):
+                exec(compile(script, "workflow-pytest", "exec"), {})
+                run.assert_called_once_with([sys.executable, "-m", "pytest", *expected], check=True)
+
+    def test_ha_profile_requires_the_plugin_as_well_as_homeassistant(self):
+        def version(package):
+            if package == "homeassistant":
+                return "2025.3.0"
+            raise install.importlib.metadata.PackageNotFoundError(package)
+
+        with (
+            patch.object(install.importlib.metadata, "version", side_effect=version),
+            self.assertRaisesRegex(ValueError, "pytest-homeassistant-custom-component"),
+        ):
+            install.environment_versions("ha")
+
+    def test_unit_profile_keeps_supporting_non_ha_tools(self):
+        with patch.object(
+            install.importlib.metadata,
+            "version",
+            side_effect=install.importlib.metadata.PackageNotFoundError,
+        ):
+            self.assertEqual(
+                install.environment_versions("unit"), ("not installed", "not installed")
+            )
+            with self.assertRaisesRegex(ValueError, "homeassistant"):
+                install.environment_versions("ha")
+
+    def test_ha_profile_reports_the_exact_installed_pair(self):
+        versions = {
+            "homeassistant": "2025.3.0",
+            "pytest-homeassistant-custom-component": "0.13.221",
+        }
+        with patch.object(install.importlib.metadata, "version", side_effect=versions.get):
+            self.assertEqual(install.environment_versions("ha"), tuple(versions.values()))
+        with self.assertRaisesRegex(ValueError, "test-profile"):
+            install.environment_versions("typo")
+
+
 class BadgeSafety(unittest.TestCase):
     def test_only_marked_block_changes(self):
         text = "# Title\n\n" + badges.START + "\nold\n" + badges.END + "\n\nMoved to somewhere.\n"

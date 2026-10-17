@@ -12,6 +12,8 @@
 | [Core 구현 예시](https://github.com/home-assistant/core/tree/63e9f9bf2eb899e8313257b2b22e63140f17c76f/homeassistant/components/airgradient) | 모듈 역할과 구조 참고 |
 | [Core 테스트 예시](https://github.com/home-assistant/core/tree/63e9f9bf2eb899e8313257b2b22e63140f17c76f/tests/components/airgradient) | tests/components/domain, fixture·플랫폼·snapshot 배치 |
 | [HA testing](https://developers.home-assistant.io/docs/development_testing/) | 테스트 실행 개념 |
+| [플러그인 최소 예시 PyPI 메타데이터](https://pypi.org/pypi/pytest-homeassistant-custom-component/0.13.221/json) | HA 2025.3.0 · Python >=3.13 호환 선언 |
+| [플러그인 현재 예시 PyPI 메타데이터](https://pypi.org/pypi/pytest-homeassistant-custom-component/0.13.373/json) | HA 2026.10.2 · Python >=3.14 호환 선언 |
 | [Custom component pytest](https://github.com/MatthewFlamm/pytest-homeassistant-custom-component) | 커스텀 통합 fixture와 버전 호환 |
 | [HACS general](https://www.hacs.xyz/docs/publish/start/) | hacs.json, 최소 HA, 리포 메타데이터 |
 | [HACS integration](https://www.hacs.xyz/docs/publish/integration/) | 통합 배포 구조 |

@@ -15,5 +15,6 @@ jobs:
     with:
       domain: example
       packages: '["imagespec", "blesession"]'
-      python-version: '3.13'
-      validation-command: python -m ruff check . && python -m ruff format --check . && python -m pytest tests/ -v
+      python-version: '3.14'
+      test-profile: ha
+      validation-command: python -m ruff check . && python -m ruff format --check . && python -m pytest tests/components/example/ -v

@@ -43,7 +43,7 @@
 
 **CI-12 필수**: 테스트 의존성 추가·업데이트 PR도 [실제 HA 테스트 기준](testing.md)과 [의존성 추가 절차](dependencies.md)를 따릅니다. HA 패키지 설치·환경 summary·stub 테스트의 성공만으로 통합 검증을 완료하지 않습니다. 필요한 HA 구성요소와 package 요구사항을 설치하고 실제 entry·플랫폼 테스트를 실행합니다.
 
-현재 workflow/action의 기본값과 실행용 템플릿이 이 규칙을 자동 강제하는 것은 아닙니다. 이번에는 규칙만 변경하며, 공통 CI 구현과 각 리포 전환은 별도 작업으로 진행합니다.
+공통 workflow/action은 과거 caller 호환을 위해 `unit` 기본값을 유지합니다. 실행용 템플릿은 `ha`를 명시하며, HA 최소/현재는 각기 Python·requirements·expected-ha-version을 지정한 별도 caller job으로 실행합니다. `pytest-args`를 생략하면 `ha`는 `tests/components/<domain>/ -v`, `unit`은 `tests/ -v`를 실행합니다. 환경 action은 실제 HA와 테스트 플러그인 설치·버전을 확인하지만 실제 통합 로딩 테스트의 성공은 별도로 검증해야 합니다.
 
 ## 입력과 경계
 

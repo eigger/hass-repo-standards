@@ -12,11 +12,21 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  python:
+  current:
+    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@main
+    with:
+      domain: example
+      python-versions: '["3.14"]'
+      requirements: requirements_test.txt
+      expected-ha-version: '2026.10.2'
+      test-profile: ha
+      pytest-args: tests/components/example/ -v
+  minimum-ha:
     uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@main
     with:
       domain: example
       python-versions: '["3.13"]'
-      test-profile: unit
-      dependency-modes: '["current", "minimum"]'
-      minimum-packages: '["imagespec", "blesession"]'
+      requirements: requirements_test_min.txt
+      expected-ha-version: '2025.3.0'
+      test-profile: ha
+      pytest-args: tests/components/example/ -v
