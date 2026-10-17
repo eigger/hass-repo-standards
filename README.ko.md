@@ -28,7 +28,7 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 
 통합의 기본 README.md는 영어, README.ko.md는 한국어로 제공하며 상호 연결합니다. HA 통합의 Usage 배지는 집계 존재 사전 확인 없이 manifest domain으로 미리 추가합니다.
 
-현재 규칙은 HACS 커스텀 통합도 Core와 유사한 구현·테스트 구조를 사용하도록 정의합니다. hass-kibble 첫 파일럿의 공통 규칙 적용·실제 HA 검증·README 언어·Usage 후속 보완을 완료했습니다. hass-catprinter의 두 번째 파일럿을 진행하며 나머지 통합은 중앙 현황표의 순서와 범위에 따라 이관합니다.
+현재 규칙은 HACS 커스텀 통합도 Core와 유사한 구현·테스트 구조를 사용하도록 정의합니다. hass-kibble 첫 파일럿의 공통 규칙 적용·실제 HA 검증·README 언어·Usage 후속 보완을 완료했습니다. hass-catprinter 두 번째 파일럿도 최소·현재 HA와 최종 CI의 독립 검증을 마쳤습니다. 나머지 통합은 중앙 현황표의 순서와 범위에 따라 이관합니다.
 
 ## 리포별 작업 시작
 
