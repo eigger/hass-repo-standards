@@ -28,7 +28,7 @@ def simple_spec(requirement: Requirement) -> tuple[str, Version]:
 
 def fetch_package(name: str) -> dict:
     url = f"https://pypi.org/pypi/{canonicalize_name(name)}/json"
-    request = urllib.request.Request(url, headers={"User-Agent": "hass-repo-standards/0.1.0"})
+    request = urllib.request.Request(url, headers={"User-Agent": "hass-repo-standards/0.1.1"})
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.load(response)
 
@@ -73,6 +73,11 @@ def plan_updates(manifest: dict, packages: list[str], fetch=fetch_package, allow
         if name in seen:
             raise ValueError(f"Duplicate selected requirement: {name}")
         seen.add(name)
+        if requirement.marker and not requirement.marker.evaluate():
+            raise ValueError(
+                f"Cannot validate inactive marker for {text}; "
+                "run the updater in an environment where this marker is active"
+            )
         operator, current = simple_spec(requirement)
         latest = latest_stable(fetch(name), platform.python_version())
         if latest <= current:
