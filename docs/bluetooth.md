@@ -15,6 +15,13 @@ blesession을 사용해 HA에서 BLE 장치에 연결하는 통합의 사용자 
 
 위 후보는 [ESPHome 공식 설치 목록](https://esphome.io/projects/?type=bluetooth)에 있는 구성을 기준으로 선택했습니다. 모든 통합·장치 조합을 실물 검증했다는 의미는 아닙니다. ESPHome 설치 목록은 XIAO W5500 **V1.2만 지원**한다고 명시하며, 구형 보드에는 인터럽트 배선·RF 관련 차이가 있습니다. 판매 사진·리비전과 [Seeed 공식 설정 안내](https://wiki.seeedstudio.com/esphome_xiao_w5500_ethernet_adapter/)를 확인합니다. 가격·재고나 판매 링크를 리포마다 복제하지 않습니다.
 
+### 구매 페이지
+
+- [Seeed Studio XIAO W5500 Ethernet Adapter 구매](https://ko.aliexpress.com/item/1005009310322353.html)
+- [추가 구매 페이지 — AliExpress](https://ko.aliexpress.com/item/1005005643544014.html)
+
+XIAO W5500은 위 추천 기준의 V1.2를 선택합니다. 추가 구매 페이지의 제품명·보드 변형은 판매 페이지에서 확인합니다.
+
 ## 프록시 준비
 
 1. 정확한 보드에 맞는 공식 proxy 펌웨어를 설치하거나 해당 보드의 ESPHome 설정을 사용합니다. Ethernet 핀·전원·보드 리비전 설정은 제조사/공식 예제를 따릅니다.
