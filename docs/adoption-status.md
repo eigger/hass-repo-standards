@@ -25,7 +25,7 @@
 | [hass-atflee](https://github.com/eigger/hass-atflee) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-ble-esl](https://github.com/eigger/hass-ble-esl) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-ble-led-sign](https://github.com/eigger/hass-ble-led-sign) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
-| [hass-catprinter](https://github.com/eigger/hass-catprinter) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
+| [hass-catprinter](https://github.com/eigger/hass-catprinter) / `main` | 진행 중 | 2차 파일럿 착수: 실제 HA 테스트·공통 CI·의존성 검증과 영문/한글 README·Bluetooth 문제 해결·진입 지침 적용. 지원 최소 HA 2025.2.0 유지; current 실제 버전 공식 확인·검증 대기 | 기준 `78d242092eac732a1af48770e77e3f51e566c6c2` · 변경 전 hacs.json 지원 선언 확인 · 구현/검증 근거는 작업 후 등록 | 구현·독립 리뷰·최소/current HA 및 최소 라이브러리 검증·원격 CI 대기. 지원 최소와 최신 테스트 환경 분리 | 2026-10-17 / 조율 root · 구현 catprinter_implementation / catprinter_docs · 독립 리뷰 review_catprinter |
 | [hass-cyx-rgb-led](https://github.com/eigger/hass-cyx-rgb-led) / `master` | 적용 제외 | — | 2026-10-17 사용자 명시 | 사용자 요청으로 공통화 대상에서 제외. 별도 요청 전 수정하지 않음 | 2026-10-17 / 미배정 |
 | [hass-divoom](https://github.com/eigger/hass-divoom) / `master` | 적용 제외 | — | 2026-10-17 사용자 명시 | 사용자 요청으로 공통화 대상에서 제외. 별도 요청 전 수정하지 않음 | 2026-10-17 / 미배정 |
 | [hass-esphome-ota](https://github.com/eigger/hass-esphome-ota) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
