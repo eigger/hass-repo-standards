@@ -46,21 +46,7 @@ Install the [AGENTS.md entry template](templates/integration/AGENTS.md), then re
 
 See [templates/integration](templates/integration/README.md) for callers. Shared workflows check out the calling repository. Paths, Python, dependencies, HA components, and excluded checks are inputs. Browser, card, Android, and add-on builds remain in their repositories.
 
-**Creating this repository does not change existing repository files or CI.** Install development dependencies before running these inspection and validation commands:
-
-```bash
-python3 -m pip install -r requirements_dev.txt
-python3 scripts/audit_repositories.py --root .. --output /tmp/hass-ci-audit.json
-python3 scripts/audit_repositories.py --github-owner eigger --output /tmp/hass-ci-remote.json
-python3 -m unittest discover -s tests -v
-python3 scripts/check_repository.py
-```
-
-Badges are updated only inside their managed block. Read the [usage instructions](docs/documentation.md) first.
-
-```bash
-python3 scripts/sync_badges.py ../hass-example --check
-```
+[Development and inspection](docs/development.md) covers local setup, audit commands, tests, and badge checks.
 
 ## Support and license
 

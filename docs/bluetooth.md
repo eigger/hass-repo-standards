@@ -62,16 +62,32 @@ BLE ESL의 Retry Count, Debounce, 이미지 전송 규칙을 체중계·프린�
 
 ## 연결 문제 확인 순서
 
-| 증상 | 먼저 확인할 내용 |
+README에는 먼저 기기 깨우기·전원과 상세 문제 해결 링크를 짧게 안내합니다. 통합의 `docs/troubleshooting.md`에는 아래 공통 순서와 실제 모델·펌웨어의 고유 조건을 연결합니다. [BLE ESL 문제 해결 문서](https://github.com/eigger/hass-ble-esl/blob/main/docs/troubleshooting.md)의 **실패 단계 찾기 → 실제 진단 경로 → 제보할 증거** 순서를 참고하되, ESL 전용 센서·액션·Retry Count·Debounce·timeout은 다른 통합에 복사하지 않습니다.
+
+**광고를 발견하거나 스캔에 성공해도 GATT 연결·인증·읽기·쓰기 성공을 의미하지 않습니다.** `esp32_ble_tracker.scan_parameters.active`는 scan response를 요청하는 스캔 방식이며 `bluetooth_proxy.active`는 GATT 연결 지원입니다. passive scan 자체를 연결 불가 원인으로 단정하지 않습니다.
+
+| 증상 / 단계 | 먼저 확인할 내용과 다음 조치 |
 |---|---|
-| 기기가 발견되지 않음 | proxy 온라인 상태, 광고·기기 준비 상태, 거리, 발견에 필요한 스캔 응답 |
-| 발견되지만 연결 실패 | 실제 GATT 연결 지원, `bluetooth_proxy.active`, 다른 연결 점유, 인증·본딩 조건 |
-| 슬롯 부족·대기 | 장시간 연결을 유지하는 장치와 동시 전송, proxy 배치와 연결 용량 |
-| 전송 중 끊김·timeout | 실제 사용한 proxy, 거리·전원·네트워크, 장치 상태, 통합별 전송 조건 |
+| 기기가 발견되지 않음 / `unreachable` | proxy가 HA에서 온라인인지, 기기가 전원·배터리·깨우기 조건을 만족하고 광고하는지 확인합니다. 가까이 이동해 재확인하고 해당 모델에 필요한 scan response·광고 주기를 확인합니다. |
+| 발견되지만 연결 실패 / `connect` | 실제 연결 가능한 경로와 `bluetooth_proxy.active`, 타 앱·게이트웨이의 연결 점유를 확인합니다. 모델 안내에 따라 다른 앱 연결을 종료하고 다시 시도합니다. 페어링·본딩·인증 조건은 기기별 문서를 따릅니다. |
+| 슬롯 부족 / `connect.no_slot` | 동시 전송과 오래 유지하는 연결을 확인합니다. 불필요한 연결을 종료하거나 부하를 나누고 필요하면 proxy를 추가합니다. 슬롯 수·재시도를 무조건 늘리지 않습니다. |
+| 연결 직후 세션·인증 실패 | 실제 서비스/characteristic·모델·펌웨어가 통합의 지원 대상인지 확인합니다. 깨우기·본딩·인증키·다른 앱 연결 조건을 따릅니다. 인증 거부나 잘못된 모델을 반복 재시도로 해결하려 하지 않습니다. |
+| 전송 중 끊김 / `link_lost` | 실패 당시 실제 사용한 proxy·거리·기기 배터리·proxy 전원·네트워크/재시작 여부를 확인합니다. 연결이 복구되고 기기가 준비된 뒤 통합이 지원하는 재시도/재연결 방법을 사용합니다. 반복 전송은 기기 부작용을 확인한 뒤 수행합니다. |
+| 쓰기가 반환되지 않음 / `write_timeout` | adapter/proxy의 응답·연결 부하·전원·네트워크를 확인합니다. 계속 응답하지 않으면 해당 경로를 복구한 뒤 재시도합니다. 단순 장치 응답 대기 timeout과 같은 원인으로 단정하지 않습니다. |
+| 전송 후 완료 확인 실패 | 기기의 실제 상태와 통합의 완료/응답 규칙을 확인합니다. 전체 작업을 다시 보내기 전에 기기가 이미 명령을 수행했는지 확인하고 중복 동작의 영향을 고려합니다. |
+| 간헐적 실패 후 성공 | 최근 성공만 보지 말고 실패 당시 기록과 실제 경로를 확인합니다. 특정 proxy·시간·부하에 집중되는지 비교합니다. |
 
-문제 제보에는 HA·ESPHome·통합 버전, proxy 모델·리비전, 연결 방식, 기기 모델·펌웨어와 오류 단계를 적습니다. 통합이 노출할 때만 blesession의 `failed_stage`, `via`, `via_type`, `rssi`, `paths`, `via_unconfirmed` 등을 함께 확인합니다. 광고를 가장 잘 수신한 proxy와 실제 연결 경로를 혼동하지 않고, 공개 로그에서 주소·계정 등 민감 값은 제거합니다. [blesession 사용 계약](https://github.com/eigger/blesession/blob/main/docs/contract.md)
+재시도 횟수·backoff·연결 유지·본딩·전송 간격은 **각 통합의 정책**입니다. blesession 설치만으로 자동 재연결이나 모든 오류의 재시도를 보장하지 않습니다. 해당 통합에서 실제 사용하는 blesession 버전과 오류 매핑을 기준으로 안내하며 고정된 공통 timeout이나 RSSI 임계값을 강제하지 않습니다.
 
-HA가 지원하는 어댑터·remote adapter 동작은 [HA Bluetooth 문서](https://www.home-assistant.io/integrations/bluetooth/)를 참고합니다.
+### 실제 진단 경로와 제보 정보
+
+- 기기/통합 페이지에서 제공하는 진단 다운로드·상태 속성·최근 오류·자동화 trace를 **실제로 제공할 때만** 안내합니다. 없던 진단 센서나 통합 옵션을 문서 때문에 있다고 쓰지 않습니다.
+- 노출되는 경우 `failed_stage`, `failed_detail`, `likely_cause_key`, `error`, 작업 시각, `via`, `via_type`, `rssi`, `paths`, `via_unconfirmed`를 확인합니다. 단계와 기기별 오류 이름의 매핑을 해당 통합 문서에 적습니다. 특정 단계/센서가 모든 통합에 존재한다고 가정하지 않습니다.
+- 광고를 가장 잘 수신한 proxy와 실제 연결 경로를 구분합니다. 실제 경로가 확인되지 않았으면 추정값임을 명시합니다. RSSI·경로 개수만으로 원인을 확정하지 않습니다.
+- HA·통합·ESPHome·blesession 버전(확인 가능한 경우), proxy 모델·리비전과 연결 방식, 기기 모델·펌웨어, 실패 시각/단계와 재현 절차를 제보합니다. 여러 번 시도했다면 마지막 성공과 실패를 구분합니다.
+- 진단 파일도 공개 전에 확인하고 MAC/Bluetooth 주소·계정·인증키·토큰·내부 주소·개인 데이터 등 민감 값을 제거합니다. 디버그 로그는 통합이 안내하는 실제 logger 이름으로 필요한 재현 구간만 수집하고 수집 후 끕니다. 예시의 다른 domain logger를 그대로 복사하지 않습니다.
+
+위 오류 용어와 재시도·진단 경계는 [blesession 사용 계약](https://github.com/eigger/blesession/blob/main/docs/contract.md)과 [통합 채택 안내](https://github.com/eigger/blesession/blob/main/docs/adopting.md)를 기준으로 합니다. HA가 지원하는 어댑터·remote adapter 동작은 [HA Bluetooth 문서](https://www.home-assistant.io/integrations/bluetooth/)를 참고합니다.
 
 ## 각 README에서 연결하는 예시
 
@@ -81,7 +97,9 @@ HA가 지원하는 어댑터·remote adapter 동작은 [HA Bluetooth 문서](htt
 이 통합은 BLE 장치에 연결해 데이터를 읽거나 씁니다.
 [Bluetooth proxy 설정과 추천 기기](https://github.com/eigger/hass-repo-standards/blob/main/docs/bluetooth.md)를 먼저 확인하세요.
 
-기기별 준비·페어링 방법과 확인된 제한사항은 이 통합의 설정 절을 따르세요.
+기기를 깨우고 다른 앱의 연결을 종료하는 등 해당 모델의 준비 조건을 확인하세요.
+문제가 계속되면 이 통합에서 제공하는 상세 문제 해결 문서를 확인하고, 별도 문서가 없으면
+[공통 연결 문제 확인 순서](https://github.com/eigger/hass-repo-standards/blob/main/docs/bluetooth.md#연결-문제-확인-순서)와 해당 통합의 기기별 조건을 함께 확인하세요.
 ```
 
 개별 README에 공통 설정을 직접 적는 경우도 이 문서의 원본 링크와 확인일을 함께 적고 내용이 달라지지 않도록 관리합니다. 기존 통합의 README 수정은 해당 리포를 이관할 때 진행합니다.

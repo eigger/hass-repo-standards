@@ -10,7 +10,7 @@
 6. STANDARDS.md, ADOPTION_CHECKLIST.md와 AGENTS.md를 복사하고 참조 커밋·적용 상태·검증 증거·예외를 기록합니다. blesession/proxy 통합의 README는 공통 Bluetooth 설정·추천 기기로 연결하고 기기별 준비 조건을 추가합니다.
 7. 작업 시작·단계 변경·종료 시 [중앙 적용 현황](../../docs/adoption-status.md)의 자기 리포 행을 갱신하고, 구현과 리뷰·검증은 서로 다른 서브 에이전트에게 위임합니다.
 8. [HACS 브랜드 검사 안내](../../docs/hacs.md)에 따라 로컬 custom_components/<domain>/brand/icon.png 또는 실제 원격 brands 등록 근거를 준비하고 해당 커밋에서 HACS를 실행합니다. README 배지·HACS Default 여부와 브랜드 검사 통과는 각각 구분합니다.
-9. 아래 영어 틀은 대상 `README.md`로, 한국어 틀은 `README.ko.md`로 작성하고 상호 연결합니다. 기존 한국어 내용·이전 안내는 한국어판에 보존하고 영어판에 같은 정보를 제공합니다. 두 언어의 관리 블록에 manifest domain의 동적 Usage 배지를 사전 조회 없이 생성합니다. 이 템플릿 폴더 자체는 배포할 통합이 아닙니다.
+9. 아래 영어 틀은 대상 `README.md`로, 한국어 틀은 `README.ko.md`로 작성하고 상호 연결합니다. 기존 한국어 내용·이전 안내는 한국어판에 보존하고 영어판에 같은 정보를 제공합니다. 두 언어의 관리 블록에 manifest domain의 동적 Usage 배지를 사전 조회 없이 생성합니다. 메인은 간결한 시작 페이지로 유지하고 상세 옵션·긴 YAML·전체 엔티티·프로토콜·오류별 대응·개발 명령은 추가 문서로 보존·분리합니다. 중요 제한·안전·미검증 고지는 메인에도 남깁니다. 이 템플릿 폴더 자체는 배포할 통합이 아닙니다.
 
 ```markdown
 # Integration Name
@@ -23,7 +23,7 @@
 Describe the supported device and connection method in one paragraph.
 
 ## Supported devices
-Verified models, features, firmware, and limitations.
+Summarize the main verified devices/features; put the complete model reference in docs/.
 
 ## Requirements
 Minimum supported HA, hardware, accounts, proxies, and local/cloud requirements.
@@ -33,16 +33,20 @@ Add a HACS custom repository (Integration), install, restart, and add the integr
 Document manual installation in custom_components/<domain> and removal.
 
 ## Configuration
-Required/optional fields, authentication, and reconfiguration.
+Show only essential setup; link to the detailed configuration guide.
 
-## Usage
-Working action/YAML examples.
+## Quick start
+One short, working example. Move long YAML and additional examples to examples/.
 
-## Limitations and troubleshooting
-Unsupported features, diagnostics, and removal of sensitive information.
+## Important limitations
+Keep safety warnings and unverified/unsupported scope visible here.
+Link to troubleshooting for error-specific checks instead of repeating the guide.
 
-## Development and contributing
-Link to CONTRIBUTING or the actual development/testing instructions.
+## Documentation
+Add verified links to configuration, action/entity reference, examples, troubleshooting,
+and development/contributing guides. Detailed commands belong in docs/ or CONTRIBUTING.
+For blesession integrations, provide device-specific troubleshooting or link to the
+shared Bluetooth troubleshooting guide and document model-specific conditions.
 
 ## Support
 Report bugs via the enabled repository Issues page.
@@ -67,7 +71,7 @@ Link to the repository LICENSE file.
 어떤 기기를 어떤 방식으로 연결하는지 한 문단으로 설명합니다.
 
 ## 지원 기기
-검증한 모델·기능·펌웨어·제한사항.
+검증한 핵심 모델·기능을 요약하고 전체 모델/펌웨어 참조는 docs/로 연결합니다.
 
 ## 요구사항
 지원 최소 HA, 필요한 하드웨어·계정·proxy와 로컬/클라우드 조건.
@@ -77,16 +81,20 @@ HACS 커스텀 리포(Integration) 추가, 설치, 재시작, 통합 추가.
 수동 custom_components/<domain> 설치 경로와 제거 방법.
 
 ## 설정
-필수·선택 필드와 인증·재설정 방법.
+필수 설정만 간단히 안내하고 상세 옵션·인증·재설정 안내는 추가 문서로 연결합니다.
 
-## 사용 예시
-실제로 동작하는 action/YAML 예시.
+## 빠른 시작
+짧고 실제로 동작하는 대표 예제 하나를 제공합니다. 긴 YAML과 추가 예제는 examples/로 옮깁니다.
 
-## 제한사항과 문제 해결
-미지원 기능, 진단 정보와 민감 값 제거 안내.
+## 중요 제한사항
+안전 경고와 미지원·실물 미검증 범위는 여기에 짧게 유지합니다.
+오류별 대응은 문제 해결 문서로 연결하고 본문을 중복하지 않습니다.
 
-## 개발과 참여
-CONTRIBUTING 또는 실제 개발·테스트 안내로 연결합니다.
+## 문서
+설정, 액션/엔티티 참조, 예제, 문제 해결, 개발·참여 안내의 실제 링크를 제공합니다.
+긴 개발·테스트 명령은 docs/ 또는 CONTRIBUTING으로 옮깁니다.
+blesession 통합은 전용 문제 해결 문서 또는 공통 Bluetooth 문제 해결 링크와
+모델별 깨우기·페어링·연결 조건 및 실제 진단 경로를 제공합니다.
 
 ## 지원
 활성 Issues의 실제 링크를 버그 보고 경로로 제공합니다.
