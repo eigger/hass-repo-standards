@@ -1,7 +1,7 @@
 # 적용한 공통 규칙
 
-- 표준: https://github.com/eigger/hass-repo-standards/tree/v0.1.0
-- 버전: 0.1.0
+- 표준: https://github.com/eigger/hass-repo-standards/tree/v0.1.1
+- 버전: 0.1.1
 - 채택일: 실제 채택 PR 날짜 입력
 - profile: integration / unit 또는 integration / ha 중 선택
 - 실제 기본 브랜치: 채택 시 입력

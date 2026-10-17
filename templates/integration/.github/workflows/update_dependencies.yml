@@ -1,4 +1,4 @@
-# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+# Shared standard v0.1.1; upstream action SHAs verified 2026-10-17.
 name: Update dependencies
 'on':
   schedule:
@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: eigger/hass-repo-standards/.github/workflows/dependency-update.yml@v0.1.0
+    uses: eigger/hass-repo-standards/.github/workflows/dependency-update.yml@v0.1.1
     with:
       domain: example
       packages: '["imagespec", "blesession"]'

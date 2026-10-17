@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from packaging.markers import default_environment
 from packaging.version import Version
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -55,6 +56,48 @@ class DependencyUpdates(unittest.TestCase):
         changed, notes = update.plan_updates(manifest, ["imagespec"], lambda _: releases("1.3.0"))
         self.assertEqual(changed, manifest)
         self.assertEqual(notes, [])
+
+    def test_inactive_markers_fail_before_selecting_an_unvalidated_release(self):
+        environment = {
+            **default_environment(),
+            "python_version": "3.14",
+            "python_full_version": "3.14.0",
+            "sys_platform": "linux",
+        }
+        for marker in ['python_version < "3.13"', 'sys_platform == "win32"']:
+            with self.subTest(marker=marker):
+                manifest = {"requirements": [f"imagespec>=1.0; {marker}"]}
+                original = json.loads(json.dumps(manifest))
+                with (
+                    patch("packaging.markers.default_environment", return_value=environment),
+                    patch.object(update, "fetch_package") as fetch,
+                    self.assertRaisesRegex(ValueError, "Cannot validate inactive marker"),
+                ):
+                    update.plan_updates(manifest, ["imagespec"], fetch=fetch)
+                fetch.assert_not_called()
+                self.assertEqual(manifest, original)
+
+    def test_yanked_proposal_still_reaches_pr_synchronization(self):
+        manifest = {"requirements": ["imagespec>=1.0"]}
+        data = releases("1.0", "1.1")
+        proposal, notes = update.plan_updates(manifest, ["imagespec"], lambda _: data)
+        self.assertEqual(proposal["requirements"], ["imagespec>=1.1"])
+        self.assertTrue(notes)
+        data["releases"]["1.1"][0]["yanked"] = True
+        unchanged, notes = update.plan_updates(manifest, ["imagespec"], lambda _: data)
+        self.assertEqual(unchanged, manifest)
+        self.assertFalse(notes)
+        workflow = audit.yaml.load(
+            (ROOT / ".github/workflows/dependency-update.yml").read_text(), Loader=audit.Loader
+        )
+        steps = workflow["jobs"]["update"]["steps"]
+        synchronize = next(s for s in steps if s.get("uses", "").startswith("peter-evans/"))
+        # No explicit condition: GitHub's implicit success() gate permits
+        # no-change cleanup, but still blocks synchronization on earlier failures.
+        self.assertNotIn("if", synchronize)
+        self.assertTrue(synchronize["with"]["delete-branch"])
+        validate = next(s for s in steps if s.get("name") == "Validate proposed dependency changes")
+        self.assertEqual(validate["if"], "steps.update.outputs.updated == 'true'")
 
     def test_major_requires_explicit_opt_in(self):
         manifest = {"requirements": ["imagespec>=1.0"]}

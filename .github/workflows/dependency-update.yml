@@ -1,4 +1,4 @@
-# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+# Shared standard v0.1.1; upstream action SHAs verified 2026-10-17.
 name: Update manifest dependencies
 'on':
   workflow_call:
@@ -76,7 +76,7 @@ jobs:
         ref: ${{ steps.repository.outputs.branch }}
         persist-credentials: false
     - id: update
-      uses: eigger/hass-repo-standards/actions/update-manifest@e7b02dabb8a3d7b477237a2e904b34c3eeab0839 # actions v0.1.0
+      uses: eigger/hass-repo-standards/actions/update-manifest@8e7b3b415dbdb8960ef5b2689c981d99fc8b0028 # updater v0.1.1
       with:
         domain: ${{ inputs.domain }}
         packages: ${{ inputs.packages }}
@@ -102,7 +102,8 @@ jobs:
 
         bash -euo pipefail -c "$VALIDATION_COMMAND"'
     - name: Create or update one dependency PR
-      if: steps.update.outputs.updated == 'true'
+      # Also synchronize an existing PR when no change remains. The default
+      # success() guard still prevents this step after update/validation failures.
       uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
       with:
         token: ${{ github.token }}

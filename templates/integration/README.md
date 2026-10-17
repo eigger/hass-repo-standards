@@ -4,7 +4,7 @@
 
 1. `.github/workflows`의 main을 실제 기본 브랜치로 바꿉니다.
 2. example domain, Python 버전, package 목록, requirements 경로, unit/ha profile을 실제 환경으로 바꿉니다.
-3. 각 `@v0.1.0`을 확인한 release commit SHA로 바꿉니다.
+3. 각 `@v0.1.1`을 확인한 release commit SHA로 바꿉니다.
 4. 테스트/린트 requirements와 기존 pyproject.toml을 정리합니다. Ruff 설정은 현재 코드에 맞게 채택합니다.
 5. 최소 package matrix는 사용 중인 package만 넣습니다. HA 최소 버전은 별도 job에서 검증합니다.
 6. STANDARDS.md와 AGENTS.md 참조를 추가하고 예외를 기록합니다.

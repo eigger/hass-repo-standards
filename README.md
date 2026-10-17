@@ -1,6 +1,6 @@
 # Home Assistant Repository Standards
 
-Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·릴리스 규칙과 재사용 workflow를 관리합니다. 기준 버전은 **0.1.0**입니다.
+Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·릴리스 규칙과 재사용 workflow를 관리합니다. 기준 버전은 **0.1.1**입니다.
 
 규칙은 한국어로 작성하며 코드 식별자, 로그, CI job 이름은 영어를 사용합니다. 공식 규격과 프로젝트 정책을 구분합니다. 기존 리포는 채택 PR에서 적용 버전과 예외를 기록하고 점진적으로 이관합니다.
 

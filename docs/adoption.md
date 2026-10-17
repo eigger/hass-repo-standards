@@ -11,9 +11,9 @@
 
 ## 채택
 
-**GOV-01 필수**: `STANDARDS.md`에 표준 버전, 적용 profile, 예외(ID·이유·담당자·재검토 조건)를 기록합니다. 예시는 templates/integration/STANDARDS.md입니다. 새 통합은 v0.1.0 기준을 적용하고, 기존 통합은 결함을 숨기지 않은 채 단계적으로 이관합니다.
+**GOV-01 필수**: `STANDARDS.md`에 표준 버전, 적용 profile, 예외(ID·이유·담당자·재검토 조건)를 기록합니다. 예시는 templates/integration/STANDARDS.md입니다. 새 통합은 v0.1.1 기준을 적용하고, 기존 통합은 결함을 숨기지 않은 채 단계적으로 이관합니다.
 
-**GOV-02 필수**: 공통 workflow/action은 검토한 commit SHA로 고정합니다. 예시의 `v0.1.0`은 읽기 쉬운 배포 참조입니다. 실제 채택 PR에서는 `git ls-remote https://github.com/eigger/hass-repo-standards.git refs/tags/v0.1.0`으로 SHA를 확인해 교체합니다. 중앙 변경이 모든 리포에 즉시 적용되지 않도록 합니다.
+**GOV-02 필수**: 공통 workflow/action은 검토한 commit SHA로 고정합니다. 예시의 `v0.1.1`은 읽기 쉬운 배포 참조입니다. 실제 채택 PR에서는 `git ls-remote https://github.com/eigger/hass-repo-standards.git refs/tags/v0.1.1`으로 SHA를 확인해 교체합니다. 중앙 변경이 모든 리포에 즉시 적용되지 않도록 합니다.
 
 **GOV-03 필수**: 규칙 변경은 CHANGELOG에 기록합니다. 표준의 SemVer: major는 기존 채택 리포에 변경을 요구하는 정책, minor는 선택 기능과 호환 입력, patch는 오류·설명 수정입니다. 릴리스 태그는 이동하지 않습니다. 필수 규칙 전환은 차기 major 또는 명시적 채택 PR로 합니다.
 
