@@ -9,6 +9,7 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 | 문서 | 내용 |
 |---|---|
 | [적용과 변경 관리](docs/adoption.md) | 필수·권장 구분, 기존 리포 이관, 예외 |
+| [중앙 적용 현황](docs/adoption-status.md) | 리포별 진행 상태·적용 내용·검증/리뷰 근거·남은 작업 |
 | [통합별 적용 체크리스트](docs/checklist.md) | 적용 상태·검증 증거·호환 환경·예외 기록 |
 | [Home Assistant 개발](docs/home-assistant.md) | Core와 대응하는 구조, 설정, async, 엔티티, BLE |
 | [HACS와 배포](docs/hacs.md) | manifest, hacs.json, 버전과 배포 구조 |
@@ -23,6 +24,10 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 | [공식 자료](docs/sources.md) | 확인한 공식 문서와 확인일 |
 
 현재 규칙은 HACS 커스텀 통합도 Core와 유사한 구현·테스트 구조를 사용하도록 정의합니다. 기존 통합 리포와 공통 CI 구현·실행용 템플릿의 전환은 별도 작업으로 진행합니다.
+
+## 리포별 작업 시작
+
+대상 리포에 [AGENTS.md 진입 템플릿](templates/integration/AGENTS.md)을 설치하면 **“공통 규칙 적용해줘”**라는 요청으로 시작할 수 있습니다. 진입 지침은 중앙 AGENTS.md·관련 규칙·체크리스트를 실제로 읽도록 안내합니다. 구현과 리뷰·검증은 별도의 서브 에이전트가 수행하고, 주 에이전트가 결과를 취합하며 중앙 현황표를 갱신합니다. 현재는 진입 지침을 준비한 단계이며 기존 통합 리포에는 아직 설치하지 않았습니다.
 
 ## 공통 CI
 

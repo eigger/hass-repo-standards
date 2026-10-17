@@ -5,6 +5,9 @@
 - 채택일: 실제 채택 PR 날짜 입력
 - profile: integration / ha (실제 HA fixture·통합 로딩 필수)
 - 적용 점검표: [ADOPTION_CHECKLIST.md](ADOPTION_CHECKLIST.md)
+- 중앙 현황표: https://github.com/eigger/hass-repo-standards/blob/main/docs/adoption-status.md
+- 조율 / 구현 / 독립 리뷰·검증 담당: 작업 시작 시 배정
+- 중앙 현황 갱신일: 미등록
 - 실제 기본 브랜치: 채택 시 입력
 - 테스트 경로: tests/components/<domain>/
 - HA 테스트 환경: 실제 HA/Python/pytest-homeassistant-custom-component 조합 입력
