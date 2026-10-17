@@ -1,4 +1,4 @@
-# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+# Shared standards; upstream action SHAs verified 2026-10-17.
 name: Standards checks
 'on':
   push:

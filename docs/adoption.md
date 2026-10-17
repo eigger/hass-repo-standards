@@ -1,4 +1,4 @@
-# 적용과 버전 관리
+# 적용과 변경 관리
 
 ## 범위와 우선순위
 
@@ -11,11 +11,11 @@
 
 ## 채택
 
-**GOV-01 필수**: `STANDARDS.md`에 표준 버전, 적용 profile, 예외(ID·이유·담당자·재검토 조건)를 기록합니다. 예시는 templates/integration/STANDARDS.md입니다. 새 통합은 v0.1.1 기준을 적용하고, 기존 통합은 결함을 숨기지 않은 채 단계적으로 이관합니다.
+**GOV-01 필수**: `STANDARDS.md`에 참조한 표준 커밋 SHA, 적용 profile, 예외(ID·이유·담당자·재검토 조건)를 기록합니다. 예시는 templates/integration/STANDARDS.md입니다. 새 통합은 main의 규칙을 검토해 적용하고, 기존 통합은 결함을 숨기지 않은 채 단계적으로 이관합니다.
 
-**GOV-02 필수**: 공통 workflow/action은 검토한 commit SHA로 고정합니다. 예시의 `v0.1.1`은 읽기 쉬운 배포 참조입니다. 실제 채택 PR에서는 `git ls-remote https://github.com/eigger/hass-repo-standards.git refs/tags/v0.1.1`으로 SHA를 확인해 교체합니다. 중앙 변경이 모든 리포에 즉시 적용되지 않도록 합니다.
+**GOV-02 필수**: 이 리포는 별도 태그·GitHub Release·SemVer 없이 main과 커밋 이력으로 관리합니다. 문서는 main에서 확인하며, 실제 채택 PR에서는 `git ls-remote https://github.com/eigger/hass-repo-standards.git refs/heads/main`으로 검토한 commit SHA를 확인해 STANDARDS.md에 기록합니다. 공통 workflow/action 호출은 그 SHA로 고정하여 중앙 변경이 모든 리포에 즉시 적용되지 않도록 합니다. 템플릿의 `@main`은 채택 시 SHA로 교체하는 예시입니다.
 
-**GOV-03 필수**: 규칙 변경은 CHANGELOG에 기록합니다. 표준의 SemVer: major는 기존 채택 리포에 변경을 요구하는 정책, minor는 선택 기능과 호환 입력, patch는 오류·설명 수정입니다. 릴리스 태그는 이동하지 않습니다. 필수 규칙 전환은 차기 major 또는 명시적 채택 PR로 합니다.
+**GOV-03 필수**: 규칙 변경은 날짜와 변경 내용을 CHANGELOG에 기록합니다. 기존 채택 리포에 영향을 주는 변경은 영향·이관 방법을 설명하고 각 리포의 명시적 채택 PR로 반영합니다. 이 규칙 리포의 관리 방식과 개별 통합의 배포 버전·릴리스 정책은 별개입니다.
 
 ## 이관 순서
 

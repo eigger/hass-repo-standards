@@ -1,4 +1,4 @@
-# Shared standard v0.1.1; upstream action SHAs verified 2026-10-17.
+# Shared standards; upstream action SHAs verified 2026-10-17.
 name: Update manifest dependencies
 'on':
   workflow_call:
@@ -76,13 +76,13 @@ jobs:
         ref: ${{ steps.repository.outputs.branch }}
         persist-credentials: false
     - id: update
-      uses: eigger/hass-repo-standards/actions/update-manifest@8e7b3b415dbdb8960ef5b2689c981d99fc8b0028 # updater v0.1.1
+      uses: eigger/hass-repo-standards/actions/update-manifest@8e7b3b415dbdb8960ef5b2689c981d99fc8b0028 # validated updater implementation
       with:
         domain: ${{ inputs.domain }}
         packages: ${{ inputs.packages }}
         allow-major: ${{ inputs.allow-major }}
     - if: steps.update.outputs.updated == 'true'
-      uses: eigger/hass-repo-standards/actions/python-environment@e7b02dabb8a3d7b477237a2e904b34c3eeab0839 # actions v0.1.0
+      uses: eigger/hass-repo-standards/actions/python-environment@e7b02dabb8a3d7b477237a2e904b34c3eeab0839 # validated environment implementation
       with:
         domain: ${{ inputs.domain }}
         python-version: ${{ inputs.python-version }}

@@ -23,7 +23,7 @@
 
 **CI-04 필수**: 정상 lint/test를 `continue-on-error`, `|| true`, 항상 성공하는 wrapper로 숨기지 않습니다. lint와 test는 의존성이 없다면 병렬 실행합니다. optional matrix는 필수 검사를 대체하지 않습니다. required checks 변경은 채택 PR에 기록합니다. paths 필터로 필수 체크가 영구 Pending이 되는 구성을 피합니다.
 
-**CI-05 필수**: 외부 action·중앙 workflow는 검토한 full SHA로 참조하고 버전 주석을 붙입니다. Dependabot으로 갱신합니다. SHA 고정이 action 내부 Docker 이미지까지 고정하는 것은 아닙니다. HACS/Hassfest는 upstream 이미지가 바뀔 수 있는 validator이며 schedule로 변화를 탐지합니다. 완전한 재현 환경은 별도 image digest 정책이 필요합니다.
+**CI-05 필수**: 외부 action·중앙 workflow는 검토한 full SHA로 참조하고 외부 action 버전 또는 검토한 커밋 설명을 주석으로 붙입니다. Dependabot으로 갱신합니다. SHA 고정이 action 내부 Docker 이미지까지 고정하는 것은 아닙니다. HACS/Hassfest는 upstream 이미지가 바뀔 수 있는 validator이며 schedule로 변화를 탐지합니다. 완전한 재현 환경은 별도 image digest 정책이 필요합니다.
 
 ## 환경과 명령
 
@@ -39,7 +39,7 @@
 
 **CI-10 필수**: GITHUB_TOKEN으로 만든 PR의 push/PR 이벤트가 다른 workflow를 자동 실행한다고 가정하지 않습니다. 공통 updater는 변경한 tree에서 선택 package의 정확한 새 하한과 지정한 검증을 먼저 실행하며, 추가 required checks는 수동 dispatch 또는 GitHub App 토큰 등 별도 운영 방식으로 충족합니다. dispatch 실패를 경고만 하고 모든 검증이 끝났다고 표시하지 않습니다. 본 구현은 PAT/App 비밀키를 요구하지 않습니다.
 
-**CI-11 필수**: release는 검증한 같은 commit/tag에서 수행하고 별도 job만 contents:write를 받습니다. 산출물·manifest·tag 일치를 확인합니다. 이 표준 v0.1.0은 통합 릴리스 자동 배포를 제공하지 않습니다.
+**CI-11 필수**: release는 검증한 같은 commit/tag에서 수행하고 별도 job만 contents:write를 받습니다. 산출물·manifest·tag 일치를 확인합니다. 이 공통 규칙 리포는 통합 릴리스 자동 배포를 제공하지 않습니다.
 
 ## 입력과 경계
 

@@ -10,4 +10,4 @@
 - reusable workflow는 caller checkout을 유지합니다. scripts 접근은 composite action의 github.action_path를 사용합니다.
 - 의존성 bot은 extras·연산자·marker를 보존하고 실패를 성공으로 바꾸지 않습니다.
 - 수정한 동작에 해당하는 단위 테스트를 실행하고 python3 scripts/check_repository.py를 실행합니다.
-- SHA와 PyPI 버전은 실재하는 값만 사용합니다. release 태그는 이미 검증한 commit에만 붙입니다.
+- SHA와 PyPI 버전은 실재하는 값만 사용합니다. 이 규칙 리포에는 태그나 GitHub Release를 만들지 않고 main과 커밋으로 관리합니다.

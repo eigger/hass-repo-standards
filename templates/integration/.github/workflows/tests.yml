@@ -1,4 +1,4 @@
-# Shared standard v0.1.1; upstream action SHAs verified 2026-10-17.
+# Shared standards; upstream action SHAs verified 2026-10-17.
 name: Tests
 'on':
   push:
@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   python:
-    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@v0.1.1
+    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@main
     with:
       domain: example
       python-versions: '["3.13"]'
