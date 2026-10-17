@@ -13,6 +13,10 @@
 | 검토일 / 조율 담당 | 미확인 |
 | 구현 서브 에이전트 / 독립 리뷰·검증 서브 에이전트 | 미배정 |
 | 중앙 현황표 반영일 / 기록 | 미등록 — 공통 리포 docs/adoption-status.md에 갱신 |
+| 변경 전 지원 최소 HA / 근거 파일(hacs.json·manifest·README) | 미확인 — current 테스트 버전과 별도 기록 |
+| 유지·변경할 지원 최소 / 변경 시 실제 비호환 근거·명시적 승인 | 미확인 — 최신화 요청만으로 상향하지 않음 |
+| current 테스트 HA / 호환 Python·플러그인 | 미확인 |
+| 최소 테스트 HA / 호환 Python·플러그인 | 미확인 — 선언 최소가 current와 다르면 별도 환경 |
 | profile / 테스트 경로 | 미확인 — 통합 기준 `integration / ha`, `tests/components/<domain>/` |
 | 이전 검토 기록 | 미확인 — 최초 검토이면 그 사실 기재 |
 | 채택 판정 | 이관 진행 중 — 아직 확인하지 않음 |
@@ -44,11 +48,13 @@
 | TEST-02, TEST-03, DEP-07 | 실제 HA·호환 플러그인과 `hass`/`enable_custom_integrations` fixture 사용, HA core stub/복사본/`--no-deps`로 대체하지 않음 | TODO | 미확인 |
 | TEST-09 | 실제 loader·config entry manager로 setup/플랫폼 로딩, HA 상태·registry·service/action으로 결과 검증 | TODO | 미확인 |
 | TEST-01, TEST-06, TEST-07 | 구현 기능별 성공·실패·중복·migration·unload·복구 회귀 검증, 외부 통신 경계만 mock, skip 사유 | TODO | 미확인 |
-| TEST-04, HACS-01 | 선언한 최소 HA의 정확한 버전과 호환 Python/플러그인으로 실제 HA 테스트 | TODO | 미확인 |
+| TEST-04, HACS-01 | 변경 전 지원 최소·current·각 Python/플러그인 분리, 선언한 정확한 최소 검증, 상향 시 비호환 근거·명시적 승인 확인 | TODO | 미확인 |
 | TEST-05, HA-10, DEP-02, DEP-05 | imagespec·blesession 등 최소/현재 라이브러리 별도 환경, 실제 HA 테스트·정확한 설치값·API 경계 검증 | TODO | 미확인 |
 | DEP-01, DEP-06 | Python runtime은 manifest requirements, HA domain은 dependencies/after_dependencies, 테스트·린트 requirements는 별도 | TODO | 미확인 |
 | DEP-07, CI-06 | 실제 사용하는 HA 구성요소의 requirements·필수 재귀 의존성·선택 로딩 경로 설치, resolver·`pip check` 통과 | TODO | 미확인 |
 | DEP-02, DEP-03, DEP-08 | 의존성 추가/변경의 버전·extras·marker·선언 위치·지원 플랫폼·라이선스 검토, 실제 HA 테스트와 문서 갱신 | TODO | 미확인 — 이번 변경의 해당 여부 확인 |
+
+독립 리뷰는 변경 전후 지원 최소와 current를 비교하고, 봇 PR이 과거 최소 requirements·constraints까지 갱신하거나 expected-ha-version·Python을 누락하지 않았는지 확인합니다. 최신 테스트 실패는 호환 수정 대상으로 처리합니다.
 
 환경마다 아래 행을 복사합니다. 최소 HA와 최소 라이브러리 검증을 혼동하지 않고, marker가 활성인 환경에서 대상 패키지 설치값을 확인합니다. 실행하지 않은 조합은 `TODO` 또는 근거가 있는 `EXCEPTION`으로 남깁니다.
 

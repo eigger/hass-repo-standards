@@ -11,6 +11,9 @@ permissions:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+# This example tests current HA; it does not declare or raise minimum support.
+# Add/keep a separate minimum-ha job when hacs.json declares an older HA.
+# Use that exact HA, a compatible Python/plugin pair, and separate requirements.
 jobs:
   current:
     uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@main

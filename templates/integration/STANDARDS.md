@@ -10,7 +10,9 @@
 - 중앙 현황 갱신일: 미등록
 - 실제 기본 브랜치: 채택 시 입력
 - 테스트 경로: tests/components/<domain>/
-- HA 테스트 환경: 실제 HA/Python/pytest-homeassistant-custom-component 조합 입력
+- 변경 전 지원 최소 HA / 선언 근거: hacs.json·manifest·README 실제 값과 불일치 기록
+- 적용 후 지원 최소 HA: 기본은 기존 값 보존; 상향 시 비호환 근거·별도 명시적 사용자 승인 기록
+- current HA 테스트 환경: 실제 HA/Python/pytest-homeassistant-custom-component 조합 입력
 - 최소 HA 검증 환경: HA/Python/플러그인 버전 또는 미검증 사유
 - 최소 package 검증: 해당 package와 버전
 
