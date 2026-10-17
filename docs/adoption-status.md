@@ -40,7 +40,7 @@
 | [hass-magic-caster-wand](https://github.com/eigger/hass-magic-caster-wand) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-marklife](https://github.com/eigger/hass-marklife) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-melk-light](https://github.com/eigger/hass-melk-light) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
-| [hass-minibig](https://github.com/eigger/hass-minibig) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
+| [hass-minibig](https://github.com/eigger/hass-minibig) / `main` | 진행 중 | Core 대응 구조·실제 HA 테스트·공통 CI·blesession 하한·영문/한글 README·동적 Usage·기기별 Bluetooth 문서·진입 지침 적용 착수. 기존 지원 최소 HA 2025.8.0·통합 0.3.0·blesession>=0.9.0 보존 | 기준 `b1c80cf2c4bf8b4bc4e3556409ad948b7f850ea0` · 시작 대상 `c45775cf2179ae052fa0b1a47543ada91807f50e` | 차이 점검·체크리스트 작성·구현·독립 실제 HA 최소/current 검증 및 원격 CI 대기. 실물·새 프록시 보드·HA UI는 별도 미검증 | 2026-10-17 / 조율 root · 구현 minibig_implementation / minibig_docs · 독립 리뷰 minibig_review |
 | [hass-niimbot](https://github.com/eigger/hass-niimbot) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-omron](https://github.com/eigger/hass-omron) / `master` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
 | [hass-opinet](https://github.com/eigger/hass-opinet) / `main` | 미착수 | — | 미등록 | 현황 점검·체크리스트 작성 | 2026-10-17 / 미배정 |
