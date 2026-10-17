@@ -7,7 +7,7 @@
 - 각 통합 채택·재검토는 docs/checklist.md와 ADOPTION_CHECKLIST.md 템플릿을 사용해 상태와 실제 검증 증거를 기록합니다. 미확인·예외를 통과로 표시하지 않습니다.
 - 다른 통합 리포를 수정하거나 workflow를 실행하는 것은 해당 작업 범위에 포함될 때만 합니다.
 - 버전·domain·기본 브랜치·의존성은 기존 메타데이터에서 읽습니다. main/master나 패키지 이름을 추정하지 않습니다.
-- 배지는 관리 주석 사이만 변경합니다. 이전 안내와 번역 문서를 보존합니다.
+- 배지는 관리 주석 사이만 변경합니다. 기본 README.md는 영어, README.ko.md는 한국어로 제공하고 상호 연결하며 이전 안내·기존 본문을 보존합니다. HA 통합에는 manifest domain의 동적 Usage 배지를 조회 가능 여부와 관계없이 미리 추가합니다. Analytics 데이터 제공 동의와 배지 선택 여부를 혼동하지 않고 미집계를 설치 수 0으로 해석하지 않습니다.
 - reusable workflow는 caller checkout을 유지합니다. scripts 접근은 composite action의 github.action_path를 사용합니다.
 - 의존성 bot은 extras·연산자·marker를 보존하고 실패를 성공으로 바꾸지 않습니다.
 - 통합을 이관할 때 tests/components/<domain>/ 구조와 실제 HA fixture·통합 로딩 테스트를 필수로 적용합니다. HA 코어 stub으로 대체하지 않고 외부 통신 경계만 mock합니다.

@@ -28,7 +28,7 @@ for key in "tTfF":
 def check():
     errors = []
     documents = [
-        ROOT / "README.md",
+        *sorted(ROOT.glob("README*.md")),
         ROOT / "CONTRIBUTING.md",
         ROOT / "AGENTS.md",
         *sorted((ROOT / "templates/integration").glob("*.md")),

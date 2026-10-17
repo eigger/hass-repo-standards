@@ -93,23 +93,22 @@ def render(repo: Path, config: dict, readme: Path | None = None):
             f"https://img.shields.io/github/license/{repository}?style=flat-square",
             prefix + "LICENSE",
         )
-    if config.get("analytics", False):
-        if not config.get("analytics_evidence"):
-            raise ValueError("analytics needs analytics_evidence URL/date")
-        query = urlencode(
-            {
-                "style": "flat-square",
-                "color": "41BDF5",
-                "label": "Usage",
-                "query": f"$.{domain}.total",
-                "url": "https://analytics.home-assistant.io/custom_integrations.json",
-            }
-        )
-        badge(
-            "Analytics reporting installs",
-            "https://img.shields.io/badge/dynamic/json?" + query,
-            "https://analytics.home-assistant.io/",
-        )
+    # Every HA integration gets Usage before its domain appears in Analytics.
+    # Legacy analytics=False/evidence settings do not suppress the badge.
+    query = urlencode(
+        {
+            "style": "flat-square",
+            "color": "41BDF5",
+            "label": "Usage",
+            "query": f"$.{domain}.total",
+            "url": "https://analytics.home-assistant.io/custom_integrations.json",
+        }
+    )
+    badge(
+        "Analytics reporting installs",
+        "https://img.shields.io/badge/dynamic/json?" + query,
+        "https://analytics.home-assistant.io/",
+    )
     return "\n".join(badges)
 
 

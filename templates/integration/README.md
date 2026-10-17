@@ -10,7 +10,7 @@
 6. STANDARDS.md, ADOPTION_CHECKLIST.md와 AGENTS.md를 복사하고 참조 커밋·적용 상태·검증 증거·예외를 기록합니다. blesession/proxy 통합의 README는 공통 Bluetooth 설정·추천 기기로 연결하고 기기별 준비 조건을 추가합니다.
 7. 작업 시작·단계 변경·종료 시 [중앙 적용 현황](../../docs/adoption-status.md)의 자기 리포 행을 갱신하고, 구현과 리뷰·검증은 서로 다른 서브 에이전트에게 위임합니다.
 8. [HACS 브랜드 검사 안내](../../docs/hacs.md)에 따라 로컬 custom_components/<domain>/brand/icon.png 또는 실제 원격 brands 등록 근거를 준비하고 해당 커밋에서 HACS를 실행합니다. README 배지·HACS Default 여부와 브랜드 검사 통과는 각각 구분합니다.
-9. README는 아래 틀을 사용하되 기존 언어와 이전 안내를 유지합니다.
+9. 아래 영어 틀은 대상 `README.md`로, 한국어 틀은 `README.ko.md`로 작성하고 상호 연결합니다. 기존 한국어 내용·이전 안내는 한국어판에 보존하고 영어판에 같은 정보를 제공합니다. 두 언어의 관리 블록에 manifest domain의 동적 Usage 배지를 사전 조회 없이 생성합니다. 이 템플릿 폴더 자체는 배포할 통합이 아닙니다.
 
 ```markdown
 # Integration Name
@@ -18,29 +18,83 @@
 <!-- hass-standards:badges:start -->
 <!-- hass-standards:badges:end -->
 
-어떤 기기를 어떤 방식으로 연결하는지 한 문단으로 설명합니다.
+**English** | [한국어](README.ko.md)
+
+Describe the supported device and connection method in one paragraph.
 
 ## Supported devices
-확인된 모델·기능·펌웨어와 제한사항.
+Verified models, features, firmware, and limitations.
 
 ## Requirements
-최소 HA, 필요한 하드웨어·계정·proxy, 로컬/클라우드 조건.
+Minimum supported HA, hardware, accounts, proxies, and local/cloud requirements.
 
 ## Installation
-HACS Custom repository 추가(Integration), 설치, 재시작, 통합 추가.
-수동 설치 경로 custom_components/<domain>과 제거 방법.
+Add a HACS custom repository (Integration), install, restart, and add the integration.
+Document manual installation in custom_components/<domain> and removal.
 
 ## Configuration
-필수/선택 필드와 인증·재설정 방법.
+Required/optional fields, authentication, and reconfiguration.
 
 ## Usage
-실제로 동작하는 action/YAML 예시.
+Working action/YAML examples.
 
 ## Limitations and troubleshooting
+Unsupported features, diagnostics, and removal of sensitive information.
+
+## Development and contributing
+Link to CONTRIBUTING or the actual development/testing instructions.
+
+## Support
+Report bugs via the enabled repository Issues page.
+Use the enabled Discussions page for questions and feature requests.
+Check the actual repository settings and replace these instructions with verified links.
+If either feature is disabled, document the available support route without enabling it automatically.
+
+## License
+Link to the repository LICENSE file.
+```
+
+한국어판 `README.ko.md`의 대응 틀입니다. 실제 내용은 영어판과 함께 갱신합니다.
+
+```markdown
+# Integration Name
+
+<!-- hass-standards:badges:start -->
+<!-- hass-standards:badges:end -->
+
+[English](README.md) | **한국어**
+
+어떤 기기를 어떤 방식으로 연결하는지 한 문단으로 설명합니다.
+
+## 지원 기기
+검증한 모델·기능·펌웨어·제한사항.
+
+## 요구사항
+지원 최소 HA, 필요한 하드웨어·계정·proxy와 로컬/클라우드 조건.
+
+## 설치
+HACS 커스텀 리포(Integration) 추가, 설치, 재시작, 통합 추가.
+수동 custom_components/<domain> 설치 경로와 제거 방법.
+
+## 설정
+필수·선택 필드와 인증·재설정 방법.
+
+## 사용 예시
+실제로 동작하는 action/YAML 예시.
+
+## 제한사항과 문제 해결
 미지원 기능, 진단 정보와 민감 값 제거 안내.
 
-## Support and license
-Issues, 기존 Discussions 활성 여부, LICENSE 링크.
+## 개발과 참여
+CONTRIBUTING 또는 실제 개발·테스트 안내로 연결합니다.
+
+## 지원
+활성 Issues의 실제 링크를 버그 보고 경로로 제공합니다.
+활성 Discussions의 실제 링크를 질문·기능 제안 경로로 제공합니다.
+원격 설정을 확인하고 비활성 기능은 임의로 켜지 않으며 실제 사용 가능한 대체 지원 경로를 명시합니다.
+
+## 라이선스
+실제 LICENSE 파일로 연결합니다.
 ```
 
 requirements_lint.txt는 복사할 수 있는 실제 고정 예시입니다. requirements_test.txt는 PyPI 메타데이터에서 HA 2026.10.2와 pytest-homeassistant-custom-component 0.13.373의 호환 선언을 확인한 예시이며 Python 3.14를 사용합니다. 모든 통합의 지원 최소를 이 버전으로 올리라는 뜻은 아닙니다. 실제 지원 범위를 확인하고 조합을 검증합니다.
