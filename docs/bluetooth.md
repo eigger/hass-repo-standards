@@ -6,21 +6,20 @@ blesession을 사용해 HA에서 BLE 장치에 연결하는 통합의 사용자 
 
 ## 추천 기기
 
-유선망을 사용할 수 있다면 Ethernet proxy를 우선 검토합니다. ESPHome은 Wi-Fi와 Bluetooth의 무선 자원 경쟁을 줄이는 방법으로 Ethernet 사용을 안내합니다. 기존에 안정적으로 동작하는 로컬 어댑터가 있으면 교체를 필수로 요구하지 않습니다. [수신 성능 안내](https://esphome.io/components/bluetooth_proxy/#improving-reception-performance)
+기본 추천은 **Seeed Studio XIAO W5500 Ethernet Adapter V1.2**입니다. 유선 Ethernet·PoE·외장 안테나 구성을 우선 사용합니다. USB 형태로 간편하게 배치하고 Wi-Fi로 연결하려면 **M5Stack AtomS3U**를 추천합니다.
 
-| 용도 | 추천 후보 | 선택할 때 확인할 점 |
-|---|---|---|
-| 소형 유선·PoE proxy | Seeed Studio XIAO W5500 Ethernet Adapter **V1.2** | ESP32-S3 기반 해당 제품·리비전인지 확인. 이름이 비슷한 W5500 모듈이나 구형 보드를 같은 제품으로 취급하지 않음 |
-| 유선 배치가 어려운 곳 | 공식 Generic ESP32 proxy 대상 보드 | 설치기의 Generic 대상과 실제 칩 일치 확인. C3/S3 등 변형에 Generic 펌웨어를 그대로 사용하지 않음 |
+ESPHome은 Wi-Fi와 Bluetooth의 무선 자원 경쟁을 줄이는 방법으로 Ethernet 사용을 안내합니다. [수신 성능 안내](https://esphome.io/components/bluetooth_proxy/#improving-reception-performance)
 
-위 후보는 [ESPHome 공식 설치 목록](https://esphome.io/projects/?type=bluetooth)에 있는 구성을 기준으로 선택했습니다. 모든 통합·장치 조합을 실물 검증했다는 의미는 아닙니다. ESPHome 설치 목록은 XIAO W5500 **V1.2만 지원**한다고 명시하며, 구형 보드에는 인터럽트 배선·RF 관련 차이가 있습니다. 판매 사진·리비전과 [Seeed 공식 설정 안내](https://wiki.seeedstudio.com/esphome_xiao_w5500_ethernet_adapter/)를 확인합니다. 가격·재고나 판매 링크를 리포마다 복제하지 않습니다.
+| 추천 용도 | 기기 | 특징·설정 기준 | 구매 페이지 |
+|---|---|---|---|
+| **기본 추천 — 유선·PoE·외장 안테나** | **Seeed Studio XIAO W5500 Ethernet Adapter V1.2** | Ethernet 연결과 PoE 전원, 외장 안테나. 해당 제품의 V1.2 리비전 확인 | [AliExpress 구매](https://ko.aliexpress.com/item/1005009310322353.html) |
+| **USB 형태·Wi-Fi 연결** | **M5Stack AtomS3U** | USB로 전원을 공급하고 Wi-Fi로 HA에 연결. AtomS3U용 ESPHome 보드 설정에 Bluetooth proxy 구성 적용 | [AliExpress 구매](https://ko.aliexpress.com/item/1005005643544014.html) |
 
-### 구매 페이지
+XIAO W5500은 [ESPHome 공식 설치 목록](https://esphome.io/projects/?type=bluetooth)에서 **V1.2만 지원**한다고 명시합니다. 구형 보드는 인터럽트 배선·RF 관련 차이가 있으므로 구매 옵션과 리비전을 확인합니다. [Seeed 공식 설정 안내](https://wiki.seeedstudio.com/esphome_xiao_w5500_ethernet_adapter/)
 
-- [Seeed Studio XIAO W5500 Ethernet Adapter 구매](https://ko.aliexpress.com/item/1005009310322353.html)
-- [추가 구매 페이지 — AliExpress](https://ko.aliexpress.com/item/1005005643544014.html)
+AtomS3U는 HA 호스트에 직접 연결하는 USB Bluetooth 동글이 아니라 **USB 형태의 Wi-Fi Bluetooth proxy**로 사용합니다. [M5Stack 제품 문서](https://docs.m5stack.com/en/core/AtomS3U)와 [AtomS3U ESPHome 보드 예제](https://github.com/m5stack/esphome-yaml/blob/main/examples/kit/atoms3u.yaml)를 참고하고, Generic ESP32용 펌웨어를 그대로 사용하지 않습니다.
 
-XIAO W5500은 위 추천 기준의 V1.2를 선택합니다. 추가 구매 페이지의 제품명·보드 변형은 판매 페이지에서 확인합니다.
+이 추천은 모든 통합·장치 조합을 실물 검증했다는 의미는 아닙니다. 기존에 안정적으로 동작하는 로컬 어댑터가 있으면 교체가 필수는 아닙니다. 가격·재고나 판매 링크를 리포마다 복제하지 않고 이 공통 문서로 연결합니다.
 
 ## 프록시 준비
 
