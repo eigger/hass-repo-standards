@@ -11,7 +11,6 @@ blesession을 사용해 HA에서 BLE 장치에 연결하는 통합의 사용자 
 | 용도 | 추천 후보 | 선택할 때 확인할 점 |
 |---|---|---|
 | 소형 유선·PoE proxy | Seeed Studio XIAO W5500 Ethernet Adapter **V1.2** | ESP32-S3 기반 해당 제품·리비전인지 확인. 이름이 비슷한 W5500 모듈이나 구형 보드를 같은 제품으로 취급하지 않음 |
-| 유선·PoE, 외장 안테나 선택 | Olimex ESP32-POE-ISO / ESP32-POE-ISO-EA | 정확한 보드 변형과 전원 조건 확인. EA는 외장 안테나 변형 |
 | 유선 배치가 어려운 곳 | 공식 Generic ESP32 proxy 대상 보드 | 설치기의 Generic 대상과 실제 칩 일치 확인. C3/S3 등 변형에 Generic 펌웨어를 그대로 사용하지 않음 |
 
 위 후보는 [ESPHome 공식 설치 목록](https://esphome.io/projects/?type=bluetooth)에 있는 구성을 기준으로 선택했습니다. 모든 통합·장치 조합을 실물 검증했다는 의미는 아닙니다. ESPHome 설치 목록은 XIAO W5500 **V1.2만 지원**한다고 명시하며, 구형 보드에는 인터럽트 배선·RF 관련 차이가 있습니다. 판매 사진·리비전과 [Seeed 공식 설정 안내](https://wiki.seeedstudio.com/esphome_xiao_w5500_ethernet_adapter/)를 확인합니다. 가격·재고나 판매 링크를 리포마다 복제하지 않습니다.
