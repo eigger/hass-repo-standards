@@ -6,9 +6,9 @@
 
 ## 선행 작업과 파일럿
 
-공통 CI는 기존 caller 호환을 위해 `unit` 기본값을 유지하고, 실행용 템플릿은 `ha`와 최소/현재 HA별 별도 job을 명시합니다. [실제 HA 테스트 규칙](testing.md)에 따라 파일럿에서 실제 로딩 검증을 확인합니다. **첫 파일럿과 함께 공통 workflow·환경·템플릿을 보완하고 검증한 다음** 나머지에 확산합니다. caller 교체만으로 채택을 완료하지 않습니다.
+공통 CI는 기존 caller 호환을 위해 `unit` 기본값을 유지하고, 실행용 템플릿은 `ha` 단일 최신 기준 job을 예시로 제공합니다. 예전 최소 지원을 실제로 약속하는 통합은 최소/현재가 다를 때 별도 job으로 검증합니다. [실제 HA 테스트 규칙](testing.md)에 따라 파일럿에서 실제 로딩 검증을 확인합니다. **첫 파일럿과 함께 공통 workflow·환경·템플릿을 보완하고 검증한 다음** 나머지에 확산합니다. caller 교체만으로 채택을 완료하지 않습니다.
 
-첫 파일럿은 **hass-kibble**을 권장합니다. manifest의 외부 Python 요구사항과 HA 구성요소 의존성이 없고, BLE·전용 UI 없이 HTTP 조회·coordinator·sensor·button 경로로 기본 패턴을 확인할 수 있습니다. 기존 HA stub 테스트를 실제 fixture·config entry·플랫폼 로딩으로 바꾸는 기준 사례가 됩니다. 이는 코드 전체가 가장 작다는 판정이 아니라, 공유 환경을 처음 검증할 때 특수 의존성이 적다는 판단입니다.
+첫 파일럿은 **hass-kibble**입니다. 사용자 결정으로 지원 최소와 현재 HA를 모두 2026.10.2로 맞추고 Python 3.14·플러그인 0.13.373 단일 환경으로 재검증합니다. 예전 2025.3.0 환경의 성공 기록은 이전 커밋 근거로 보존하며 구형 job·requirements·constraints는 제거합니다. manifest의 외부 Python 요구사항과 HA 구성요소 의존성이 없고, BLE·전용 UI 없이 HTTP 조회·coordinator·sensor·button 경로로 기본 패턴을 확인할 수 있습니다. 기존 HA stub 테스트를 실제 fixture·config entry·플랫폼 로딩으로 바꾸는 기준 사례가 됩니다. 이는 코드 전체가 가장 작다는 판정이 아니라, 공유 환경을 처음 검증할 때 특수 의존성이 적다는 판단입니다.
 
 두 번째는 **hass-catprinter**입니다. `imagespec[datamatrix]`와 `blesession`을 모두 선언하고 기존 CI에 current/minimum 의존성 matrix가 있어, 두 라이브러리·extras·업데이트 bot·Bluetooth proxy 안내를 함께 검증할 대표 사례입니다. 기존 프로토콜 테스트를 유지하면서 실제 HA 로딩 테스트를 추가해야 합니다. `hass-marklife`는 현재 manifest가 imagespec만 선언하므로 두 라이브러리의 동시 파일럿은 catprinter를 사용합니다.
 

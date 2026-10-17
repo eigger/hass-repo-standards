@@ -18,9 +18,12 @@
 | [HACS general](https://www.hacs.xyz/docs/publish/start/) | hacs.json, 최소 HA, 리포 메타데이터 |
 | [HACS integration](https://www.hacs.xyz/docs/publish/integration/) | 통합 배포 구조 |
 | [HACS action](https://www.hacs.xyz/docs/publish/action/) | validator와 입력·검사 제외 |
+| [HACS 브랜드 검사 구현](https://github.com/hacs/integration/blob/adc26ec798021d2c2db1e6aa90eabe2e208b8c04/custom_components/hacs/validate/brands.py) | 로컬 brand/icon.png 우선·원격 custom domain fallback |
+| [HA 브랜드 이미지](https://contributors.home-assistant.io/core/integrations/brands/) | 로컬 brand 지원 버전·PNG 규격 |
 | [HACS default inclusion](https://www.hacs.xyz/docs/publish/include/) | Default 목록 등재 |
 | [GitHub reusable workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows) | workflow_call, 입력, 권한 |
 | [GitHub secure use](https://docs.github.com/en/actions/reference/security/secure-use) | 최소 권한·SHA·외부 입력 |
+| [Dependabot 설정](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference) | 과거 최소 환경 exclude-paths·HA/플러그인 groups의 범위 |
 | [GitHub event triggers](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow) | GITHUB_TOKEN 후속 workflow 제한 |
 | [Python dependency specifiers](https://packaging.python.org/en/latest/specifications/dependency-specifiers/) | 연산자, extras, marker |
 | [PyPI JSON API](https://docs.pypi.org/api/json/) | 릴리스 파일, yanked, Requires-Python |

@@ -63,7 +63,7 @@
 | 규칙 ID | 확인 항목 | 상태 | 근거 / 남은 작업 |
 |---|---|---|---|
 | HACS-01, HACS-02 | 루트 README/LICENSE/hacs.json, 검증한 최소 HA, 실제 배포 구조와 필요한 옵션 일치 | TODO | 미확인 |
-| HACS-03, HACS-05 | Default 여부는 목록 근거로 확인, HACS/Hassfest 실제 실행, ignore는 이유·해제 조건 기록 | TODO | 미확인 |
+| HACS-03, HACS-05 | Default 여부는 목록 근거로 확인, [로컬 brand/icon.png 또는 원격 brands 근거](https://github.com/eigger/hass-repo-standards/blob/main/docs/hacs.md)와 HACS/Hassfest 실제 실행, ignore는 이유·해제 조건 기록 | TODO | 미확인 |
 | HACS-06 (권장) | description·topics·issue 경로·brands 및 사용하는 HACS 필드 지원 확인 | TODO | 미확인 |
 | CI-01, CI-02 | Validate/Python Tests 공통화, 확장 job 유지, PR·실제 기본 브랜치 push·dispatch 및 필요한 schedule | TODO | 미확인 |
 | CI-03, CI-05, CI-08 | 최소 권한·checkout 자격증명 비보존·timeout·concurrency, full SHA·갱신 관리, 비신뢰 입력·secrets 경계 | TODO | 미확인 |
