@@ -82,7 +82,7 @@ jobs:
         packages: ${{ inputs.packages }}
         allow-major: ${{ inputs.allow-major }}
     - if: steps.update.outputs.updated == 'true'
-      uses: eigger/hass-repo-standards/actions/python-environment@e7b02dabb8a3d7b477237a2e904b34c3eeab0839 # validated environment implementation
+      uses: eigger/hass-repo-standards/actions/python-environment@d5dcaa03cfe91923a5ca2fe0ab79595b222eb90e # validated environment implementation
       with:
         domain: ${{ inputs.domain }}
         python-version: ${{ inputs.python-version }}

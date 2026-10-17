@@ -95,7 +95,7 @@ jobs:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
         persist-credentials: false
-    - uses: eigger/hass-repo-standards/actions/python-environment@e7b02dabb8a3d7b477237a2e904b34c3eeab0839 # validated environment implementation
+    - uses: eigger/hass-repo-standards/actions/python-environment@d5dcaa03cfe91923a5ca2fe0ab79595b222eb90e # validated environment implementation
       with:
         domain: ${{ inputs.domain }}
         python-version: ${{ matrix.python }}
