@@ -32,7 +32,9 @@ The hass-kibble pilot completed adoption, real HA validation, and the README lan
 
 ## Starting work in a repository
 
-Install the [AGENTS.md entry template](templates/integration/AGENTS.md), then request “Apply the shared standards” (or “공통 규칙 적용해줘”). The instructions require reading the central AGENTS.md, relevant rules, and checklist. Separate subagents implement and independently review/verify changes; the coordinating agent integrates results and updates the central status. The entry instructions were applied and verified in hass-kibble; they are not automatically installed elsewhere.
+Request “Apply the shared standards from eigger/hass-repo-standards” (or “hass-repo-standards 공통 규칙 적용해줘”), providing the central checkout path or repository URL when needed. The agent reads the central [AGENTS.md](AGENTS.md), relevant rules, and checklist directly for that adoption task. Separate subagents implement and independently review/verify changes; the coordinating agent integrates results and updates the central status.
+
+Do not copy, generate, append, or install the central AGENTS.md or its contents as an agent entry file in the integration, even under another filename. Do not reinstall it without a separate user request. Preserve existing repository-specific instructions. Record the reviewed standards SHA and exceptions in STANDARDS.md and the verification evidence for that adoption in ADOPTION_CHECKLIST.md; past PASS results do not validate later changes.
 
 ## Shared CI
 

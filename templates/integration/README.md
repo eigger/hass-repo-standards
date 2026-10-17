@@ -7,7 +7,7 @@
 3. 각 `@main`을 검토한 main의 commit SHA로 바꿉니다.
 4. 테스트/린트 requirements와 기존 pyproject.toml을 정리합니다. Ruff 설정은 현재 코드에 맞게 채택합니다.
 5. 테스트는 `tests/components/<domain>/`에 배치하고 실제 HA fixture·config entry·플랫폼 로딩으로 검증합니다. 최소 package matrix는 사용하는 package만 넣으며 두 환경 모두 실제 HA 테스트를 실행합니다. 최소 HA가 현재 검증 버전과 다르면 별도 환경에서 검증합니다.
-6. STANDARDS.md, ADOPTION_CHECKLIST.md와 AGENTS.md를 복사하고 참조 커밋·적용 상태·검증 증거·예외를 기록합니다. blesession/proxy 통합의 README는 공통 Bluetooth 설정·추천 기기로 연결하고 기기별 준비 조건을 추가합니다.
+6. 적용 기록용 STANDARDS.md와 ADOPTION_CHECKLIST.md를 복사하고 참조 커밋·적용 상태·해당 시점의 실제 검증 증거·예외를 기록합니다. 중앙 AGENTS.md나 그 내용을 통합의 AGENTS.md로 복사·생성·추가하지 않으며 다른 파일명으로 에이전트 진입 지침을 설치하지도 않습니다. 사용자 별도 요청 없이는 재설치하지 않고 기존 리포 고유 지침은 임의로 수정·삭제하지 않습니다. blesession/proxy 통합의 README는 공통 Bluetooth 설정·추천 기기로 연결하고 기기별 준비 조건을 추가합니다.
 7. 작업 시작·단계 변경·종료 시 [중앙 적용 현황](../../docs/adoption-status.md)의 자기 리포 행을 갱신하고, 구현과 리뷰·검증은 서로 다른 서브 에이전트에게 위임합니다.
 8. [HACS 브랜드 검사 안내](../../docs/hacs.md)에 따라 로컬 custom_components/<domain>/brand/icon.png 또는 실제 원격 brands 등록 근거를 준비하고 해당 커밋에서 HACS를 실행합니다. README 배지·HACS Default 여부와 브랜드 검사 통과는 각각 구분합니다.
 9. 아래 영어 틀은 대상 `README.md`로, 한국어 틀은 `README.ko.md`로 작성하고 상호 연결합니다. 기존 한국어 내용·이전 안내는 한국어판에 보존하고 영어판에 같은 정보를 제공합니다. 두 언어의 관리 블록에 manifest domain의 동적 Usage 배지를 사전 조회 없이 생성합니다. 메인은 간결한 시작 페이지로 유지하고 상세 옵션·긴 YAML·전체 엔티티·프로토콜·오류별 대응·개발 명령은 추가 문서로 보존·분리합니다. 중요 제한·안전·미검증 고지는 메인에도 남깁니다. 이 템플릿 폴더 자체는 배포할 통합이 아닙니다.
@@ -117,4 +117,4 @@ requirements_lint.txt는 복사할 수 있는 실제 고정 예시입니다. req
 
 채택 점검에는 [체크리스트 사용법](../../docs/checklist.md)과 [ADOPTION_CHECKLIST.md](ADOPTION_CHECKLIST.md)를 사용합니다. 모든 항목은 미확인에서 시작하며 실제 적용한 통합의 증거로 채웁니다.
 
-이 진입 AGENTS.md 설치 후 사용자는 해당 리포 세션에서 “공통 규칙 적용해줘”라고 요청하면 됩니다. 공통 지침의 읽기·위임·검증·중앙 보고 순서를 따르며 리포별 세부 규칙을 다시 나열할 필요가 없습니다.
+사용자는 해당 리포 세션에서 “hass-repo-standards 공통 규칙 적용해줘”라고 요청하고, 필요하면 중앙 checkout 경로나 리포 URL을 지정합니다. 에이전트는 적용 작업 때 중앙 [AGENTS.md](../../AGENTS.md)를 직접 읽고 위임·검증·중앙 보고 순서를 따릅니다. 중앙 지침을 통합에 설치할 필요가 없으며 과거 체크리스트의 PASS는 이후 변경을 검증한 결과가 아닙니다.
