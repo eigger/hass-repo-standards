@@ -39,6 +39,11 @@
 - [ESP32 BLE tracker](https://esphome.io/components/esp32_ble_tracker/): active scan의 의미.
 - [ESPHome 공식 프로젝트](https://esphome.io/projects/?type=bluetooth): 기기·리비전 지원과 설치 경로.
 - [Seeed XIAO W5500](https://wiki.seeedstudio.com/esphome_xiao_w5500_ethernet_adapter/): V1.2 보드와 proxy 구성.
-- [M5Stack AtomS3U](https://docs.m5stack.com/en/core/AtomS3U): 제조사 자료이며 ESPHome 공식 Bluetooth proxy 목록의 대상이 아님. 확인일 2026-10-17.
+- [M5Stack AtomS3U](https://docs.m5stack.com/en/core/AtomS3U): USB-A 형태·ESP32-S3 사양. ESPHome 공식 Bluetooth proxy 설치 목록의 별도 대상이 아님. 확인일 2026-10-18.
+- [M5Stack AtomS3U ESPHome 예제](https://github.com/m5stack/esphome-yaml/blob/main/examples/kit/atoms3u.yaml): esp32s3·8 MB·ESP-IDF, Wi-Fi 연결 시 ble.disable 동작 확인. 그대로 proxy 펌웨어로 사용하지 않음.
+- [M5Stack AtomS3U 다운로드 모드](https://docs.m5stack.com/en/arduino/m5atoms3u/program): USB 최초 설치 준비.
+- [ESPHome 시작 안내](https://esphome.io/install/getting-started/): Device Builder·검증·첫 USB 설치.
+- [HA ESPHome](https://www.home-assistant.io/integrations/esphome/): 발견/수동 등록·API 포트·암호화 키.
+- [ESPHome BLE](https://esphome.io/components/esp32_ble/): ble.disable. [BLE provisioning](https://esphome.io/components/esp32_improv/): 별도 Wi-Fi 설정 도우미와 proxy 동작 구분. Bluetooth 자료 재확인일 2026-10-18.
 - [BLE ESL 한국어 README](https://github.com/eigger/hass-ble-esl/blob/main/README.ko.md#설치): 기존 설치 안내의 출발점.
 - [blesession 계약](https://github.com/eigger/blesession/blob/main/docs/contract.md): 라이브러리와 통합 책임, 진단 정보.

@@ -20,7 +20,8 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 | [테스트와 호환성](docs/testing.md) | tests/components/domain 구조, 실제 HA fixture·로딩, 최소 버전 |
 | [CI 작성 규칙](docs/ci.md) | 공통 workflow, 권한, 이벤트, timeout, 확장 |
 | [의존성 관리](docs/dependencies.md) | 선언 위치·추가 절차, HA 테스트 의존성, 업데이트·최소 버전 |
-| [Bluetooth 공통 설정](docs/bluetooth.md) | proxy 설정, 추천 기기·리비전, blesession 통합의 README 연결 |
+| [Bluetooth 문서 작성 규칙](docs/bluetooth-documentation.md) | 작성자 요구사항과 사용자 안내 연결 |
+| [Bluetooth proxy 사용자 안내](docs/bluetooth.ko.md) | 기기 선택·펌웨어 설치·HA 등록·문제 해결 ([English](docs/bluetooth.md)) |
 | [릴리스·유지보수](docs/releases.md) | 버전, 변경 기록, 이관, 지원 상태 |
 | [전체 리포 CI 조사](docs/ci-audit.md) | 로컬 hass* 전체 workflow 비교와 이관 계획 |
 | [초기 구현 검증](docs/validation.md) | 테스트 환경과 확인 범위 |

@@ -7,7 +7,7 @@
 3. 각 `@main`을 검토한 main의 commit SHA로 바꿉니다.
 4. 테스트/린트 requirements와 기존 pyproject.toml을 정리합니다. Ruff 설정은 현재 코드에 맞게 채택합니다.
 5. 테스트는 `tests/components/<domain>/`에 배치하고 실제 HA fixture·config entry·플랫폼 로딩으로 검증합니다. 최소 package matrix는 사용하는 package만 넣으며 두 환경 모두 실제 HA 테스트를 실행합니다. 최소 HA가 현재 검증 버전과 다르면 별도 환경에서 검증합니다.
-6. 적용 기록용 STANDARDS.md와 ADOPTION_CHECKLIST.md를 복사하고 참조 커밋·적용 상태·해당 시점의 실제 검증 증거·예외를 기록합니다. 중앙 AGENTS.md나 그 내용을 통합의 AGENTS.md로 복사·생성·추가하지 않으며 다른 파일명으로 에이전트 진입 지침을 설치하지도 않습니다. 사용자 별도 요청 없이는 재설치하지 않고 기존 리포 고유 지침은 임의로 수정·삭제하지 않습니다. blesession/proxy 통합의 README는 공통 Bluetooth 설정·추천 기기로 연결하고 기기별 준비 조건을 추가합니다.
+6. 적용 기록용 STANDARDS.md와 ADOPTION_CHECKLIST.md를 복사하고 참조 커밋·적용 상태·해당 시점의 실제 검증 증거·예외를 기록합니다. 중앙 AGENTS.md나 그 내용을 통합의 AGENTS.md로 복사·생성·추가하지 않으며 다른 파일명으로 에이전트 진입 지침을 설치하지도 않습니다. 사용자 별도 요청 없이는 재설치하지 않고 기존 리포 고유 지침은 임의로 수정·삭제하지 않습니다. blesession/proxy 통합은 [Bluetooth 작성 규칙](../../docs/bluetooth-documentation.md)을 읽고 README.md에는 영어 사용자 가이드, README.ko.md에는 한국어 사용자 가이드를 연결하며 기기별 준비 조건을 추가합니다. 개발자 작성·구현 가이드를 사용자 설정 안내로 연결하지 않습니다.
 7. 작업 시작·단계 변경·종료 시 [중앙 적용 현황](../../docs/adoption-status.md)의 자기 리포 행을 갱신하고, 구현과 리뷰·검증은 서로 다른 서브 에이전트에게 위임합니다.
 8. [HACS 브랜드 검사 안내](../../docs/hacs.md)에 따라 로컬 custom_components/<domain>/brand/icon.png 또는 실제 원격 brands 등록 근거를 준비하고 해당 커밋에서 HACS를 실행합니다. README 배지·HACS Default 여부와 브랜드 검사 통과는 각각 구분합니다.
 9. 아래 영어 틀은 대상 `README.md`로, 한국어 틀은 `README.ko.md`로 작성하고 상호 연결합니다. 기존 한국어 내용·이전 안내는 한국어판에 보존하고 영어판에 같은 정보를 제공합니다. 두 언어의 관리 블록에 manifest domain의 동적 Usage 배지를 사전 조회 없이 생성합니다. 메인은 간결한 시작 페이지로 유지하고 상세 옵션·긴 YAML·전체 엔티티·프로토콜·오류별 대응·개발 명령은 추가 문서로 보존·분리합니다. 중요 제한·안전·미검증 고지는 메인에도 남깁니다. 이 템플릿 폴더 자체는 배포할 통합이 아닙니다.
@@ -45,8 +45,9 @@ Link to troubleshooting for error-specific checks instead of repeating the guide
 ## Documentation
 Add verified links to configuration, action/entity reference, examples, troubleshooting,
 and development/contributing guides. Detailed commands belong in docs/ or CONTRIBUTING.
-For blesession integrations, provide device-specific troubleshooting or link to the
-shared Bluetooth troubleshooting guide and document model-specific conditions.
+For blesession integrations, link to the [Bluetooth proxy user guide](https://github.com/eigger/hass-repo-standards/blob/main/docs/bluetooth.md)
+and device-specific troubleshooting, or the [shared user troubleshooting](https://github.com/eigger/hass-repo-standards/blob/main/docs/bluetooth.md#troubleshooting)
+with model-specific conditions. Do not link users to authoring rules or implementation contracts as setup instructions.
 
 ## Support
 Report bugs via the enabled repository Issues page.
@@ -93,8 +94,9 @@ HACS 커스텀 리포(Integration) 추가, 설치, 재시작, 통합 추가.
 ## 문서
 설정, 액션/엔티티 참조, 예제, 문제 해결, 개발·참여 안내의 실제 링크를 제공합니다.
 긴 개발·테스트 명령은 docs/ 또는 CONTRIBUTING으로 옮깁니다.
-blesession 통합은 전용 문제 해결 문서 또는 공통 Bluetooth 문제 해결 링크와
-모델별 깨우기·페어링·연결 조건 및 실제 진단 경로를 제공합니다.
+blesession 통합은 [Bluetooth proxy 사용자 안내](https://github.com/eigger/hass-repo-standards/blob/main/docs/bluetooth.ko.md)와
+전용 문제 해결 또는 [공통 사용자 문제 해결](https://github.com/eigger/hass-repo-standards/blob/main/docs/bluetooth.ko.md#troubleshooting),
+모델별 깨우기·페어링·연결 조건 및 실제 진단 경로를 제공합니다. 개발자 작성·구현 가이드를 사용자 설정 안내로 연결하지 않습니다.
 
 ## 지원
 활성 Issues의 실제 링크를 버그 보고 경로로 제공합니다.
@@ -113,7 +115,7 @@ requirements_lint.txt는 복사할 수 있는 실제 고정 예시입니다. req
 
 `.github/dependabot.yml`은 현재 HA·플러그인을 묶고, 과거 최소 환경이 존재할 때만 그 파일을 자동 갱신에서 제외하는 예시입니다. 제외 경로를 실제 구조에 맞춥니다. 묶인 PR도 workflow의 expected-ha-version·Python·관련 constraints를 자동 갱신하지 않으므로 함께 검토하고 동기화합니다. 기본 브랜치보다 낮아진 제안은 거부합니다. 구버전 비호환 근거와 별도 명시적 승인을 받아 최소 상향을 결정한 경우에만 hacs.json과 README·지원 정책 기록도 함께 맞춥니다. 공통 workflow는 과거 caller 호환을 위해 unit 기본값을 유지하므로 통합은 ha를 명시합니다. pytest-args 생략 시 ha는 tests/components/<domain>/ -v를 사용합니다.
 
-[실제 HA 테스트 구조](../../docs/testing.md), [의존성 선언·추가 규칙](../../docs/dependencies.md), [Bluetooth 공통 설정·추천 기기](../../docs/bluetooth.md)를 채택 기준으로 사용합니다.
+[실제 HA 테스트 구조](../../docs/testing.md), [의존성 선언·추가 규칙](../../docs/dependencies.md), [Bluetooth 문서 작성 규칙](../../docs/bluetooth-documentation.md)을 채택 기준으로 사용합니다.
 
 채택 점검에는 [체크리스트 사용법](../../docs/checklist.md)과 [ADOPTION_CHECKLIST.md](ADOPTION_CHECKLIST.md)를 사용합니다. 모든 항목은 미확인에서 시작하며 실제 적용한 통합의 증거로 채웁니다.
 

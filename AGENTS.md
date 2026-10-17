@@ -12,7 +12,7 @@
 - 의존성 bot은 extras·연산자·marker를 보존하고 실패를 성공으로 바꾸지 않습니다.
 - 통합을 이관할 때 tests/components/<domain>/ 구조와 실제 HA fixture·통합 로딩 테스트를 필수로 적용합니다. HA 코어 stub으로 대체하지 않고 외부 통신 경계만 mock합니다.
 - 새 의존성은 manifest의 requirements/dependencies/after_dependencies와 테스트 requirements를 구분하고 docs/dependencies.md의 추가 절차를 따릅니다.
-- blesession/Bluetooth proxy 통합의 README는 docs/bluetooth.md 공통 설정·추천 기기로 연결하고 기기 고유 조건을 따로 적습니다.
+- blesession/Bluetooth proxy 통합의 사용자 README는 영어 docs/bluetooth.md·한국어 docs/bluetooth.ko.md의 실제 사용자 설정 안내로 연결하고 기기 고유 조건을 따로 적습니다. 작성자 규칙은 docs/bluetooth-documentation.md에서 읽으며 사용자에게 개발·구현 가이드를 설정 안내로 연결하지 않습니다.
 - 수정한 동작에 해당하는 단위 테스트를 실행하고 python3 scripts/check_repository.py를 실행합니다.
 - SHA와 PyPI 버전은 실재하는 값만 사용합니다. 이 규칙 리포에는 태그나 GitHub Release를 만들지 않고 main과 커밋으로 관리합니다.
 
@@ -52,6 +52,6 @@
 
 ## README와 Bluetooth 안내 구성 — 필수
 
-메인 README는 소개·핵심 지원·최소 요구·빠른 설치/설정·짧은 대표 예제·중요 제한·문서 목록·지원/라이선스만 간결하게 제공합니다. 긴 YAML·상세 옵션·엔티티/프로토콜 참조·오류별 대응·개발/테스트 명령은 docs/·examples/·CONTRIBUTING으로 옮겨 연결하고 기존 내용은 보존합니다. 중요 안전·미검증 고지는 메인에 짧게 남기며 중복 설명보다 원본 링크를 사용합니다. 영어·한국어 README에서 실제 문서와 언어가 명확하게 연결되는지 확인합니다.
+메인 README는 소개·핵심 지원·최소 요구·빠른 설치/설정·짧은 대표 예제·중요 제한·문서 목록·지원/라이선스만 간결하게 제공합니다. 긴 YAML·상세 옵션·엔티티/프로토콜 참조·오류별 대응·개발/테스트 명령은 docs/·examples/·CONTRIBUTING으로 옮겨 연결하고 기존 내용은 보존합니다. 중요 안전·미검증 고지는 메인에 짧게 남기며 중복 설명보다 원본 링크를 사용합니다. 영어·한국어 README에서 실제 문서와 언어가 명확하게 연결되는지 확인합니다. 공통 Bluetooth 사용자 안내도 영어를 기본으로 한국어판과 상호 연결하며, 설정·추천 기기·문제 해결은 사용자용 문서로 제공하고 작성자 지시·구현 계약은 [작성 규칙](docs/bluetooth-documentation.md)으로 분리합니다.
 
 blesession/Bluetooth proxy 통합은 기기별 docs/troubleshooting.md를 작성하거나 공통 Bluetooth 문제 해결 문서로 연결하면서 모델 고유 깨우기/전원·페어링/인증·타 앱 연결·전송 조건과 실제 진단 경로를 추가합니다. 발견/스캔과 GATT 연결·쓰기는 구분하고 실제 사용하는 경로·슬롯·거리·네트워크·재연결 및 민감 정보 제거 후 제보 절차를 안내합니다. BLE ESL 전용 센서·재시도·Debounce·timeout을 모든 통합의 공통 기능으로 복사하거나 실물 미검증을 검증 완료로 주장하지 않습니다.

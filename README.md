@@ -20,7 +20,8 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 | [Testing and compatibility](docs/testing.md) | tests/components/domain, real HA fixtures/loading, minimum versions |
 | [CI rules](docs/ci.md) | Shared workflows, permissions, events, timeouts, extensions |
 | [Dependency management](docs/dependencies.md) | Declarations, additions, HA test dependencies, updates, minimums |
-| [Shared Bluetooth setup](docs/bluetooth.md) | Proxy configuration, recommended devices/revisions, blesession documentation |
+| [Bluetooth documentation rules](docs/bluetooth-documentation.md) | Authoring requirements and user-guide links |
+| [Bluetooth proxy user guide](docs/bluetooth.md) | Device selection, firmware installation, Home Assistant setup and troubleshooting ([한국어](docs/bluetooth.ko.md)) |
 | [Releases and maintenance](docs/releases.md) | Versions, changelogs, migration, support status |
 | [Repository CI inventory](docs/ci-audit.md) | Local hass* workflow comparison and migration plan |
 | [Initial implementation validation](docs/validation.md) | Test environment and verified scope |

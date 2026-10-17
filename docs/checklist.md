@@ -38,4 +38,4 @@ hass-kibble 첫 파일럿과 공통 CI·실행용 템플릿의 초기 보완 및
 
 ## 연결 문서
 
-규칙의 상세 조건은 [적용 관리](adoption.md), [HA 개발](home-assistant.md), [테스트](testing.md), [의존성](dependencies.md), [HACS](hacs.md), [CI](ci.md), [문서·배지](documentation.md), [Bluetooth](bluetooth.md), [릴리스·유지보수](releases.md)를 따릅니다. 채택 기록과 예외의 원본은 [`STANDARDS.md` 템플릿](../templates/integration/STANDARDS.md)입니다.
+규칙의 상세 조건은 [적용 관리](adoption.md), [HA 개발](home-assistant.md), [테스트](testing.md), [의존성](dependencies.md), [HACS](hacs.md), [CI](ci.md), [문서·배지](documentation.md), [Bluetooth 문서 작성 규칙](bluetooth-documentation.md), [릴리스·유지보수](releases.md)를 따릅니다. 채택 기록과 예외의 원본은 [`STANDARDS.md` 템플릿](../templates/integration/STANDARDS.md)입니다.
