@@ -1,0 +1,117 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+name: Python tests
+'on':
+  workflow_call:
+    inputs:
+      domain:
+        description: Integration domain
+        required: true
+        type: string
+      python-versions:
+        description: JSON array of valid Python versions
+        required: true
+        type: string
+      lint-python-version:
+        description: Python used for pinned Ruff
+        required: false
+        type: string
+        default: '3.13'
+      requirements:
+        description: Caller test requirements
+        required: false
+        type: string
+        default: requirements_test.txt
+      lint-requirements:
+        description: Caller lint requirements
+        required: false
+        type: string
+        default: requirements_lint.txt
+      dependency-modes:
+        description: JSON array of current and/or minimum
+        required: false
+        type: string
+        default: '["current"]'
+      minimum-packages:
+        description: JSON package names for minimum matrix
+        required: false
+        type: string
+        default: '[]'
+      ha-components:
+        description: Space separated HA component names
+        required: false
+        type: string
+        default: ''
+      constraints:
+        description: Optional constraints file
+        required: false
+        type: string
+        default: ''
+      expected-ha-version:
+        description: Optional exact HA version check
+        required: false
+        type: string
+        default: ''
+      test-profile:
+        description: unit or ha
+        required: false
+        type: string
+        default: unit
+      pytest-args:
+        description: Trusted repository-controlled pytest arguments
+        required: false
+        type: string
+        default: tests/ -v
+permissions:
+  contents: read
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        persist-credentials: false
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+      with:
+        python-version: ${{ inputs.lint-python-version }}
+        cache: pip
+        cache-dependency-path: ${{ inputs.lint-requirements }}
+    - env:
+        REQUIREMENTS: ${{ inputs.lint-requirements }}
+      run: python -m pip install -r "$REQUIREMENTS"
+    - run: 'python -m ruff check .
+
+        python -m ruff format --check .'
+  test:
+    name: Python ${{ matrix.python }} / ${{ inputs.test-profile }} / ${{ matrix.dependencies }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ${{ fromJSON(inputs.python-versions) }}
+        dependencies: ${{ fromJSON(inputs.dependency-modes) }}
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        persist-credentials: false
+    - uses: eigger/hass-repo-standards/actions/python-environment@e7b02dabb8a3d7b477237a2e904b34c3eeab0839 # actions v0.1.0
+      with:
+        domain: ${{ inputs.domain }}
+        python-version: ${{ matrix.python }}
+        requirements: ${{ inputs.requirements }}
+        dependency-mode: ${{ matrix.dependencies }}
+        minimum-packages: ${{ inputs.minimum-packages }}
+        ha-components: ${{ inputs.ha-components }}
+        constraints: ${{ inputs.constraints }}
+        expected-ha-version: ${{ inputs.expected-ha-version }}
+        test-profile: ${{ inputs.test-profile }}
+    - env:
+        PYTEST_ARGS: ${{ inputs.pytest-args }}
+      run: 'python - <<''PY''
+
+        import os, shlex, subprocess, sys
+
+        subprocess.run([sys.executable, "-m", "pytest", *shlex.split(os.environ["PYTEST_ARGS"])], check=True)
+
+        PY'

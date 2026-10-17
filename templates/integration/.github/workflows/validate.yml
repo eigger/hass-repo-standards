@@ -1,0 +1,18 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+name: Validate
+'on':
+  push:
+    branches:
+    - main
+  pull_request: null
+  workflow_dispatch: null
+  schedule:
+  - cron: 23 3 * * 1
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    uses: eigger/hass-repo-standards/.github/workflows/validate-integration.yml@v0.1.0

@@ -1,0 +1,19 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+name: Update dependencies
+'on':
+  schedule:
+  - cron: 41 4 * * 1
+  workflow_dispatch: null
+permissions:
+  contents: read
+jobs:
+  dependencies:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: eigger/hass-repo-standards/.github/workflows/dependency-update.yml@v0.1.0
+    with:
+      domain: example
+      packages: '["imagespec", "blesession"]'
+      python-version: '3.13'
+      validation-command: python -m ruff check . && python -m ruff format --check . && python -m pytest tests/ -v

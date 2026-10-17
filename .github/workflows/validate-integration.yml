@@ -1,0 +1,33 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+name: Validate integration
+'on':
+  workflow_call:
+    inputs:
+      hacs-ignore:
+        description: Space separated approved exceptions; record rationale in STANDARDS.md
+        required: false
+        type: string
+        default: ''
+permissions:
+  contents: read
+jobs:
+  hacs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        persist-credentials: false
+    - uses: hacs/action@1ebf01c408f29afcb6406bd431bc98fd8cbb15aa # main snapshot 2026-10-17
+      with:
+        category: integration
+        ignore: ${{ inputs.hacs-ignore }}
+        comment: 'false'
+  hassfest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        persist-credentials: false
+    - uses: home-assistant/actions/hassfest@cd6f3635a740c84d8a14f6121a90068b8ece6bf6 # master snapshot 2026-10-17

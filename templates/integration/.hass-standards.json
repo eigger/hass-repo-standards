@@ -1,0 +1,11 @@
+{
+  "repository": "eigger/hass-example",
+  "default_branch": "main",
+  "readmes": ["README.md"],
+  "hacs": "custom",
+  "release": false,
+  "analytics": false,
+  "installation_link": "#installation",
+  "tests_workflow": "tests.yml",
+  "validate_workflow": "validate.yml"
+}

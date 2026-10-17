@@ -1,0 +1,115 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+name: Update manifest dependencies
+'on':
+  workflow_call:
+    inputs:
+      domain:
+        description: Integration domain
+        required: true
+        type: string
+      packages:
+        description: JSON array, e.g. ["imagespec", "blesession"]
+        required: true
+        type: string
+      python-version:
+        description: Python compatible with test environment
+        required: true
+        type: string
+      requirements:
+        description: Caller test requirements
+        required: false
+        type: string
+        default: requirements_test.txt
+      lint-requirements:
+        description: Caller lint requirements
+        required: false
+        type: string
+        default: requirements_lint.txt
+      ha-components:
+        description: Space separated HA component names
+        required: false
+        type: string
+        default: ''
+      test-profile:
+        description: unit or ha
+        required: false
+        type: string
+        default: unit
+      validation-command:
+        description: Trusted command covering changed package behavior
+        required: true
+        type: string
+      allow-major:
+        description: Allow explicitly reviewed major version update
+        required: false
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency:
+      group: manifest-dependencies-${{ github.repository }}
+      cancel-in-progress: false
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        persist-credentials: false
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Read actual default branch
+      id: repository
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: 'branch=$(gh api "repos/$GITHUB_REPOSITORY" --jq .default_branch)
+
+        printf ''branch=%s\n'' "$branch" >> "$GITHUB_OUTPUT"'
+    - name: Check out default branch
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        ref: ${{ steps.repository.outputs.branch }}
+        persist-credentials: false
+    - id: update
+      uses: eigger/hass-repo-standards/actions/update-manifest@e7b02dabb8a3d7b477237a2e904b34c3eeab0839 # actions v0.1.0
+      with:
+        domain: ${{ inputs.domain }}
+        packages: ${{ inputs.packages }}
+        allow-major: ${{ inputs.allow-major }}
+    - if: steps.update.outputs.updated == 'true'
+      uses: eigger/hass-repo-standards/actions/python-environment@e7b02dabb8a3d7b477237a2e904b34c3eeab0839 # actions v0.1.0
+      with:
+        domain: ${{ inputs.domain }}
+        python-version: ${{ inputs.python-version }}
+        requirements: ${{ inputs.requirements }}
+        ha-components: ${{ inputs.ha-components }}
+        test-profile: ${{ inputs.test-profile }}
+        dependency-mode: minimum
+        minimum-packages: ${{ inputs.packages }}
+    - name: Validate proposed dependency changes
+      if: steps.update.outputs.updated == 'true'
+      env:
+        VALIDATION_COMMAND: ${{ inputs.validation-command }}
+        LINT_REQUIREMENTS: ${{ inputs.lint-requirements }}
+      run: 'python -m pip install -r "$LINT_REQUIREMENTS"
+
+        python -m pip check
+
+        bash -euo pipefail -c "$VALIDATION_COMMAND"'
+    - name: Create or update one dependency PR
+      if: steps.update.outputs.updated == 'true'
+      uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+      with:
+        token: ${{ github.token }}
+        base: ${{ steps.repository.outputs.branch }}
+        branch: bot/manifest-dependencies
+        delete-branch: true
+        add-paths: custom_components/${{ inputs.domain }}/manifest.json
+        title: 'chore: update manifest dependencies'
+        commit-message: 'chore: update manifest dependencies'
+        body-path: ${{ runner.temp }}/hass-dependency-update.md

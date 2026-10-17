@@ -1,0 +1,11 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+version: 2
+updates:
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: weekly
+- package-ecosystem: pip
+  directory: /
+  schedule:
+    interval: weekly

@@ -1,0 +1,72 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+name: Standards checks
+'on':
+  push:
+    branches:
+    - main
+  pull_request: null
+  workflow_dispatch: null
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        persist-credentials: false
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+      with:
+        python-version: '3.13'
+        cache: pip
+        cache-dependency-path: requirements*.txt
+    - run: python -m pip install -r requirements_dev.txt
+    - run: 'python -m ruff check .
+
+        python -m ruff format --check .
+
+        python -m unittest discover -s tests -v
+
+        python scripts/check_repository.py'
+    - name: Lint workflow syntax (actionlint 1.7.12)
+      env:
+        ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+      run: 'curl --fail --silent --show-error --location https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz --output "$RUNNER_TEMP/actionlint.tar.gz"
+
+        printf ''%s  %s\n'' "$ACTIONLINT_SHA256" "$RUNNER_TEMP/actionlint.tar.gz" | sha256sum --check
+
+        tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
+
+        "$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes= .github/workflows/*.yml templates/integration/.github/workflows/*.yml'
+  environment-smoke:
+    name: Environment action / ${{ matrix.mode }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        mode:
+        - current
+        - minimum
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        persist-credentials: false
+    - name: Create isolated caller fixture
+      run: 'mkdir -p custom_components/standards_smoke
+
+        printf ''%s\n'' ''{"domain":"standards_smoke","requirements":["packaging>=25.0"]}'' > custom_components/standards_smoke/manifest.json
+
+        printf ''# No extra test packages in this fixture\n'' > smoke-requirements.txt'
+    - uses: ./actions/python-environment
+      with:
+        domain: standards_smoke
+        python-version: '3.13'
+        requirements: smoke-requirements.txt
+        dependency-mode: ${{ matrix.mode }}
+        minimum-packages: '["packaging"]'
+        test-profile: unit

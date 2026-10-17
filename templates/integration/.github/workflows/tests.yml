@@ -1,0 +1,22 @@
+# Shared standard v0.1.0; upstream action SHAs verified 2026-10-17.
+name: Tests
+'on':
+  push:
+    branches:
+    - main
+  pull_request: null
+  workflow_dispatch: null
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  python:
+    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@v0.1.0
+    with:
+      domain: example
+      python-versions: '["3.13"]'
+      test-profile: unit
+      dependency-modes: '["current", "minimum"]'
+      minimum-packages: '["imagespec", "blesession"]'
