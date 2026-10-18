@@ -47,3 +47,12 @@
 - [ESPHome BLE](https://esphome.io/components/esp32_ble/): ble.disable. [BLE provisioning](https://esphome.io/components/esp32_improv/): 별도 Wi-Fi 설정 도우미와 proxy 동작 구분. Bluetooth 자료 재확인일 2026-10-18.
 - [BLE ESL 한국어 README](https://github.com/eigger/hass-ble-esl/blob/main/README.ko.md#설치): 기존 설치 안내의 출발점.
 - [blesession 계약](https://github.com/eigger/blesession/blob/main/docs/contract.md): 라이브러리와 통합 책임, 진단 정보.
+
+## imagespec payload 참고와 검증 범위
+
+다음은 공식 HA 요구사항이 아닌 라이브러리 소유 자료입니다. 중앙 DOC-08은 프로젝트 정책이며 실제 HA schema·renderer 실행 의무와 통합별 고정 문서 틀을 정합니다.
+
+- [imagespec 공통 영어 안내](https://github.com/eigger/imagespec/blob/main/docs/payload.md) / [한국어 안내](https://github.com/eigger/imagespec/blob/main/docs/payload.ko.md): 공통 문법·값·색상·회전·디더링·최소 렌더링 예제. 신규 문서가 로컬 초안인 동안 원격 존재를 확인했다고 쓰지 않으며 실제 기본 브랜치 반영 후 URL을 확인합니다.
+- [imagespec 속성 참조](https://github.com/eigger/imagespec/blob/main/docs/reference.md), [요소 예제](https://github.com/eigger/imagespec/blob/main/docs/elements.md), [디더링](https://github.com/eigger/imagespec/blob/main/docs/dithering.md), [호스트 통합](https://github.com/eigger/imagespec/blob/main/docs/integrating.md): 실제 설치 버전의 키·API·RenderContext·지원 범위와 대조하는 라이브러리 원본. 전체 매뉴얼을 중앙에 복제하지 않습니다.
+
+2026-10-18 로컬 문서 작성은 imagespec checkout의 실제 public validate/render·소스·스키마를 기준으로 검증하며 기존 지원 최소·버전·릴리스 정책은 변경하지 않습니다. HA fixture·서비스 스키마 실행 증거와 이미지 렌더링 증거·기기 전달/실물 검증을 구분합니다.

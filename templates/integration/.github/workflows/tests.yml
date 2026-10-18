@@ -18,6 +18,8 @@ jobs:
   current:
     uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@main
     with:
+      # Replace main with the same reviewed full SHA as this reusable workflow.
+      standards-ref: main
       domain: example
       python-versions: '["3.14"]'
       requirements: requirements_test.txt

@@ -72,4 +72,8 @@ DEP-07·DEP-08 적용 시 현재 HA와 테스트 플러그인은 같은 PR에서
 
 설치 action은 `ha`에서 실제 HA와 `pytest-homeassistant-custom-component`의 설치를 확인하고 버전을 보고합니다. 실행용 requirements 예시는 채택할 통합의 실제 지원 범위에 맞춰 검토합니다. 각 통합 manifest는 해당 통합의 채택 범위에서만 변경합니다.
 
-중앙 문서 검사 action은 기존 공통 도구와 같은 `packaging==26.3`을 사용해 blesession requirement의 실제 배포 이름을 파싱합니다. extras·연산자·URL·marker를 문자열 prefix로 추정하지 않고, 검사 호스트에서 비활성인 marker도 통합의 지원 범위 선언으로 유지합니다. 이는 검사 도구 의존성이며 통합 manifest 런타임 의존성에 추가하지 않습니다.
+중앙 문서 검사 action은 기존 공통 도구와 같은 `packaging==26.3`을 사용해 blesession·imagespec requirement의 실제 배포 이름을 파싱합니다. extras·연산자·URL·marker를 문자열 prefix로 추정하지 않고, 검사 호스트에서 비활성인 marker도 통합의 지원 범위 선언으로 유지합니다. 이는 검사 도구 의존성이며 통합 manifest 런타임 의존성에 추가하지 않습니다.
+
+imagespec의 문서 예제 계약(DOC-08)은 이미 설치된 패키지를 사용합니다. current와 manifest의 정확한 하한은 실제 HA 환경에서 각각 검증하며, 범위 requirement는 `minimum-packages`에 imagespec을 포함합니다. 단일 exact pin은 같은 실제 설치값일 때 결과를 재사용할 수 있습니다. 예제 실행을 위해 resolver 완료 뒤 최신 imagespec·새 extras를 덮어 설치하거나 하한을 올리지 않습니다. 통합이 실제 사용하는 extras·템플릿·폰트/이미지/history context와 하한의 public API 호환성을 [작성 규칙](payload-documentation.md)에 따라 검증하고 실제 버전·pip check·결과를 기록합니다.
+
+DOC-08의 matrix별 marker 비활성은 requirement·문서 의무를 제거하지 않습니다. 해당 job은 payload 버전 coverage 없이 N/A를 명시하고 일반 HA 회귀를 유지하며, 실제 활성 환경의 current/정확한 하한 검증을 별도로 충족해야 합니다. 이는 선택한 갱신 package의 marker가 비활성이면 실패하는 updater 정책이나 활성 환경의 실제 패키지 누락 실패를 완화하지 않습니다. marker·지원 최소·설치값을 검증 편의에 맞게 바꾸지 않습니다.

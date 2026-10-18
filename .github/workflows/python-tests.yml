@@ -56,6 +56,11 @@ name: Python tests
         required: false
         type: string
         default: unit
+      standards-ref:
+        description: Reviewed full central SHA for installed payload contract (imagespec HA only)
+        required: false
+        type: string
+        default: ''
       pytest-args:
         description: Trusted pytest arguments; empty selects tests/components/domain for ha
         required: false
@@ -106,10 +111,78 @@ jobs:
         constraints: ${{ inputs.constraints }}
         expected-ha-version: ${{ inputs.expected-ha-version }}
         test-profile: ${{ inputs.test-profile }}
+    - name: Detect documented payload contract
+      id: payload
+      env:
+        DOMAIN: ${{ inputs.domain }}
+        TEST_PROFILE: ${{ inputs.test-profile }}
+        STANDARDS_REF: ${{ inputs.standards-ref }}
+      run: |
+        python - <<'PAYLOAD'
+        import ast, json, os, re
+        from pathlib import Path
+        from packaging.requirements import Requirement
+        from packaging.utils import canonicalize_name
+        needed = False
+        active = False
+        root = Path.cwd()
+        if os.environ["TEST_PROFILE"] == "ha":
+            component = root / "custom_components" / os.environ["DOMAIN"]
+            manifest = json.loads((component / "manifest.json").read_text())
+            selected = [Requirement(r) for r in manifest.get("requirements", []) if canonicalize_name(Requirement(r).name) == "imagespec"]
+            needed = bool(selected)
+            active = any(r.marker is None or r.marker.evaluate() for r in selected)
+            if not needed:
+                for path in component.rglob("*.py"):
+                    if not path.resolve().is_relative_to(root):
+                        raise ValueError("Integration source escapes caller checkout")
+                    tree = ast.parse(path.read_text(), filename=str(path))
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.Import) and any(a.name.split(".")[0] == "imagespec" for a in node.names):
+                            needed = active = True
+                        if isinstance(node, ast.ImportFrom) and node.level == 0 and (node.module or "").split(".")[0] == "imagespec":
+                            needed = active = True
+        if active:
+            if not re.fullmatch(r"[0-9a-f]{40}", os.environ["STANDARDS_REF"]):
+                raise ValueError("imagespec HA validation requires the reviewed full standards-ref SHA")
+            reserved = root / ".hass-standards-tools"
+            if reserved.exists() or reserved.is_symlink():
+                raise ValueError("Reserved standards tooling path exists; preserve caller files and choose an approved migration")
+        with open(os.environ["GITHUB_OUTPUT"], "a") as stream:
+            stream.write("required=" + str(needed).lower() + "\n")
+            stream.write("active=" + str(active).lower() + "\n")
+        if needed and not active:
+            print("N/A: imagespec marker inactive in this matrix; ordinary regression continues, no payload version coverage is claimed")
+        PAYLOAD
+    - name: Check out reviewed payload tools separately
+      if: steps.payload.outputs.active == 'true'
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        repository: eigger/hass-repo-standards
+        ref: ${{ inputs.standards-ref }}
+        path: .hass-standards-tools
+        persist-credentials: false
+    - name: Validate installed payload examples
+      if: steps.payload.outputs.active == 'true'
+      uses: ./.hass-standards-tools/actions/check-payload
+      with:
+        domain: ${{ inputs.domain }}
+    - name: Remove temporary standards tooling checkout
+      if: steps.payload.outputs.active == 'true'
+      run: |
+        python - <<'CLEAN'
+        from pathlib import Path
+        import shutil
+        path = Path.cwd() / ".hass-standards-tools"
+        if path.is_symlink() or path.resolve() != Path.cwd() / ".hass-standards-tools":
+            raise ValueError("Refuse to remove a changed tooling path")
+        shutil.rmtree(path)
+        CLEAN
     - env:
         PYTEST_ARGS: ${{ inputs.pytest-args }}
         TEST_PROFILE: ${{ inputs.test-profile }}
         DOMAIN: ${{ inputs.domain }}
+        PAYLOAD_CONTRACT: ${{ steps.payload.outputs.required }}
       run: |
         python - <<'PYTEST'
         import os, shlex, subprocess, sys
@@ -117,5 +190,7 @@ jobs:
         if not arguments:
             target = "tests/components/" + os.environ["DOMAIN"] + "/" if os.environ["TEST_PROFILE"] == "ha" else "tests/"
             arguments = [target, "-v"]
+        if os.environ.get("PAYLOAD_CONTRACT") == "true":
+            arguments.append("--ignore=tests/components/" + os.environ["DOMAIN"] + "/test_payload_examples.py")
         subprocess.run([sys.executable, "-m", "pytest", *arguments], check=True)
         PYTEST

@@ -20,6 +20,7 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 | [Testing and compatibility](docs/testing.md) | tests/components/domain, real HA fixtures/loading, minimum versions |
 | [CI rules](docs/ci.md) | Shared workflows, permissions, events, timeouts, extensions |
 | [Dependency management](docs/dependencies.md) | Declarations, additions, HA test dependencies, updates, minimums |
+| [Payload documentation rules](docs/payload-documentation.md) | Required bilingual device guides and executable HA/imagespec examples; common [English](https://github.com/eigger/imagespec/blob/main/docs/payload.md) / [한국어](https://github.com/eigger/imagespec/blob/main/docs/payload.ko.md) guide owned by imagespec |
 | [Bluetooth documentation rules](docs/bluetooth-documentation.md) | Authoring requirements and user-guide links |
 | [Bluetooth proxy user guide](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md) | Common user guide maintained in blesession ([한국어](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md)); [common troubleshooting](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.md) |
 | [Releases and maintenance](docs/releases.md) | Versions, changelogs, migration, support status |

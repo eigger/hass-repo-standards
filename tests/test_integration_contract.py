@@ -200,6 +200,150 @@ class IntegrationContract(unittest.TestCase):
             )
         )
 
+    def make_payload_documents(self, requirement="imagespec>=1.0.1"):
+        import re
+
+        (self.root / "custom_components/example/manifest.json").write_text(
+            json.dumps({"domain": "example", "requirements": [requirement]})
+        )
+        (self.root / "docs").mkdir(exist_ok=True)
+        (self.root / "examples/payload").mkdir(parents=True, exist_ok=True)
+        example = self.root / "examples/payload/minimal.yaml"
+        example.write_text(
+            """action: example.draw\ndata:\n  payload:\n    - type: text\n      x: 0\n      y: 0\n      value: "{{ states('sensor.actual') }}"\n      size: 8\n"""
+        )
+        self.config["payload"] = {
+            "examples": [
+                {
+                    "path": "examples/payload/minimal.yaml",
+                    "payload_path": ["data", "payload"],
+                    "expected_size": [32, 16],
+                    "expected_palette": ["#000000", "#ffffff"],
+                }
+            ]
+        }
+        self.save_config()
+        for name, readme in (("payload.md", "README.md"), ("payload.ko.md", "README.ko.md")):
+            text = (
+                (ROOT / "templates/integration/docs" / name)
+                .read_text()
+                .replace("REPLACE_REPOSITORY", self.config["repository"])
+            )
+            text = re.sub(r"REPLACE_[A-Z_]+", "Actual device condition", text)
+            (self.root / "docs" / name).write_text(text)
+            path = self.root / readme
+            path.write_text(
+                path.read_text().replace(
+                    contract.markers("support")[0],
+                    f"[Payload](docs/{name})\n\n" + contract.markers("support")[0],
+                )
+            )
+        for file in (self.root / ".github/workflows").glob("*.yml"):
+            text = file.read_text().replace("standards-ref: main", "standards-ref: " + "a" * 40)
+            if file.name == "tests.yml":
+                text = text.replace(
+                    "      domain: example",
+                    """      dependency-modes: '["current", "minimum"]'\n      minimum-packages: '["imagespec"]'\n      domain: example""",
+                )
+            file.write_text(text)
+
+    def test_payload_contract_structure_and_real_jinja_are_accepted(self):
+        self.make_payload_documents()
+        self.assertEqual(contract.check(self.root), [])
+
+    def test_payload_missing_locale_placeholder_heading_link_and_unregistered_yaml(self):
+        self.make_payload_documents()
+        path = self.root / "docs/payload.ko.md"
+        original = path.read_text()
+        for broken in (
+            "Missing Korean document structure",
+            original + "\nREPLACE_DEVICE_DETAILS\n",
+            original.replace("## 최소 동작 예제", "## 다른 절"),
+            original.replace("../README.ko.md", "../README.md"),
+            original.replace(
+                "imagespec/blob/main/docs/payload.ko.md", "imagespec/blob/main/docs/payload.md"
+            ),
+            original + "\n[Other example](../examples/payload/untested.yaml)\n",
+            original + "\n[Encoded example](../examples/payload/untested%2Eyaml)\n",
+            "<pre>\n" + original + "\n</pre>",
+        ):
+            path.write_text(broken)
+            self.assertTrue(
+                any("DOC-08 docs/payload.ko.md" in error for error in contract.check(self.root))
+            )
+        path.unlink()
+        self.assertTrue(
+            any("DOC-08 docs/payload.ko.md" in error for error in contract.check(self.root))
+        )
+
+    def test_payload_sha_and_collective_minimum_coverage(self):
+        self.make_payload_documents()
+        path = self.root / ".github/workflows/tests.yml"
+        original = path.read_text()
+        path.write_text(
+            original.replace("standards-ref: " + "a" * 40, "standards-ref: " + "b" * 40)
+        )
+        self.assertTrue(any("standards-ref" in error for error in contract.check(self.root)))
+        path.write_text(original.replace('["current", "minimum"]', '["current"]'))
+        self.assertTrue(any("exact minimum" in error for error in contract.check(self.root)))
+        # Separate required jobs may collectively cover package modes.
+        data = contract.yaml.load(original, Loader=contract.Loader)
+        job = data["jobs"]["current"]
+        job["with"]["dependency-modes"] = '["current"]'
+        import copy
+
+        minimum = copy.deepcopy(job)
+        minimum["with"]["dependency-modes"] = '["minimum"]'
+        data["jobs"]["minimum"] = minimum
+        path.write_text(contract.yaml.safe_dump(data, sort_keys=False))
+        self.assertEqual(contract.check(self.root), [])
+        # An actual exact pin can reuse one current job.
+        del data["jobs"]["minimum"]
+        path.write_text(contract.yaml.safe_dump(data, sort_keys=False))
+        (self.root / "custom_components/example/manifest.json").write_text(
+            '{"domain":"example","requirements":["imagespec==1.0.1"]}'
+        )
+        self.assertEqual(contract.check(self.root), [])
+
+    def test_inactive_jobs_do_not_count_as_payload_version_coverage(self):
+        self.make_payload_documents('imagespec>=1.0.1; python_version >= "3.14"')
+        path = self.root / ".github/workflows/tests.yml"
+        original = path.read_text()
+        path.write_text(original.replace('["3.14"]', '["3.13"]'))
+        self.assertTrue(any("exact minimum" in error for error in contract.check(self.root)))
+        path.write_text(original)
+        self.assertEqual(contract.check(self.root), [])
+
+    def test_payload_scaffold_examples_and_paths_cannot_be_faked(self):
+        self.make_payload_documents()
+        path = self.root / "tests/components/example/test_payload_examples.py"
+        path.write_text("def test_payload(): pass\n")
+        self.assertTrue(
+            any("central payload contract scaffold" in error for error in contract.check(self.root))
+        )
+        shutil.copyfile(
+            ROOT / "templates/integration/tests/components/example/test_payload_examples.py", path
+        )
+        self.config["payload"]["examples"][0]["payload_path"] = ["data", "missing"]
+        self.save_config()
+        self.assertTrue(
+            any("DOC-08 .hass-standards.json" in error for error in contract.check(self.root))
+        )
+        self.config["payload"]["examples"][0]["payload_path"] = ["data", "payload"]
+        self.save_config()
+        outside = self.root / "docs/payload.md"
+        outside.unlink()
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "payload.md"
+            target.write_text("Outside")
+            outside.symlink_to(target)
+            self.assertTrue(
+                any(
+                    "DOC-08 docs/payload.md" in error and "escapes" in error
+                    for error in contract.check(self.root)
+                )
+            )
+
     def make_bluetooth_documents(self, requirement="blesession[extra]>=0.9; python_version < '2'"):
         manifest = self.root / "custom_components/example/manifest.json"
         manifest.write_text(

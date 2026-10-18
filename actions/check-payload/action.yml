@@ -1,0 +1,19 @@
+name: Validate documented payload examples
+description: Execute real HA action schema and installed imagespec rendering contracts
+inputs:
+  domain:
+    description: Caller integration domain
+    required: true
+runs:
+  using: composite
+  steps:
+  - shell: bash
+    run: python -m pip check
+  - shell: bash
+    env:
+      ACTION_PATH: ${{ github.action_path }}
+      PAYLOAD_REPOSITORY: ${{ github.workspace }}
+      PAYLOAD_DOMAIN: ${{ inputs.domain }}
+    run: |
+      export PYTHONPATH="$ACTION_PATH/../../scripts${PYTHONPATH:+:$PYTHONPATH}"
+      python "$ACTION_PATH/../../scripts/run_payload_contract.py"

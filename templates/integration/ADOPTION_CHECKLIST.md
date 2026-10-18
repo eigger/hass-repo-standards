@@ -85,6 +85,9 @@
 | DOC-03, DOC-04, DOC-05 | 언어 링크 다음 중첩 배지 관리 블록, flat·Release/HACS/HA minimum/Tests/Validate/License/Usage 순서·실제 조건·고유 배지 보존, 실제 기본 브랜치·필수 동적 Usage·미집계와 0 설치 구분 | TODO | 미확인 |
 | HA-09, HA-10 | BLE 사용 시 HA Bluetooth API·라이브러리 공개 경계, 지원한 proxy 경로·재연결·취소·서비스 변경 검증 | TODO | 미확인 |
 | DOC-07 | blesession 사용 여부(manifest requirement extras·operator·marker/실제 import) 확인. 사용 통합은 중앙 양언어 docs/troubleshooting 템플릿의 고정 제목·순서·증상 표·실제 진단/로그·기존 Issues 연결, README와 로컬 문서의 언어별 상호/공통 blesession 원본 링크·placeholder 제거·공용 Validate 검사. 기존 본문/기기안내 보존, 새 제보 양식 금지. 프록시만 지원하면 기존 기기 조건·사용자 안내를 수동 확인 | TODO | 미확인 |
+| DOC-08 | imagespec 사용 여부·양언어 docs/payload 여섯 절·언어별 README/공통 원본/상호 링크·실제 액션/대상/전체 YAML·기기 출력/지원/제한·기존 예제/본문 보존·기존 지원 연결, 모든 로컬 연결 예제의 payload.examples 등록·실제 경로/payload_format(list 또는 yaml)/크기/모델 색상 | TODO | 미확인 |
+| DOC-08, TEST-02, TEST-05, TEST-09 | 정확한 중앙 test_payload_examples scaffold·실제 HA entry/등록 action schema·production 준비 context/함수·기기 전송 없는 installed imagespec.validate/render 비교·각 예제 크기/색상, current/정확한 하한 실제 버전·pip check·명령/CI 결과, exact pin 재사용 근거·독립 adapter 리뷰 | TODO | 미확인 |
+| DOC-08, CI-05, CI-07, DEP-08 | 공용 Tests/updater의 standards-ref와 reusable full SHA 일치·caller checkout 보존·도구 별도 checkout·resolver 후 패키지 변경 없음·지원 최소 보존·미실행/skip/xfail/deselect를 PASS로 처리하지 않음 | TODO | 미확인 |
 | DOC-07, HA-12 | 기기별 깨우기·인증·타 앱 연결·전송 제약, 실제 검증 경로와 미검증 범위, 공개 문제 로그 비식별화 | TODO | 미확인 |
 | HACS-04, REL-01, REL-02, REL-03, CI-11 | 통합 릴리스 시 같은 검증 commit/tag·manifest 버전·산출물·권한, 사용자 영향·지원 변경·제한 안내 | TODO | 미확인 — 규칙 리포에는 릴리스하지 않음 |
 | REL-04 | 이전/중단 시 README 상단 경로·유지보수 상태·재등록 여부, 자동 이전으로 오인하지 않는 안내 | TODO | 미확인 |
@@ -114,3 +117,19 @@
 - 양언어 본문 보존·의미 일치·기존 고지·고유 배지 독립 리뷰: 미확인
 - 공용 CI 이름·파일명·기존 실행 조건과 전용 CI 명명 형식: 미확인
 - 승인 예외 실제 사용자 근거·일자·경로·범위 및 설정과 STANDARDS.md 대조: 미확인
+
+## imagespec payload 예제 검증 환경 — 해당 시
+
+imagespec 미사용이면 실제 requirement/import 확인 근거와 N/A를 기록합니다. 사용 통합은 모든 등록 예제와 각 검증 환경을 기록하고, 이 표의 미확인 값을 PASS로 취급하지 않습니다.
+
+| 환경 / 대상 커밋 | Python / 실제 HA / 플러그인 | 실제 imagespec / current·정확한 하한 근거 | 예제 경로 / 실제 HA schema·준비 경로 | 기대/실제 출력 크기·허용 색상 | pip check·명령·결과·CI 링크 |
+|---|---|---|---|---|---|
+| 미확인 | 미확인 | 미확인 | 미확인 | 미확인 | 미확인 |
+
+- 중앙 계약 완료·등록 예제 전체 실행·skip/xfail/deselect 없음: 미확인
+- adapter가 production 준비 함수를 호출하고 실제 context/정규화 payload를 쓰는 독립 검토: 미확인
+- 템플릿·폰트·이미지·history 실제 지원 context와 외부 통신만 mock한 근거: 미확인
+- 공통 원본 실제 기본 브랜치 공개 URL 확인 / 중앙 규칙 반영 순서: 미확인
+
+- DOC-08 matrix별 imagespec marker 활성/비활성 근거·비활성 N/A와 버전 coverage 없음·일반 HA 회귀 지속·다른 활성 환경의 current/정확한 하한 결과: 미확인
+- YAML 문자열/목록 액션 입력과 실제 HA 스키마 정규화 후 payload_format 일치·기존 API 보존: 미확인

@@ -13,6 +13,7 @@ import yaml
 from bluetooth_documents import check as bluetooth_document_errors
 from bluetooth_documents import syntax_error_message
 from check_repository import Loader
+from payload_documents import check as payload_document_errors
 from sync_badges import END as BADGES_END
 from sync_badges import START as BADGES_START
 from sync_badges import preserve_extra_badges
@@ -423,6 +424,7 @@ def check(root, write_readmes=False):
     errors.extend(test_errors(root, domain))
     errors.extend(workflow_errors(root, config, domain))
     errors.extend(bluetooth_document_errors(root, config, manifests[0], manifest, safe_path))
+    errors.extend(payload_document_errors(root, config, manifests[0], manifest, safe_path))
     result = apply_exceptions(root, config, errors)
     # All documents preflight above; preserve bytes outside explicitly managed areas.
     if write_readmes and not any(rule == "DOC-01" for rule, _, _ in errors):

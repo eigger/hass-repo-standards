@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-18 — imagespec 공통 payload 원본과 실제 예제 검증
+
+- 공통 사용자 문법·속성·요소·색상·회전·디더링 원본을 imagespec의 양언어 payload 문서로 연결합니다. 중앙 DOC-08은 기기별 양언어 여섯 절과 실제 액션/대상/전체 YAML·출력/제약·기존 지원 경로를 강제하며 기존 README·기기 예제를 보존합니다. 제보 양식을 새로 만들지 않습니다.
+- 모든 연결된 로컬 액션 YAML을 payload.examples에 실제 중첩 경로·기대 출력 크기·모델 색상으로 등록합니다. Validate 정적 검사에 더해 중앙 pytest 계약으로 실제 HA fixture·등록 스키마·통합 준비 경로·설치된 imagespec.validate/render 결과를 검증합니다. skip/xfail/deselect·자체 PASS 선언은 실행 증거가 아닙니다.
+- 실제 액션 payload가 목록 또는 YAML 문자열인 기존 API를 보존하고 payload_format으로 스키마 정규화 결과를 구분합니다. marker 비활성 matrix는 명시적 N/A·버전 검증 없음으로 일반 HA 회귀를 유지하며 다른 활성 환경의 current/정확한 하한 검증은 필수입니다. 활성 환경 누락은 실패하고 설치·최소 상향으로 우회하지 않습니다.
+- 공용 Tests/updater는 reusable workflow와 같은 검토 full standards-ref를 별도로 checkout하며 caller·기존 resolver 설치 버전을 유지합니다. current/정확한 하한은 실제 환경에서 검증하고 exact pin의 같은 설치값만 결과를 재사용합니다. 최소 HA·Python·라이브러리·릴리스 정책을 임의 변경하지 않습니다.
+- 사용하지 않는 액션·기능·config entry를 검사 때문에 만들지 않습니다. 내부 렌더링 전용·YAML 설정 등 범위 차이는 실제 근거·중앙 계약 개선 또는 명시적 승인 예외로 다루며 정적 예외가 런타임 검사를 자동 면제한다고 주장하지 않습니다. 실물·기기 전송·원격 CI는 실제 수행 근거와 구분합니다.
+- imagespec 공통 원본을 실제 기본 브랜치에 먼저 반영·URL 검증한 뒤 중앙 규칙을 공개합니다. 로컬 초안만으로 원격 공개나 기존 통합 적용을 완료했다고 보고하지 않습니다. 현재 사용자 브랜치·기존 작업을 보존하며 자동 commit/push·다른 통합 수정·릴리스를 수행하지 않습니다.
+
 ## 2026-10-18 — blesession 공통 안내 이관과 기기별 문제 해결 강제
 
 - 공통 프록시 추천·설정·HA 등록·일반 문제 해결 원본을 blesession의 양언어 bluetooth/troubleshooting 문서로 옮깁니다. 기존 중앙 bluetooth URL과 troubleshooting 앵커는 짧은 이전 안내로 유지하며 중복 원본을 관리하지 않습니다. 일반 안내 읽기에 라이브러리 설치를 요구하지 않습니다.

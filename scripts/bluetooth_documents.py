@@ -94,11 +94,11 @@ def syntax_error_message(error):
     )
 
 
-def uses_blesession(root, manifest_path, manifest, safe_path):
+def uses_package(root, manifest_path, manifest, safe_path, package):
     # Do not evaluate markers on the checker's OS/Python: every declared target
     # environment remains part of the integration's support scope.
     if any(
-        canonicalize_name(Requirement(req).name) == "blesession"
+        canonicalize_name(Requirement(req).name) == canonicalize_name(package)
         for req in manifest.get("requirements", [])
     ):
         return True
@@ -107,16 +107,20 @@ def uses_blesession(root, manifest_path, manifest, safe_path):
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in ast.walk(tree):
             if isinstance(node, ast.Import) and any(
-                alias.name.split(".")[0] == "blesession" for alias in node.names
+                alias.name.split(".")[0] == package for alias in node.names
             ):
                 return True
             if (
                 isinstance(node, ast.ImportFrom)
                 and node.level == 0
-                and (node.module or "").split(".")[0] == "blesession"
+                and (node.module or "").split(".")[0] == package
             ):
                 return True
     return False
+
+
+def uses_blesession(root, manifest_path, manifest, safe_path):
+    return uses_package(root, manifest_path, manifest, safe_path, "blesession")
 
 
 def check(root, config, manifest_path, manifest, safe_path):

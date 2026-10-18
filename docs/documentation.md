@@ -35,6 +35,16 @@ blesession 사용 통합의 양언어 README는 각각 같은 언어의 로컬 �
 
 공통 원본의 확인일 관리, 공식 구매/지원 근거 확인과 라이브러리 계약 검토는 **작성자의 작업**으로 유지합니다. 사용자 문서 본문에 이런 작성 지시나 채택 절차를 섞지 않습니다. 규칙의 세부 조건은 [작성 규칙](bluetooth-documentation.md)을 따릅니다.
 
+## imagespec payload 사용자 안내
+
+**DOC-08 필수**: imagespec 사용 통합은 [작성 규칙](payload-documentation.md)과 중앙 [영어](../templates/integration/docs/payload.md)·[한국어](../templates/integration/docs/payload.ko.md) 템플릿을 적용해 `docs/payload.md`·`docs/payload.ko.md`를 제공합니다. 고정 여섯 H2는 공통 payload 안내 → 이 통합에서 payload 사용 → 최소 동작 예제 → 기기 출력 설정 → 지원 기능과 제한 → 문제 해결이며 영어 대응 제목·순서도 중앙 템플릿을 따릅니다. 하위 H3로 모델별 설명을 보완할 수 있습니다. 실제 액션·대상·전체 YAML·출력 크기/색상/회전·제약을 쓰고 기존 README 본문·기기 예제는 보존합니다. 공통 문법·요소·속성·색상·회전·디더링 원본은 imagespec의 [영어 안내](https://github.com/eigger/imagespec/blob/main/docs/payload.md)·[한국어 안내](https://github.com/eigger/imagespec/blob/main/docs/payload.ko.md)이며 중앙이나 각 통합에서 전체 공통 매뉴얼을 중복 유지하지 않습니다.
+
+양언어 README는 같은 언어의 로컬 payload 안내로 연결하며 로컬 문서는 같은 언어 README·다른 언어판·공통 원본으로 연결합니다. 예제는 `examples/payload/*.yaml`의 실제 전체 HA 액션 파일이며 라이브러리의 bare 요소 목록을 기기 액션으로 오인하지 않습니다. 문서에서 연결한 모든 로컬 액션 YAML을 `.hass-standards.json`의 `payload.examples`에 실제 payload 위치·기대 출력 크기·모델 색상과 함께 등록합니다. 해당 통합에 없는 템플릿·폰트·history·extras·액션·기능은 만들지 않으며 해당 없음의 이유를 명시합니다. 문제 해결은 기존 안내·Issues·이슈 템플릿으로 연결하고 별도 제보 양식을 만들지 않습니다.
+
+공용 Validate는 대상·문서·고정 구조·링크·메타데이터·중앙 테스트 scaffold를 검사합니다. 공용 HA Tests는 실제 설치된 imagespec의 current 및 선언된 정확한 하한에서, 실제 HA fixture·등록된 액션 스키마·통합의 실제 준비/렌더링 경로와 중앙 pytest 계약으로 모든 예제를 검증합니다. 일반 구조 검사나 caller의 자체 PASS 선언으로 실행을 대체하지 않습니다. 외부 전송 경계만 mock하며 기기 명령을 실행하지 않고, resolver 완료 뒤 검증 편의를 위해 패키지를 덮어 설치하지 않습니다. 정확한 단일 pin은 실제 설치 버전이 같을 때만 current 결과를 재사용할 수 있습니다. 지원 최소 HA·Python·라이브러리는 임의 상향하지 않습니다. 실제 미지원 API·환경 제약은 미검증/실패로 기록하고 중앙 템플릿 수정 또는 명시적 승인 예외 절차를 따릅니다.
+
+원본 공개는 imagespec 문서를 실제 기본 브랜치에 먼저 반영해 URL을 검증한 뒤 중앙 규칙을 공개하는 순서입니다. 로컬 초안은 원격 공개·CI 성공·실물 검증의 근거가 아닙니다.
+
 ## 배지 도구
 
 `scripts/sync_badges.py`는 네트워크 없이 manifest/hacs/workflow/origin을 읽습니다. `.hass-standards.json`의 `repository`와 `default_branch`가 없으면 Git origin과 origin/HEAD에서 읽으며 모르면 실패합니다. 다른 언어판은 `readmes` 배열에 명시합니다. 관리 구역이 없으면 내용을 변경하지 않고 실패하므로 채택 PR에서 header 안의 언어 링크 다음에 다음 두 줄을 먼저 추가합니다.

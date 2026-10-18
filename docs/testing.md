@@ -34,6 +34,7 @@ tests/
 | `test_<platform>.py` | 실제 플랫폼 로딩 후 상태·registry·action 검증 |
 | `test_coordinator.py` | 실제 coordinator의 갱신·예외·복구 검증 |
 | `test_diagnostics.py` | 진단 결과와 민감 정보 제거 |
+| `test_payload_examples.py` | imagespec 사용 시 정확한 중앙 scaffold, 실제 실행 본문은 중앙 plugin |
 | `fixtures/` | 해당 domain의 비식별 응답·패킷 데이터 |
 | `snapshots/` | 사용하는 snapshot extension에 맞춘 domain별 snapshot |
 
@@ -83,3 +84,13 @@ Core의 helper 경로 `tests.common`은 커스텀 통합에서 `pytest_homeassis
 채택 완료에는 실제 HA로 통합을 로딩한 결과, 검증한 HA/Python/플러그인 버전, 최소 라이브러리 설치값, 제외·skip 사유가 필요합니다. HA 패키지가 설치됐다는 summary나 `test-profile: ha` 설정만으로 완료 처리하지 않습니다.
 
 공통 CI는 기존 caller 호환을 위해 `unit` 기본값을 유지합니다. 실행용 템플릿은 current 테스트의 단일 `ha` job 예시이며 지원 최소를 선언하지 않습니다. 선언된 최소가 current보다 낮으면 정확한 최소의 별도 job과 requirements를 추가·유지해야 합니다. 환경 action은 실제 HA·플러그인의 설치를 확인합니다. 채택 시 실제 지원 최소 HA와 현재 HA의 호환 조합으로 입력·requirements를 바꾸고 위 구조·실제 로딩 테스트를 실행해야 합니다. 환경 설치 확인은 통합 로딩 검증을 대신하지 않습니다. 최소 버전을 올리는 것은 지원 정책 변경이므로 사용자 결정과 이관 안내를 기록합니다. 예전 최소를 더 이상 지원하지 않기로 결정했다면 관련 job·requirements·constraints를 함께 제거하고 과거 테스트 성공 기록은 이전 커밋의 증거로 보존합니다.
+
+## imagespec 문서 예제의 중앙 실행 계약
+
+imagespec 사용 통합은 DOC-08에 따라 `tests/components/<domain>/test_payload_examples.py`를 중앙 scaffold와 정확히 같게 적용합니다. 실제 테스트 본문은 중앙 plugin이 domain fixture 범위에서 수집합니다. 일반 pytest만으로 이 파일을 실행하면 의도적으로 실패하므로 PASS 테스트로 고치거나 skip하지 않습니다. 공용 workflow는 필수 중앙 계약을 먼저 실행하고 성공 후 일반 회귀 실행에서 이 scaffold만 제외합니다. 예제의 skip·xfail·deselect도 완료로 인정하지 않습니다.
+
+`payload_example_setup`은 실제 HA·config entry·등록 액션을 로딩하고 `payload_example_adapter`는 실제 템플릿/스키마 처리 결과와 `RenderContext`·출력 설정·통합 production 준비 함수를 제공합니다. 중앙 계약은 전체 YAML의 실제 HA SCRIPT_SCHEMA·서비스 준비·등록 서비스 schema를 확인한 뒤 기기 전송 없이 실제 준비 결과와 public imagespec.validate/render의 이미지를 비교합니다. 모든 예제는 등록한 출력 크기와 허용 색상을 충족해야 합니다. 적용 인터페이스·예제 메타데이터는 [작성 규칙](payload-documentation.md)을 따릅니다. 자체 HA·등록 스키마·이미지 생성 대체물·테스트용 별도 통합으로 대상 통합의 검증을 주장하지 않습니다.
+
+검사는 해당 job의 resolver가 설치한 실제 imagespec current/정확한 하한을 사용하고 라이브러리를 추가 설치해 결과를 바꾸지 않습니다. 실제 템플릿·폰트·이미지·이력 지원은 필요한 fixture로 재현하되 외부 통신만 대체합니다. 미지원 기능은 이유를 기록하며 검사기 준비·HA 설치만으로 대상 예제나 실물 검증을 완료했다고 표시하지 않습니다. 하한에서 public API가 없으면 실제 실패·버전·영향을 기록해 호환성을 수정하거나 범위가 명시된 사용자 승인 예외를 받으며 지원 최소를 자동 상향하지 않습니다.
+
+DOC-08 matrix에서 imagespec requirement marker가 비활성이면 공용 workflow는 N/A·payload 버전 검증 없음으로 기록하고 도구 checkout/계약 실행만 생략하며 일반 HA 회귀는 관리 scaffold만 제외하고 계속합니다. 활성 환경의 필수 예제를 skip·xfail·deselect하는 것과 다릅니다. current/정확한 하한은 marker가 입증 가능하게 활성인 호환 환경에서 별도로 검증합니다. 활성 환경에 실제 패키지가 없으면 실패하고 설치로 우회하지 않습니다. 실제 액션 YAML의 payload 입력이 YAML 문자열이면 `payload_format: yaml`, 목록이면 기본 `list`로 등록해 기존 API를 보존합니다. yaml 형식은 실제 스키마가 이미 목록으로 파싱한 정규화 결과도 허용하며 production 준비 경로가 반환한 최종 목록과 비교합니다.

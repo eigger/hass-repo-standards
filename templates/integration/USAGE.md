@@ -45,3 +45,21 @@ blesession 사용 통합은 [영어 기기별 템플릿](docs/troubleshooting.md
 공통 문서 이관 공개 순서는 blesession의 새 양언어 원본을 먼저 반영·검증한 뒤 중앙 이전 안내와 새 템플릿 규칙을 반영하는 순서입니다. 로컬 문서 작성만으로 원격 원본이 공개되었다고 보고하지 않습니다. 현재 작업은 commit/push 권한을 자동 부여하지 않으며 다른 리포를 자동 수정하지 않습니다.
 
 로컬 중앙 검사기는 대상 통합의 Python 문법과 같거나 더 최신인 Python으로 실행합니다. standalone standards job은 현재 예제 통합의 Python 3.14 문법을 파싱하도록 Python 3.14를 사용합니다. 이 값은 검사 도구 실행 환경이며 통합의 지원 최소 HA/Python이나 최소 검증 환경을 올리지 않습니다. 중앙 도구 자체의 Python 3.9 단위 테스트 호환성과 대상 파일을 파싱할 수 있는 버전은 구분합니다.
+
+## imagespec 기기별 payload 안내와 실제 예제
+
+imagespec 사용 통합은 [작성 규칙](../../docs/payload-documentation.md)과 [영어](docs/payload.md)·[한국어](docs/payload.ko.md) 템플릿으로 대상의 `docs/payload.md`·`docs/payload.ko.md`를 작성합니다. 여섯 H2 제목·순서를 유지하고 H3로 모델별 세부 내용을 추가합니다. README는 같은 언어의 로컬 문서, 로컬 문서는 같은 언어 README·다른 언어판·imagespec [영어 원본](https://github.com/eigger/imagespec/blob/main/docs/payload.md)·[한국어 원본](https://github.com/eigger/imagespec/blob/main/docs/payload.ko.md)으로 연결합니다. 원본 공통 문법·요소 매뉴얼을 복제하거나 기존 README·기기 예제를 전면 재작성하지 않습니다.
+
+실제 전체 HA 액션 YAML을 `examples/payload/*.yaml`에 둡니다. 중앙 [minimal.yaml](examples/payload/minimal.yaml)은 미완성 표시이므로 실제 action/target/data로 교체해야 하며 라이브러리의 bare payload 예제와 다릅니다. 문서가 연결하는 모든 로컬 액션 YAML은 `.hass-standards.json`의 선택 `payload.examples`에 등록합니다. 필드는 `path`, 실제 정규화 payload 위치의 `payload_path`, 선택 `payload_format`(`list` 기본, 실제 액션 YAML의 입력이 YAML 문자열이면 `yaml`), 실제 출력 `[width, height]`인 `expected_size`, 모델 지원 `#RRGGBB` 목록인 `expected_palette`입니다. 예시 값은 작성 규칙에서 확인하되 모델에 맞지 않는 기본값을 적용하지 않습니다. imagespec을 사용하지 않는 통합은 이 선택 설정·문서·테스트를 만들 필요가 없습니다. templates의 기본 JSON은 특정 모델·액션을 가정하지 않아 payload 설정을 포함하지 않습니다.
+
+`tests/components/example/test_payload_examples.py`는 imagespec 사용 통합에만 실제 domain으로 복사하고 파일 내용은 중앙 scaffold와 정확히 일치하게 유지합니다. domain conftest에 실제 HA entry/서비스를 로딩하는 `payload_example_setup`과 실제 준비 함수를 연결하는 `payload_example_adapter`를 제공합니다. 후자는 `hass_standards_payload.PreparedPayload(payload, context, render_options, prepare)`를 반환합니다. 상세 인자와 실제 함수·외부 mock 경계는 작성 규칙을 따르며 새 가짜 스키마·HA·렌더러로 통과시키지 않습니다.
+
+공용 Tests와 updater의 `standards-ref`는 각각 reusable workflow의 검토 full SHA와 같아야 합니다. `main`은 초안 placeholder이며 실제 중앙 변경을 검토한 커밋이 존재한 뒤 SHA로 바꿉니다. 실제 설치한 current/정확한 하한의 public imagespec.validate/render와 통합 준비 결과·크기·팔레트를 검증하며 단일 exact pin의 같은 설치값만 결과를 재사용할 수 있습니다. 테스트가 실패한다고 하한을 올리거나 설치 후 패키지를 교체하지 않습니다. 해당 없음·미지원 이유·승인 예외·실제 검증 한계는 기록합니다. 일반 pytest는 중앙 plugin 없이 scaffold를 통과시키지 않으며 공용 workflow는 중앙 계약 성공 후에만 일반 회귀 실행에서 그 scaffold를 제외합니다.
+
+지원하는 템플릿·폰트/이미지/history·extras·기기 제약만 안내하고 실제 context로 테스트합니다. 마지막 절은 기존 문제 해결·Issues를 사용하며 새 양식을 만들지 않습니다. imagespec 공통 원본을 실제 기본 브랜치에 먼저 공개·확인한 후 중앙 규칙을 공개합니다. 로컬 초안과 중앙 검사기 테스트만으로 원격 URL·대상 통합·실물 검증을 완료했다고 보고하지 않습니다.
+
+실제 공개 payload 액션이 없는 내부 렌더링 통합이나 YAML 설정 전용 통합은 기능·entry·action을 새로 만들어 검사에 맞추지 않습니다. 해당 없음의 근거와 명시적으로 승인한 범위를 기록해 중앙 계약을 먼저 개선합니다. 정적 DOC-08 예외는 별도 런타임 계약을 자동 면제하지 않으며 실행 경로가 지원하지 않으면 차단 상태로 남깁니다. Core 공통 액션·entity service도 실제 대상 엔티티가 로딩된 통합 소유임을 확인해 검증할 수 있습니다. imagespec requirement의 marker가 일부 matrix에서 비활성이면 공용 workflow는 해당 예제 계약을 N/A·버전 검증 없음으로 명시하고 도구 checkout/실행만 생략하며 일반 HA 회귀 테스트는 관리 scaffold만 제외하고 계속합니다. current/정확한 하한은 marker가 실제 활성인 다른 호환 환경에서 검증해야 합니다. minor-only Python 값으로 patch 조건의 python_full_version marker를 입증하지 않습니다. 활성 환경에 패키지가 없으면 실행기는 명확한 오류로 실패하며 추가 설치로 숨기지 않습니다. 비활성 환경의 직접 로컬 계약 실행도 버전 검증 근거가 아닙니다.
+
+액션의 payload 필드가 원래 YAML 문자열을 받는다면 그 API를 바꾸지 않습니다. 실제 액션 YAML이 문자열 payload를 제공하면 `payload_format: yaml`, 목록이면 기본 `list`를 선택합니다. yaml 형식은 실제 HA 스키마가 이미 목록으로 파싱한 결과도 허용하며 아직 문자열이면 안전하게 파싱해 통합 production 준비 결과의 최종 목록과 비교합니다. 어댑터에서 가짜 파서를 만들어 production 준비를 대체하지 않습니다. 실제 Jinja 표현식은 호스트의 기존 지원 방식으로 처리하며 미완성 placeholder와 혼동하지 않습니다.
+
+`PreparedPayload`는 `payload_example_adapter` 팩터리 **함수 안에서 지연 import**합니다. domain conftest 최상위에서 중앙 `hass_standards_payload` 또는 계약만을 위한 imagespec을 import하지 않습니다. 중앙 도구가 PYTHONPATH에 없거나 imagespec marker가 비활성인 일반 회귀 실행도 정상 수집되어야 합니다. 타입 전용 import는 `TYPE_CHECKING`과 런타임 평가되지 않는 주석을 사용할 수 있으며 통합 자체의 실제 런타임 의존성은 바꾸지 않습니다.

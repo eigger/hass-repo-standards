@@ -45,3 +45,7 @@ hass-kibble 첫 파일럿과 공통 CI·실행용 템플릿의 초기 보완 및
 채택·재검토마다 `scripts/check_integration.py` 결과와 중앙 템플릿 diff를 기록합니다. README 공통 영역 밖의 순서·제목·본문 보존, 양언어 내용·번역 의미 일치, 기존 고지·고유 배지 보존을 독립 리뷰에서 확인합니다. 테스트의 세 빈 init·정확한 루트 conftest·domain fixture 역할·실제 HA 로딩과 공용 CI 이름·파일명·실행 조건도 확인합니다. 승인 예외는 실제 사용자 승인 근거·허용 경로·범위를 대조합니다. 자동 검사의 성공은 번역 의미·실제 HA 동작·원격 CI 실행의 증거를 대체하지 않습니다.
 
 DOC-07에서 blesession 사용 통합은 중앙 양언어 기기별 문제 해결 템플릿과 공용 Validate 자동 검사를 확인합니다. 실제 기능·진단·기기 조건·번역 의미·기존 Issues 목적지는 독립 리뷰로 확인하며 빈 템플릿이나 미검증을 PASS로 표시하지 않습니다. 공통 프록시 안내 원본은 blesession이며 중앙 이전 안내를 새 원본으로 복제하지 않습니다. blesession 미사용 프록시 통합의 기존 사용자 안내 범위는 수동 검토합니다.
+
+DOC-08은 imagespec 사용 여부를 실제 requirements/import로 확인합니다. 적용 대상은 양언어 로컬 payload 문서의 여섯 절·상호/공통 링크·전체 액션 YAML·등록 메타데이터·정확한 중앙 테스트 scaffold를 검사합니다. 각 current/정확한 하한 환경의 실제 HA 스키마 처리·production 준비 함수·설치된 imagespec.validate/render·출력 크기/색상·실제 버전·pip check·명령/CI 링크를 증거로 남깁니다. exact pin으로 결과를 재사용했다면 같은 실제 설치값임을 적습니다. 기존 기기 예제·README 본문 보존과 번역 의미, context·fixture가 실제 구현인지 독립 리뷰합니다. 기능이 없으면 해당 없음의 근거를 기록하고, 미실행/실패·API 비호환은 PASS로 바꾸지 않습니다. 중앙 plugin 자체의 성공을 모든 대상 통합의 검증으로 재사용하지 않습니다.
+
+DOC-08 예제가 YAML 문자열 입력을 사용하는 경우 `payload_format`과 실제 HA 스키마 정규화 후 형태를 기록합니다. matrix별 marker 비활성은 N/A·설치 버전 coverage 없음으로 분리하고 일반 HA 회귀 결과와 활성 환경의 current/정확한 하한 예제 결과를 각각 남깁니다. 실제 patch가 필요한 marker를 minor-only Python 선언으로 입증했다고 적지 않습니다.

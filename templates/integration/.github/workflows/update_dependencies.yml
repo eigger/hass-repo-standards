@@ -13,6 +13,8 @@ jobs:
       pull-requests: write
     uses: eigger/hass-repo-standards/.github/workflows/dependency-update.yml@main
     with:
+      # Replace main with the same reviewed full SHA as this reusable workflow.
+      standards-ref: main
       domain: example
       packages: '["imagespec", "blesession"]'
       python-version: '3.14'

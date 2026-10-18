@@ -15,6 +15,8 @@
 - current HA 테스트 환경: 실제 HA/Python/pytest-homeassistant-custom-component 조합 입력
 - 최소 HA 검증 환경: HA/Python/플러그인 버전 또는 미검증 사유
 - 최소 package 검증: 해당 package와 버전
+- imagespec DOC-08 해당 여부 / 예제 계약 검증: 실제 requirement/import·payload.examples·환경별 검증 근거 또는 N/A
+- imagespec 공용 Tests/updater standards-ref: 각 reusable workflow와 같은 검토 full SHA
 
 ## 예외
 

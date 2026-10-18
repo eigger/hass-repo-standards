@@ -66,3 +66,7 @@ Validate caller는 중앙 `actions/check-standards`을 사용해 README 관리 �
 공용 Validate의 중앙 템플릿 검사는 DOC-07에 따라 blesession 사용 통합의 양언어 기기별 문제 해결 문서도 검사합니다. manifest requirement의 정규 패키지명(extras·연산자·marker 포함) 또는 실제 코드 import로 대상을 식별하고, 문서 존재·고정 H2 순서·증상 표·필수 언어별 링크·미완료 placeholder를 검사합니다. 실제 기기 조건·진단 정확성·번역·기존 Issues 상태를 자동으로 입증하지 않으며 독립 리뷰가 필요합니다. blesession 미사용 프록시 통합의 기존 문서 의무는 수동 검토합니다.
 
 standalone standards job은 대상 소스·테스트 문법을 읽을 수 있는 Python으로 실행합니다. 중앙 caller 예제는 Python 3.14이며 로컬 검사기도 대상 통합의 문법과 같거나 더 최신인 Python을 사용합니다. 이는 검사 도구 환경이며 지원 최소 HA/Python·최소 테스트 환경의 변경 근거가 아닙니다. 중앙 도구 자체의 단위 테스트 Python 3.9 호환성과 대상 소스 파싱 조건은 별개입니다.
+
+imagespec 사용 통합의 DOC-08 정적 문서 검사는 Validate에서, 실제 예제 실행 계약은 각 필수 `ha` Tests 환경과 의존성 업데이트 검증에서 수행합니다. caller의 `standards-ref`는 reusable workflow의 검토 full SHA와 같아야 합니다. 중앙 도구는 예약된 별도 `.hass-standards-tools` 경로로 같은 SHA를 checkout하며 해당 경로가 이미 있으면 caller 파일을 덮지 않고 실패합니다. 기존 caller checkout·설치 버전을 유지하고 `actions/check-payload`는 `github.action_path`의 중앙 plugin을 실행합니다. 기기 action을 dispatch하지 않으며 skip/xfail/deselect·설치만 성공·caller 자체 PASS 테스트로 계약 실행을 대체하지 않습니다. 자세한 fixture·메타데이터 계약은 [payload 작성 규칙](payload-documentation.md)을 따릅니다.
+
+DOC-08 적용 대상이라도 개별 matrix에서 imagespec requirement marker가 비활성이면 해당 계약은 N/A·버전 검증 없음으로 명시합니다. 그 job은 중앙 도구 checkout/계약만 생략하고 일반 HA 회귀 검사는 정확한 관리 scaffold만 제외하고 계속합니다. 정적 current/정확한 하한 coverage는 선언한 Python matrix에서 marker 활성 근거가 있는 job만 인정하며 patch 조건의 python_full_version은 실제 patch가 명시된 호환 환경으로 입증해야 합니다. 다른 활성 환경의 계약 실행은 여전히 필수입니다. 활성 환경의 패키지 누락·필수 예제 미실행은 실패이며 marker를 바꾸거나 추가 설치해 숨기지 않습니다.

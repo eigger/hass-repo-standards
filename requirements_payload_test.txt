@@ -1,0 +1,6 @@
+# Tool runtime fixture, not an integration support-minimum policy.
+# imagespec 1.0.1 distribution and Python>=3.13 verified from PyPI JSON 2026-10-18.
+-r templates/integration/requirements_test.txt
+imagespec==1.0.1
+packaging==26.3
+PyYAML==6.0.3
