@@ -12,7 +12,7 @@
 - 의존성 bot은 extras·연산자·marker를 보존하고 실패를 성공으로 바꾸지 않습니다.
 - 통합을 이관할 때 tests/components/<domain>/ 구조와 실제 HA fixture·통합 로딩 테스트를 필수로 적용합니다. HA 코어 stub으로 대체하지 않고 외부 통신 경계만 mock합니다.
 - 새 의존성은 manifest의 requirements/dependencies/after_dependencies와 테스트 requirements를 구분하고 docs/dependencies.md의 추가 절차를 따릅니다.
-- blesession/Bluetooth proxy 통합의 사용자 README는 영어 docs/bluetooth.md·한국어 docs/bluetooth.ko.md의 실제 사용자 설정 안내로 연결하고 기기 고유 조건을 따로 적습니다. 작성자 규칙은 docs/bluetooth-documentation.md에서 읽으며 사용자에게 개발·구현 가이드를 설정 안내로 연결하지 않습니다.
+- blesession/Bluetooth proxy 통합의 사용자 README는 blesession의 영어 docs/bluetooth.md·한국어 docs/bluetooth.ko.md 공통 사용자 설정 안내로 연결하고 기기 고유 조건을 따로 적습니다. blesession 사용 통합은 중앙 템플릿의 docs/troubleshooting.md·docs/troubleshooting.ko.md를 의무 제공하고 README도 같은 언어의 로컬 문제 해결로 연결합니다. 작성자 규칙은 docs/bluetooth-documentation.md에서 읽으며 사용자에게 개발·구현 가이드를 설정 안내로 연결하지 않습니다.
 - 수정한 동작에 해당하는 단위 테스트를 실행하고 python3 scripts/check_repository.py를 실행합니다.
 - SHA와 PyPI 버전은 실재하는 값만 사용합니다. 이 규칙 리포에는 태그나 GitHub Release를 만들지 않고 main과 커밋으로 관리합니다.
 
@@ -58,4 +58,4 @@ README 공통 영역은 중앙 템플릿을 의무 적용합니다. 상단은 �
 
 테스트는 중앙 템플릿의 세 빈 `__init__.py`와 정확히 일치하는 `tests/conftest.py`, domain별 `conftest.py`·`test_init.py` 구조를 적용합니다. domain fixture는 공통 이름·역할을 유지하면서 필요한 외부 통신 mock과 fixture만 추가합니다. 공통 autouse에 오류 무시·네트워크 일괄 허용·통합 로딩 생략을 넣지 않습니다. 필요한 개별 허용은 해당 테스트에 범위와 사유를 명시하고 기존 회귀 테스트는 보존합니다. 공용 CI 명칭·파일명·기존 실행 조건은 중앙 템플릿으로 강제하고 리포 전용 CI는 소문자·밑줄 `.yml` 파일명과 역할이 명확한 영어 표시 이름을 사용합니다.
 
-blesession/Bluetooth proxy 통합은 기기별 docs/troubleshooting.md를 작성하거나 공통 Bluetooth 문제 해결 문서로 연결하면서 모델 고유 깨우기/전원·페어링/인증·타 앱 연결·전송 조건과 실제 진단 경로를 추가합니다. 발견/스캔과 GATT 연결·쓰기는 구분하고 실제 사용하는 경로·슬롯·거리·네트워크·재연결 및 민감 정보 제거 후 제보 절차를 안내합니다. BLE ESL 전용 센서·재시도·Debounce·timeout을 모든 통합의 공통 기능으로 복사하거나 실물 미검증을 검증 완료로 주장하지 않습니다.
+blesession 사용 통합은 중앙 양언어 기기별 문제 해결 템플릿의 제목·순서·증상 표를 의무 적용하고 실제 전원·깨우기·페어링·인증·타 앱 연결·전송 조건과 진단·로그를 적습니다. 마지막 절은 기존 Issues/이슈 템플릿에 연결하며 제보 양식이나 이슈 템플릿을 새로 만들지 않습니다. 공통 프록시 추천·설정·HA 등록·문제 해결 원본은 blesession의 docs/bluetooth.md·docs/bluetooth.ko.md·docs/troubleshooting.md·docs/troubleshooting.ko.md입니다. 중앙에는 작성 규칙·기기별 템플릿·검사와 이전 안내만 유지합니다. 라이브러리 미사용 프록시 통합도 공통 안내를 읽을 수 있고 읽기 위해 blesession 설치를 요구하지 않습니다. 프록시만 지원하는 통합의 기기별 조건·사용자 연결 안내는 기존 DOC-07 범위를 수동 검토하며, 양언어 고정 템플릿 자동 검사 의무는 blesession 사용 여부로 판단합니다. 발견/스캔과 GATT 연결·쓰기는 구분하고 실제 사용하는 경로·슬롯·거리·네트워크·재연결 및 민감 정보 제거 후 제보 절차를 안내합니다. BLE ESL 전용 센서·재시도·Debounce·timeout을 모든 통합의 공통 기능으로 복사하거나 실물 미검증을 검증 완료로 주장하지 않습니다.

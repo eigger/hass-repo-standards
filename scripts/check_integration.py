@@ -10,6 +10,8 @@ import re
 from pathlib import Path
 
 import yaml
+from bluetooth_documents import check as bluetooth_document_errors
+from bluetooth_documents import syntax_error_message
 from check_repository import Loader
 from sync_badges import END as BADGES_END
 from sync_badges import START as BADGES_START
@@ -248,7 +250,7 @@ def test_errors(root, domain):
         try:
             ast.parse(file.read_text(), filename=str(file))
         except SyntaxError as err:
-            errors.append(("TEST-08", file.relative_to(root).as_posix(), str(err)))
+            errors.append(("TEST-08", file.relative_to(root).as_posix(), syntax_error_message(err)))
     return errors
 
 
@@ -402,7 +404,8 @@ def check(root, write_readmes=False):
     if len(manifests) != 1:
         raise ValueError("Exactly one HA integration manifest required")
     safe_path(root, manifests[0].relative_to(root))
-    domain = json.loads(manifests[0].read_text())["domain"]
+    manifest = json.loads(manifests[0].read_text())
+    domain = manifest["domain"]
     if not re.fullmatch(r"[a-z][a-z0-9_]*", domain) or manifests[0].parent.name != domain:
         raise ValueError("manifest domain and directory must match")
     errors = []
@@ -419,6 +422,7 @@ def check(root, write_readmes=False):
             errors.append(("DOC-01", path.name, "managed areas differ from central rendering"))
     errors.extend(test_errors(root, domain))
     errors.extend(workflow_errors(root, config, domain))
+    errors.extend(bluetooth_document_errors(root, config, manifests[0], manifest, safe_path))
     result = apply_exceptions(root, config, errors)
     # All documents preflight above; preserve bytes outside explicitly managed areas.
     if write_readmes and not any(rule == "DOC-01" for rule, _, _ in errors):

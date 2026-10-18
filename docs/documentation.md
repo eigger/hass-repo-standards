@@ -27,11 +27,13 @@
 
 **DOC-06 필수**: README에는 HACS 커스텀 통합임을 명확히 쓰고 Core와 유사한 구조라는 이유로 공식 Core 포함·품질 등급을 주장하지 않습니다. 개발 안내에는 [Core 대응 구조](home-assistant.md), [실제 HA 테스트 구조](testing.md), [의존성 추가 절차](dependencies.md)를 반영합니다. 개발 환경·실제 테스트 명령과 검증 환경 표를 제공하고 양언어 README에서 찾을 수 있게 연결합니다. 본문·상세 문서 배치는 리포가 결정하며 기존 내용을 공통 적용 때문에 이동하지 않습니다. 양언어 README에서 문서 경로가 유효해야 합니다. 상세 문서 언어가 한국어인 경우 링크에 언어를 표시합니다. 검증한 HA/Python/pytest 플러그인 조합과 미검증 범위를 기록합니다.
 
-**DOC-07 필수**: blesession을 사용하거나 Bluetooth proxy 경로를 지원하는 통합은 [Bluetooth 문서 작성 규칙](bluetooth-documentation.md)에 따라 사용자 안내와 개발자 지시를 분리합니다. 기본 사용자 안내는 영어 [Bluetooth proxy setup](bluetooth.md), 한국어 대응판은 [Bluetooth proxy 설정](bluetooth.ko.md)이며 상호 언어 링크를 제공합니다. 각 README는 해당 언어의 **사용자용** 기기 선택·펌웨어 설치·HA 등록·연결 확인·문제 해결 문서로 연결합니다. 작성 규칙, blesession 계약·채택/구현 가이드를 일반 사용자의 설정 안내로 연결하지 않습니다. README에는 핵심 준비 조건과 사용자 안내 링크를 제공하며 상세 배치는 리포에 맡기고 기존 내용을 보존합니다.
+**DOC-07 필수**: blesession 사용 통합은 [작성 규칙](bluetooth-documentation.md)과 중앙 [영어](../templates/integration/docs/troubleshooting.md)·[한국어](../templates/integration/docs/troubleshooting.ko.md) 기기별 템플릿을 의무 적용해 `docs/troubleshooting.md`와 `docs/troubleshooting.ko.md`를 제공합니다. 고정 H2 제목·순서, 증상/실패 단계/확인 사항/조치 표, 실제 진단·로그 안내, 기존 Issues/이슈 템플릿 연결을 유지합니다. 전원·깨우기·페어링·인증·타 앱·전송 조건은 실제 기기에 맞게 적고 기능이 없거나 해당 없으면 이유를 밝힙니다. 미검증을 검증 완료로 쓰거나 빈 템플릿·TODO·가짜 기능을 통과시키지 않습니다. 기존 기기 안내와 README 본문·고지는 보존하고 새 제보 양식·이슈 템플릿을 만들지 않습니다.
 
-`docs/troubleshooting.md` 등에 통합별 문제 해결을 작성하거나 [공통 사용자 문제 해결](bluetooth.md#troubleshooting)로 연결하면서 모델 고유 깨우기·전원·페어링·본딩·인증·타 앱 연결·전송 제약과 실제 진단 경로를 함께 제공합니다. 한국어판은 [한국어 문제 해결](bluetooth.ko.md#troubleshooting)로 연결합니다. proxy 설정·추천 기기/리비전·active 스캔과 GATT 연결의 차이·민감 정보 제거 후 제보 절차를 찾을 수 있어야 합니다. 실제 제공하지 않는 옵션·진단 기능을 주장하거나 BLE ESL의 재시도·Debounce 등을 모든 통합의 기능으로 복사하지 않습니다. 실제 검증 경로와 미검증 범위를 구분하고 다른 통합의 실물 검증을 자기 통합의 결과로 주장하지 않습니다.
+공통 프록시 추천·설정·HA 등록·일반 문제 해결의 원본은 blesession의 [영어 프록시 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md)·[한국어 프록시 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md), [영어 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.md)·[한국어 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.ko.md)입니다. 중앙은 작성 규칙·기기별 템플릿·검사를 관리하며 공통 사용자 본문을 중복 유지하지 않습니다. blesession 미사용 통합도 일반 프록시 안내를 읽을 수 있으며 문서를 읽기 위해 라이브러리 설치를 요구하지 않습니다. Bluetooth proxy 지원 통합은 같은 원본을 사용자 안내로 연결하고 기기 고유 조건을 보완합니다.
 
-공통 설정을 직접 적을 때의 원본·확인일 관리, 공식 구매/지원 근거 확인과 라이브러리 계약 검토는 **작성자의 작업**으로 유지합니다. 사용자 문서 본문에 이런 작성 지시나 채택 절차를 섞지 않습니다. 규칙의 세부 조건은 [작성 규칙](bluetooth-documentation.md)을 따릅니다.
+blesession 사용 통합의 양언어 README는 각각 같은 언어의 로컬 문제 해결과 공통 프록시 안내로 연결합니다. 로컬 문서도 같은 언어의 README·다른 언어판·공통 문제 해결로 연결합니다. 작성자 규칙·라이브러리 계약을 사용자 설정 안내로 연결하지 않습니다. 오류 단계, 실제 진단 키와 로거, 광고 수신 경로와 확인된 연결 경로 구분, 복구 순서는 실제 라이브러리와 통합 구현을 확인해 적습니다. BLE ESL 전용 센서·재시도·Debounce·timeout을 모든 통합에 복제하지 않습니다.
+
+공통 원본의 확인일 관리, 공식 구매/지원 근거 확인과 라이브러리 계약 검토는 **작성자의 작업**으로 유지합니다. 사용자 문서 본문에 이런 작성 지시나 채택 절차를 섞지 않습니다. 규칙의 세부 조건은 [작성 규칙](bluetooth-documentation.md)을 따릅니다.
 
 ## 배지 도구
 

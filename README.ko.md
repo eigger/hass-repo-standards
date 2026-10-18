@@ -21,7 +21,7 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 | [CI 작성 규칙](docs/ci.md) | 공통 workflow, 권한, 이벤트, timeout, 확장 |
 | [의존성 관리](docs/dependencies.md) | 선언 위치·추가 절차, HA 테스트 의존성, 업데이트·최소 버전 |
 | [Bluetooth 문서 작성 규칙](docs/bluetooth-documentation.md) | 작성자 요구사항과 사용자 안내 연결 |
-| [Bluetooth proxy 사용자 안내](docs/bluetooth.ko.md) | 기기 선택·펌웨어 설치·HA 등록·문제 해결 ([English](docs/bluetooth.md)) |
+| [Bluetooth proxy 사용자 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md) | blesession에서 관리하는 공통 사용자 안내 ([English](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md))·[공통 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.ko.md) |
 | [릴리스·유지보수](docs/releases.md) | 버전, 변경 기록, 이관, 지원 상태 |
 | [전체 리포 CI 조사](docs/ci-audit.md) | 로컬 hass* 전체 workflow 비교와 이관 계획 |
 | [초기 구현 검증](docs/validation.md) | 테스트 환경과 확인 범위 |
@@ -38,6 +38,8 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 중앙 AGENTS.md나 그 내용을 통합의 AGENTS.md로 복사·생성·추가하지 않고, 다른 파일명으로 에이전트 진입 지침을 설치하지도 않습니다. 사용자 별도 요청 없이는 재설치하지 않으며 기존 리포 고유 지침은 보존합니다. 통합에는 STANDARDS.md에 검토한 표준 SHA·예외를, ADOPTION_CHECKLIST.md에 해당 시점의 검증 근거를 기록합니다. 과거 PASS는 이후 변경의 검증 결과가 아닙니다.
 
 README 공통 영역·테스트 기본 구조·공용 CI는 중앙 템플릿을 의무 적용하고 자동 검사합니다. README의 나머지 구성과 기존 본문은 각 리포에 맡겨 보존합니다. 양언어는 같은 구조·내용으로 유지하며 독립 리뷰에서 번역 의미를 확인합니다. 차이는 중앙 템플릿 수정 또는 사용자 명시적 승인 후 적용하고 근거·범위를 기록합니다. 승인 요청은 에이전트가 수행하며 CI가 승인 대기하지 않습니다.
+
+공통 Bluetooth 프록시 추천·설정·문제 해결은 blesession에서 관리합니다. 중앙은 작성 규칙·양언어 기기별 문제 해결 템플릿·공용 Validate 검사를 관리합니다. 일반 프록시 안내를 읽기 위해 blesession을 설치할 필요는 없습니다. 기존 중앙 안내 URL은 이전 안내로 유지합니다.
 
 ## 공통 CI
 

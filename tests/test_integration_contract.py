@@ -200,6 +200,204 @@ class IntegrationContract(unittest.TestCase):
             )
         )
 
+    def make_bluetooth_documents(self, requirement="blesession[extra]>=0.9; python_version < '2'"):
+        manifest = self.root / "custom_components/example/manifest.json"
+        manifest.write_text(
+            json.dumps({"domain": "example", "requirements": [requirement] if requirement else []})
+        )
+        (self.root / "docs").mkdir(exist_ok=True)
+        for name, readme, other, suffix in (
+            ("troubleshooting.md", "README.md", "troubleshooting.ko.md", ""),
+            ("troubleshooting.ko.md", "README.ko.md", "troubleshooting.md", ".ko"),
+        ):
+            text = (ROOT / "templates/integration/docs" / name).read_text()
+            text = text.replace("{{repository}}", self.config["repository"])
+            import re
+
+            text = re.sub(
+                r"\{\{.*?\}\}",
+                "N/A: this device has no pairing control; use the existing Home Assistant log.",
+                text,
+            )
+            (self.root / "docs" / name).write_text(text)
+            path = self.root / readme
+            content = path.read_text()
+            marker = contract.markers("support")[0]
+            content = content.replace(
+                marker,
+                f"[Device troubleshooting](docs/{name}) and [Proxy guide](https://github.com/eigger/blesession/blob/main/docs/bluetooth{suffix}.md).\n\n"
+                + marker,
+            )
+            path.write_text(content)
+
+    def test_blesession_requirement_identity_and_import_detection(self):
+        import bluetooth_documents
+
+        path = self.root / "custom_components/example/manifest.json"
+        for requirement in (
+            "BLESession==0.9.0",
+            "blesession[extra]>=0.9; python_version < '2'",
+            "blesession @ https://example.org/blesession.whl",
+        ):
+            self.assertTrue(
+                bluetooth_documents.uses_blesession(
+                    self.root, path, {"requirements": [requirement]}, contract.safe_path
+                )
+            )
+        for requirement in ("not-blesession==1", "blesession-helper==1"):
+            self.assertFalse(
+                bluetooth_documents.uses_blesession(
+                    self.root, path, {"requirements": [requirement]}, contract.safe_path
+                )
+            )
+        code = path.parent / "client.py"
+        code.write_text('# import blesession\ntext = "from blesession import Client"\n')
+        self.assertFalse(
+            bluetooth_documents.uses_blesession(self.root, path, {}, contract.safe_path)
+        )
+        for source in ("import blesession as library", "from blesession.client import Client"):
+            code.write_text(source)
+            self.assertTrue(
+                bluetooth_documents.uses_blesession(self.root, path, {}, contract.safe_path)
+            )
+        code.write_text("from .blesession import Client")
+        self.assertFalse(
+            bluetooth_documents.uses_blesession(self.root, path, {}, contract.safe_path)
+        )
+
+    @unittest.skipUnless(sys.version_info >= (3, 14), "t-string parsing requires Python 3.14+")
+    def test_checker_accepts_actual_python314_syntax_and_detects_imports(self):
+        source = self.root / "custom_components/example/client.py"
+        source.write_text('name = "device"\nmessage = t"Status: {name}"\n')
+        self.assertEqual(contract.check(self.root), [])
+        # Exercise both test-source and integration-source AST parsers under
+        # the interpreter selected for the standalone standards job.
+        (self.root / "tests/components/example/test_template.py").write_text(
+            'message = t"Status: {name}"\n'
+        )
+        self.assertEqual(contract.check(self.root), [])
+        source.write_text(source.read_text() + "import blesession\n")
+        errors = contract.check(self.root)
+        self.assertTrue(any("DOC-07 docs/troubleshooting.md" in error for error in errors))
+        self.assertFalse(any("cannot parse" in error for error in errors))
+        self.make_bluetooth_documents(requirement=None)
+        self.assertEqual(contract.check(self.root), [])
+
+    def test_parser_failure_names_actual_source_and_checker_interpreter(self):
+        source = self.root / "custom_components/example/client.py"
+        source.write_text("def broken(:\n")
+        errors = contract.check(self.root)
+        self.assertTrue(
+            any(
+                "DOC-07 custom_components/example/client.py" in error
+                and "Run the checker with Python matching" in error
+                for error in errors
+            )
+        )
+        self.assertFalse(
+            any("DOC-07 custom_components/example/manifest.json" in error for error in errors)
+        )
+        source.unlink()
+        (self.root / "tests/components/example/test_broken.py").write_text("def broken(:\n")
+        self.assertTrue(
+            any(
+                "TEST-08 tests/components/example/test_broken.py" in error
+                and "Run the checker with Python matching" in error
+                for error in contract.check(self.root)
+            )
+        )
+
+    def test_complete_blesession_documents_pass(self):
+        self.make_bluetooth_documents()
+        self.assertEqual(contract.check(self.root), [])
+
+    def test_blesession_missing_language_and_exact_exception_scope(self):
+        self.make_bluetooth_documents()
+        (self.root / "docs/troubleshooting.ko.md").unlink()
+        self.assertTrue(
+            any("DOC-07 docs/troubleshooting.ko.md" in error for error in contract.check(self.root))
+        )
+        self.config["exceptions"] = [
+            {
+                "id": "BLE-EN",
+                "rule": "DOC-07",
+                "paths": ["docs/troubleshooting.md"],
+                "reason": "English document exception",
+                "approved_by": "repository owner",
+                "approved_at": "2026-10-18",
+                "evidence": "STANDARDS.md#ble-en",
+            }
+        ]
+        self.save_config()
+        (self.root / "STANDARDS.md").write_text("## BLE-EN\nUser approval reference.")
+        self.assertTrue(
+            any("DOC-07 docs/troubleshooting.ko.md" in error for error in contract.check(self.root))
+        )
+
+    def test_blesession_headings_links_table_and_placeholders_enforced(self):
+        self.make_bluetooth_documents()
+        path = self.root / "docs/troubleshooting.md"
+        original = path.read_text()
+        for broken in (
+            original.replace("## Device-specific checks", "## Changed heading"),
+            original.replace("## Device-specific checks", "## Diagnostics and logs", 1),
+            original.replace(
+                "https://github.com/eigger/blesession/blob/main/docs/troubleshooting.md",
+                "https://github.com/eigger/blesession/blob/main/docs/troubleshooting.ko.md",
+            ),
+            original.replace("../README.md", "../README.ko.md"),
+            original.replace("troubleshooting.ko.md", "not_a_language.md"),
+            original.replace(
+                "https://github.com/owner/example/issues", "https://github.com/another/repo/issues"
+            ),
+            original.replace("| Symptom |", "| Missing |"),
+            original.replace("|---|---|---|---|", "|bad|bad|bad|bad|"),
+            original + "\nTODO: fill this in\n",
+            original + "\n{{device_conditions}}\n",
+            "```markdown\n" + original + "\n```",
+            "<!--\n" + original + "\n-->",
+            "<pre>\n" + original + "\n</pre>",
+            "<CODE class='sample'>\n" + original + "\n</CODE>",
+            "<pre>\n" + original,
+        ):
+            with self.subTest(broken=broken[-100:]):
+                path.write_text(broken)
+                self.assertTrue(
+                    any(
+                        "DOC-07 docs/troubleshooting.md" in error
+                        for error in contract.check(self.root)
+                    )
+                )
+        path.write_text(original)
+        readme = self.root / "README.md"
+        readme.write_text(
+            readme.read_text().replace("(docs/troubleshooting.md)", "(docs/troubleshooting.ko.md)")
+        )
+        self.assertTrue(any("DOC-07 README.md" in error for error in contract.check(self.root)))
+
+    def test_blesession_scaffold_copy_is_not_pass(self):
+        self.make_bluetooth_documents()
+        shutil.copyfile(
+            ROOT / "templates/integration/docs/troubleshooting.md",
+            self.root / "docs/troubleshooting.md",
+        )
+        self.assertTrue(any("placeholder" in error for error in contract.check(self.root)))
+
+    def test_blesession_document_symlink_cannot_escape(self):
+        self.make_bluetooth_documents()
+        path = self.root / "docs/troubleshooting.md"
+        with tempfile.TemporaryDirectory() as directory:
+            outside = Path(directory) / "troubleshooting.md"
+            outside.write_bytes(path.read_bytes())
+            path.unlink()
+            path.symlink_to(outside)
+            self.assertTrue(
+                any(
+                    "DOC-07 docs/troubleshooting.md" in error and "escapes" in error
+                    for error in contract.check(self.root)
+                )
+            )
+
     def test_english_exception_cannot_hide_korean_failure(self):
         (self.root / "README.ko.md").write_text("Missing Korean markers")
         item = {

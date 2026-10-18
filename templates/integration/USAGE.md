@@ -33,3 +33,15 @@ requirements_lint.txt는 복사할 수 있는 실제 고정 예시입니다. req
 채택 점검에는 [체크리스트 사용법](../../docs/checklist.md)과 [ADOPTION_CHECKLIST.md](ADOPTION_CHECKLIST.md)를 사용합니다. 모든 항목은 미확인에서 시작하며 실제 적용한 통합의 증거로 채웁니다.
 
 사용자는 해당 리포 세션에서 “hass-repo-standards 공통 규칙 적용해줘”라고 요청하고, 필요하면 중앙 checkout 경로나 리포 URL을 지정합니다. 에이전트는 적용 작업 때 중앙 [AGENTS.md](../../AGENTS.md)를 직접 읽고 위임·검증·중앙 보고 순서를 따릅니다. 중앙 지침을 통합에 설치할 필요가 없으며 과거 체크리스트의 PASS는 이후 변경을 검증한 결과가 아닙니다.
+
+## blesession 기기별 문제 해결
+
+blesession 사용 통합은 [영어 기기별 템플릿](docs/troubleshooting.md)과 [한국어 기기별 템플릿](docs/troubleshooting.ko.md)을 대상의 같은 경로에 적용합니다. `{{...}}`는 실제 기기 정보 또는 근거 있는 N/A로 교체하고 기존 기기별 안내를 보존하세요. 템플릿을 그대로 복사한 상태는 검사에 실패합니다. 고정 H2 순서와 증상/실패 단계/확인 사항/조치 표를 유지하고 실제 진단·로거만 적습니다. 마지막 절은 기존 Issues/이슈 템플릿을 재사용하며 새 양식을 만들지 않습니다.
+
+공통 원본은 blesession의 [영어 프록시 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md)·[한국어 프록시 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md)·[영어 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.md)·[한국어 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.ko.md)입니다. 각 README는 같은 언어의 프록시 안내와 로컬 문제 해결로 연결하고, 로컬 문제 해결은 같은 언어의 README·공통 문제 해결·다른 언어판으로 연결합니다. README 세부 구조와 기존 본문·고지를 재작성하지 마세요.
+
+공용 Validate는 blesession의 실제 requirement 이름(extras·연산자·marker 포함, marker 비활성이라도 대상) 또는 절대 import를 읽어 적용 여부를 판단합니다. 문서 존재·고정 구조·필수 링크·미입력 표시를 검사하며 실제 진단 의미·하드웨어·번역·원격 Issues 상태는 별도 독립 리뷰가 필요합니다. 읽기만을 위해 라이브러리 설치를 요구하지 않으며 blesession 미사용 통합에 고정 템플릿 자동 검사를 강제하지 않습니다.
+
+공통 문서 이관 공개 순서는 blesession의 새 양언어 원본을 먼저 반영·검증한 뒤 중앙 이전 안내와 새 템플릿 규칙을 반영하는 순서입니다. 로컬 문서 작성만으로 원격 원본이 공개되었다고 보고하지 않습니다. 현재 작업은 commit/push 권한을 자동 부여하지 않으며 다른 리포를 자동 수정하지 않습니다.
+
+로컬 중앙 검사기는 대상 통합의 Python 문법과 같거나 더 최신인 Python으로 실행합니다. standalone standards job은 현재 예제 통합의 Python 3.14 문법을 파싱하도록 Python 3.14를 사용합니다. 이 값은 검사 도구 실행 환경이며 통합의 지원 최소 HA/Python이나 최소 검증 환경을 올리지 않습니다. 중앙 도구 자체의 Python 3.9 단위 테스트 호환성과 대상 파일을 파싱할 수 있는 버전은 구분합니다.

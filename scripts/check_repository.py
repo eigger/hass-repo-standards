@@ -95,16 +95,20 @@ def check_template_integrity():
 
 
 def check():
+    from bluetooth_documents import visible_markdown
+
     errors = []
     documents = [
         *sorted(ROOT.glob("README*.md")),
         ROOT / "CONTRIBUTING.md",
         ROOT / "AGENTS.md",
-        *sorted((ROOT / "templates/integration").glob("*.md")),
+        *sorted((ROOT / "templates/integration").rglob("*.md")),
         *sorted((ROOT / "docs").glob("*.md")),
     ]
     for file in documents:
-        for link in re.findall(r"\]\(([^)]+)\)", file.read_text(encoding="utf-8")):
+        for link in re.findall(
+            r"\]\(([^)]+)\)", visible_markdown(file.read_text(encoding="utf-8"))
+        ):
             if "://" in link or link.startswith("#"):
                 continue
             target = link.split("#", 1)[0]

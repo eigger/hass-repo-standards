@@ -62,3 +62,7 @@
 ## 형식 검사
 
 Validate caller는 중앙 `actions/check-standards`을 사용해 README 관리 영역·테스트 기본 구조·공용 workflow 형식을 검사합니다. 검사 action과 reusable workflow는 검토한 전체 SHA로 고정합니다. 검사 실패를 성공으로 바꾸지 않습니다. 검사기는 기록된 승인 예외의 형식과 범위만 반영하며 승인 요청·승인 대기 기능을 수행하지 않습니다. 승인 근거의 진위와 리포별 의미 검증은 적용 에이전트와 독립 리뷰의 책임입니다.
+
+공용 Validate의 중앙 템플릿 검사는 DOC-07에 따라 blesession 사용 통합의 양언어 기기별 문제 해결 문서도 검사합니다. manifest requirement의 정규 패키지명(extras·연산자·marker 포함) 또는 실제 코드 import로 대상을 식별하고, 문서 존재·고정 H2 순서·증상 표·필수 언어별 링크·미완료 placeholder를 검사합니다. 실제 기기 조건·진단 정확성·번역·기존 Issues 상태를 자동으로 입증하지 않으며 독립 리뷰가 필요합니다. blesession 미사용 프록시 통합의 기존 문서 의무는 수동 검토합니다.
+
+standalone standards job은 대상 소스·테스트 문법을 읽을 수 있는 Python으로 실행합니다. 중앙 caller 예제는 Python 3.14이며 로컬 검사기도 대상 통합의 문법과 같거나 더 최신인 Python을 사용합니다. 이는 검사 도구 환경이며 지원 최소 HA/Python·최소 테스트 환경의 변경 근거가 아닙니다. 중앙 도구 자체의 단위 테스트 Python 3.9 호환성과 대상 소스 파싱 조건은 별개입니다.

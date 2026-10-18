@@ -21,7 +21,7 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 | [CI rules](docs/ci.md) | Shared workflows, permissions, events, timeouts, extensions |
 | [Dependency management](docs/dependencies.md) | Declarations, additions, HA test dependencies, updates, minimums |
 | [Bluetooth documentation rules](docs/bluetooth-documentation.md) | Authoring requirements and user-guide links |
-| [Bluetooth proxy user guide](docs/bluetooth.md) | Device selection, firmware installation, Home Assistant setup and troubleshooting ([한국어](docs/bluetooth.ko.md)) |
+| [Bluetooth proxy user guide](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md) | Common user guide maintained in blesession ([한국어](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md)); [common troubleshooting](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.md) |
 | [Releases and maintenance](docs/releases.md) | Versions, changelogs, migration, support status |
 | [Repository CI inventory](docs/ci-audit.md) | Local hass* workflow comparison and migration plan |
 | [Initial implementation validation](docs/validation.md) | Test environment and verified scope |
@@ -38,6 +38,8 @@ Request “Apply the shared standards from eigger/hass-repo-standards” (or “
 Do not copy, generate, append, or install the central AGENTS.md or its contents as an agent entry file in the integration, even under another filename. Do not reinstall it without a separate user request. Preserve existing repository-specific instructions. Record the reviewed standards SHA and exceptions in STANDARDS.md and the verification evidence for that adoption in ADOPTION_CHECKLIST.md; past PASS results do not validate later changes.
 
 Managed README regions, the test foundation, and shared CI must follow central templates and automated checks. Each repository retains its remaining README structure and content. English and Korean versions carry the same structure and information, with independent review of translation meaning. Deviations require a central template change or explicit user approval before application, with evidence and scope recorded. The agent requests approval; CI does not wait for approval.
+
+blesession owns common Bluetooth proxy recommendations, setup and troubleshooting. This repository maintains authoring rules, bilingual device-specific troubleshooting templates and their shared Validate checks. Reading the general proxy guide does not require installing blesession. Existing central guide URLs remain as move notices.
 
 ## Shared CI
 
