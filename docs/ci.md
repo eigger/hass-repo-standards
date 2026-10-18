@@ -4,7 +4,7 @@
 
 ## 역할과 분리
 
-**CI-01 필수**: 검증은 읽기 전용, 업데이트 PR과 릴리스는 쓰기 작업으로 분리합니다. 통합은 Validate와 Python Tests를 사용하고, frontend/browser/Android/add-on 작업은 독립 job으로 유지합니다. 같은 역할의 코드를 다시 복사하지 않고 중앙 reusable workflow 또는 composite action을 사용합니다.
+**CI-01 필수**: 검증은 읽기 전용, 업데이트 PR과 릴리스는 쓰기 작업으로 분리합니다. 통합은 Validate와 Tests를 사용하고, frontend/browser/Android/add-on 작업은 독립 job으로 유지합니다. 같은 역할의 코드를 다시 복사하지 않고 중앙 reusable workflow 또는 composite action을 사용합니다.
 
 | 역할 | 중앙 구현 | 리포별 입력/확장 |
 |---|---|---|
@@ -17,7 +17,15 @@
 
 ## 실행과 결과
 
-**CI-02 필수**: caller는 PR, 실제 기본 브랜치 push, workflow_dispatch를 지원합니다. upstream validator/의존성 변경을 잡는 schedule은 역할에 맞게 추가합니다. cron은 UTC이며 정시 집중을 피합니다. 예시의 main은 각 리포 기본 브랜치로 바꿉니다. schedule은 기본 브랜치에서 실행됩니다.
+**CI-02 필수**: 공용 caller의 파일명·표시 이름·실행 조건은 중앙 템플릿을 의무 적용합니다. 기본 브랜치 이름은 실제 원격 메타데이터에서 읽습니다. 아래 조건은 기존 동작을 유지하며 PR 대상 브랜치를 제한하거나 문서 변경을 paths 필터로 제외하지 않습니다. 태그 push를 별도 실행 조건으로 추가하지 않습니다. cron은 UTC이며 중앙 템플릿의 예약식을 유지합니다.
+
+| 파일명 | 표시 이름 | 실행 조건 |
+|---|---|---|
+| `validate.yml` | `Validate` | 모든 대상 브랜치 PR의 생성·갱신·재오픈, 실제 기본 브랜치 push, 수동, 매주 예약 |
+| `tests.yml` | `Tests` | 모든 대상 브랜치 PR의 생성·갱신·재오픈, 실제 기본 브랜치 push, 수동 |
+| `update_dependencies.yml` | `Update dependencies` | 예약·수동, 업데이트할 외부 의존성이 있는 경우만 적용 |
+
+리포 전용 CI의 작업·실행 조건은 리포에 맡깁니다. 파일명은 소문자 단어를 밑줄로 연결한 `.yml`, 표시 이름은 역할이 명확한 영어로 작성합니다(예: `build_frontend.yml` / `Build frontend`). 공용 CI를 같은 이름의 로컬 구현으로 대체하지 않습니다. 기존 required checks·특수 목적 job을 보존하고 이름 변경 영향은 확인합니다. 불가피한 차이는 [중앙 템플릿 수정 또는 사용자 승인](adoption.md#중앙-템플릿과-예외) 후 적용합니다.
 
 **CI-03 필수**: 검증 workflow는 `permissions: contents: read`, checkout은 `persist-credentials: false`, 각 job에 timeout을 둡니다. 취소 가능한 검증에는 workflow+ref concurrency를 둡니다. dependency updater에는 취소하지 않는 별도 그룹을 둡니다. write 권한은 PR 생성/릴리스 job에만 줍니다.
 
@@ -50,3 +58,7 @@
 ## 입력과 경계
 
 공통 workflow는 로컬 trusted requirements와 명령을 실행합니다. 입력은 사용자 리포가 관리하며 임의 외부 값으로 만들지 않습니다. `pytest-args`, `validation-command`는 의도적인 shell 명령 입력이므로 PR 본문이나 네트워크 응답에서 생성하지 않습니다. composite action은 스크립트를 자신의 `github.action_path`에서 읽고 caller의 파일을 검사합니다. 실제 호출 예시는 templates/integration/.github/workflows에 있습니다.
+
+## 형식 검사
+
+Validate caller는 중앙 `actions/check-standards`을 사용해 README 관리 영역·테스트 기본 구조·공용 workflow 형식을 검사합니다. 검사 action과 reusable workflow는 검토한 전체 SHA로 고정합니다. 검사 실패를 성공으로 바꾸지 않습니다. 검사기는 기록된 승인 예외의 형식과 범위만 반영하며 승인 요청·승인 대기 기능을 수행하지 않습니다. 승인 근거의 진위와 리포별 의미 검증은 적용 에이전트와 독립 리뷰의 책임입니다.

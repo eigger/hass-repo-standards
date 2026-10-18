@@ -37,6 +37,8 @@ Request “Apply the shared standards from eigger/hass-repo-standards” (or “
 
 Do not copy, generate, append, or install the central AGENTS.md or its contents as an agent entry file in the integration, even under another filename. Do not reinstall it without a separate user request. Preserve existing repository-specific instructions. Record the reviewed standards SHA and exceptions in STANDARDS.md and the verification evidence for that adoption in ADOPTION_CHECKLIST.md; past PASS results do not validate later changes.
 
+Managed README regions, the test foundation, and shared CI must follow central templates and automated checks. Each repository retains its remaining README structure and content. English and Korean versions carry the same structure and information, with independent review of translation meaning. Deviations require a central template change or explicit user approval before application, with evidence and scope recorded. The agent requests approval; CI does not wait for approval.
+
 ## Shared CI
 
 | File | Purpose |
@@ -47,12 +49,16 @@ Do not copy, generate, append, or install the central AGENTS.md or its contents 
 | [actions/python-environment](actions/python-environment/action.yml) | Consistent Python dependencies for test/browser jobs |
 | [actions/update-manifest](actions/update-manifest/action.yml) | Updates for imagespec, blesession, and other packages |
 
-See [templates/integration](templates/integration/README.md) for callers. Shared workflows check out the calling repository. Paths, Python, dependencies, HA components, and excluded checks are inputs. Browser, card, Android, and add-on builds remain in their repositories.
+See [templates/integration](templates/integration/USAGE.md) for callers. Shared workflows check out the calling repository. Paths, Python, dependencies, HA components, and excluded checks are inputs. Browser, card, Android, and add-on builds remain in their repositories.
 
 [Development and inspection](docs/development.md) covers local setup, audit commands, tests, and badge checks.
 
-## Support and license
+## Support
 
-Use [Issues](https://github.com/eigger/hass-repo-standards/issues) for bug reports, questions, and feature requests. Discussions is currently disabled.
+- [Issues](https://github.com/eigger/hass-repo-standards/issues): Report bugs or request features.
+
+Questions currently also use Issues. Discussions is disabled.
+
+## License
 
 Released under the [MIT License](LICENSE).

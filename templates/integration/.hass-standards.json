@@ -14,5 +14,21 @@
   "installation_links": {
     "README.md": "#installation",
     "README.ko.md": "#설치"
-  }
+  },
+  "readme": {
+    "title": "Integration Name",
+    "descriptions": {
+      "en": "A Home Assistant custom integration for the supported device.",
+      "ko": "지원 기기를 위한 Home Assistant 커스텀 통합입니다."
+    },
+    "issues": true,
+    "discussions": false,
+    "license_name": "MIT License",
+    "license_notices": {
+      "en": [],
+      "ko": []
+    },
+    "related_projects": []
+  },
+  "exceptions": []
 }

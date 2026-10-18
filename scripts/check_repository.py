@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
+import tempfile
 from pathlib import Path
 
 import yaml
@@ -25,6 +27,73 @@ for key in "tTfF":
     )
 
 
+def is_destination_license_placeholder(file: Path, target: str):
+    # README assets target the adopter's actual LICENSE; never distribute a
+    # sample license that could overwrite or silently change its legal terms.
+    return (
+        file
+        in {
+            ROOT / "templates/integration/README.md",
+            ROOT / "templates/integration/README.ko.md",
+        }
+        and target == "LICENSE"
+    )
+
+
+def check_template_integrity():
+    from check_integration import readme_updates
+
+    errors = []
+    source = ROOT / "templates/integration"
+    for relative in (
+        "tests/__init__.py",
+        "tests/components/__init__.py",
+        "tests/components/example/__init__.py",
+    ):
+        path = source / relative
+        if not path.is_file() or path.read_bytes():
+            errors.append(f"templates/integration/{relative}: must exist and be empty")
+    expected = (
+        '"""Shared Home Assistant test configuration."""\n\nimport pytest\n\n\n'
+        "@pytest.fixture(autouse=True)\ndef auto_enable_custom_integrations(enable_custom_integrations):\n"
+        '    """Enable custom integrations for all tests."""\n'
+    )
+    if (source / "tests/conftest.py").read_text() != expected:
+        errors.append("templates/integration/tests/conftest.py: central fixture contract changed")
+    with tempfile.TemporaryDirectory() as directory:
+        fixture = Path(directory)
+        (fixture / "custom_components/example").mkdir(parents=True)
+        (fixture / "custom_components/example/manifest.json").write_text('{"domain":"example"}')
+        (fixture / "hacs.json").write_text("{}")
+        (fixture / "LICENSE").write_text("Synthetic render fixture; not an adoption license")
+        shutil.copytree(source / ".github", fixture / ".github")
+        config = json.loads((source / ".hass-standards.json").read_text())
+        for name in config["readmes"]:
+            shutil.copyfile(source / name, fixture / name)
+        try:
+            for path, _ in readme_updates(fixture, config):
+                errors.append(
+                    f"templates/integration/{path.name}: managed areas differ from renderer"
+                )
+        except (ValueError, KeyError, FileNotFoundError) as err:
+            errors.append(f"templates/integration: {err}")
+    caller = yaml.load((source / ".github/workflows/validate.yml").read_text(), Loader=Loader)
+    steps = caller.get("jobs", {}).get("standards", {}).get("steps", [])
+    if not any(
+        step.get("uses") == "eigger/hass-repo-standards/actions/check-standards@main"
+        for step in steps
+    ):
+        errors.append("validate.yml: central standards action adoption placeholder required")
+    action = yaml.load((ROOT / "actions/check-standards/action.yml").read_text(), Loader=Loader)
+    if action["runs"]["using"] != "composite" or not any(
+        "${{ github.action_path }}/../../scripts/check_integration.py" in step.get("run", "")
+        and '"$GITHUB_WORKSPACE"' in step.get("run", "")
+        for step in action["runs"]["steps"]
+    ):
+        errors.append("check-standards action: action_path script and caller checkout required")
+    return errors
+
+
 def check():
     errors = []
     documents = [
@@ -39,7 +108,11 @@ def check():
             if "://" in link or link.startswith("#"):
                 continue
             target = link.split("#", 1)[0]
-            if target and not (file.parent / target).exists():
+            if (
+                target
+                and not (file.parent / target).exists()
+                and not is_destination_license_placeholder(file, target)
+            ):
                 errors.append(f"{file.relative_to(ROOT)}: missing link {link}")
     workflows = [
         *sorted((ROOT / ".github/workflows").glob("*.yml")),
@@ -78,6 +151,7 @@ def check():
     for file in ROOT.rglob("*.json"):
         if ".venv" not in file.parts:
             json.loads(file.read_text(encoding="utf-8"))
+    errors.extend(check_template_integrity())
     for error in errors:
         print(error)
     if errors:

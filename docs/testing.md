@@ -37,6 +37,10 @@ tests/
 | `fixtures/` | 해당 domain의 비식별 응답·패킷 데이터 |
 | `snapshots/` | 사용하는 snapshot extension에 맞춘 domain별 snapshot |
 
+중앙 `templates/integration/tests/`를 의무 사용합니다. `tests/__init__.py`, `tests/components/__init__.py`, `tests/components/<domain>/__init__.py`는 모두 빈 파일이고, `tests/conftest.py`는 중앙 파일과 정확히 일치해야 합니다. 루트의 autouse fixture는 실제 `enable_custom_integrations`를 활성화하는 공통 설정으로 제한합니다. domain `conftest.py`는 중앙 기본 틀을 유지하며 config entry를 사용하는 통합은 `mock_config_entry` 이름·역할로 실제 HA `MockConfigEntry`를 제공합니다. 외부 클라이언트 경계가 있을 때 `mock_client`를 제공하며 실제 통합에 필요한 fixture·응답·외부 통신 mock은 추가할 수 있습니다. 없는 기능을 채우기 위한 가짜 fixture는 만들지 않습니다. `test_init.py`는 실제 HA setup·로딩·unload 검증으로 구현합니다. 중앙 기본 틀에서 벗어나야 하면 먼저 [중앙 템플릿 수정 또는 사용자 승인](adoption.md#중앙-템플릿과-예외)을 받습니다.
+
+공통 fixture에 오류 무시·네트워크 일괄 허용·통합 로딩 생략을 넣어 통과시키지 않습니다. 개별 테스트의 제한적 허용은 그 테스트에 범위와 사유를 명시하며 실제 setup·플랫폼 로딩 검사나 외부 통신 mock 경계를 대체하지 않습니다. 기존 회귀 테스트와 필요한 fixture는 보존하며 올바른 위치로 이동하고 변경 후 다시 검증합니다.
+
 공통 helper는 여러 테스트에서 실제 공유할 때만 둡니다. fixture·snapshot 로더의 기준 경로는 사용하는 플러그인에서 확인합니다. snapshot 사용 시 해당 extension과 fixture 설정을 함께 추가합니다. 독립적인 규칙 검사 도구 등 HA 통합이 아닌 코드의 테스트에는 이 domain 구조를 강제하지 않습니다.
 
 ## 실제 Home Assistant를 사용하는 기준

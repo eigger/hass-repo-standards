@@ -1,6 +1,6 @@
 # Bluetooth documentation rules for integration authors
 
-This is a developer reference for DOC-07. User-facing READMEs must link to the [English setup guide](bluetooth.md) or [Korean setup guide](bluetooth.ko.md), never to this authoring guide or a library implementation contract. Keep the README introduction short; put device-specific instructions in the integration’s usage and troubleshooting documents. The default user guide is English, with a corresponding Korean version and language switch links.
+This is a developer reference for DOC-07. User-facing READMEs must link to the [English setup guide](bluetooth.md) or [Korean setup guide](bluetooth.ko.md), never to this authoring guide or a library implementation contract. Keep the managed header introduction to one line. The integration owns the structure of its remaining README content; preserve existing device instructions and do not move them merely to apply common standards. Link the actual user setup and troubleshooting guidance. The default user guide is English, with a corresponding Korean version and language switch links.
 
 ## Content and ownership
 

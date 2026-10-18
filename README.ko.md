@@ -37,6 +37,8 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 
 중앙 AGENTS.md나 그 내용을 통합의 AGENTS.md로 복사·생성·추가하지 않고, 다른 파일명으로 에이전트 진입 지침을 설치하지도 않습니다. 사용자 별도 요청 없이는 재설치하지 않으며 기존 리포 고유 지침은 보존합니다. 통합에는 STANDARDS.md에 검토한 표준 SHA·예외를, ADOPTION_CHECKLIST.md에 해당 시점의 검증 근거를 기록합니다. 과거 PASS는 이후 변경의 검증 결과가 아닙니다.
 
+README 공통 영역·테스트 기본 구조·공용 CI는 중앙 템플릿을 의무 적용하고 자동 검사합니다. README의 나머지 구성과 기존 본문은 각 리포에 맡겨 보존합니다. 양언어는 같은 구조·내용으로 유지하며 독립 리뷰에서 번역 의미를 확인합니다. 차이는 중앙 템플릿 수정 또는 사용자 명시적 승인 후 적용하고 근거·범위를 기록합니다. 승인 요청은 에이전트가 수행하며 CI가 승인 대기하지 않습니다.
+
 ## 공통 CI
 
 | 파일 | 용도 |
@@ -47,12 +49,16 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 | [actions/python-environment](actions/python-environment/action.yml) | 테스트·브라우저 job에서 같은 Python 의존성 설치 |
 | [actions/update-manifest](actions/update-manifest/action.yml) | imagespec·blesession 등 업데이트 로직 |
 
-호출 예시는 [templates/integration](templates/integration/README.md)에 있습니다. 중앙 workflow는 호출한 리포의 코드를 checkout합니다. 리포별 경로·Python·의존성·HA 구성요소·제외 검사는 입력으로 받습니다. 브라우저, 카드, Android, 애드온 빌드는 해당 리포에 남깁니다.
+호출 예시는 [templates/integration](templates/integration/USAGE.md)에 있습니다. 중앙 workflow는 호출한 리포의 코드를 checkout합니다. 리포별 경로·Python·의존성·HA 구성요소·제외 검사는 입력으로 받습니다. 브라우저, 카드, Android, 애드온 빌드는 해당 리포에 남깁니다.
 
 [개발·검사 안내](docs/development.ko.md)에서 로컬 준비·전체 조사·테스트·배지 검사 명령을 확인합니다.
 
-## 지원과 라이선스
+## 지원
 
-버그 보고·질문·기능 제안은 [Issues](https://github.com/eigger/hass-repo-standards/issues)를 이용합니다. 현재 Discussions는 비활성 상태입니다.
+- [Issues](https://github.com/eigger/hass-repo-standards/issues): 버그를 신고하거나 기능을 요청하세요.
 
-[MIT 라이선스](LICENSE)로 제공합니다.
+질문도 현재 Issues를 이용합니다. Discussions는 비활성 상태입니다.
+
+## 라이선스
+
+[MIT License](LICENSE) 라이선스로 배포됩니다.

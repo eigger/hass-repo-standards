@@ -17,3 +17,9 @@ Badges are updated only inside their managed block. Read the [usage instructions
 ```bash
 python3 scripts/sync_badges.py ../hass-example --check
 ```
+
+Follow the [central template instructions](../templates/integration/USAGE.md) for adoption and checks. README content outside managed regions remains unchanged.
+
+```bash
+python3 scripts/check_integration.py ../hass-example
+```

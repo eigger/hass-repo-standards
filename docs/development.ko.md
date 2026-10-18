@@ -17,3 +17,9 @@ python3 scripts/check_repository.py
 ```bash
 python3 scripts/sync_badges.py ../hass-example --check
 ```
+
+중앙 템플릿 채택·검사 절차는 [사용법](../templates/integration/USAGE.md)을 따릅니다. 관리 영역 밖 README는 자동 수정하지 않습니다.
+
+```bash
+python3 scripts/check_integration.py ../hass-example
+```

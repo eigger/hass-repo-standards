@@ -57,22 +57,22 @@ def render(repo: Path, config: dict, readme: Path | None = None):
         raise ValueError("hacs must be custom or default")
     if status == "default" and not config.get("hacs_default_evidence"):
         raise ValueError("Default needs hacs_default_evidence URL/date")
-    badge(
-        "HACS " + status.title(),
-        f"https://img.shields.io/badge/HACS-{status.title()}-41BDF5?style=flat-square",
-        install or config.get("installation_link", "#installation"),
-    )
     if config.get("release", False):
         badge(
             "Release",
-            f"https://img.shields.io/github/v/release/{repository}?style=flat-square",
+            f"https://img.shields.io/github/v/release/{repository}?style=flat",
             base + "/releases",
         )
+    badge(
+        "HACS " + status.title(),
+        f"https://img.shields.io/badge/HACS-{status.title()}-41BDF5?style=flat",
+        install or config.get("installation_link", "#installation"),
+    )
     if hacs.get("homeassistant"):
         text = quote("≥ " + hacs["homeassistant"], safe="")
         badge(
             "Home Assistant minimum",
-            f"https://img.shields.io/badge/HA-{text}-41BDF5?style=flat-square",
+            f"https://img.shields.io/badge/HA-{text}-41BDF5?style=flat",
             prefix + "hacs.json",
         )
     for label, key, default in [
@@ -81,7 +81,7 @@ def render(repo: Path, config: dict, readme: Path | None = None):
     ]:
         name = config.get(key, default)
         if name and (repo / ".github/workflows" / name).is_file():
-            query = urlencode({"branch": branch, "style": "flat-square", "label": label})
+            query = urlencode({"branch": branch, "style": "flat", "label": label})
             badge(
                 label,
                 f"https://img.shields.io/github/actions/workflow/status/{repository}/{quote(name, safe='')}?{query}",
@@ -90,14 +90,14 @@ def render(repo: Path, config: dict, readme: Path | None = None):
     if (repo / "LICENSE").is_file():
         badge(
             "License",
-            f"https://img.shields.io/github/license/{repository}?style=flat-square",
+            f"https://img.shields.io/github/license/{repository}?style=flat",
             prefix + "LICENSE",
         )
     # Every HA integration gets Usage before its domain appears in Analytics.
     # Legacy analytics=False/evidence settings do not suppress the badge.
     query = urlencode(
         {
-            "style": "flat-square",
+            "style": "flat",
             "color": "41BDF5",
             "label": "Usage",
             "query": f"$.{domain}.total",
@@ -110,6 +110,32 @@ def render(repo: Path, config: dict, readme: Path | None = None):
         "https://analytics.home-assistant.io/",
     )
     return "\n".join(badges)
+
+
+def preserve_extra_badges(text: str, rendered: str):
+    """Keep unique Markdown badges after the centrally generated badge list."""
+    replace_block(text, rendered)  # Validate pair count/order before extracting.
+    existing = text.split(START)[1].split(END)[0]
+    known = {
+        "Release",
+        "HACS Custom",
+        "HACS Default",
+        "Home Assistant minimum",
+        "Tests",
+        "Validate",
+        "License",
+        "Analytics reporting installs",
+    }
+    extras = []
+    for value in existing.splitlines():
+        match = re.fullmatch(r"\[!\[([^]]+)\]\(.+\)\]\(.+\)", value)
+        if match and match[1] not in known:
+            extras.append(value)
+        elif value.strip() and not match:
+            raise ValueError(
+                "Badge block contains unrecognized non-badge content; migrate manually"
+            )
+    return "\n".join([rendered, *extras])
 
 
 def replace_block(text: str, block: str):
@@ -137,14 +163,16 @@ def main():
         path = (root / name).resolve()
         if not path.is_relative_to(root) or path.suffix.lower() != ".md":
             raise ValueError("README paths must be Markdown files inside the repository")
-        original = path.read_text(encoding="utf-8")
-        updated = replace_block(original, render(root, config, path))
+        original = path.read_bytes().decode("utf-8")
+        updated = replace_block(
+            original, preserve_extra_badges(original, render(root, config, path))
+        )
         if original != updated:
             updates.append((path, updated))
     for path, updated in updates:
         print(("WRITE " if args.write else "DIFF ") + str(path))
         if args.write:
-            path.write_text(updated, encoding="utf-8")
+            path.write_bytes(updated.encode("utf-8"))
     raise SystemExit(1 if args.check and updates else 0)
 
 

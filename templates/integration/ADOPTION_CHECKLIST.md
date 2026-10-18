@@ -71,7 +71,7 @@
 | HACS-01, HACS-02 | 루트 README/LICENSE/hacs.json, 검증한 최소 HA, 실제 배포 구조와 필요한 옵션 일치 | TODO | 미확인 |
 | HACS-03, HACS-05 | Default 여부는 목록 근거로 확인, [로컬 brand/icon.png 또는 원격 brands 근거](https://github.com/eigger/hass-repo-standards/blob/main/docs/hacs.md)와 HACS/Hassfest 실제 실행, ignore는 이유·해제 조건 기록 | TODO | 미확인 |
 | HACS-06 (권장) | description·topics·issue 경로·brands 및 사용하는 HACS 필드 지원 확인 | TODO | 미확인 |
-| CI-01, CI-02 | Validate/Python Tests 공통화, 확장 job 유지, PR·실제 기본 브랜치 push·dispatch 및 필요한 schedule | TODO | 미확인 |
+| CI-01, CI-02 | Validate/Tests 공통화, 확장 job 유지, 공용 파일명·표시 이름·PR 대상 제한 없는 기본 이벤트·실제 기본 브랜치 push·dispatch·기존 schedule, 전용 CI 명명 형식 | TODO | 미확인 |
 | CI-03, CI-05, CI-08 | 최소 권한·checkout 자격증명 비보존·timeout·concurrency, full SHA·갱신 관리, 비신뢰 입력·secrets 경계 | TODO | 미확인 |
 | CI-04, CI-07, CI-12 | 실패를 숨기지 않는 실제 `ha` 필수 테스트, 버전별 환경·cache·Ruff 설정과 required checks 이름 확인 | TODO | 미확인 |
 | DEP-03, DEP-04, CI-09 | updater의 선택 package·연산자/extras/marker 보존, 안정 버전·major 정책, 실제 기본 브랜치·단일 bot branch·PR만 제안 | TODO | 미확인 |
@@ -81,8 +81,8 @@
 
 | 규칙 ID | 확인 항목 | 상태 | 근거 / 남은 작업 |
 |---|---|---|---|
-| DOC-01, DOC-02, DOC-06 | 영어 README.md·한국어 README.ko.md·상호 링크·기존 내용 보존, 간결한 제목/소개/핵심지원/최소요구/빠른설치·설정/짧은예제/중요제한/문서목록, 상세옵션·긴YAML·참조·개발/실HA테스트·의존성/검증범위를 docs·examples 등으로 보존·분리하고 유효한 링크 제공, 실제 활성 Issues·Discussions 또는 대체 지원 경로·실제 LICENSE 링크 | TODO | 미확인 |
-| DOC-03, DOC-04, DOC-05 | 제목 아래 관리 블록, flat-square·순서·실제 조건별 배지, CI 실제 기본 브랜치, 필수 동적 Usage·Analytics 참여 설치 의미·미집계/조회 실패와 0 설치 구분·이전 안내 보존 | TODO | 미확인 |
+| DOC-01, DOC-02, DOC-06 | 중앙 header/support/related-projects/license 관리 영역의 정확한 형식, 기존 공통 내용·고지 보존, 영역 밖 순서·제목·본문 유지, 양언어 같은 구조·내용·상호 링크, 독립 번역 의미·누락 리뷰, 실제 활성 지원 링크·실제 라이선스 | TODO | 미확인 |
+| DOC-03, DOC-04, DOC-05 | 언어 링크 다음 중첩 배지 관리 블록, flat·Release/HACS/HA minimum/Tests/Validate/License/Usage 순서·실제 조건·고유 배지 보존, 실제 기본 브랜치·필수 동적 Usage·미집계와 0 설치 구분 | TODO | 미확인 |
 | HA-09, HA-10 | BLE 사용 시 HA Bluetooth API·라이브러리 공개 경계, 지원한 proxy 경로·재연결·취소·서비스 변경 검증 | TODO | 미확인 |
 | DOC-07 | blesession/proxy 통합 README의 핵심조건·영어 기본/한국어 대응 사용자 설정 링크(작성·구현 가이드로 대체 금지), 공통 Bluetooth 설정·추천기기·active 스캔/GATT 차이, 통합별 troubleshooting 또는 공통 링크+모델고유조건·실제진단·민감정보 제거 제보 안내 | TODO | 미확인 |
 | DOC-07, HA-12 | 기기별 깨우기·인증·타 앱 연결·전송 제약, 실제 검증 경로와 미검증 범위, 공개 문제 로그 비식별화 | TODO | 미확인 |
@@ -105,3 +105,12 @@
 최종 검토 시 적용 대상 필수 `TODO`와 `EXCEPTION`, 이유가 있는 `N/A`, 권장 미채택을 구분해 적습니다. CI 성공만으로 실물 기기 검증을 주장하지 않습니다. 실물 검증을 수행했다면 모델·펌웨어·어댑터/proxy·연결 경로와 결과를 별도로 기록합니다.
 
 중앙 보고는 [적용 현황표](https://github.com/eigger/hass-repo-standards/blob/main/docs/adoption-status.md)의 자기 리포 행에 반영합니다. 리뷰 지적·수정·재검증 결과와 중앙 갱신 실패 사유가 있으면 남은 작업에도 기록합니다.
+
+## 중앙 템플릿 검증
+
+- `scripts/check_integration.py` 명령·결과·대상 커밋: 미확인
+- 세 빈 init·정확한 루트 conftest·domain mock_config_entry/필요 시 mock_client·실제 HA 로딩·기존 회귀 범위 보존: 미확인
+- 공통 fixture의 오류 무시·네트워크 일괄 허용·로딩 생략 금지, 개별 허용 범위·사유: 미확인
+- 양언어 본문 보존·의미 일치·기존 고지·고유 배지 독립 리뷰: 미확인
+- 공용 CI 이름·파일명·기존 실행 조건과 전용 CI 명명 형식: 미확인
+- 승인 예외 실제 사용자 근거·일자·경로·범위 및 설정과 STANDARDS.md 대조: 미확인

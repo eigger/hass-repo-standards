@@ -289,7 +289,9 @@ class BadgeSafety(unittest.TestCase):
                 "README.ko.md": "# Example\n[English](README.md)\n## 설치\n",
             }
             for name, text in texts.items():
-                (root / name).write_text(text + badges.START + "\nold\n" + badges.END)
+                (root / name).write_text(
+                    text + badges.START + "\n[![Tests](old)](old)\n" + badges.END
+                )
             config = {
                 "repository": "eigger/hass-example",
                 "default_branch": "main",
@@ -333,6 +335,31 @@ class BadgeSafety(unittest.TestCase):
             ):
                 badges.main()
             self.assertEqual((root / "README.md").read_text(), original)
+
+    def test_badge_writer_preserves_custom_badges_and_outside_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            custom = "[![Device status](https://example.com/badge)](https://example.com)"
+            original = (
+                "# Title\r\n\r\n"
+                + badges.START
+                + "\n"
+                + custom
+                + "\n"
+                + badges.END
+                + "\r\nKeep  spaces.\r\n"
+            )
+            path = root / "README.md"
+            path.write_bytes(original.encode())
+            (root / ".hass-standards.json").write_text('{"readmes":["README.md"]}')
+            with (
+                patch.object(sys, "argv", ["sync", directory, "--write"]),
+                patch.object(badges, "render", return_value="[![Tests](test)](test)"),
+                self.assertRaises(SystemExit),
+            ):
+                badges.main()
+            output = path.read_bytes().decode()
+            self.assertEqual(output, original.replace(custom, "[![Tests](test)](test)\n" + custom))
 
     def test_workflow_yaml_preserves_on_and_booleans(self):
         data = audit.yaml.load(

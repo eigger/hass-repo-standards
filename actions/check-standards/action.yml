@@ -1,0 +1,11 @@
+name: Check integration standards
+description: Check the caller against central README, tests and CI contracts
+runs:
+  using: composite
+  steps:
+    - name: Install checker requirements
+      shell: bash
+      run: python -m pip install -r "${{ github.action_path }}/requirements.txt"
+    - name: Check caller repository
+      shell: bash
+      run: python "${{ github.action_path }}/../../scripts/check_integration.py" "$GITHUB_WORKSPACE"

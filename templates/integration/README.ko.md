@@ -1,42 +1,32 @@
+<!-- hass-standards:header:start -->
 # Integration Name
 
-<!-- hass-standards:badges:start -->
-<!-- hass-standards:badges:end -->
+지원 기기를 위한 Home Assistant 커스텀 통합입니다.
 
 [English](README.md) | **한국어**
 
-어떤 기기를 어떤 방식으로 연결하는지 한 문단으로 설명합니다.
+<!-- hass-standards:badges:start -->
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5?style=flat)](#설치)
+[![Tests](https://img.shields.io/github/actions/workflow/status/eigger/hass-example/tests.yml?branch=main&style=flat&label=Tests)](https://github.com/eigger/hass-example/actions/workflows/tests.yml)
+[![Validate](https://img.shields.io/github/actions/workflow/status/eigger/hass-example/validate.yml?branch=main&style=flat&label=Validate)](https://github.com/eigger/hass-example/actions/workflows/validate.yml)
+[![License](https://img.shields.io/github/license/eigger/hass-example?style=flat)](LICENSE)
+[![Analytics reporting installs](https://img.shields.io/badge/dynamic/json?style=flat&color=41BDF5&label=Usage&query=%24.example.total&url=https%3A%2F%2Fanalytics.home-assistant.io%2Fcustom_integrations.json)](https://analytics.home-assistant.io/)
+<!-- hass-standards:badges:end -->
+<!-- hass-standards:header:end -->
 
-## 지원 기기
-검증한 핵심 모델·기능을 요약하고 전체 모델/펌웨어 참조는 docs/로 연결합니다.
+<!-- 기존 섹션 순서·제목·본문·예제·고지를 여기에 보존합니다. 이 주석은 적용 위치 표시이며 필수 본문 틀이 아닙니다. -->
 
-## 요구사항
-지원 최소 HA, 필요한 하드웨어·계정·proxy와 로컬/클라우드 조건.
-
-## 설치
-HACS 커스텀 리포(Integration) 추가, 설치, 재시작, 통합 추가.
-수동 custom_components/<domain> 설치 경로와 제거 방법.
-
-## 설정
-필수 설정만 간단히 안내하고 상세 옵션·인증·재설정 안내는 추가 문서로 연결합니다.
-
-## 빠른 시작
-짧고 실제로 동작하는 대표 예제 하나를 제공합니다. 긴 YAML과 추가 예제는 examples/로 옮깁니다.
-
-## 중요 제한사항
-안전 경고와 미지원·실물 미검증 범위는 여기에 짧게 유지합니다.
-오류별 대응은 문제 해결 문서로 연결하고 본문을 중복하지 않습니다.
-
-## 문서
-설정, 액션/엔티티 참조, 예제, 문제 해결, 개발·참여 안내의 실제 링크를 제공합니다.
-긴 개발·테스트 명령은 docs/ 또는 CONTRIBUTING으로 옮깁니다.
-blesession 통합은 전용 문제 해결 문서 또는 공통 Bluetooth 문제 해결 링크와
-모델별 깨우기·페어링·연결 조건 및 실제 진단 경로를 제공합니다.
-
+<!-- hass-standards:support:start -->
 ## 지원
-활성 Issues의 실제 링크를 버그 보고 경로로 제공합니다.
-활성 Discussions의 실제 링크를 질문·기능 제안 경로로 제공합니다.
-원격 설정을 확인하고 비활성 기능은 임의로 켜지 않으며 실제 사용 가능한 대체 지원 경로를 명시합니다.
 
+- [Issues](https://github.com/eigger/hass-example/issues): 버그를 신고하거나 기능을 요청하세요.
+<!-- hass-standards:support:end -->
+
+<!-- hass-standards:related-projects:start -->
+<!-- hass-standards:related-projects:end -->
+
+<!-- hass-standards:license:start -->
 ## 라이선스
-실제 LICENSE 파일로 연결합니다.
+
+[MIT License](LICENSE) 라이선스로 배포됩니다.
+<!-- hass-standards:license:end -->
