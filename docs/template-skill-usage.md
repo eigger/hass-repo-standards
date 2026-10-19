@@ -1,10 +1,10 @@
 # 템플릿·스킬 도구 사용 안내
 
-현재 구현은 계약·공통 렌더러, `inspect`·`plan`·`apply`·`recover`, 신규 작성 기반과 정적 검사이며 T1~T4는 main에 반영했습니다. T5 신규 생성·기존 채택 스킬의 작성·정적 회귀와 격리 요청 분기를 검증했고 PR CI는 대기 중입니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 합니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
+현재 구현은 계약·공통 렌더러, `inspect`·`plan`·`apply`·`recover`, 신규 작성 기반과 정적 검사이며 T1~T5는 main에 반영했습니다. T6 중앙 fixture의 생성·갱신 자동 회귀 구현·독립 검증과 PR CI도 완료했으며 외부 통합 적용은 이번 요청 범위가 아닙니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 합니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
 
 ## 실행 준비와 조사
 
-[개발 안내](development.md)의 기존 의존성을 설치하고 대상 문법 이상 Python으로 실행합니다. `plan`은 실행 중인 중앙 checkout의 HEAD와 명시한 full SHA가 같고 `scripts/`, `schemas/`, `templates/`, `docs/`, `AGENTS.md`, 양언어 README가 깨끗해야 합니다. 미커밋 구현 checkout을 임의 SHA로 실행할 수 없습니다.
+[개발 안내](development.md)의 기존 의존성을 설치하고 대상 문법 이상 Python으로 실행합니다. `plan`은 실행 중인 중앙 checkout의 HEAD와 명시한 full SHA가 같고 `scripts/`, `schemas/`, `templates/`, `docs/`, `skills/`, `AGENTS.md`, 양언어 README가 깨끗해야 합니다. 미커밋 구현 checkout을 임의 SHA로 실행할 수 없습니다.
 
 아래 `<target>`은 실제 조사할 대상 경로, `<work>`는 대상 밖에 미리 만든 작업 디렉터리입니다. 명령의 `<...>`는 실제 확인한 값으로 바꿉니다. 아래 표기는 실행 증거가 아닙니다.
 
@@ -118,20 +118,45 @@ python3 scripts/check_repository.py
 
 정적 성공은 실제 HA setup·플랫폼·unload·실패 복구·외부 I/O mock 경계나 번역 의미·기기 조건의 검증 결과가 아닙니다. 실제 최소/current HA 환경과 해당 payload current/정확한 하한 실행, 독립 의미 리뷰를 별도로 수행하고 증거를 체크리스트에 기록해야 합니다. 생성·복구 성공이나 중앙 fixture 결과를 실제 채택 완료로 보고하지 않습니다.
 
+## 중앙 시나리오 회귀
+
+[raw fixture 안내](../tests/fixtures/scaffold/README.md)와 [CLI 시나리오 테스트](../tests/test_integration_scenarios.py)는 신규/기존 × 기본/imagespec/blesession/둘 다 조합을 검증합니다. 공통 README·CI·테스트는 현재 중앙 도구에서 생성하고 fixture에는 입력과 고유 보존 자료만 둡니다.
+
+```text
+python3 -m unittest discover -s tests -p test_integration_scenarios.py -v
+```
+
+이 명령은 중앙 저장소의 개발 환경에서 실행합니다. T6의 실제 독립 192개 실행 결과와 검증 대상 커밋의 PR CI는 [검증 기록](template-skill-validation.md), 현재 병합 상태는 [PR #7](https://github.com/eigger/hass-repo-standards/pull/7)에서 확인합니다. 실행 대상은 임시 Git fixture이고 실제 외부 통합·기기·실제 최소/current HA 채택 성공을 검증하는 명령이 아닙니다. 이번 중앙 도구·템플릿·스킬 요청은 T6 중앙 검증으로 마무리하며 다른 통합 적용과 개인 스킬 설치는 별도 요청 범위입니다.
+
 ## 두 스킬의 원본·명시적 설치
 
 중앙 원본은 [create-ha-integration](../skills/create-ha-integration/SKILL.md)와 [adopt-ha-standards](../skills/adopt-ha-standards/SKILL.md)입니다. 각 디렉터리는 SKILL.md·references/workflow.md·agents/openai.yaml만 포함하며 중앙 템플릿이나 도구를 복제하지 않습니다. 원본 작성·quick_validate 문법 검사와 격리 요청 분기 실행을 마쳤으며 자세한 관측·한계는 검증 기록에 분리합니다. 이번 작업에서 설치나 다른 통합 수정은 수행하지 않았습니다.
 
+SKILL.md의 name/description·본문과 references는 공용 Agent Skills 형식이며 중앙 Python CLI·템플릿도 모델 API에 의존하지 않습니다. agents/openai.yaml은 OpenAI UI를 위한 선택 metadata이고 공통 실행의 필수 파일이 아닙니다. 호환 대상은 스킬을 읽고 파일/셸을 실행하는 **클라이언트**이며 Claude Code나 Antigravity의 지원을 일반 Claude/Gemini 웹 채팅 지원으로 해석하지 않습니다. [OpenAI 스킬 문서](https://learn.chatgpt.com/docs/build-skills), [Claude Code 스킬 문서](https://code.claude.com/docs/en/skills), [Antigravity 스킬 문서](https://antigravity.google/docs/skills)
+
+2026-10-19 확인한 제품별 명시적 설치 위치는 다음과 같습니다. `<skill>`은 두 공용 원본 디렉터리 중 하나입니다. 설치 위치만 다르며 제품별 규칙·템플릿 사본을 별도로 유지하지 않습니다.
+
+| 클라이언트 | Workspace 위치 | 사용자 전역 위치 |
+|---|---|---|
+| Codex | `.agents/skills/<skill>/` | `~/.agents/skills/<skill>/` |
+| Claude Code | `.claude/skills/<skill>/` | `~/.claude/skills/<skill>/` |
+| Antigravity App·IDE | `.agents/skills/<skill>/` | `~/.gemini/config/skills/<skill>/` |
+| Antigravity CLI | `.agents/skills/<skill>/` | `~/.gemini/antigravity-cli/skills/<skill>/` |
+
+이 표는 각 [공식 Codex](https://learn.chatgpt.com/docs/build-skills)·[Claude Code](https://code.claude.com/docs/en/skills)·[Antigravity](https://antigravity.google/docs/skills) 문서의 탐색 위치를 요약합니다. 이 환경에서 이미 쓰는 `$CODEX_HOME/skills`·`~/.codex/skills` 기존 경로와 현재 공식 Codex 안내의 `.agents/skills`를 구분합니다. 기존 설치를 자동 이동하거나 해당 기존 경로를 모든 클라이언트의 신규 권장 위치로 제시하지 않습니다.
+
+이 리포의 실제 스킬 행동 평가는 Codex에서 수행했습니다. 다른 클라이언트 실행·자동 발동은 미검증이며 중앙 AGENTS의 collaboration 위임 표현은 Codex 실행 기능을 전제로 합니다. 형식 호환이 제품별 위임·권한·실행 기능까지 같음을 보장하지 않습니다. 다른 클라이언트 적용 시 해당 기능 대응을 검토해야 하며 이번 문서 보완으로 코드·AGENTS 정책을 바꾸거나 실제 설치/검증 범위를 확대하지 않습니다.
+
 설치는 별도의 사용자 요청이 있을 때 다음처럼 수행합니다.
 
 1. 사용자가 선택한 중앙 checkout의 검토 full SHA와 원본 파일을 확인합니다. 설치할 스킬의 원본 SHA를 사용자 설치 기록에 남깁니다.
-2. 사용자가 지정한 설치 경로를 우선합니다. 별도 지정이 없을 때 일반 개인 경로는 `CODEX_HOME/skills`, CODEX_HOME이 없으면 `~/.codex/skills`입니다. 그 아래에 두 스킬 디렉터리를 각각 같은 이름으로 복사합니다. 통합 대상의 `.agents/skills`·AGENTS.md나 다른 진입 파일로 설치하지 않습니다.
+2. 사용자가 지정한 제품·설치 범위·경로를 확인하고 위 표의 해당 위치 아래에 두 공용 스킬 디렉터리를 각각 같은 이름으로 복사합니다. 일반 통합 적용 요청만으로 대상의 `.agents/skills`·`.claude/skills`·AGENTS.md나 다른 진입 파일을 자동 설치하지 않습니다. Workspace 설치 표는 별도 명시적 설치 요청이 있을 때의 위치입니다.
 3. 이름이 같은 설치본이 있으면 로컬 변경·기존 원본 SHA를 비교하여 보존한 후 사용자 요청 범위에서 갱신합니다. 전체 skills 디렉터리를 덮어쓰거나 다른 스킬을 삭제하지 않습니다. 설치한 SKILL.md·workflow·metadata가 모두 같은 원본 SHA에서 왔는지 확인합니다.
 4. 실제 호출에는 **별도로 확인한 중앙 checkout 경로·검토 full SHA·대상 경로·요청 범위**를 제공합니다. 설치된 스킬의 상대 `../../` 경로가 중앙 저장소라고 가정하지 않습니다. 중앙 HEAD·깨끗한 실행 자산·계약 버전 1이 맞지 않으면 실행을 중단하고 필요한 경로/버전 근거를 확인합니다.
 
 중앙 checkout에 폴더가 있다는 것만으로 외부 리포에서 자동 발견된다고 주장하지 않습니다. 설치본 갱신은 중앙 규칙·도구와의 호환성 확인이 필요하며 검토 SHA가 다른 이전 계획은 그대로 재사용하지 않습니다.
 
-설치 후 호출 예시는 다음과 같습니다. `<...>`는 실제 확인한 경로·SHA·입력으로 바꿉니다.
+설치 후 아래 호출은 Codex 표기 예시입니다. 다른 클라이언트의 호출 UI는 해당 공식 안내를 따르며 이 리포에서는 실제 호출을 검증하지 않았습니다. `<...>`는 실제 확인한 경로·SHA·입력으로 바꿉니다.
 
 ```text
 $create-ha-integration: 중앙 <central>의 <full-sha>와 입력 <input.json>으로 <target>에 신규 통합 골격을 생성해줘.

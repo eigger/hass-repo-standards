@@ -1,0 +1,4 @@
+"""Synthetic preservation source; this file is not executed as HA evidence."""
+
+def test_project_regression():
+    assert "preserve" == "preserve"

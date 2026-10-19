@@ -1,0 +1,10 @@
+name: Project-only scheduled review
+'on':
+  schedule:
+    - cron: '17 4 * * 2'
+  workflow_dispatch: null
+jobs:
+  project-only:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Synthetic preservation fixture; never dispatched'

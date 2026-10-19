@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "repository": {
+    "value": "owner/example",
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "default_branch": {
+    "value": "trunk",
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "domain": {
+    "value": "example",
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "manifest": {
+    "value": {
+      "domain": "example",
+      "name": "Example",
+      "version": "1.0.0",
+      "documentation": "https://github.com/owner/example",
+      "issue_tracker": "https://github.com/owner/example/issues",
+      "codeowners": [
+        "@owner"
+      ],
+      "requirements": [
+        "blesession>=0.9.0"
+      ],
+      "dependencies": [],
+      "after_dependencies": [],
+      "config_flow": true
+    },
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "readme": {
+    "value": {
+      "title": "Example",
+      "descriptions": {
+        "en": "An integration.",
+        "ko": "통합입니다."
+      },
+      "issues": true,
+      "discussions": false,
+      "related_projects": []
+    },
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "license": {
+    "value": {
+      "name": "MIT License",
+      "path": "LICENSE",
+      "notices": {
+        "en": [],
+        "ko": []
+      }
+    },
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "configuration": {
+    "value": "ui",
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "platforms": {
+    "value": [
+      "sensor"
+    ],
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "features": {
+    "value": {
+      "coordinator": false,
+      "shared_entity": false,
+      "diagnostics": false,
+      "actions": false,
+      "fixtures": false,
+      "snapshots": false,
+      "dependency_updates": false
+    },
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "environments": {
+    "value": {
+      "minimum": {
+        "ha": "2026.10.2",
+        "python": "3.14",
+        "pytest_homeassistant_custom_component": "0.13.373",
+        "requirements": [
+          "requirements_minimum.txt"
+        ],
+        "constraints": [
+          "constraints/exact-minimum.txt"
+        ]
+      },
+      "current": {
+        "ha": "2026.10.2",
+        "python": "3.14",
+        "pytest_homeassistant_custom_component": "0.13.373",
+        "requirements": [
+          "requirements_test.txt"
+        ],
+        "constraints": [
+          "constraints/current.txt"
+        ]
+      },
+      "libraries": {
+        "blesession": {
+          "current": "0.9.0",
+          "minimum": "0.9.0"
+        }
+      }
+    },
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  },
+  "remote": {
+    "value": "https://github.com/owner/example.git",
+    "source": "Synthetic create/blesession tool fixture; not device, installation or HA behavior evidence."
+  }
+}

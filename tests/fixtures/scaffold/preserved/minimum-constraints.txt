@@ -1,0 +1,2 @@
+# Retain exact minimum constraints and this explanation.
+homeassistant==2026.10.2
