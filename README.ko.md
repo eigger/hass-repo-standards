@@ -13,7 +13,7 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 | [적용과 변경 관리](docs/adoption.md) | 필수·권장 구분, 기존 리포 이관, 예외 |
 | [중앙 적용 현황](docs/adoption-status.md) | 리포별 진행 상태·적용 내용·검증/리뷰 근거·남은 작업 |
 | [적용 권장 순서](docs/adoption-plan.md) | 적용 대상 HA 통합 22개 파일럿·단계별 적용 계획 |
-| [템플릿·스킬 구조 개편 구현안](docs/template-skill-plan.md) | 관리 범위·CLI·예정 스킬·단계별 설계; T1/T2 병합, T3 apply·복구·작성 기반 독립 코드 검증 완료 |
+| [템플릿·스킬 구조 개편 구현안](docs/template-skill-plan.md) | 관리 범위·CLI·예정 스킬·단계별 설계; T1~T3 병합, T4 생성물·중앙 계약 검사 독립 코드 검증 완료 |
 | [템플릿·스킬 사용 안내](docs/template-skill-usage.md) | 조사·계획·보호된 적용·복구; 생성된 기기 동작은 미완성, 스킬은 미구현 |
 | [템플릿·스킬 구현 검증](docs/template-skill-validation.md) | 단계별 상태·명령·환경·근거·남은 작업 |
 | [통합별 적용 체크리스트](docs/checklist.md) | 적용 상태·검증 증거·호환 환경·예외 기록 |

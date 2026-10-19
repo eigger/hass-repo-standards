@@ -6,8 +6,8 @@
 |---|---|
 | T1 | 계약·입력 검증·공통 렌더러 구현·독립 코드/문서 검증 완료; 문서 반영 후 저장소 검사 36개 문서·7개 workflow 성공 |
 | T2 | 읽기 전용 inspect/plan CLI 구현·독립 코드/문서 검증 완료; 문서 반영 후 저장소 검사 37개 문서·7개 workflow 성공 |
-| T3 | 신규 작성 기반·apply·recover 구현·독립 코드/문서 검증 완료; 커밋/CI 확인 대기 |
-| T4 | TODO: 전체 계약 검사·CI 연결 |
+| T3 | 신규 작성 기반·apply·recover 구현·독립 검증·PR CI 성공·main 병합 |
+| T4 | 생성물 검사·중앙 계약 연결 구현·독립 코드 검증 완료; PR CI 확인 대기 |
 | T5 | TODO: 신규 생성·기존 적용 스킬과 실행 안내 |
 | T6 | TODO: 중앙 생성·갱신 fixture와 별도 범위의 실제 도입; 외부 리포 미적용 |
 
@@ -69,6 +69,8 @@ T1 → T2 → T3 → T4 → T5 → T6 순서로 진행합니다. 각 단계는 �
 4. 공용 caller의 reusable workflow·action·standards-ref를 같은 검토 SHA로 렌더링합니다. CI는 caller checkout을 유지하고 composite script 경로는 github.action_path를 사용합니다. 형식 불일치를 자동 수정하거나 검증 실패를 성공으로 바꾸지 않습니다.
 
 **검증:** 같은 입력으로 렌더링한 관리 영역은 검사에서 차이가 없어야 하고, 필수 파일·영역·번역·기능별 테스트·SHA를 하나씩 훼손하면 해당 경로가 실패해야 합니다. 형식 검사 통과와 실제 HA/payload 검증 통과를 별도 결과로 확인합니다. 기존 전체 회귀 및 workflow 변경 시 actionlint를 통과시킵니다.
+
+현재 구현의 실행 진입은 `python3 scripts/check_integration.py <target> --check`와 `python3 scripts/check_repository.py`입니다. 기존 check CLI·승인 예외 경로를 유지하며 workflow/action 파일 자체는 변경하지 않습니다. 정적 구조·번역 키/placeholder·활성 대응 테스트·SHA·정확한 중앙 scaffold 미완성 표시 검사는 실제 HA 기능·번역 의미 검증을 대신하지 않습니다. 최종 독립 실행 결과 전에는 T4 완료로 기록하지 않습니다.
 
 ## T5. 두 스킬과 실행 안내 작성
 

@@ -15,6 +15,8 @@ from bluetooth_documents import syntax_error_message
 from check_repository import Loader
 from payload_documents import check as payload_document_errors
 from standards import readme as _readme
+from standards import validation
+from standards.planning import workflow_events
 from sync_badges import preserve_extra_badges as preserve_extra_badges
 
 CENTRAL = Path(__file__).resolve().parent.parent
@@ -70,26 +72,7 @@ def test_errors(root, domain):
     for file in (root / "tests").rglob("*"):
         safe_path(root, file.relative_to(root))
     prefix = Path("tests/components") / domain
-    for path in [
-        Path("tests/__init__.py"),
-        Path("tests/components/__init__.py"),
-        prefix / "__init__.py",
-    ]:
-        if not (root / path).is_file() or (root / path).read_bytes() != b"":
-            errors.append(("TEST-08", str(path), "must exist and be empty"))
-    path = Path("tests/conftest.py")
-    if not (root / path).is_file() or (root / path).read_bytes() != (TEMPLATES / path).read_bytes():
-        errors.append(("TEST-03", str(path), "must match the central template exactly"))
-    path = prefix / "conftest.py"
-    expected = (TEMPLATES / "tests/components/example/conftest.py").read_text()
-    try:
-        valid = (root / path).is_file() and block(
-            (root / path).read_text(), "domain-fixtures"
-        ) == block(expected, "domain-fixtures")
-    except ValueError:
-        valid = False
-    if not valid:
-        errors.append(("TEST-08", str(path), "managed domain fixture skeleton is required"))
+    errors.extend(validation.foundation_errors(root, domain, safe_path, CENTRAL))
     path = prefix / "test_init.py"
     if not (root / path).is_file():
         errors.append(("TEST-08", str(path), "real HA lifecycle tests are required"))
@@ -124,9 +107,7 @@ def workflow_errors(root, config, domain):
             continue
         rel = path.relative_to(root).as_posix()
         template = yaml.load((TEMPLATES / rel).read_text(), Loader=Loader)
-        events = json.loads(json.dumps(template["on"]))
-        if "push" in events:
-            events["push"]["branches"] = [config["default_branch"]]
+        events = workflow_events(template, config["default_branch"])
         if data.get("name") != expected[path.name] or data.get("on") != events:
             errors.append(
                 (
@@ -268,6 +249,7 @@ def check(root, write_readmes=False):
     for path, _ in updates:
         if not write_readmes:
             errors.append(("DOC-01", path.name, "managed areas differ from central rendering"))
+    errors.extend(validation.check(root, config, manifests[0], manifest, safe_path, CENTRAL))
     errors.extend(test_errors(root, domain))
     errors.extend(workflow_errors(root, config, domain))
     errors.extend(bluetooth_document_errors(root, config, manifests[0], manifest, safe_path))
