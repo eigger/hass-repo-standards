@@ -1,0 +1,7 @@
+# Central scaffold tool scenarios
+
+These raw sourced inputs cover create/adopt and base/imagespec/blesession/both. Values are synthetic metadata for local tool regression; they do not assert a real device, production adapter, registered payload action, package installation or supported integration environment. Library version metadata uses the previously looked-up imagespec current 1.1.0/minimum 1.0.1 and blesession 0.9.0/0.9.0 pairs, with no installation or runtime claim. Payload metadata reuses that test's schema shape only and remains pending.
+
+Most cases use the recorded central test pair with separate requirements/constraints paths. The adopt-base case preserves the previously verified metadata pair HA 2025.3.0/Python 3.13/plugin 0.13.221 as minimum against current 2026.10.2/3.14/0.13.373. They are serialization and preservation inputs, not new runtime compatibility evidence. Imagespec without payload metadata is tested separately as failure.
+
+`preserved/` contains only project-specific bodies, a regression source, a fixture extension, a dedicated CI schedule and independently named environment/documentation bytes. The scenarios obtain common README, CI and test foundations from the current central tools. They supply the repository's existing LICENSE notice explicitly in the temporary fixture; a genuinely empty create target still records its missing license/README as pending.

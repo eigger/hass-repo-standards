@@ -10,7 +10,9 @@ T2는 실제 커밋 `a1e37401533e65651f910d498f9b3a2d21764b8b`의 [PR #3 CI](htt
 
 T3는 실제 커밋 `419c23441cd8b4e6e37ceca6df0c0493b199d7b0`의 [PR #4 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39198455037) 네 검사가 모두 성공한 뒤 merge commit `2433321f4d1f7eba6b3bc3646aa3ba0b251dc419`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39198603979) 네 검사도 모두 성공했습니다.
 
-T4는 실제 커밋 `53ac269dece6561276480a2d5e86ea884c0abcbb`의 [PR #5 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39200102781) 네 검사가 모두 성공한 뒤 merge commit `c3051910452a13036aafea77976096c2c5841273`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39200292843)도 성공했습니다. T5 검증 대상은 이 main 커밋 위의 작업 트리 변경분입니다. T5 최종 커밋·원격 CI는 대기 중이며 이전 단계 결과를 T5 검증으로 재사용하지 않습니다.
+T4는 실제 커밋 `53ac269dece6561276480a2d5e86ea884c0abcbb`의 [PR #5 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39200102781) 네 검사가 모두 성공한 뒤 merge commit `c3051910452a13036aafea77976096c2c5841273`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39200292843)도 성공했습니다.
+
+T5는 실제 커밋 `4d837b2e73515517667b0b5555760794d176764e`의 [PR #6 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39201816337) 네 검사가 모두 성공한 뒤 merge commit `7b004342ecc53f191d684b8c9040d296fc0f7578`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39201996349) 네 검사도 모두 성공했습니다. T6 중앙 fixture 검증 대상은 이 main 커밋 위의 작업 트리 변경분이며 구현·독립 코드 검증을 완료했습니다. 실제 커밋/PR·원격 CI/병합 근거는 대기 중입니다. 이전 단계 결과를 T6 검증으로 재사용하지 않습니다.
 
 | 단계 | 구현·검증 상태 | 남은 작업 |
 |---|---|---|
@@ -18,8 +20,8 @@ T4는 실제 커밋 `53ac269dece6561276480a2d5e86ea884c0abcbb`의 [PR #5 CI](htt
 | T2 | 읽기 전용 inspect/plan·조사·변경 계획 구현, 독립 코드/문서 검증·커밋/main CI 각 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
 | T3 | 새 작성 기반·apply·recover 구현·독립 코드/문서 검증·PR/main CI 각 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
 | T4 | 생성물 검사·중앙 계약 연결 구현·독립 검증·PR/main CI 성공·main 병합 | 후속 단계와 별도 기록 |
-| T5 | 두 스킬·실행 안내 작성·독립 정적 회귀·격리 요청 분기 실행·독립 문서 검증 | 커밋/CI |
-| T6 | TODO | 중앙 생성·갱신 fixture와 별도 범위의 실제 통합 검증 |
+| T5 | 두 스킬·실행 안내·정적/격리 행동·독립 문서 검증·PR/main CI 각 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
+| T6 | 중앙 생성·갱신 자동 회귀 구현·독립 코드/문서 검증 완료 | 실제 커밋/PR CI/병합; 외부 실제 도입은 범위 밖 |
 
 T1은 계약 44개 중 기존 원본 available 21개와 미작성 자산 pending 23개를 구분했습니다. T3는 작성 자산 18개와 빈 `custom_components/__init__.py` 패키지 marker를 추가해 총 45개·available 40개·pending 5개입니다. marker는 기존 빈 테스트 init 원본을 재사용하고 create_only로 기존 파일을 보존합니다. available은 원본이 존재한다는 뜻이며 실제 기기 동작·fixture·검증 미완료는 renderer의 pending으로 별도 반환합니다. CLI에는 T2 inspect/plan과 T3 apply/recover가 있습니다. 외부 통합 수정·지원 최소 변경·스킬 설치·workflow 수동 실행은 수행하지 않았습니다.
 
@@ -220,6 +222,38 @@ Fresh retry의 정확한 산출물은 원행동 루트의 `cases/retry/{report.m
 
 위 실행은 중앙 임시 fixture의 분기 검증입니다. 명시적 사용자 스킬 설치·앱 자동 발동·실제 외부 통합·원격 현황 갱신·실제 최소/current HA 통합 성공·기기·payload production 실행을 수행하지 않았습니다. 초기 행동 환경에는 HA/pytest/imagespec 등이 없었으며 선언한 환경 버전은 입력 메타데이터일 뿐 설치 증거가 아닙니다. 별도 중앙 HA 6개 회귀 결과를 fixture 통합 성공으로 재사용하지 않습니다.
 
+## T6 중앙 fixture 검증
+
+신규·기존 × 기본/imagespec/blesession/둘 다의 8조합과 입력 누락 실패를 실제 중앙 CLI로 실행하는 9개 자동 회귀를 추가했습니다. 원본은 [fixture 안내](../tests/fixtures/scaffold/README.md)와 [시나리오 테스트](../tests/test_integration_scenarios.py)에 있습니다. 새 22개 파일은 raw 입력·고유 보존 자료·테스트/안내이며 README·CI·테스트 공통 사본은 현재 중앙 자산에서 생성합니다. production 코드는 변경하지 않았습니다.
+
+| 최종 독립 검증 | 결과 |
+|---|---|
+| 전체 도구 회귀 | 192개 수집 중 도구 186개 성공·중앙 HA 6개 skip, 23.575초 |
+| 별도 중앙 HA 회귀 | 같은 6개 모두 실행 성공, 12.961초; 서로 다른 총 192개 실행 성공 |
+| 저장소·Ruff 검사 | 문서 37개/workflow 7개 성공·Ruff check/format 성공·89개 파일 |
+| 조건·보존 | 8조합의 create/adopt 실제 CLI·적용 후 adopt 0 operations·고유 양언어 본문/fixture/회귀/CI/환경 바이트 보존 |
+| 조건 제거 | 라이브러리 조건 제거 후 plan/apply/adopt 0 operations·양언어 문서/전체 예제 바이트 보존 |
+| 누락·충돌 | payload·출처 누락은 종료 2/대상 미작성; 기존 공용 CI schedule 확장은 정확한 경로 충돌로 차단·원본 보존 |
+| 대표 기존 최소 보존 | adopt-base를 별도 재실행하여 최소/current 메타데이터·환경 경로·hacs·README 분리 보존 |
+| 최종 문서 8개 독립 검토 | 문서 37개/workflow 7개·diff 검사 성공, 신규 22개 fingerprint 불변·필수 미해결 지적 없음 |
+
+최종 snapshot은 `/home/eigger/hass-standards-review-t6-4a1ddO`, 로그는 그 아래 tools-tests.log·ha-tests.log·repository.log·ruff.log·format.log입니다. 신규 22개 파일 fingerprint는 공유 작업 트리 원시 바이트와 같고 manifest SHA-256은 `8780c985cfc3b083f7078c62339231c6c5a7b576f42bc86162a905e08491f25b`입니다. 이 값은 Git 커밋 SHA가 아닙니다. 대표 재실행 아티팩트는 같은 snapshot 아래 `adopt-base-artifacts`입니다. 미해결 필수 지적은 없습니다.
+
+실제 실행 환경은 T1~T5와 같습니다. 정확한 명령은 다음과 같습니다.
+
+```bash
+cd /home/eigger/hass-standards-review-t6-4a1ddO
+PYTHONDONTWRITEBYTECODE=1 /home/eigger/hass-standards-review-t4-GodQr4/.venv/bin/python -m unittest discover -s tests -v
+/home/eigger/hass-standards-review-t4-GodQr4/.venv/bin/python scripts/check_repository.py
+/home/eigger/hass-standards-review-t4-GodQr4/.venv/bin/python -m ruff check .
+/home/eigger/hass-standards-review-t4-GodQr4/.venv/bin/python -m ruff format --check .
+/home/eigger/hass-standards-review-ha-s3tDc4/.ha-venv/bin/python -m unittest discover -s tests -p test_payload_runtime.py -v
+```
+
+adopt-base는 최소 HA 2025.3.0/Python 3.13/플러그인 0.13.221과 current HA 2026.10.2/Python 3.14/플러그인 0.13.373의 입력 메타데이터·requirements_minimum/exact-min 및 current 경로·workflow expected HA·hacs 2025.3.0·양언어 README 지원 선언을 보존했습니다. 이것은 구 HA 런타임 설치/성공 검증이 아닙니다. 모든 생성 초안의 정적 검사는 실제 기기/HA assertion 미완성 sentinel로 종료 1을 유지하며 의도한 실패를 자동 테스트가 검증합니다. 라이브러리 버전·payload 메타데이터는 합성 입력이며 실제 패키지/production 액션 실행 증거가 아닙니다.
+
+이번 중앙 도구·템플릿·스킬 요청은 이 중앙 검증을 완료한 뒤 마무리합니다. 외부 통합 실제 도입·하드웨어·실제 최소/current HA 통합 성공·payload production 실행은 요청 범위 밖·미실행입니다. 중앙 리포는 통합 채택 현황표 대상이 아니어서 해당 표를 변경하지 않습니다.
+
 ## 남은 검증과 한계
 
-T5 독립 문서 검증과 문서 반영 후 저장소 재검사는 완료했고 커밋·원격 CI가 필요하며 T6 실제 도입은 별도 범위로 남습니다. 생성 초안의 실제 HA negative smoke는 수행했지만 실제 신규·기존 통합의 HA minimum/current 성공, HACS/Hassfest, UI 번역·기기 의미·하드웨어 검증은 수행하지 않았습니다. 중앙 fixture와 중앙 도구의 회귀 성공을 외부 통합 도입 완료로 기록하지 않습니다.
+중앙 T1~T6 구현과 T6 독립 코드 검증을 완료했으며 실제 커밋/PR·원격 CI/병합을 기다립니다. 그 근거는 실제 발생 후 추가하며 현재 작업 트리 결과를 원격 성공으로 기록하지 않습니다. 생성 초안의 실제 HA negative smoke는 수행했지만 실제 신규·기존 통합의 HA minimum/current 성공, HACS/Hassfest, UI 번역·기기 의미·하드웨어 검증은 이번 범위 밖·미실행입니다. 다른 에이전트 클라이언트 실행·개인 설치·앱 자동 발동도 미검증입니다. 중앙 fixture와 중앙 도구의 회귀 성공을 외부 통합 도입 완료로 기록하지 않습니다.

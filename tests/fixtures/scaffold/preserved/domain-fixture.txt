@@ -1,0 +1,3 @@
+
+# Existing fixture outside the central domain-fixtures block.
+PROJECT_FIXTURE = "preserve bytes"

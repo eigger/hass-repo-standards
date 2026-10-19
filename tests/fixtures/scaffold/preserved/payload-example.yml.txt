@@ -1,0 +1,2 @@
+# Preservation bytes only; no executable action or production adapter is claimed.
+synthetic_metadata: preserve

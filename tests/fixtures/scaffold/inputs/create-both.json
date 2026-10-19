@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "repository": {
+    "value": "owner/example",
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "default_branch": {
+    "value": "trunk",
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "domain": {
+    "value": "example",
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "manifest": {
+    "value": {
+      "domain": "example",
+      "name": "Example",
+      "version": "1.0.0",
+      "documentation": "https://github.com/owner/example",
+      "issue_tracker": "https://github.com/owner/example/issues",
+      "codeowners": [
+        "@owner"
+      ],
+      "requirements": [
+        "imagespec[datamatrix]>=1.0.1",
+        "blesession>=0.9.0"
+      ],
+      "dependencies": [],
+      "after_dependencies": [],
+      "config_flow": true
+    },
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "readme": {
+    "value": {
+      "title": "Example",
+      "descriptions": {
+        "en": "An integration.",
+        "ko": "통합입니다."
+      },
+      "issues": true,
+      "discussions": false,
+      "related_projects": []
+    },
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "license": {
+    "value": {
+      "name": "MIT License",
+      "path": "LICENSE",
+      "notices": {
+        "en": [],
+        "ko": []
+      }
+    },
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "configuration": {
+    "value": "ui",
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "platforms": {
+    "value": [
+      "sensor"
+    ],
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "features": {
+    "value": {
+      "coordinator": false,
+      "shared_entity": false,
+      "diagnostics": false,
+      "actions": false,
+      "fixtures": false,
+      "snapshots": false,
+      "dependency_updates": false
+    },
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "environments": {
+    "value": {
+      "minimum": {
+        "ha": "2026.10.2",
+        "python": "3.14",
+        "pytest_homeassistant_custom_component": "0.13.373",
+        "requirements": [
+          "requirements_minimum.txt"
+        ],
+        "constraints": [
+          "constraints/exact-minimum.txt"
+        ]
+      },
+      "current": {
+        "ha": "2026.10.2",
+        "python": "3.14",
+        "pytest_homeassistant_custom_component": "0.13.373",
+        "requirements": [
+          "requirements_test.txt"
+        ],
+        "constraints": [
+          "constraints/current.txt"
+        ]
+      },
+      "libraries": {
+        "imagespec": {
+          "current": "1.1.0",
+          "minimum": "1.0.1"
+        },
+        "blesession": {
+          "current": "0.9.0",
+          "minimum": "0.9.0"
+        }
+      }
+    },
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "remote": {
+    "value": "https://github.com/owner/example.git",
+    "source": "Synthetic create/both tool fixture; not device, installation or HA behavior evidence."
+  },
+  "payload": {
+    "value": {
+      "examples": [
+        {
+          "path": "examples/payload/synthetic.yaml",
+          "payload_path": [
+            "data",
+            "payload"
+          ],
+          "expected_size": [
+            16,
+            16
+          ],
+          "expected_palette": [
+            "#000000"
+          ]
+        }
+      ],
+      "adapter": "synthetic tool metadata only; no production callable or registration asserted"
+    },
+    "source": "Reuses test_integration_planning synthetic schema shape only; production execution remains unverified."
+  }
+}

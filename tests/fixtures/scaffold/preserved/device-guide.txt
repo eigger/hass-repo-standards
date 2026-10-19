@@ -1,0 +1,1 @@
+Existing synthetic device documentation. Actual hardware behavior remains unverified.

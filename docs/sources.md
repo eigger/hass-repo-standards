@@ -67,3 +67,15 @@
 - [imagespec 속성 참조](https://github.com/eigger/imagespec/blob/main/docs/reference.md), [요소 예제](https://github.com/eigger/imagespec/blob/main/docs/elements.md), [디더링](https://github.com/eigger/imagespec/blob/main/docs/dithering.md), [호스트 통합](https://github.com/eigger/imagespec/blob/main/docs/integrating.md): 실제 설치 버전의 키·API·RenderContext·지원 범위와 대조하는 라이브러리 원본. 전체 매뉴얼을 중앙에 복제하지 않습니다.
 
 2026-10-18 로컬 문서 작성은 imagespec checkout의 실제 public validate/render·소스·스키마를 기준으로 검증하며 기존 지원 최소·버전·릴리스 정책은 변경하지 않습니다. HA fixture·서비스 스키마 실행 증거와 이미지 렌더링 증거·기기 전달/실물 검증을 구분합니다.
+
+## 에이전트 스킬 호환성
+
+이 절의 확인일은 **2026-10-19**입니다. 에이전트 클라이언트의 스킬 형식·탐색 경로 자료이며 HA의 공식 요구사항과 관계없습니다. 위 HA 자료 표 전체의 확인일을 갱신한 의미도 아닙니다.
+
+| 공식 자료 | 확인 용도 |
+|---|---|
+| [OpenAI Build skills](https://learn.chatgpt.com/docs/build-skills) | SKILL.md와 공용 지원 파일, 선택 agents/openai.yaml, Codex의 workspace `.agents/skills`·사용자 `~/.agents/skills` |
+| [Claude Code skills](https://code.claude.com/docs/en/skills) | 공용 Agent Skills 지원과 workspace `.claude/skills`·사용자 `~/.claude/skills` |
+| [Antigravity skills](https://antigravity.google/docs/skills) | App·CLI·IDE별 workspace `.agents/skills`, App/IDE 사용자 `~/.gemini/config/skills`, CLI 사용자 `~/.gemini/antigravity-cli/skills` |
+
+형식 호환과 이 리포의 실제 행동 검증을 구분합니다. Codex의 격리 실행만 검증했고 다른 클라이언트·일반 웹 채팅·자동 발동은 검증하지 않았습니다. 중앙 collaboration 위임 등 제품 기능에 의존하는 정책의 호환성을 확인하기 전 모든 클라이언트에서 동일 실행을 보장한다고 주장하지 않습니다. 명시적 설치 방법과 현재 범위는 [사용 안내](template-skill-usage.md)를 따릅니다.
