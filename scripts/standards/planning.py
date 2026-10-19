@@ -15,7 +15,16 @@ import yaml
 from . import conditions, contract, inventory, readme, scaffold
 
 CENTRAL = contract.CENTRAL
-ASSET_PATHS = ("scripts", "schemas", "templates", "docs", "AGENTS.md", "README.md", "README.ko.md")
+ASSET_PATHS = (
+    "scripts",
+    "schemas",
+    "templates",
+    "skills",
+    "docs",
+    "AGENTS.md",
+    "README.md",
+    "README.ko.md",
+)
 
 
 def canonical_json(value):
@@ -38,13 +47,52 @@ def verify_standards(ref, central=None):
     )
     if raw is None or raw:
         raise ValueError(
-            "Standards rules, scripts, schemas and templates must be clean at standards-ref"
+            "Standards rules, scripts, schemas, templates and skills must be clean at standards-ref"
         )
     return central
 
 
 def observed(data, field):
     return [item for item in data["observations"] if item["field"] == field]
+
+
+def requirement_lines(text):
+    """Preserve every effective requirement verbatim except surrounding whitespace."""
+    return [
+        line.strip()
+        for line in text.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+
+
+def environment_paths(data):
+    environments = data["environments"]["value"]
+    return {
+        axis: {
+            contract.validate_path(path)
+            for field in ("requirements", "constraints")
+            for path in environments[axis][field]
+        }
+        for axis in ("minimum", "current")
+    }
+
+
+def render_dependabot(source, data):
+    """Retain central updates while protecting the actual minimum-only environment files."""
+    paths = environment_paths(data)
+    document = yaml.safe_load(source)
+    for update in document["updates"]:
+        if update.get("package-ecosystem") != "pip":
+            continue
+        exclusions = [
+            path for path in update.get("exclude-paths", []) if path not in paths["current"]
+        ]
+        exclusions.extend(sorted(paths["minimum"] - paths["current"] - set(exclusions)))
+        if exclusions:
+            update["exclude-paths"] = exclusions
+        else:
+            update.pop("exclude-paths", None)
+    return yaml.safe_dump(document, sort_keys=False, allow_unicode=True)
 
 
 def workflow_events(template, default_branch):
@@ -332,6 +380,14 @@ def plan(target, mode, data, standards_ref, *, central=None):
         if before == after:
             result["unchanged"].append(name)
             return
+        if (
+            name == "requirements_test.txt"
+            and record["ownership"] == "merge"
+            and before is not None
+            and requirement_lines(before.decode("utf-8")) == requirement_lines(content)
+        ):
+            result["unchanged"].append(name)
+            return
         if name in dirty:
             result["conflicts"].append(f"Preserve modified user file: {name}")
             return
@@ -346,7 +402,7 @@ def plan(target, mode, data, standards_ref, *, central=None):
             )
             return
         if before is not None and record["ownership"] == "merge" and name != ".hass-standards.json":
-            if name.startswith(".github/workflows/"):
+            if name.startswith(".github/workflows/") or name == ".github/dependabot.yml":
                 if yaml.safe_load(before.decode("utf-8")) == yaml.safe_load(content):
                     result["unchanged"].append(name)
                     return
@@ -428,6 +484,18 @@ def plan(target, mode, data, standards_ref, *, central=None):
             except ValueError as error:
                 result["pending"].append(f"{destination}: {error}")
                 continue
+        elif destination == ".github/dependabot.yml":
+            content = render_dependabot(content, validated_input)
+            environments = validated_input["environments"]["value"]
+            paths = environment_paths(validated_input)
+            if any(
+                environments["minimum"][key] != environments["current"][key]
+                for key in ("ha", "python", "pytest_homeassistant_custom_component")
+            ):
+                for shared in sorted(paths["minimum"] & paths["current"]):
+                    result["pending"].append(
+                        f"Automatic minimum protection is unverified for shared environment path {shared}; review separate exact minimum constraints and update impact"
+                    )
         elif destination == "requirements_test.txt":
             env = data["environments"]["value"]["current"]
             minimum = data["environments"]["value"]["minimum"]

@@ -14,6 +14,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import yaml
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from standards import contract, inventory, planning, readme  # noqa: E402
@@ -56,7 +58,7 @@ class IntegrationPlanning(unittest.TestCase):
     def setUpClass(cls):
         cls.assets_directory = tempfile.TemporaryDirectory(prefix="standards-T2-assets-")
         cls.central = Path(cls.assets_directory.name)
-        for name in ("scripts", "templates", "docs", "schemas"):
+        for name in ("scripts", "templates", "docs", "schemas", "skills"):
             shutil.copytree(
                 ROOT / name,
                 cls.central / name,
@@ -320,13 +322,210 @@ class IntegrationPlanning(unittest.TestCase):
         for ref in ("main", "0" * 40, self.ref[:7]):
             with self.subTest(ref=ref), self.assertRaisesRegex(ValueError, "SHA|HEAD"):
                 planning.plan(self.target, "create", self.data, ref, central=self.central)
-        path = self.central / "docs/temporary-untracked-rule.md"
-        path.write_text("Modified execution assets")
-        try:
-            with self.assertRaisesRegex(ValueError, "clean"):
-                self.plan()
-        finally:
-            path.unlink()
+        for relative in ("docs/temporary-untracked-rule.md", "skills/temporary-untracked-skill.md"):
+            path = self.central / relative
+            path.write_text("Modified execution assets")
+            try:
+                with self.subTest(relative=relative), self.assertRaisesRegex(ValueError, "clean"):
+                    self.plan()
+            finally:
+                path.unlink()
+
+    def test_identical_effective_test_requirements_preserve_existing_bytes(self):
+        self.adopt_fixture()
+        generated = next(
+            operation["content"]
+            for operation in self.plan("adopt")["operations"]
+            if operation["path"] == "requirements_test.txt"
+        )
+        requirements = [
+            line for line in generated.splitlines() if line and not line.startswith("#")
+        ]
+        original = (
+            "# Existing compatible environment; retain this explanation.\r\n\r\n  "
+            + requirements[0]
+            + "  \r\n\t# Existing plugin rationale\r\n\t"
+            + requirements[1]
+            + "\t\r\n"
+        ).encode("utf-8")
+        path = self.target / "requirements_test.txt"
+        path.write_bytes(original)
+        commit(self.target)
+        for dirty in (False, True):
+            with self.subTest(dirty=dirty):
+                if dirty:
+                    path.write_bytes(original + b"# User's uncommitted explanation\r\n")
+                before = self.snapshot()
+                result = self.plan("adopt")
+                self.assertIn("requirements_test.txt", result["unchanged"])
+                self.assertFalse(
+                    any(
+                        operation["path"] == "requirements_test.txt"
+                        for operation in result["operations"]
+                    )
+                )
+                self.assertFalse(
+                    any("requirements_test.txt" in conflict for conflict in result["conflicts"])
+                )
+                self.assertEqual(self.snapshot(), before)
+                self.assertEqual(
+                    next(
+                        guard["sha256"]
+                        for guard in result["guards"]
+                        if guard["path"] == "requirements_test.txt"
+                    ),
+                    planning.digest(path.read_bytes()),
+                )
+
+    def test_changed_effective_test_requirements_still_require_reviewed_merge(self):
+        self.adopt_fixture()
+        generated = next(
+            operation["content"]
+            for operation in self.plan("adopt")["operations"]
+            if operation["path"] == "requirements_test.txt"
+        )
+        lines = [line for line in generated.splitlines() if line and not line.startswith("#")]
+        path = self.target / "requirements_test.txt"
+        variants = (
+            [lines[0].replace("==", ">="), lines[1]],
+            [lines[0] + '; python_version >= "3.14"', lines[1]],
+            [lines[0].replace("homeassistant", "homeassistant[extra]"), lines[1]],
+            [*lines, "pytest-timeout==2.4.0"],
+            [*lines, "-r other.txt"],
+            [*lines, "-c constraints.txt"],
+            [lines[0] + " # inline comment retained for review", lines[1]],
+            [lines[0], lines[0], lines[1]],
+        )
+        for variant in variants:
+            with self.subTest(variant=variant):
+                original = ("\n".join(variant) + "\n").encode("utf-8")
+                path.write_bytes(original)
+                commit(self.target)
+                result = self.plan("adopt")
+                self.assertTrue(
+                    any(
+                        "reviewed merge required: requirements_test.txt" in conflict
+                        for conflict in result["conflicts"]
+                    )
+                )
+                self.assertFalse(
+                    any(
+                        operation["path"] == "requirements_test.txt"
+                        for operation in result["operations"]
+                    )
+                )
+                self.assertEqual(path.read_bytes(), original)
+
+    def test_dependabot_protects_actual_minimum_environment_paths_and_preserves_updates(self):
+        data = copy.deepcopy(self.data)
+        environments = data["environments"]["value"]
+        environments["minimum"]["requirements"] = ["requirements_minimum.txt"]
+        environments["minimum"]["constraints"] = ["constraints/confirmed-minimum.txt"]
+        environments["minimum"]["pytest_homeassistant_custom_component"] = "0.12.0"
+        source = (self.central / "templates/integration/.github/dependabot.yml").read_text()
+        baseline = yaml.safe_load(source)
+        result = self.plan(data=data)
+        operation = next(
+            item for item in result["operations"] if item["path"] == ".github/dependabot.yml"
+        )
+        rendered = yaml.safe_load(operation["content"])
+        pip = next(update for update in rendered["updates"] if update["package-ecosystem"] == "pip")
+        self.assertIn("requirements_minimum.txt", pip["exclude-paths"])
+        self.assertIn("constraints/confirmed-minimum.txt", pip["exclude-paths"])
+        self.assertNotIn("requirements_test.txt", pip["exclude-paths"])
+        original_pip = next(
+            update for update in baseline["updates"] if update["package-ecosystem"] == "pip"
+        )
+        for path in original_pip["exclude-paths"]:
+            self.assertIn(path, pip["exclude-paths"])
+        pip.pop("exclude-paths")
+        original_pip.pop("exclude-paths")
+        self.assertEqual(rendered, baseline)
+        self.assertEqual(result["validated_input"]["environments"]["value"], environments)
+
+    def test_dependabot_shared_current_paths_are_not_excluded_and_existing_yaml_is_noop(self):
+        source = (self.central / "templates/integration/.github/dependabot.yml").read_text()
+        data = copy.deepcopy(self.data)
+        for axis in ("minimum", "current"):
+            data["environments"]["value"][axis]["constraints"] = [
+                "constraints/homeassistant-min.txt"
+            ]
+        document = yaml.safe_load(planning.render_dependabot(source, data))
+        pip = next(update for update in document["updates"] if update["package-ecosystem"] == "pip")
+        self.assertNotIn("requirements_test.txt", pip["exclude-paths"])
+        self.assertNotIn("constraints/homeassistant-min.txt", pip["exclude-paths"])
+        self.adopt_fixture()
+        path = self.target / ".github/dependabot.yml"
+        path.parent.mkdir(parents=True)
+        generated = next(
+            operation["content"]
+            for operation in self.plan("adopt")["operations"]
+            if operation["path"] == ".github/dependabot.yml"
+        )
+        original = (
+            "# Retain existing formatting and rationale.\r\n" + generated.replace("\n", "\r\n")
+        ).encode("utf-8")
+        path.write_bytes(original)
+        commit(self.target)
+        result = self.plan("adopt")
+        self.assertIn(".github/dependabot.yml", result["unchanged"])
+        self.assertFalse(
+            any(operation["path"] == ".github/dependabot.yml" for operation in result["operations"])
+        )
+        self.assertEqual(path.read_bytes(), original)
+        document = yaml.safe_load(original)
+        document["updates"][0]["schedule"]["interval"] = "monthly"
+        path.write_text(yaml.safe_dump(document), encoding="utf-8")
+        commit(self.target)
+        result = self.plan("adopt")
+        self.assertTrue(
+            any(
+                "reviewed merge required: .github/dependabot.yml" in conflict
+                for conflict in result["conflicts"]
+            )
+        )
+        self.assertEqual(yaml.safe_load(path.read_bytes()), document)
+
+    def test_dependabot_shared_paths_in_distinct_environments_remain_explicitly_unverified(self):
+        data = copy.deepcopy(self.data)
+        for axis in ("minimum", "current"):
+            data["environments"]["value"][axis]["constraints"] = ["constraints/shared.txt"]
+        data["environments"]["value"]["minimum"]["python"] = "3.13"
+        result = self.plan(data=data)
+        content = next(
+            operation["content"]
+            for operation in result["operations"]
+            if operation["path"] == ".github/dependabot.yml"
+        )
+        pip = next(
+            update
+            for update in yaml.safe_load(content)["updates"]
+            if update["package-ecosystem"] == "pip"
+        )
+        for shared in ("requirements_test.txt", "constraints/shared.txt"):
+            self.assertNotIn(shared, pip["exclude-paths"])
+            self.assertTrue(
+                any(
+                    "Automatic minimum protection is unverified" in pending and shared in pending
+                    for pending in result["pending"]
+                )
+            )
+        same = self.plan()
+        self.assertFalse(
+            any(
+                "Automatic minimum protection is unverified" in pending
+                for pending in same["pending"]
+            )
+        )
+
+    def test_dependabot_environment_paths_are_validated_before_rendering(self):
+        source = (self.central / "templates/integration/.github/dependabot.yml").read_text()
+        for invalid in ("../escape.txt", "/absolute.txt", "constraints/*.txt", "C:/escape.txt"):
+            with self.subTest(invalid=invalid):
+                data = copy.deepcopy(self.data)
+                data["environments"]["value"]["minimum"]["constraints"] = [invalid]
+                with self.assertRaises(ValueError):
+                    planning.render_dependabot(source, data)
 
     def test_library_combinations_share_detection_and_never_delete_removed_documents(self):
         for packages in ([], ["imagespec"], ["blesession"], ["imagespec", "blesession"]):

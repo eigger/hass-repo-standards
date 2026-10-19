@@ -8,15 +8,17 @@
 
 T2는 실제 커밋 `a1e37401533e65651f910d498f9b3a2d21764b8b`의 [PR #3 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39196264296) 네 검사가 모두 성공한 뒤 merge commit `89e842466c8970be1c17df84e960c0d355409fb9`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39196437890) 네 검사도 모두 성공했습니다.
 
-T3는 실제 커밋 `419c23441cd8b4e6e37ceca6df0c0493b199d7b0`의 [PR #4 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39198455037) 네 검사가 모두 성공한 뒤 merge commit `2433321f4d1f7eba6b3bc3646aa3ba0b251dc419`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39198603979) 네 검사도 모두 성공했습니다. 현재 T4 검증 대상은 이 main 커밋 위의 작업 트리 변경분이며 독립 코드 검증을 완료했습니다. 최종 커밋·원격 CI는 대기 중이며 이전 단계 결과를 T4 검증으로 재사용하지 않습니다.
+T3는 실제 커밋 `419c23441cd8b4e6e37ceca6df0c0493b199d7b0`의 [PR #4 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39198455037) 네 검사가 모두 성공한 뒤 merge commit `2433321f4d1f7eba6b3bc3646aa3ba0b251dc419`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39198603979) 네 검사도 모두 성공했습니다.
+
+T4는 실제 커밋 `53ac269dece6561276480a2d5e86ea884c0abcbb`의 [PR #5 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39200102781) 네 검사가 모두 성공한 뒤 merge commit `c3051910452a13036aafea77976096c2c5841273`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39200292843)도 성공했습니다. T5 검증 대상은 이 main 커밋 위의 작업 트리 변경분입니다. T5 최종 커밋·원격 CI는 대기 중이며 이전 단계 결과를 T5 검증으로 재사용하지 않습니다.
 
 | 단계 | 구현·검증 상태 | 남은 작업 |
 |---|---|---|
 | T1 | 계약·스키마·공통 모듈 구현, 독립 코드/문서 검증·커밋 CI 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
 | T2 | 읽기 전용 inspect/plan·조사·변경 계획 구현, 독립 코드/문서 검증·커밋/main CI 각 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
 | T3 | 새 작성 기반·apply·recover 구현·독립 코드/문서 검증·PR/main CI 각 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
-| T4 | 생성물 검사·중앙 계약·스키마·자산 무결성 연결 구현·독립 코드/문서 검증 완료 | 커밋/CI 근거 확정 |
-| T5 | TODO | 두 스킬·설치 및 실행 안내·동작 검증 |
+| T4 | 생성물 검사·중앙 계약 연결 구현·독립 검증·PR/main CI 성공·main 병합 | 후속 단계와 별도 기록 |
+| T5 | 두 스킬·실행 안내 작성·독립 정적 회귀·격리 요청 분기 실행·독립 문서 검증 | 커밋/CI |
 | T6 | TODO | 중앙 생성·갱신 fixture와 별도 범위의 실제 통합 검증 |
 
 T1은 계약 44개 중 기존 원본 available 21개와 미작성 자산 pending 23개를 구분했습니다. T3는 작성 자산 18개와 빈 `custom_components/__init__.py` 패키지 marker를 추가해 총 45개·available 40개·pending 5개입니다. marker는 기존 빈 테스트 init 원본을 재사용하고 create_only로 기존 파일을 보존합니다. available은 원본이 존재한다는 뜻이며 실제 기기 동작·fixture·검증 미완료는 renderer의 pending으로 별도 반환합니다. CLI에는 T2 inspect/plan과 T3 apply/recover가 있습니다. 외부 통합 수정·지원 최소 변경·스킬 설치·workflow 수동 실행은 수행하지 않았습니다.
@@ -167,6 +169,57 @@ cd /home/eigger/hass-standards-review-t4-GodQr4
 
 생성물 검사는 기존 `check_integration.py <target> --check`와 승인 예외 경로로 연결했습니다. 정적 구조·번역 키/placeholder·대응 테스트의 알려진 활성 assertion·SHA·정확한 중앙 작성 기반 미완성 표시를 확인합니다. 실제 HA 기능 실행·동적 코드의 모든 의미·번역 의미 검증은 별도입니다. workflow/action 파일 자체와 caller checkout·action_path는 변경하지 않았습니다.
 
+## T5 변경분 검증
+
+두 스킬은 skill-creator의 initializer로 references만 생성하고 metadata generator로 display_name·short_description만 작성했습니다. 복제 assets/scripts·아이콘·외부 도구 의존성을 추가하지 않았고 자동 발동 기본값을 유지했습니다. quick_validate는 두 스킬 모두 성공했으며 이 결과는 frontmatter·이름·미완성 placeholder 검사일 뿐 실제 에이전트 행동 검증이 아닙니다.
+
+```text
+python C:/Users/eigger/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/create-ha-integration
+python C:/Users/eigger/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/adopt-ha-standards
+```
+
+정적 계약 검사는 임시 설치 위치의 내부 참조·실제 CLI argparse·입력 스키마/계약 버전·최소 UI metadata·복제 자산 부재와 수정/삭제/미추적 스킬의 SHA guard를 검증했습니다. 최초 177개 결과 후 실제 행동에서 주석 충돌을 발견해 수정했고, 179개 중간 결과 후 생성된 Dependabot의 실제 최소 파일 제외 누락도 수정했습니다. 아래 최종 183개 결과를 사용하며 중간 SHA의 관측을 최종 실행 결과로 바꾸지 않습니다.
+
+| 검증 | 최종 결과 |
+|---|---|
+| 전체 도구 회귀 | 183개 수집 중 도구 177개 성공·중앙 HA 6개 skip, 11.102초 |
+| 별도 중앙 HA 회귀 | 같은 6개 모두 실행 성공, 13.664초; 서로 다른 총 183개 실행 성공 |
+| 저장소·Ruff 검사 | 문서 37개/workflow 7개 성공·Ruff check/format 성공·85개 파일 |
+| 원본 동일성 | 스킬 6개와 코드/테스트 3개, 총 9개 자산 fingerprint 동일 |
+| 최종 문서 7개 독립 검토 | 문서 37개/workflow 7개·diff 검사 성공, 9개 자산 fingerprint 불변·필수 미해결 지적 없음 |
+
+최종 snapshot은 `/home/eigger/hass-standards-t5-dependabot-4eehkb8j/central`, 로그는 그 상위의 tools-tests.log·ha-tests.log·repository.log·ruff.log·format.log입니다. 자산 fingerprint manifest SHA-256은 `3e066f280c51a62effb920c20072d238fe9a6fc341e5ee95488840701f53e9ef`입니다. 임시 평가 커밋은 배포 SHA가 아니며 이 fingerprint도 Git SHA가 아닙니다. 환경은 T1~T4와 같고 정확한 실행 명령은 다음과 같습니다.
+
+```bash
+cd /home/eigger/hass-standards-t5-dependabot-4eehkb8j/central
+PYTHONDONTWRITEBYTECODE=1 /home/eigger/hass-standards-review-t4-GodQr4/.venv/bin/python -m unittest discover -s tests -v
+/home/eigger/hass-standards-review-t4-GodQr4/.venv/bin/python scripts/check_repository.py
+/home/eigger/hass-standards-review-t4-GodQr4/.venv/bin/python -m ruff check .
+/home/eigger/hass-standards-review-t4-GodQr4/.venv/bin/python -m ruff format --check .
+/home/eigger/hass-standards-review-ha-s3tDc4/.ha-venv/bin/python -m unittest discover -s tests -p test_payload_runtime.py -v
+```
+
+### 실제 요청 분기 관측과 후속 수정
+
+최소 context의 별도 실행 담당이 원본 스킬을 읽고 실제 CLI를 호출한 초기 보고는 `/home/eigger/hass-standards-t5-behavior-BbjWzF/cases/skill-run/report.md`입니다. 해당 commands.json은 argv·cwd·종료 코드·출력을 기록합니다. 초기 관측과 도구 수정 후 재평가를 구분합니다.
+
+| 사례 | 초기 실제 관측 | 수정 후 관측/한계 |
+|---|---|---|
+| 01 신규 골격 | inspect/plan/apply 0·26개 파일 생성·adopt 재계획 0 operations·check 1 | README/LICENSE·최소 requirements·기기 동작/HA assertion은 미완료; 0 diff는 구조 수렴만 뜻함 |
+| 02 기존 적용 | 주석만 다른 requirements_test.txt가 plan 2로 차단; 수동 병합 시도도 dirty guard가 거부하여 원본 복원·apply 미실행 | 좁은 수정 후 fresh retry inspect/plan/apply 0·19개 경로 적용·adopt 0 operations; 기존 requirements/minimum/구현/hacs 바이트 보존, 수동 편집 없음; check 1은 실제 test_init scaffold 미완성 |
+| 03 검토만 | inspect/plan까지만 실행하고 apply 없음·대상 불변 | 별도 packaged copy에서도 독립 제공 central 경로로 검토; 실제 설치/자동 발동 시험 아님 |
+| 04 조건 조합 | base/blesession은 주석 충돌, imagespec/둘 다는 실제 payload 입력 부재로 plan 2 | 수정 후 base plan 0/19 operations·blesession 0/21과 양언어 문서 pending; imagespec/둘 다는 payload 부재 plan 2 유지·기능/액션 발명 없음 |
+| 05 domain 충돌 | inspect 0·plan 2·apply 없음·대상 불변 | 충돌을 임의 수정하거나 다른 domain에 적용하지 않음 |
+| 06 CLI 실패 | malformed JSON이 SHA 검사보다 먼저 실패하여 plan 2·plan.json 없음·대상 불변 | HEAD가 요청 SHA와 다른 사실만 별도 확인; 이 요청으로 CLI SHA guard가 실행됐다고 주장하지 않음 |
+
+관측된 주석 문제는 `requirements_test.txt`의 유효 requirement 줄이 앞뒤 공백을 제외한 같은 순서·문자열일 때만 기존 바이트를 unchanged로 보존하도록 수정했습니다. 버전·extras·연산자·marker·경로를 바꾸거나 실제 차이를 병합하는 처리는 추가하지 않았습니다. dirty guard는 유지했습니다. 원본 실패·시도 원복을 성공 결과로 바꾸지 않고 후속 재평가와 함께 남깁니다.
+
+Fresh retry의 정확한 산출물은 원행동 루트의 `cases/retry/{report.md,commands.json,results.json,hashreport.json,rule-source-hashes.json}`입니다. 해당 시점에는 19개 적용(16개 신규·3개 관리 영역)·삭제 0개·기존 9개 파일 보존·검토 대상 4개 불변을 기록했습니다. 이는 주석 수정 후 179개 회귀를 실행한 중간 SHA의 관측이며 새 Dependabot 수정 도구의 실행 결과와 구분합니다.
+
+후속 검토에서 생성된 Dependabot이 고정 예시 최소 파일만 제외하고 실제 입력의 requirements_minimum.txt를 빠뜨린 문제를 발견했습니다. 실제 minimum requirements/constraints 경로를 반영하도록 수정한 최종 도구로 다시 raw base plan 0 → apply 0 → adopt 0 operations와 기존 minimum/current 바이트 보존을 확인했습니다. raw base의 생성 exclude는 requirements_minimum.txt를 포함하고 current requirements_test.txt는 제외하지 않았으며 기존 exclude 2개·weekly·groups·actions entry를 보존했습니다. 별도 constraints 입력 대조에서 constraints/exact-min.txt가 추가됨을 확인했습니다. 각 대조에서 current 경로와 제외 경로의 교집합이 없음을 확인했고 공유 경로의 역할을 확인할 수 없는 경우에는 pending을 유지했습니다. 실제 Dependabot 실행이나 최소/current HA 통합 성공을 검증한 결과가 아닙니다.
+
+위 실행은 중앙 임시 fixture의 분기 검증입니다. 명시적 사용자 스킬 설치·앱 자동 발동·실제 외부 통합·원격 현황 갱신·실제 최소/current HA 통합 성공·기기·payload production 실행을 수행하지 않았습니다. 초기 행동 환경에는 HA/pytest/imagespec 등이 없었으며 선언한 환경 버전은 입력 메타데이터일 뿐 설치 증거가 아닙니다. 별도 중앙 HA 6개 회귀 결과를 fixture 통합 성공으로 재사용하지 않습니다.
+
 ## 남은 검증과 한계
 
-T4 구현·독립 코드/문서 검증과 문서 반영 후 저장소 재검사는 완료했고 최종 커밋·원격 CI 결과가 필요하며 T5 실제 스킬 분기는 미구현입니다. 생성 초안의 실제 HA negative smoke는 수행했지만 실제 신규·기존 통합의 HA minimum/current 성공, HACS/Hassfest, UI 번역·기기 의미·하드웨어 검증은 수행하지 않았습니다. 중앙 fixture와 중앙 도구의 회귀 성공을 외부 통합 도입 완료로 기록하지 않습니다.
+T5 독립 문서 검증과 문서 반영 후 저장소 재검사는 완료했고 커밋·원격 CI가 필요하며 T6 실제 도입은 별도 범위로 남습니다. 생성 초안의 실제 HA negative smoke는 수행했지만 실제 신규·기존 통합의 HA minimum/current 성공, HACS/Hassfest, UI 번역·기기 의미·하드웨어 검증은 수행하지 않았습니다. 중앙 fixture와 중앙 도구의 회귀 성공을 외부 통합 도입 완료로 기록하지 않습니다.
