@@ -47,14 +47,20 @@ def observed(data, field):
     return [item for item in data["observations"] if item["field"] == field]
 
 
+def workflow_events(template, default_branch):
+    """Render central trigger boundaries for both generation and read-only checks."""
+    events = copy.deepcopy(template["on"])
+    if isinstance(events, dict) and isinstance(events.get("push"), dict):
+        events["push"]["branches"] = [default_branch]
+    return events
+
+
 def render_workflow(source, destination, data, ref):
     parsed = yaml.safe_load(source)
     # PyYAML's YAML 1.1 resolver calls the unquoted 'on' key True; templates quote it.
     if not isinstance(parsed, dict) or "on" not in parsed:
         raise ValueError("Workflow template must have explicit on events")
-    events = parsed["on"]
-    if isinstance(events, dict) and isinstance(events.get("push"), dict):
-        events["push"]["branches"] = [data["default_branch"]["value"]]
+    parsed["on"] = workflow_events(parsed, data["default_branch"]["value"])
     domain = data["domain"]["value"]
     environments = data["environments"]["value"]
     for job in parsed.get("jobs", {}).values():

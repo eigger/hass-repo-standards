@@ -1,6 +1,6 @@
 # 템플릿·스킬 도구 사용 안내
 
-현재 구현은 계약·공통 렌더러, 읽기 전용 `inspect`·`plan`, T3의 `apply`·`recover`와 신규 작성 기반입니다. T3 독립 코드/문서 검증은 완료했고 커밋/CI 확인은 남아 있습니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 하고 두 스킬은 미구현입니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
+현재 구현은 계약·공통 렌더러, 읽기 전용 `inspect`·`plan`, `apply`·`recover`와 신규 작성 기반이며 T1~T3은 main에 반영했습니다. T4 생성물 검사·중앙 계약 연결의 독립 코드 검증은 완료했고 PR CI는 대기 중입니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 하고 두 스킬은 미구현입니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
 
 ## 실행 준비와 조사
 
@@ -97,4 +97,19 @@ apply는 내장 입력 스키마·digest, 동일 full SHA의 깨끗한 실행 �
 
 중앙 자산은 45개 중 available 40개·pending 5개입니다. 빈 `custom_components/__init__.py`도 create_only로 생성하고 기존 파일은 보존합니다. 개별 HA 테스트는 수집 단계에서 실제 `custom_components.<domain>.const`의 DOMAIN을 import해 플러그인의 regular package 선점을 방지합니다. available은 원본 존재를 뜻하며 새 코드·UI flow·플랫폼·coordinator·진단·대응 테스트는 TODO·`NotImplementedError`와 실제 작성 pending을 포함합니다. strings/en은 같은 영어 소스에서 생성하고 ko 키·구조·placeholder·미해결 Core 참조를 검증합니다. 실제 UI 문구·기능·entry/client fixture·액션 스키마를 채우기 전에는 완성되지 않습니다. Python 3.9 문법 검사는 정확한 최소/current HA API 호환성 검증을 대신하지 않으며 두 환경의 실제 실행이 필요합니다.
 
-전체 계약 기반 검사는 T4, 스킬 설치·실행은 T5 후속 단계입니다. 생성·복구 성공이나 중앙 fixture 결과를 실제 채택 완료로 보고하지 않습니다.
+## 정적 검사와 실제 실행 구분
+
+T4는 기존 통합 검사 CLI에 공유 계약 검사를 연결했습니다. 독립 코드 검증을 완료했으며 새 명령이나 자동 수정 모드는 추가하지 않습니다.
+
+```text
+python3 scripts/check_integration.py <target> --check
+python3 scripts/check_repository.py
+```
+
+`check_integration.py <target>`도 기본 읽기 전용 검사입니다. 성공은 종료 코드 0, 불일치·미완성·입력 오류는 기존과 같은 1이며 규칙 ID·경로·원인을 출력합니다. `.hass-standards.json`의 기존 승인 예외·근거 처리는 유지합니다. `--write-readmes`는 기존의 명시적 README 관리 영역 갱신 모드로 남으며 새 컴포넌트·테스트·기능을 자동 완성하지 않습니다.
+
+검사는 중앙 파일/관리 경계, 실제 DOMAIN·manifest/config flow 일치, 선택 플랫폼·coordinator·진단의 대응 테스트와 활성 assertion 존재, strings/en 일치·ko 키/구조/placeholder·일부 코드에서 정적으로 확인 가능한 번역 키, 실제 액션 메타데이터, STANDARDS의 full SHA와 공용 workflow/action/standards-ref 일치를 확인합니다. 중앙 작성 기반의 정확한 미완성 표시와 알려진 빈 테스트·전체 skip/xfail을 검출해 실패시킵니다. 동적으로 계산한 플랫폼·번역 키나 임의로 변형한 테스트의 실행 의미를 완전히 증명하는 검사는 아닙니다. 정적 판별이 어려운 기존 구현은 근거와 예외 정책을 따라 검토하며 미확인을 성공으로 처리하지 않습니다.
+
+`check_repository.py`는 중앙 계약·세 스키마 정의·원본과 참조·작성 기반 AST/JSON/YAML·번역 구조를 검사합니다. 중앙 `.tmpl` 안의 의도한 TODO는 자산으로 허용하며 적용된 통합의 TODO를 면제하지 않습니다. 기존 workflow/action 파일은 이번 단계에서 변경하지 않았으며 기존 check 진입과 CI 연결로 같은 검사를 실행합니다. caller checkout·action_path도 유지합니다.
+
+정적 성공은 실제 HA setup·플랫폼·unload·실패 복구·외부 I/O mock 경계나 번역 의미·기기 조건의 검증 결과가 아닙니다. 실제 최소/current HA 환경과 해당 payload current/정확한 하한 실행, 독립 의미 리뷰를 별도로 수행하고 증거를 체크리스트에 기록해야 합니다. 스킬 설치·실행은 T5 후속 단계입니다. 생성·복구 성공이나 중앙 fixture 결과를 실제 채택 완료로 보고하지 않습니다.

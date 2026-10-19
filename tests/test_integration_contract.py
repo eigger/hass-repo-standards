@@ -26,16 +26,44 @@ class IntegrationContract(unittest.TestCase):
         self.root = Path(self.directory.name)
         component = self.root / "custom_components/example"
         component.mkdir(parents=True)
-        (component / "manifest.json").write_text('{"domain":"example","requirements":[]}')
+        self.manifest = {
+            "domain": "example",
+            "name": "Example",
+            "version": "1.0.0",
+            "documentation": "https://github.com/owner/example",
+            "issue_tracker": "https://github.com/owner/example/issues",
+            "codeowners": ["@owner"],
+            "requirements": [],
+        }
+        (component / "manifest.json").write_text(json.dumps(self.manifest), encoding="utf-8")
+        (component.parent / "__init__.py").write_bytes(b"")
+        (component / "__init__.py").write_text('DOMAIN = "example"\n', encoding="utf-8")
+        (component / "translations").mkdir()
+        for name in ("strings.json", "translations/en.json", "translations/ko.json"):
+            (component / name).write_text("{}", encoding="utf-8")
+        (self.root / "STANDARDS.md").write_text(
+            "- 참조 커밋 SHA: " + "a" * 40 + "\n", encoding="utf-8"
+        )
+        (self.root / "ADOPTION_CHECKLIST.md").write_text(
+            "Checker unit fixture; actual HA execution is not established here.\n", encoding="utf-8"
+        )
         (self.root / "hacs.json").write_text('{"homeassistant":"2026.1.0"}')
         (self.root / "LICENSE").write_text("MIT")
         shutil.copytree(ROOT / "templates/integration/tests", self.root / "tests")
         (self.root / "tests/components/example/test_init.py").write_text(
-            '"""Fixture lifecycle test placeholder in checker unit fixture only."""\n'
+            '"""Static checker fixture; not actual HA validation evidence."""\n'
+            "async def test_lifecycle(hass, mock_config_entry):\n"
+            "    mock_config_entry.add_to_hass(hass)\n"
+            "    assert await hass.config_entries.async_setup(mock_config_entry.entry_id)\n"
+            "    assert await hass.config_entries.async_unload(mock_config_entry.entry_id)\n"
         )
         shutil.copytree(ROOT / "templates/integration/.github", self.root / ".github")
         for file in (self.root / ".github/workflows").glob("*.yml"):
-            file.write_text(file.read_text().replace("@main", "@" + "a" * 40))
+            file.write_text(
+                file.read_text()
+                .replace("@main", "@" + "a" * 40)
+                .replace("standards-ref: main", "standards-ref: " + "a" * 40)
+            )
         self.config = {
             "repository": "owner/example",
             "default_branch": "main",
@@ -204,7 +232,7 @@ class IntegrationContract(unittest.TestCase):
         import re
 
         (self.root / "custom_components/example/manifest.json").write_text(
-            json.dumps({"domain": "example", "requirements": [requirement]})
+            json.dumps({**self.manifest, "requirements": [requirement]})
         )
         (self.root / "docs").mkdir(exist_ok=True)
         (self.root / "examples/payload").mkdir(parents=True, exist_ok=True)
@@ -301,7 +329,7 @@ class IntegrationContract(unittest.TestCase):
         del data["jobs"]["minimum"]
         path.write_text(contract.yaml.safe_dump(data, sort_keys=False))
         (self.root / "custom_components/example/manifest.json").write_text(
-            '{"domain":"example","requirements":["imagespec==1.0.1"]}'
+            json.dumps({**self.manifest, "requirements": ["imagespec==1.0.1"]})
         )
         self.assertEqual(contract.check(self.root), [])
 
@@ -347,7 +375,7 @@ class IntegrationContract(unittest.TestCase):
     def make_bluetooth_documents(self, requirement="blesession[extra]>=0.9; python_version < '2'"):
         manifest = self.root / "custom_components/example/manifest.json"
         manifest.write_text(
-            json.dumps({"domain": "example", "requirements": [requirement] if requirement else []})
+            json.dumps({**self.manifest, "requirements": [requirement] if requirement else []})
         )
         (self.root / "docs").mkdir(exist_ok=True)
         for name, readme, other, suffix in (
@@ -473,7 +501,10 @@ class IntegrationContract(unittest.TestCase):
             }
         ]
         self.save_config()
-        (self.root / "STANDARDS.md").write_text("## BLE-EN\nUser approval reference.")
+        (self.root / "STANDARDS.md").write_text(
+            "- 참조 커밋 SHA: " + "a" * 40 + "\n## BLE-EN\nUser approval reference.",
+            encoding="utf-8",
+        )
         self.assertTrue(
             any("DOC-07 docs/troubleshooting.ko.md" in error for error in contract.check(self.root))
         )
@@ -555,7 +586,10 @@ class IntegrationContract(unittest.TestCase):
         }
         self.config["exceptions"] = [item]
         self.save_config()
-        (self.root / "STANDARDS.md").write_text("## EX-EN\nUser approval recorded here.")
+        (self.root / "STANDARDS.md").write_text(
+            "- 참조 커밋 SHA: " + "a" * 40 + "\n## EX-EN\nUser approval recorded here.",
+            encoding="utf-8",
+        )
         errors = contract.check(self.root)
         self.assertEqual(len(errors), 1)
         self.assertIn("README.ko.md", errors[0])
@@ -583,7 +617,10 @@ class IntegrationContract(unittest.TestCase):
         self.config["exceptions"] = [item]
         with self.assertRaises(ValueError):
             contract.apply_exceptions(self.root, self.config, errors)
-        (self.root / "STANDARDS.md").write_text("## EX-001\nUser approval recorded here.")
+        (self.root / "STANDARDS.md").write_text(
+            "- 참조 커밋 SHA: " + "a" * 40 + "\n## EX-001\nUser approval recorded here.",
+            encoding="utf-8",
+        )
         remaining = contract.apply_exceptions(self.root, self.config, errors)
         self.assertEqual(len(remaining), 1)
         self.assertIn("components", remaining[0])
