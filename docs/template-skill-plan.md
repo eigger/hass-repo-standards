@@ -53,6 +53,75 @@
 
 관리 주석이 없거나 중복·역전되어 있으면 기존 문서에서 경계를 추측하지 않습니다. 최초 이관안에서 기존 내용의 보존 위치와 설정 반영을 검토한 후 경계를 지정합니다. domain 변경이나 다중 통합 manifest 발견은 초기 버전의 자동 처리 범위 밖이며 명시적 오류로 반환합니다.
 
+### 3.1. 컴포넌트와 테스트 생성 구조
+
+신규 UI 설정 기반 장치·서비스 통합은 아래 구조를 생성 계약의 기준으로 사용합니다. 이는 생성 예정 트리이며 현재 중앙 템플릿에 모두 구현되어 있다는 뜻은 아닙니다. 기존 통합에는 같은 역할·경로를 적용하되 동작과 지원 범위·고유 구현을 보존하고, 기존 YAML 설정이나 없는 기능을 공통 형식 때문에 새로 만들거나 제거하지 않습니다.
+
+```text
+custom_components/<domain>/
+├── __init__.py
+├── manifest.json
+├── const.py
+├── config_flow.py
+├── strings.json                 # HA-11의 소스 관리 기준; 런타임 번역 아님
+├── translations/
+│   ├── en.json
+│   └── ko.json
+├── <platform>.py                # 실제 제공하는 플랫폼별 생성
+├── coordinator.py               # 데이터 갱신 coordinator가 필요한 경우
+├── entity.py                    # 플랫폼 간 공유 entity 동작이 있는 경우
+├── diagnostics.py               # 진단 기능을 제공하는 경우
+└── services.yaml                # 통합이 설명할 액션을 제공하는 경우
+
+tests/
+├── __init__.py
+├── conftest.py
+└── components/
+    ├── __init__.py
+    └── <domain>/
+        ├── __init__.py
+        ├── conftest.py
+        ├── test_init.py
+        ├── test_config_flow.py
+        ├── test_<platform>.py
+        ├── test_coordinator.py  # 해당 구현이 있는 경우
+        ├── test_diagnostics.py  # 해당 구현이 있는 경우
+        ├── test_payload_examples.py  # imagespec 적용 조건 충족 시
+        ├── fixtures/           # 비식별 응답·패킷 데이터가 필요한 경우
+        └── snapshots/          # snapshot 검증을 사용하는 경우
+```
+
+HA 공식 [파일 구조](https://contributors.home-assistant.io/core/integrations/file-structure/)는 `__init__.py`·`manifest.json`과 기능별 모듈 역할을 정의합니다. UI config flow 기본 적용, 양언어 구성, 세 빈 테스트 init·정확한 중앙 conftest·커스텀 테스트 플러그인 고정은 [HA-04·HA-11·HA-13](home-assistant.md)과 [TEST-02·TEST-03·TEST-08](testing.md)의 프로젝트 정책입니다. 모든 커스텀 통합의 설치 조건이나 Core 품질 등급 인증으로 표현하지 않습니다. 공식 근거와 재확인일은 [출처 목록](sources.md)에 연결합니다.
+
+| 생성 조건 | 구현 파일·계약 | 대응 테스트·완료 기준 |
+|---|---|---|
+| 모든 통합의 기본 구조 | `__init__.py`, 실제 domain·이름·custom version 등의 manifest, 공통 상수를 위한 `const.py` | `test_init.py`에서 실제 HA 로딩 검증. manifest·디렉터리·DOMAIN 일치와 HACS/Hassfest 확인 |
+| UI 설정을 제공함 | `config_flow.py`, manifest의 `config_flow: true`, 실제 설정·오류 번역 키 | `test_config_flow.py`에서 실제 HA flow manager로 성공·실패 후 복구·중복·안정적 unique ID 확인. options/reauth/reconfigure/discovery는 실제 제공 경로만 검증 |
+| 엔티티 플랫폼을 제공함 | 선택한 `sensor.py`, `button.py` 등 실제 플랫폼과 setup 연결 | 각 `test_<platform>.py`에서 실제 entry·플랫폼 로딩 후 상태·registry·지원 액션 검증. 사용하지 않는 플랫폼 파일 생성 금지 |
+| coordinator가 적합함 | `coordinator.py`와 필요한 첫 갱신·오류 처리 | `test_coordinator.py`에서 정상·갱신 실패·unavailable·복구 검증. push 구조를 polling으로 바꾸지 않음 |
+| 공유 entity 동작이 있음 | `entity.py` | 플랫폼 테스트로 공통 동작 검증, 별도 helper 테스트는 실제 공유 로직이 있을 때만 추가 |
+| 진단을 제공함 | `diagnostics.py` | `test_diagnostics.py`에서 실제 진단 결과와 민감 정보 제거 검증 |
+| 액션을 제공함 | 실제 등록 코드·스키마·`services.yaml`·번역 키 | 플랫폼 또는 기능별 테스트에서 실제 등록·입력 오류·출력 검증. 기기 I/O만 mock하고 가짜 액션을 생성하지 않음 |
+| imagespec을 사용함 | 기존 DOC-08 문서·실제 YAML·production adapter | 정확한 중앙 `test_payload_examples.py` scaffold와 실제 HA/설치된 renderer 계약. 기존 payload 조건·marker 정책 유지 |
+
+기능별 테스트 파일은 작성 기반으로 생성할 수 있지만, TODO·빈 테스트·일괄 skip을 완료된 테스트로 만들지 않습니다. 계약에는 선택 기능별 생성 목록과 미작성 작업을 함께 남기고, 실제 기능·입력 없이 coordinator·플랫폼·액션·fixture를 발명하지 않습니다. 기존 테스트는 내용·수집 범위를 보존하며 domain 경로로 이관한 뒤 다시 실행합니다.
+
+### 3.2. 커스텀 통합의 UI 번역
+
+README 번역과 HA UI 번역은 별도 산출물입니다. 공식 [커스텀 통합 번역 안내](https://contributors.home-assistant.io/core/integrations/translations/#custom-integrations)에 따라 커스텀 통합은 완성된 `translations/en.json`을 직접 배포하고, 이 프로젝트의 양언어 생성 구성에는 `translations/ko.json`을 포함합니다. HA는 커스텀 통합의 `strings.json`을 자동 컴파일하거나 UI 번역으로 직접 읽지 않으므로, 해당 파일만 생성한 상태를 완료로 처리하지 않습니다.
+
+기존 HA-11의 `strings.json` 소스 관리 기준은 유지하며, 새 생성 도구는 영어 원본과 배포용 `en.json`을 동기화하는 명시적 경로를 제공합니다. 커스텀 배포 파일에는 Core의 `[%key:...%]` 참조를 그대로 두지 않고 실제 문구를 기록합니다. 영어·한국어 번역 키와 placeholder, config flow·entity·action·오류 코드의 실제 사용 키를 대조하고, 해당 HA 버전에서 번역이 로딩되는지 검증합니다. 기존 번역·고유 문구는 보존하고 새로운 기능이나 미번역 문구를 임의 생성해 누락을 감추지 않습니다.
+
+### 3.3. 실제 HA 생명주기와 완료 판정
+
+생성되는 config entry 기반 구현은 실제 `async_setup_entry`와 플랫폼 전달, `async_unload_entry`와 플랫폼 해제·연결·listener·task 정리 경로를 연결합니다. `async_setup`은 통합 전역 설정·액션 등록 등 필요한 역할이 있을 때 구현합니다. 플랫폼 없는 통합에 가짜 플랫폼을 추가하지 않습니다. config entry 데이터 변경 시 실제 migration 경로와 테스트를 함께 작성합니다.
+
+공식 [config entry 생명주기](https://contributors.home-assistant.io/core/integrations/config-entries/)를 따르되 예제의 최신 Python 문법·HA API를 무조건 복사하지 않습니다. `runtime_data` 등 API와 타입 문법은 선언한 최소 HA·Python의 지원 여부를 확인하고 기존 최소·current 환경에서 각각 검증합니다. 호환되지 않으면 기존 정책에 따른 구현·지원 판단을 남기며 최소 지원을 자동으로 올리지 않습니다.
+
+`test_init.py`는 실제 `hass`·플러그인과 `MockConfigEntry`로 entry setup·로딩 상태·unload/reload·해당 실패와 복구·정리를 검증합니다. domain conftest에는 실제 entry 데이터의 `mock_config_entry`와 필요한 외부 경계의 `mock_client`를 제공하고, 실제 HA 로더·config entry manager·플랫폼을 stub이나 성공 반환값으로 대체하지 않습니다. config flow만 고립해서 검사한 결과를 통합 전체 로딩 결과로 재사용하지 않습니다.
+
+완료 판단에는 구조 검사와 실제 동작 검증을 모두 사용합니다. config flow가 있는데 대응 테스트가 없거나 선택한 플랫폼의 실제 로딩 테스트가 미작성인 경우 미완료로 보고합니다. 파일 존재·AST 파싱·테스트 개수만으로 완료 처리하지 않으며, 실제 수집·실행 결과와 기능별 assertion·mock 경계 리뷰를 연결합니다. Core의 [domain별 pytest 실행 방식](https://contributors.home-assistant.io/core/development/testing/)을 사용하되 Core의 품질 등급별 coverage 수치를 모든 커스텀 통합의 보편적 HA 요구사항으로 강제하지 않습니다.
+
 ## 4. 입력과 기준 SHA
 
 적용용 입력은 별도 `--input` JSON으로 받고, 스키마와 예시는 중앙에 둡니다. 일회성 조사 결과·변경 계획은 대상 리포 밖의 작업 디렉터리에 저장합니다. `.hass-standards.json`은 기존 검사 설정 역할을 유지하며 일회성 조사 상태를 넣지 않습니다.
@@ -61,6 +130,7 @@
 |---|---|---|
 | 원격·실제 기본 브랜치·작업 트리 | Git·GitHub 메타데이터, 조회 실패 시 확인된 명시 입력 | 확인한 원격 메타데이터 또는 사용자의 명시 입력 |
 | domain·버전·runtime/HA 의존성 | 실제 manifest, 절대 import는 조건 판별 보조 | 명시한 실제 설계 값, 미결정 버전·의존성은 차단 |
+| 설정 방식·플랫폼·선택 기능 | 실제 flow·플랫폼·등록 액션·coordinator·진단 코드 | 실제 제공할 기능과 플랫폼 목록, 해당 entry 데이터·외부 클라이언트 경계·UI 번역 |
 | 지원 최소 HA | hacs.json·manifest·README 비교 | 명시한 지원 정책 |
 | current 및 minimum HA 환경 | 실제 requirements·constraints·workflow | 검토한 HA·Python·플러그인 조합과 파일 경로 |
 | 양언어 설명·지원 경로·라이선스 고지 | 기존 본문·LICENSE·확인한 원격 기능 | 양언어 입력·실제 LICENSE 확인 |
@@ -110,7 +180,7 @@ apply는 파일별 임시 쓰기·교체와 복구용 원본을 사용합니다.
 |---|---|---|
 | 1. 적용 계약·렌더러 | `templates/integration/contract.json`, 입력 스키마·예시, `scripts/standards/`, 기존 검사·배지 wrapper | 파일 소유 방식·조건·입력 출처가 명시되고 기존 출력·오류·보호 동작 회귀 유지 |
 | 2. 조사·계획 | `scripts/manage_integration.py`의 inspect/plan, 조사·계획 스키마 | 기본 브랜치·버전 불일치·조건부 기능·관리 경계 조사, 재현 가능한 diff, target 밖 변경 없음 |
-| 3. 신규·기존 적용 | apply·복구, 신규 HACS 구조·실제 HA 테스트 작성 기반 | 반복 적용 무차이, 오래된 계획·경로 충돌 차단, 기존 본문·fixture·CI·지원 범위 보존 |
+| 3. 신규·기존 적용 | apply·복구, 3.1~3.3의 컴포넌트·UI 번역·실제 HA 테스트 작성 기반 | 기능별 생성 목록·대응 테스트·번역·생명주기 연결, 반복 적용 무차이, 오래된 계획·경로 충돌 차단, 기존 본문·fixture·CI·지원 범위 보존 |
 | 4. 검사·CI 연결 | `check_integration.py`, 문서 검사, `check_repository.py`, 필요 action/workflow | 생성과 검사 같은 계약 사용, 누락·미작성·SHA 불일치 실패, caller checkout 및 action_path 유지 |
 | 5. 두 스킬 | `skills/create-ha-integration/`, `skills/adopt-ha-standards/`, 설치·사용 문서 | 신규/기존/단순 검토/조건부 문서 요청 구분, 같은 SHA 도구 연결, 무단 설치·적용 없음 |
 | 6. 검증·도입 | 중앙 fixture와 별도 범위로 승인된 신규·기존 통합 | 아래 검증 표 충족, 실제 실행 증거와 남은 항목 기록 후 도입 판단 |
@@ -125,6 +195,8 @@ apply는 파일별 임시 쓰기·교체와 복구용 원본을 사용합니다.
 | 보존 | 양언어 긴 본문·이전 안내·고유 배지·고지·기기 예제·회귀 테스트·fixture 확장·전용 CI·최소 환경이 유지됨 |
 | 경계·실패 | 없는/중복/역전 주석, 비어 있지 않은 고정 파일, domain 불일치·다중 manifest, 오래된 계획·동시 편집·쓰기 실패·경로 이탈·부분 적용 복구 |
 | 조건부 구성 | 기본만/imagespec만/blesession만/둘 다, extras·배포 이름 정규화·절대 import·비활성 marker, 조건 제거 시 기존 문서 유지 |
+| 컴포넌트·테스트 대응 | UI flow·실제 플랫폼·coordinator·진단·액션의 선택별 생성 파일과 대응 테스트 확인, 없는 기능의 빈 파일 생성 금지, 기존 YAML 설정·회귀 수집 범위 보존 |
+| UI 번역 | 영어 소스와 배포용 en.json 동기화, ko.json의 키·placeholder·실제 사용 키 일치, 미해결 Core 참조 탐지, 실제 HA 번역 로딩. strings.json만 존재하면 완료 불가 |
 | 미완성 탐지 | 미작성 설명·가짜 액션·빈/skip lifecycle 테스트가 완료로 분류되지 않음. 정적 탐지의 한계는 실제 실행·독립 리뷰로 확인 |
 | CI 호환 | 실제 기본 브랜치와 공용 이벤트·예약식·특수 job·권한·timeout·required checks 영향, workflow/action/standards-ref SHA 일치 |
 | 기존 도구 | 기존 unittest·배지/README 렌더링·문서/실행 계약·CLI 오류 코드 회귀 유지 |

@@ -32,6 +32,17 @@
 | [Shields Workflow](https://shields.io/badges/git-hub-actions-workflow-status) | branch와 상태 배지 |
 | [Shields Downloads](https://shields.io/badges/git-hub-downloads-all-assets-all-releases) | release asset 집계 의미 |
 
+## 템플릿 생성 구조 검토
+
+다음 자료는 **2026-10-19 재확인**했습니다. [템플릿·스킬 구현안](template-skill-plan.md)의 생성 구조와 검증 근거이며, 위 표 전체의 재확인일을 갱신한 것은 아닙니다.
+
+| 자료 | 확인한 범위 |
+|---|---|
+| [HA 파일 구조](https://contributors.home-assistant.io/core/integrations/file-structure/) | domain 디렉터리, 기본 init·manifest, 기능별 flow·플랫폼·coordinator·진단 모듈 역할 |
+| [HA 커스텀 통합 번역](https://contributors.home-assistant.io/core/integrations/translations/#custom-integrations) | 완성된 translations/en.json 직접 배포, strings.json 자동 컴파일 없음, Core 문자열 참조 미지원 |
+| [HA config entries](https://contributors.home-assistant.io/core/integrations/config-entries/) | 실제 setup·플랫폼 전달·unload·자원 정리·migration, 지원 최소별 API 확인 필요 |
+| [HA pytest 실행](https://contributors.home-assistant.io/core/development/testing/) | tests/components/domain 실행, Core 품질 등급별 coverage와 커스텀 통합 프로젝트 정책 구분 |
+
 ## Bluetooth 설정 자료
 
 - [HA Bluetooth](https://www.home-assistant.io/integrations/bluetooth/): 로컬·원격 어댑터와 연결/스캔.
