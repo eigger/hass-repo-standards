@@ -1,6 +1,15 @@
 # 템플릿·스킬 개편 작업지시서
 
-2026-10-19. [구현 설계](template-skill-plan.md)를 실제 파일·동작·테스트 단위로 나눈 작업지시서입니다. **T1~T6은 모두 TODO**이며 이 문서 추가는 도구 구현 완료가 아닙니다. 공통 형식을 에이전트가 수동으로 다시 작성하게 하지 않고 중앙 계약 → 렌더링 → 변경 계획 → 적용 → 검사 경로를 구현합니다.
+2026-10-19. [구현 설계](template-skill-plan.md)를 실제 파일·동작·테스트 단위로 나눈 중앙 도구 구현 작업지시서입니다. 개별 컴포넌트를 지금 구현·이관하라는 지시가 아닙니다. 공통 형식을 에이전트가 수동으로 다시 작성하게 하지 않고 중앙 계약 → 렌더링 → 변경 계획 → 적용 → 검사 경로를 구현합니다. 실행 근거와 한계는 [검증 기록](template-skill-validation.md)에 남깁니다.
+
+| 단계 | 현재 상태 |
+|---|---|
+| T1 | 계약·입력 검증·공통 렌더러 구현·독립 코드/문서 검증 완료; 문서 반영 후 저장소 검사 36개 문서·7개 workflow 성공 |
+| T2 | TODO: inspect/plan CLI |
+| T3 | TODO: 신규 작성 기반·apply·복구 |
+| T4 | TODO: 전체 계약 검사·CI 연결 |
+| T5 | TODO: 신규 생성·기존 적용 스킬과 실행 안내 |
+| T6 | TODO: 중앙 생성·갱신 fixture와 별도 범위의 실제 도입; 외부 리포 미적용 |
 
 ## 실행 순서와 공통 완료 조건
 
@@ -16,7 +25,7 @@ T1 → T2 → T3 → T4 → T5 → T6 순서로 진행합니다. 각 단계는 �
 
 **파일:** `templates/integration/contract.json`, `schemas/integration-input.schema.json`, `schemas/integration-inventory.schema.json`, `schemas/integration-plan.schema.json`, `scripts/standards/__init__.py`, `contract.py`, `readme.py`, `badges.py`, `conditions.py`, `tests/test_standards_contract.py`. 모듈 파일은 `scripts/standards/` 아래에 둡니다.
 
-1. 계약 레코드에 `id`, `source`, `destination`, `ownership`, `condition`, `required_inputs`, `markers`, `extension`, `rules`를 정의합니다. `ownership`은 `exact_file`, `managed_blocks`, `create_only`, `merge`로 제한합니다. 실제 대상은 설계 3절의 파일별 표·3.1절 생성 트리와 일대일로 등록합니다. 표에 없는 대상 경로는 자동 쓰기 목록에 넣지 않습니다.
+1. 계약 레코드에 `id`, `source`, `destination`, `ownership`, `condition`, `required_inputs`, `markers`, `extension`, `rules`, `status`를 정의합니다. `ownership`은 `exact_file`, `managed_blocks`, `create_only`, `merge`로 제한합니다. 실제 대상은 설계 3절의 파일별 표·3.1절 생성 트리와 일대일로 등록합니다. 표에 없는 대상 경로는 자동 쓰기 목록에 넣지 않습니다. 경로 토큰은 검증한 `{domain}`과 실제 선택 플랫폼의 `{platform}`만 허용하고 플랫폼 반복은 `platforms` 조건으로 제한합니다. 기존 원본의 `available`과 후속 T3에서 작성할 자산의 `pending`을 구분하며, 원본이 없는 레코드를 렌더링 가능한 것으로 보고하지 않습니다.
 2. 입력 스키마에 원격·기본 브랜치·domain·manifest 값·양언어 소개·라이선스·설정 방식·플랫폼·선택 기능·HA 환경·payload 메타데이터를 정의합니다. 각 값의 `value`와 `source`를 기록합니다. 환경은 최소 HA/current HA와 라이브러리 current/minimum을 별도 축으로 저장합니다. 기존 검사 설정은 변경하지 않고 새 입력에서 필요한 `.hass-standards.json` 값을 렌더링합니다.
 3. `check_integration.py`의 README 렌더링·관리 경계·본문 보호와 `sync_badges.py`의 렌더링을 공통 모듈로 추출합니다. 기존 파일에서는 같은 공개 함수로 위임합니다. `bluetooth_documents.py`의 `uses_package` 등 조건 판별도 공통으로 사용하며 실제 배포 이름·extras·marker·절대 import 판별을 유지합니다.
 4. contract loader는 스키마 버전·소유 방식·조건·규칙 ID·대상 중복·경로 이탈을 검증합니다. 알 수 없는 계약 버전과 필수 입력 누락은 오류로 반환합니다. 스키마와 실제 Python 입력 검증의 허용/거부 사례를 일치시킵니다.

@@ -1,0 +1,665 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "repository": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "default_branch": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "domain": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "manifest": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "domain": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "documentation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "issue_tracker": {
+              "type": "string",
+              "minLength": 1
+            },
+            "codeowners": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            "requirements": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            },
+            "dependencies": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            },
+            "after_dependencies": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            },
+            "config_flow": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "domain",
+            "name",
+            "version",
+            "documentation",
+            "issue_tracker",
+            "codeowners",
+            "requirements",
+            "dependencies",
+            "after_dependencies",
+            "config_flow"
+          ],
+          "additionalProperties": true
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "readme": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "descriptions": {
+              "type": "object",
+              "properties": {
+                "en": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "ko": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "en",
+                "ko"
+              ],
+              "additionalProperties": false
+            },
+            "issues": {
+              "type": "boolean"
+            },
+            "discussions": {
+              "type": "boolean"
+            },
+            "related_projects": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": {
+                    "type": "object",
+                    "properties": {
+                      "en": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "ko": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "en",
+                      "ko"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "name",
+                  "url",
+                  "description"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 0
+            }
+          },
+          "required": [
+            "title",
+            "descriptions",
+            "issues",
+            "discussions",
+            "related_projects"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "license": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "path": {
+              "const": "LICENSE"
+            },
+            "notices": {
+              "type": "object",
+              "properties": {
+                "en": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 0
+                },
+                "ko": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 0
+                }
+              },
+              "required": [
+                "en",
+                "ko"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "name",
+            "path",
+            "notices"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "enum": [
+            "ui",
+            "yaml",
+            "none"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "platforms": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "coordinator": {
+              "type": "boolean"
+            },
+            "shared_entity": {
+              "type": "boolean"
+            },
+            "diagnostics": {
+              "type": "boolean"
+            },
+            "actions": {
+              "type": "boolean"
+            },
+            "fixtures": {
+              "type": "boolean"
+            },
+            "snapshots": {
+              "type": "boolean"
+            },
+            "dependency_updates": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "coordinator",
+            "shared_entity",
+            "diagnostics",
+            "actions",
+            "fixtures",
+            "snapshots",
+            "dependency_updates"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "environments": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "minimum": {
+              "type": "object",
+              "properties": {
+                "ha": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "python": {
+                  "type": "string",
+                  "pattern": "^3\\.[0-9]+(?:\\.[0-9]+)?$"
+                },
+                "pytest_homeassistant_custom_component": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "requirements": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(?!/|.*\\\\|.*:|.*(?:^|/)\\.\\.(?:/|$)|.*(?:^|/)\\.(?:/|$))[^/]+(?:/[^/]+)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "constraints": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(?!/|.*\\\\|.*:|.*(?:^|/)\\.\\.(?:/|$)|.*(?:^|/)\\.(?:/|$))[^/]+(?:/[^/]+)*$"
+                  },
+                  "minItems": 0,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "ha",
+                "python",
+                "pytest_homeassistant_custom_component",
+                "requirements",
+                "constraints"
+              ],
+              "additionalProperties": false
+            },
+            "current": {
+              "type": "object",
+              "properties": {
+                "ha": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "python": {
+                  "type": "string",
+                  "pattern": "^3\\.[0-9]+(?:\\.[0-9]+)?$"
+                },
+                "pytest_homeassistant_custom_component": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "requirements": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(?!/|.*\\\\|.*:|.*(?:^|/)\\.\\.(?:/|$)|.*(?:^|/)\\.(?:/|$))[^/]+(?:/[^/]+)*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "constraints": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(?!/|.*\\\\|.*:|.*(?:^|/)\\.\\.(?:/|$)|.*(?:^|/)\\.(?:/|$))[^/]+(?:/[^/]+)*$"
+                  },
+                  "minItems": 0,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "ha",
+                "python",
+                "pytest_homeassistant_custom_component",
+                "requirements",
+                "constraints"
+              ],
+              "additionalProperties": false
+            },
+            "libraries": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "current": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minimum": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "current",
+                  "minimum"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "minimum",
+            "current",
+            "libraries"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "examples": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "pattern": "^(?!/|.*\\\\|.*:|.*(?:^|/)\\.\\.(?:/|$)|.*(?:^|/)\\.(?:/|$))[^/]+(?:/[^/]+)*$"
+                  },
+                  "payload_path": {
+                    "type": "array",
+                    "items": {
+                      "type": [
+                        "string",
+                        "integer"
+                      ]
+                    },
+                    "minItems": 1
+                  },
+                  "payload_format": {
+                    "enum": [
+                      "list",
+                      "yaml"
+                    ]
+                  },
+                  "expected_size": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "expected_palette": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                  }
+                },
+                "required": [
+                  "path",
+                  "payload_path",
+                  "expected_size",
+                  "expected_palette"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "adapter": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "examples",
+            "adapter"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "remote": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false,
+      "description": "Original remote URL with provenance. T2 decides when required and verifies observed identity; no normalization is performed by T1."
+    }
+  },
+  "required": [
+    "schema_version",
+    "repository",
+    "default_branch",
+    "domain",
+    "manifest",
+    "readme",
+    "license",
+    "configuration",
+    "platforms",
+    "features",
+    "environments"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Integration application input, version 1",
+  "allOf": [
+    {
+      "properties": {
+        "domain": {
+          "properties": {
+            "value": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

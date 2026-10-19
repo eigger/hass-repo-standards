@@ -1,0 +1,164 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "standards_ref": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "target_identity": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        }
+      },
+      "required": [
+        "path",
+        "repository",
+        "domain"
+      ],
+      "additionalProperties": false
+    },
+    "input_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "guards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^(?!/|.*\\\\|.*:|.*(?:^|/)\\.\\.(?:/|$)|.*(?:^|/)\\.(?:/|$))[^/]+(?:/[^/]+)*$"
+          },
+          "sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^(?!/|.*\\\\|.*:|.*(?:^|/)\\.\\.(?:/|$)|.*(?:^|/)\\.(?:/|$))[^/]+(?:/[^/]+)*$"
+          },
+          "ownership": {
+            "enum": [
+              "exact_file",
+              "managed_blocks",
+              "create_only",
+              "merge"
+            ]
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "before_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "after_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "content": {
+            "type": "string"
+          },
+          "diff": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "ownership",
+          "source",
+          "rules",
+          "before_sha256",
+          "after_sha256",
+          "content",
+          "diff"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "pending": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    }
+  },
+  "required": [
+    "schema_version",
+    "standards_ref",
+    "target_identity",
+    "input_digest",
+    "guards",
+    "operations",
+    "pending",
+    "conflicts"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
