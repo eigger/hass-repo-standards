@@ -259,4 +259,31 @@ adopt-base는 최소 HA 2025.3.0/Python 3.13/플러그인 0.13.221과 current HA
 
 ## 남은 검증과 한계
 
+### 2026-10-19 HACS 설치 안내 분기 후속 검증
+
+검증 대상은 `14992ace23a58f5f813fa6c285001703e679576b` 위의 이번 미커밋 변경입니다. 구현과 별도 리뷰 담당이 독립 snapshot에서 검사했으며, 신규 생성 후 실제 LICENSE 제공·adopt, 기존 Default/Custom 전환, 기존 Default 설정 유지, 양언어 본문 CRLF 바이트 보존, 경계 없는 설치 안내 충돌, 잘못된 관리 주석·등록 근거 거부 및 네트워크 없는 렌더링을 확인했습니다.
+
+| 독립 검증 | 실제 결과 |
+|---|---|
+| Ubuntu 전체 도구 회귀 | 197개 중 191개 실행 성공·실제 HA/plugin/imagespec 런타임 6개 skip, 25.735초 |
+| Ruff check / format | 모두 성공, format 대상 91개 파일 |
+| 저장소 검사 | 성공, 문서 37개·workflow 7개 및 JSON/caller 계약 |
+| 변경 diff 공백 검사 | `git diff --check` 성공 |
+| 실행 환경 | Ubuntu Python 3.14.4, Ruff 0.17.1, PyYAML 6.0.3, packaging 26.3 |
+
+독립 실행 명령은 다음과 같습니다.
+
+```bash
+cd /tmp/hacs-independent-review-5390d86813db4522a9cbdf399e933f53/snapshot
+review_python=/tmp/hacs-independent-review-5390d86813db4522a9cbdf399e933f53/venv/bin/python
+"$review_python" -m unittest discover -s tests -v
+"$review_python" -m ruff check .
+"$review_python" -m ruff format --check .
+"$review_python" scripts/check_repository.py
+```
+
+`git diff --check`는 원본 Windows checkout `D:\Source\Github\hass-repo-standards`에서 실행했습니다. 위 Ubuntu 경로는 실행 당시 임시 경로이며 이후 정리되어 현재 보존을 보장하지 않습니다. 독립 snapshot·로그·manifest·diff는 Windows `C:\Users\eigger\AppData\Local\Temp\hacs-independent-review-5390d86813db4522a9cbdf399e933f53`에 보관했습니다. Windows Python 3.14.6의 `python3` 별칭은 Store 실행 안내로 실패했고 실제 Python 경로를 사용했습니다. 첫 저장소 검사는 cp949 기본 디코딩으로 실패하여 `PYTHONUTF8=1`로 재실행했습니다. 첫 템플릿 검사에서 발견한 CRLF를 LF로 수정했고, 새 테스트의 인코딩·줄바꿈도 수정한 뒤 재실행했습니다. Windows 전체 회귀는 Git 작업 지연·심볼릭 링크 권한 skip 때문에 중단했으며 PASS로 기록하지 않습니다. 위 최종 전체 결과는 수정 후 Linux 독립 재실행 결과입니다. 실행 후 수정된 사용 안내·이 검증 기록을 독립 Windows snapshot에 갱신해 UTF-8 저장소 검사를 다시 통과했으며 production·템플릿·테스트의 fingerprint는 실행본과 같았습니다.
+
+실제 HA 최소/current·HACS UI 설치·기기·외부 통합 적용과 원격 CI는 이번 후속 작업에서 미실행입니다. 6개 skip을 실행 성공으로 계산하지 않으며 원격 커밋·PR·병합 증거도 없습니다. 이전 T1~T6 결과와 아래의 역사적 완료 범위를 이번 미커밋 변경의 검증 증거로 재사용하지 않습니다.
+
 중앙 T1~T6 구현·T6 독립 코드/문서 검증·기록한 실제 code head의 PR CI를 완료했습니다. 현재 병합 상태는 PR #7에서 확인하며 이 문서의 역사적 커밋/CI 근거와 구분합니다. 생성 초안의 실제 HA negative smoke는 수행했지만 실제 신규·기존 통합의 HA minimum/current 성공, HACS/Hassfest, UI 번역·기기 의미·하드웨어 검증은 이번 범위 밖·미실행입니다. 다른 에이전트 클라이언트 실행·개인 설치·앱 자동 발동도 미검증입니다. 중앙 fixture와 중앙 도구의 회귀 성공을 외부 통합 도입 완료로 기록하지 않습니다.

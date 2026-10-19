@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 
+from . import installation
 from .badges import END as BADGES_END
 from .badges import START as BADGES_START
 from .badges import preserve_extra_badges
@@ -113,7 +114,55 @@ def render_readme(root, config, language, original):
     ):
         guard_content(block(original, area), content, area)
         original = replace(original, area, content)
+    if config.get("installation", False) or any(
+        marker in original for marker in markers("installation")
+    ):
+        original = update_installation(original, config, language)
     return original
+
+
+def update_installation(original, config, language):
+    """Update only canonical HACS prose; leave device/manual instructions outside."""
+    content = installation.render(config, language)
+    start, end = markers("installation")
+    if start in original or end in original:
+        existing = block(original, "installation")
+        header_end = original.index(markers("header")[1]) + len(markers("header")[1])
+        if (
+            not header_end
+            <= original.index(start)
+            < original.index(end)
+            < original.index(markers("support")[0])
+        ):
+            raise ValueError("Installation must be between header and support, without overlap")
+        candidates = {config["repository"]}
+        candidates.update(
+            re.findall(r"`https://github.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)`", existing)
+        )
+        allowed = {
+            installation.render({**config, "repository": repository}, language, value)
+            for repository in candidates
+            for value in ("custom", "default")
+        }
+        if existing.strip() and existing not in allowed:
+            raise ValueError(
+                "Preserve existing installation/device instructions outside the installation "
+                "markers before sync; only canonical HACS steps may be replaced"
+            )
+        return replace(original, "installation", content)
+    # Only add a missing section when it cannot duplicate an existing installation guide.
+    body = original.split(markers("header")[1], 1)[1].split(markers("support")[0], 1)[0]
+    if re.search(
+        r"(?im)^#{1,6}[^\n]*(?:install|설치|HACS)|my\.home-assistant\.io/|"
+        r"custom repositor|custom_repositor|사용자 (?:지정|정의) 저장소|커스텀 저장소",
+        body,
+    ):
+        raise ValueError(
+            "Unmarked installation instructions require a preservation review: bound only "
+            "the common HACS steps with installation markers; keep device/manual steps outside"
+        )
+    position = original.index(markers("support")[0])
+    return original[:position] + f"{start}\n{content}\n{end}\n\n" + original[position:]
 
 
 def guard_content(old, new, area):

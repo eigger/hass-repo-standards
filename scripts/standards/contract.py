@@ -160,6 +160,15 @@ def load_schema(kind):
 
 def validate_input(data, required_inputs=()):
     validate_schema(data, load_schema("input"))
+    if "hacs" in data and data["hacs"]["value"] == "default":
+        from .installation import status
+
+        status(
+            {
+                "hacs": "default",
+                "hacs_default_evidence": data.get("hacs_default_evidence", {}).get("value"),
+            }
+        )
     for name in required_inputs:
         if name not in data:
             _fail("input", f"missing required input {name}")
@@ -327,7 +336,12 @@ def render_settings(data):
         "tests_workflow": "tests.yml",
         "validate_workflow": "validate.yml",
         "readme": readme,
+        "installation": True,
+        "installation_links": {"README.md": "#installation", "README.ko.md": "#설치"},
     }
+    for field in ("hacs", "hacs_default_evidence"):
+        if field in data:
+            result[field] = data[field]["value"]
     if "payload" in data:
         result["payload"] = {"examples": data["payload"]["value"]["examples"]}
     return result

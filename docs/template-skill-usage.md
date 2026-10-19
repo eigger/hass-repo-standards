@@ -72,6 +72,25 @@ python3 scripts/manage_integration.py plan <empty-or-absent-target> --mode creat
 
 fixture의 최소/current가 같은 것은 실제 대상의 최소를 올릴 근거가 아닙니다. 서로 다르면 각 환경을 따로 기록합니다. imagespec·blesession 사용은 실제 requirements·절대 import로 판단하며 라이브러리 버전·payload 필드는 스키마와 해당 규칙에 따라 추가합니다.
 
+### HACS 설치 안내: 신규 생성과 기존 적용
+
+create와 adopt 모두 [HACS-03](hacs.md)의 등록 여부를 확인하고 같은 중앙 README 렌더러를 사용합니다. 확인되지 않은 신규 입력은 보수적으로 custom이며 HACS Default에 등록됐다는 뜻이 아닙니다. 기존 `.hass-standards.json`의 `hacs`와 근거는 입력에서 명시적으로 바꾸지 않으면 보존합니다. 실제 공식 목록을 확인한 뒤 선택 `hacs` 입력을 `{"value":"custom","source":"실제 확인 근거"}` 또는 `{"value":"default","source":"실제 확인 근거"}`로 기록합니다. default는 다음 선택 입력도 필요합니다.
+
+```json
+"hacs_default_evidence": {
+  "value": {"url": "https://github.com/hacs/default/blob/master/integration", "checked_at": "2026-10-19"},
+  "source": "해당 목록에서 실제 owner/repository를 확인한 근거로 교체"
+}
+```
+
+위 URL·날짜는 형식 예시이며 대상 등록을 입증하지 않습니다. `url`은 실제 확인한 HTTPS URL, `checked_at`은 유효한 확인일입니다. 렌더러는 네트워크를 조회하지 않으므로 목록의 실제 리포 포함 여부는 작성·독립 검토 단계에서 확인합니다. default는 My Home Assistant의 HACS 리포지토리 설치 버튼과 HACS 검색 대안을, custom은 현재 방식인 사용자 지정 저장소 등록·통합 유형 선택을 생성합니다. 두 방식 모두 HACS 사전 설치·설정과 다운로드 후 Home Assistant 재시작을 안내합니다. 실제 통합 설정·기기 준비·수동 설치는 별도 기존 본문으로 보존합니다.
+
+생성 설정의 `installation: true`와 `installation_links`는 양언어 설치 관리 영역과 배지 앵커를 연결합니다. `hass-standards:installation:start/end` 안에는 중앙 HACS 공통 안내만 두며 동일 렌더러로 생성·검사·상태 변경합니다. 기존 영역이 없고 설치 안내도 없는 README에는 support 앞에 추가합니다. 경계 없는 설치 제목·사용자 지정 저장소 안내·My Home Assistant 링크가 있으면 자동으로 중복 안내를 넣지 않고 conflict로 중단합니다. 기존 순서와 내용을 검토해 공통 HACS 문단만 중앙 형식으로 이전하고 기기·수동 설치 문단은 경계 밖에 그대로 둔 뒤 재계획합니다. 관리 영역의 알 수 없는 추가 문장도 자동 삭제하지 않고 conflict입니다. 기존 설정에서 installation이 없고 관리 영역도 없으면 이전 검사 범위를 유지하므로 최신 adopt 계획으로 명시적으로 이전합니다.
+
+신규 빈 대상의 실제 LICENSE가 아직 없으면 기존 계약대로 README 생성이 pending입니다. 실제 라이선스를 제공한 뒤 adopt 재계획으로 양언어 README와 설치 안내를 생성하며 임의 라이선스를 만들지 않습니다.
+
+이전 `.hass-standards.json`의 `hacs_default_evidence`가 문자열이나 임의의 참 값이면 새 검토 SHA로 갱신할 때 실제 확인 근거의 `{"url":"https://…","checked_at":"YYYY-MM-DD"}` 객체로 이전합니다. 새 검사기는 URL·날짜 없는 Default 선언을 거부합니다. 이전 리포의 고정 SHA 자체는 이번 중앙 수정으로 변경되지 않습니다.
+
 ## 계획 검토와 제한
 
 `plan`은 `standards_ref`, `target_identity`, `validated_input`, `input_digest`, `guards`, `operations`, `unchanged`, `pending`, `conflicts`를 기록합니다. T3는 원래 대상 루트 존재 여부인 `target_identity.root_exists`를 필수로 기록합니다. 검증한 입력의 독립 복사본과 canonical JSON SHA-256을 포함하므로 입력 파일의 이후 변경과 구분할 수 있습니다. 스키마의 로컬 `$ref`는 input/inventory/plan 세 파일만 허용하고 외부 URI나 다른 경로를 읽지 않습니다. 이전 T2 계획은 새 필수 필드와 SHA가 맞지 않으므로 T3의 깨끗한 검토 checkout에서 다시 생성해야 합니다.

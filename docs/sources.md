@@ -21,6 +21,9 @@
 | [HACS 브랜드 검사 구현](https://github.com/hacs/integration/blob/adc26ec798021d2c2db1e6aa90eabe2e208b8c04/custom_components/hacs/validate/brands.py) | 로컬 brand/icon.png 우선·원격 custom domain fallback |
 | [HA 브랜드 이미지](https://contributors.home-assistant.io/core/integrations/brands/) | 로컬 brand 지원 버전·PNG 규격 |
 | [HACS default inclusion](https://www.hacs.xyz/docs/publish/include/) | Default 목록 등재 |
+| [HACS 기본 통합 목록](https://github.com/hacs/default/blob/master/integration) | 실제 owner/repository의 Default 등재 확인 |
+| [HACS My Home Assistant](https://www.hacs.xyz/docs/use/my/) | 저장소 바로가기와 owner·repository·category 인자 |
+| [HACS custom repositories](https://www.hacs.xyz/docs/faq/custom_repositories/) | 미등록 저장소의 수동 추가 절차 |
 | [GitHub reusable workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows) | workflow_call, 입력, 권한 |
 | [GitHub secure use](https://docs.github.com/en/actions/reference/security/secure-use) | 최소 권한·SHA·외부 입력 |
 | [Dependabot 설정](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference) | 과거 최소 환경 exclude-paths·HA/플러그인 groups의 범위 |
@@ -67,6 +70,8 @@
 - [imagespec 속성 참조](https://github.com/eigger/imagespec/blob/main/docs/reference.md), [요소 예제](https://github.com/eigger/imagespec/blob/main/docs/elements.md), [디더링](https://github.com/eigger/imagespec/blob/main/docs/dithering.md), [호스트 통합](https://github.com/eigger/imagespec/blob/main/docs/integrating.md): 실제 설치 버전의 키·API·RenderContext·지원 범위와 대조하는 라이브러리 원본. 전체 매뉴얼을 중앙에 복제하지 않습니다.
 
 2026-10-18 로컬 문서 작성은 imagespec checkout의 실제 public validate/render·소스·스키마를 기준으로 검증하며 기존 지원 최소·버전·릴리스 정책은 변경하지 않습니다. HA fixture·서비스 스키마 실행 증거와 이미지 렌더링 증거·기기 전달/실물 검증을 구분합니다.
+
+HACS 설치 안내 분기를 위해 기본 목록 저장소·My Home Assistant·custom repositories 원문을 **2026-10-19**에 확인했습니다. My 링크는 저장소 화면으로 연결하며 설치 완료를 뜻하지 않습니다. 이 확인은 위 자료 전체의 재검증을 의미하지 않습니다.
 
 ## 에이전트 스킬 호환성
 

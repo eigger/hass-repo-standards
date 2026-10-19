@@ -80,6 +80,7 @@
         "license"
       ],
       "markers": [
+        "installation",
         "header",
         "support",
         "related-projects",
@@ -106,6 +107,7 @@
         "license"
       ],
       "markers": [
+        "installation",
         "header",
         "support",
         "related-projects",

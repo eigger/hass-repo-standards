@@ -9,6 +9,8 @@ import subprocess
 from pathlib import Path
 from urllib.parse import quote, urlencode
 
+from .installation import status as hacs_status
+
 START = "<!-- hass-standards:badges:start -->"
 END = "<!-- hass-standards:badges:end -->"
 
@@ -51,11 +53,7 @@ def render(repo: Path, config: dict, readme: Path | None = None):
     def badge(label, url, link):
         badges.append(f"[![{label}]({url})]({link})")
 
-    status = config.get("hacs", "custom")
-    if status not in {"custom", "default"}:
-        raise ValueError("hacs must be custom or default")
-    if status == "default" and not config.get("hacs_default_evidence"):
-        raise ValueError("Default needs hacs_default_evidence URL/date")
+    status = hacs_status(config)
     if config.get("release", False):
         badge(
             "Release",

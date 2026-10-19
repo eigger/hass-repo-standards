@@ -14,6 +14,16 @@ A Home Assistant custom integration for the supported device.
 <!-- hass-standards:badges:end -->
 <!-- hass-standards:header:end -->
 
+<!-- hass-standards:installation:start -->
+## Installation
+
+[Install and configure HACS](https://www.hacs.xyz/docs/use/download/download/) first.
+
+1. Open HACS → ⋮ → Custom repositories.
+2. Add `https://github.com/eigger/hass-example` with type **Integration**.
+3. Find and download the integration in HACS, then restart Home Assistant.
+<!-- hass-standards:installation:end -->
+
 <!-- Preserve the repository’s existing section order, headings, content, examples, and notices here. This comment is an adoption placeholder, not a mandatory body outline. -->
 
 <!-- hass-standards:support:start -->

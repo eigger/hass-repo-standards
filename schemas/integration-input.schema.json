@@ -1,6 +1,32 @@
 {
   "type": "object",
   "properties": {
+    "hacs": {
+      "type": "object",
+      "properties": {
+        "value": {"enum": ["custom", "default"]},
+        "source": {"type": "string", "minLength": 1}
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
+    "hacs_default_evidence": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "url": {"type": "string", "pattern": "^https://[^\\s/]+/[^\\s]*$"},
+            "checked_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+          },
+          "required": ["url", "checked_at"],
+          "additionalProperties": false
+        },
+        "source": {"type": "string", "minLength": 1}
+      },
+      "required": ["value", "source"],
+      "additionalProperties": false
+    },
     "schema_version": {
       "const": 1
     },

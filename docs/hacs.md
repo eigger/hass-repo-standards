@@ -8,6 +8,8 @@
 
 **HACS-03 필수**: 기본 목록 등재와 custom repository 설치를 구분합니다. HACS 검증 성공, hacs.json 존재, brands 등록만으로 Default 배지를 표시하지 않습니다. Default 표기는 실제 목록 등재 확인 링크와 날짜를 기록합니다.
 
+신규 생성과 기존 리포 채택·재검토 모두에서 같은 확인된 등록 상태로 양언어 README의 HACS 설치 안내를 작성합니다. [공식 기본 목록](https://github.com/hacs/default/blob/master/integration)에 등재된 리포는 [My Home Assistant HACS 바로가기](https://www.hacs.xyz/docs/use/my/)로 실제 `owner`·`repository`의 저장소를 열어 다운로드하도록 안내합니다. 이 링크는 자동 설치 완료를 의미하지 않으며 HACS 사전 설치·다운로드 후 HA 재시작을 설명합니다. 미등록 리포는 기존 방식인 실제 GitHub URL의 커스텀 저장소 등록(종류 `Integration`) → 다운로드 → 재시작을 안내합니다. 확인 불가를 등재 근거로 사용하지 않습니다. 기기 설정·수동 설치·이전 안내 등 기존 고유 본문은 보존하며, 임의 본문을 자동으로 덮어쓰지 않습니다.
+
 **HACS-04 필수**: 정식 배포는 GitHub Release로 만들고 tag의 `v` 접두사를 제외한 버전과 해당 commit manifest.version을 일치시킵니다. 통합 버전과 최소 HA/HACS 버전은 별개입니다. prerelease는 GitHub에서도 prerelease로 표시합니다.
 
 **HACS-05 필수**: HACS와 Hassfest 검증을 실행합니다. 공통 Validate workflow는 둘을 별도 job으로 실행합니다. 검사 제외는 입력에 명시하고 STANDARDS.md에 이유·해제 조건을 기록합니다. 오류를 피하기 위한 무기한 ignore는 금지합니다.

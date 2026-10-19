@@ -14,6 +14,16 @@
 <!-- hass-standards:badges:end -->
 <!-- hass-standards:header:end -->
 
+<!-- hass-standards:installation:start -->
+## 설치
+
+먼저 [HACS를 설치하고 설정](https://www.hacs.xyz/docs/use/download/download/)하세요.
+
+1. HACS → ⋮ → 사용자 지정 저장소를 여세요.
+2. `https://github.com/eigger/hass-example`를 **통합(Integration)** 유형으로 추가하세요.
+3. HACS에서 통합을 찾아 다운로드한 뒤 Home Assistant를 재시작하세요.
+<!-- hass-standards:installation:end -->
+
 <!-- 기존 섹션 순서·제목·본문·예제·고지를 여기에 보존합니다. 이 주석은 적용 위치 표시이며 필수 본문 틀이 아닙니다. -->
 
 <!-- hass-standards:support:start -->
