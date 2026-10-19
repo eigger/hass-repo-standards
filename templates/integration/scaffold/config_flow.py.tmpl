@@ -1,0 +1,15 @@
+"""TODO: Add actual fields, stable identification and connection validation."""
+
+from homeassistant import config_entries
+
+from .const import DOMAIN
+
+
+class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    """Configure the integration using its real device/service contract."""
+
+    VERSION = 1
+
+    async def async_step_user(self, user_input=None):
+        """Validate real input, deduplicate and map actual connection errors."""
+        raise NotImplementedError("TODO: Actual fields, identification and authentication")

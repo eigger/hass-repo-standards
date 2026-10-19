@@ -126,9 +126,9 @@ class IntegrationPlanning(unittest.TestCase):
         )
         self.assertTrue(any("actual LICENSE" in item for item in first["pending"]))
         self.assertTrue(any("test_init.py" in item for item in first["pending"]))
-        self.assertFalse(
-            any(op["path"].startswith("custom_components/") for op in first["operations"])
-        )
+        created = {operation["path"] for operation in first["operations"]}
+        self.assertIn("custom_components/example/manifest.json", created)
+        self.assertIn("custom_components/example/__init__.py", created)
         self.target.mkdir()
         self.assertEqual(self.plan()["conflicts"], [])
         self.assertEqual(list(self.target.iterdir()), [])

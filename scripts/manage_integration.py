@@ -1,4 +1,4 @@
-"""Inspect and plan central integration changes. apply is not implemented yet."""
+"""Inspect, plan, apply and recover central integration changes with explicit guards."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+from standards import apply as application
 from standards import inventory, planning
 
 
@@ -58,8 +59,26 @@ def main(argv=None):
     plan_parser.add_argument("--mode", choices=("create", "adopt"), required=True)
     plan_parser.add_argument("--input", type=Path, required=True)
     plan_parser.add_argument("--standards-ref", required=True)
+    apply_parser = commands.add_parser(
+        "apply", help="Apply a current reviewed plan and retain recovery backups"
+    )
+    apply_parser.add_argument("target", type=Path)
+    apply_parser.add_argument("--plan", type=Path, required=True)
+    apply_parser.add_argument("--journal", type=Path)
+    recovery_parser = commands.add_parser(
+        "recover", help="Restore only unchanged transaction outputs from a journal"
+    )
+    recovery_parser.add_argument("target", type=Path)
+    recovery_parser.add_argument("--journal", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
+        if args.command in {"apply", "recover"}:
+            if args.command == "apply":
+                result = application.apply_plan(args.target, args.plan, journal_path=args.journal)
+            else:
+                result = application.recover(args.target, args.journal)
+            print(planning.canonical_json(result), end="")
+            return 2 if result["status"] == "failed" else 0
         output = output_path(args.output, args.target)
         if args.command == "inspect":
             result = inventory.inspect(args.target)

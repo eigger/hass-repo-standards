@@ -1,0 +1,10 @@
+"""TODO: Assert actual flow results, duplicate identity and connection failures."""
+
+@@domain_import@@
+
+
+async def test_user_flow(hass):
+    """Run the actual HA flow manager, then assert the real input contract."""
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    # TODO: Submit real fields and assert success, duplicates and actual errors.
+    raise NotImplementedError(f"TODO: Actual flow assertions for {result['type']}")

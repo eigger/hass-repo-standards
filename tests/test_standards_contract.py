@@ -102,6 +102,7 @@ class StandardsContract(unittest.TestCase):
     def test_assets_include_component_test_and_conditional_paths(self):
         records = {record["destination"]: record for record in self.contract["records"]}
         for destination in (
+            "custom_components/__init__.py",
             "custom_components/{domain}/__init__.py",
             "custom_components/{domain}/manifest.json",
             "custom_components/{domain}/translations/en.json",
@@ -115,8 +116,14 @@ class StandardsContract(unittest.TestCase):
             "docs/payload.md",
         ):
             self.assertIn(destination, records)
-        self.assertEqual(records["custom_components/{domain}/__init__.py"]["status"], "pending")
-        self.assertIsNone(records["custom_components/{domain}/__init__.py"]["source"])
+        self.assertEqual(records["custom_components/{domain}/__init__.py"]["status"], "available")
+        package = records["custom_components/__init__.py"]
+        self.assertEqual(package["ownership"], "create_only")
+        self.assertEqual((ROOT / package["source"]).read_bytes(), b"")
+        self.assertEqual(
+            records["custom_components/{domain}/__init__.py"]["source"],
+            "templates/integration/scaffold/init.py.tmpl",
+        )
         self.assertNotIn("AGENTS.md", records)
         self.assertNotIn("LICENSE", records)
 

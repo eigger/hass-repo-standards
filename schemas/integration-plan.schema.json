@@ -22,12 +22,16 @@
         "domain": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "root_exists": {
+          "type": "boolean"
         }
       },
       "required": [
         "path",
         "repository",
-        "domain"
+        "domain",
+        "root_exists"
       ],
       "additionalProperties": false
     },
