@@ -54,11 +54,19 @@
                 "type": "null"
               }
             ]
+          },
+          "kind": {
+            "enum": [
+              "file",
+              "absent",
+              "directory"
+            ]
           }
         },
         "required": [
           "path",
-          "sha256"
+          "sha256",
+          "kind"
         ],
         "additionalProperties": false
       },
@@ -116,6 +124,12 @@
           },
           "diff": {
             "type": "string"
+          },
+          "action": {
+            "enum": [
+              "create",
+              "update"
+            ]
           }
         },
         "required": [
@@ -126,7 +140,8 @@
           "before_sha256",
           "after_sha256",
           "content",
-          "diff"
+          "diff",
+          "action"
         ],
         "additionalProperties": false
       },
@@ -147,6 +162,23 @@
         "minLength": 1
       },
       "minItems": 0
+    },
+    "mode": {
+      "enum": [
+        "create",
+        "adopt"
+      ]
+    },
+    "unchanged": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(?!/|.*\\\\|.*:|.*(?:^|/)\\.\\.(?:/|$)|.*(?:^|/)\\.(?:/|$))[^/]+(?:/[^/]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "validated_input": {
+      "$ref": "integration-input.schema.json"
     }
   },
   "required": [
@@ -157,7 +189,10 @@
     "guards",
     "operations",
     "pending",
-    "conflicts"
+    "conflicts",
+    "mode",
+    "unchanged",
+    "validated_input"
   ],
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema"

@@ -13,8 +13,9 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 | [Adoption and change management](docs/adoption.md) | Required/recommended rules, migration, exceptions |
 | [Central adoption status](docs/adoption-status.md) | Progress, changes, verification/review evidence, remaining work |
 | [Recommended adoption order](docs/adoption-plan.md) | Pilot and phased adoption for 22 eligible HA integrations |
-| [Template and skill implementation plan](docs/template-skill-plan.md) | Ownership contracts, planned CLI and skills; T1 contracts/renderers implemented and independently tested (Korean) |
-| [Template and skill validation](docs/template-skill-validation.md) | Stage status, commands, environments, evidence and remaining work; generation/apply CLI and skills are not implemented (Korean) |
+| [Template and skill implementation plan](docs/template-skill-plan.md) | Ownership contracts, CLI and planned skills; T1 contracts/renderers tested, T2 read-only inspect/plan implemented (Korean) |
+| [Template and skill usage](docs/template-skill-usage.md) | Read-only metadata inspection and change planning; apply, new scaffolds and skills are not implemented (Korean) |
+| [Template and skill validation](docs/template-skill-validation.md) | Stage status, commands, environments, evidence and remaining work (Korean) |
 | [Integration adoption checklist](docs/checklist.md) | Status, evidence, compatible environments, exceptions |
 | [Home Assistant development](docs/home-assistant.md) | Core-like structure, configuration, async, entities, BLE |
 | [HACS and distribution](docs/hacs.md) | manifest, hacs.json, versions, packaging |

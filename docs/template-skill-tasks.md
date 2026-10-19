@@ -5,7 +5,7 @@
 | 단계 | 현재 상태 |
 |---|---|
 | T1 | 계약·입력 검증·공통 렌더러 구현·독립 코드/문서 검증 완료; 문서 반영 후 저장소 검사 36개 문서·7개 workflow 성공 |
-| T2 | TODO: inspect/plan CLI |
+| T2 | 읽기 전용 inspect/plan CLI 구현·독립 코드/문서 검증 완료; 문서 반영 후 저장소 검사 37개 문서·7개 workflow 성공 |
 | T3 | TODO: 신규 작성 기반·apply·복구 |
 | T4 | TODO: 전체 계약 검사·CI 연결 |
 | T5 | TODO: 신규 생성·기존 적용 스킬과 실행 안내 |
@@ -39,7 +39,7 @@ T1 → T2 → T3 → T4 → T5 → T6 순서로 진행합니다. 각 단계는 �
 1. `inspect <target> --output <inventory.json>`을 구현합니다. 원격·기본/현재 브랜치·작업 트리 상태·실제 manifest·hacs·README 지원 선언·requirements·workflow·관리 주석·선택 기능을 읽고 출처·충돌·미확인 값을 반환합니다. 기본 브랜치를 main/master로 추정하지 않고 조회 불가 시 확인이 필요한 값으로 남깁니다.
 2. `plan <target> --mode create|adopt --input <input.json> --standards-ref <full-sha> --output <plan.json>`을 구현합니다. create는 명시한 비어 있는 대상 경로와 신규 입력을 사용하고 기존 manifest 부재를 오류로 처리하지 않습니다. adopt는 실제 단일 domain을 읽으며 입력과 다르면 차단합니다. 수정된 사용자 파일은 보호하되 깨끗하지 않은 리포 전체를 무조건 거부하지 않습니다.
 3. CLI 실행 checkout의 HEAD와 `--standards-ref`가 일치하고 계약·템플릿·실행 코드가 수정되지 않았는지 확인합니다. 원격 최신 SHA 조회 결과만으로 다른 커밋의 도구를 실행했다고 주장하지 않습니다.
-4. 계획에 `schema_version`, `standards_ref`, `target_identity`, `input_digest`, `guards`, `operations`, `pending`, `conflicts`를 기록합니다. 각 operation은 경로·소유 방식·원본·규칙·전후 SHA-256·후속 내용·unified diff를 포함합니다. 새 파일은 기존 해시 대신 부재 조건을 기록합니다. guards에는 읽고 보존할 관련 파일의 상태도 포함합니다.
+4. 계획에 `schema_version`, `standards_ref`, `target_identity`, `validated_input`, `input_digest`, `guards`, `operations`, `pending`, `conflicts`를 기록합니다. `validated_input`은 스키마 검증한 sourced 입력의 독립 복사본이며 canonical JSON SHA-256으로 `input_digest`를 재계산할 수 있어야 합니다. 원본 입력 파일 재읽기로 스냅샷을 대신하지 않습니다. 계획 스키마는 중앙 입력 스키마를 로컬 `$ref`로 참조하고 resolver는 정확한 input/inventory/plan 스키마 세 파일 외 URI·경로를 거부합니다. 각 operation은 경로·소유 방식·원본·규칙·전후 SHA-256·후속 내용·unified diff를 포함합니다. 새 파일은 기존 해시 대신 부재 조건을 기록합니다. guards에는 읽고 보존할 관련 파일의 상태도 포함하며 조사·렌더링 도중 변경도 검출합니다.
 5. 생성·관리 영역 갱신·변경 없음·충돌·수동 작성 필요를 구분합니다. 공통 형식은 렌더러가 생성하고 기기 코드·본문·실제 테스트가 미작성인 경우 pending으로 남깁니다. 충돌·필수 입력 누락은 종료 코드 2, 생성 가능한 초안 계획은 0과 pending 목록을 반환합니다. 결과에 실행 시각 같은 비결정적 값을 넣지 않습니다.
 
 **검증:** 임시 Git 리포에서 기존/신규·기본 브랜치 차이·선언 불일치·잘못된 SHA·수정된 실행 자산·조건부 기능을 테스트합니다. 동일한 SHA·입력·대상 상태에서 계획 JSON과 diff가 같아야 합니다. 계획 파일은 target 밖에 쓰고 target의 추적·미추적 파일은 바뀌지 않아야 합니다.
@@ -51,7 +51,7 @@ T1 → T2 → T3 → T4 → T5 → T6 순서로 진행합니다. 각 단계는 �
 1. 설계 3.1절의 init·manifest·const·flow·번역·선택 플랫폼과 대응 테스트를 중앙 자산으로 추가합니다. coordinator·entity·diagnostics·액션은 실제 선택 기능만 생성합니다. root conftest와 세 빈 테스트 init는 기존 원본 그대로 생성합니다.
 2. manifest의 domain·디렉터리·DOMAIN, config_flow 선언과 실제 파일을 일치시킵니다. 실제 최소/current 환경에서 호환되는 setup·플랫폼 전달·unload·정리 작성 기반을 제공합니다. 실제 client/entry 데이터가 없으면 미완료가 드러나도록 만들고 성공만 반환하는 가짜 구현을 만들지 않습니다.
 3. 영어 소스와 `translations/en.json`의 동기화 경로, `ko.json`의 키·placeholder 검증을 구현합니다. 배포 파일에 미해결 Core 문자열 참조를 남기지 않습니다. 실제 기능·번역이 미작성인 경우 pending으로 반환하고 샘플을 완성품으로 취급하지 않습니다.
-4. `apply <target> --plan <plan.json>`을 구현합니다. 스키마·대상 identity·기준 SHA·입력 digest·guards·모든 operation 경로를 사전 검증합니다. 경로가 사라짐/추가됨/수정됨·symlink/junction 이탈·관리 주석 충돌이면 쓰기 전에 종료 코드 2로 중단합니다.
+4. `apply <target> --plan <plan.json>`을 구현합니다. 내장 `validated_input`의 스키마와 canonical JSON digest를 검증한 뒤 동일 SHA·guards로 재계획하여 operation 경로·소유 방식·content·after hash를 대조합니다. 대상 identity·기준 SHA·guards·모든 operation 경로도 사전 검증합니다. 경로가 사라짐/추가됨/수정됨·symlink/junction 이탈·관리 주석 충돌이면 쓰기 전에 종료 코드 2로 중단합니다.
 5. 관리 영역 밖 바이트·고유 배지·라이선스 고지·기기 본문·회귀 테스트·전용 CI·최소 환경을 보존합니다. create_only의 기존 파일은 덮어쓰지 않고 merge의 미해결 차이는 conflicts로 반환합니다. 기존 CI의 schedule·특수 job·required checks가 손실될 변경은 자동 적용하지 않습니다.
 6. 잠금·쓰기 직전 상태 확인·파일별 임시 쓰기/교체·복구용 원본과 결과 명세를 구현합니다. 부분 실패 시 적용 경로와 복구 명령을 출력하고 복구도 현재 해시를 확인합니다. 일괄 reset/clean과 사용자 편집 덮어쓰기를 사용하지 않습니다.
 
