@@ -7,8 +7,8 @@
 | T1 | 계약·입력 검증·공통 렌더러 구현·독립 코드/문서 검증 완료; 문서 반영 후 저장소 검사 36개 문서·7개 workflow 성공 |
 | T2 | 읽기 전용 inspect/plan CLI 구현·독립 코드/문서 검증 완료; 문서 반영 후 저장소 검사 37개 문서·7개 workflow 성공 |
 | T3 | 신규 작성 기반·apply·recover 구현·독립 검증·PR CI 성공·main 병합 |
-| T4 | 생성물 검사·중앙 계약 연결 구현·독립 코드 검증 완료; PR CI 확인 대기 |
-| T5 | TODO: 신규 생성·기존 적용 스킬과 실행 안내 |
+| T4 | 생성물 검사·중앙 계약 연결 구현·독립 검증·PR CI 성공·main 병합 |
+| T5 | 두 스킬·실행 안내 작성·정적 회귀/격리 행동 검증; PR CI 확인 대기 |
 | T6 | TODO: 중앙 생성·갱신 fixture와 별도 범위의 실제 도입; 외부 리포 미적용 |
 
 ## 실행 순서와 공통 완료 조건
@@ -74,7 +74,7 @@ T1 → T2 → T3 → T4 → T5 → T6 순서로 진행합니다. 각 단계는 �
 
 ## T5. 두 스킬과 실행 안내 작성
 
-**파일:** `skills/create-ha-integration/SKILL.md`, `skills/adopt-ha-standards/SKILL.md`, 각 `references/workflow.md`, `docs/template-skill-usage.md`, `tests/test_skill_contract.py`.
+**파일:** `skills/create-ha-integration/SKILL.md`, `skills/adopt-ha-standards/SKILL.md`, 각 `references/workflow.md`·`agents/openai.yaml`, `docs/template-skill-usage.md`, `tests/test_skill_contract.py`.
 
 1. 신규 스킬은 명시한 신규 기능·메타데이터 입력으로 create 계획을 만들고 기존 적용 스킬은 inspect 결과로 adopt 계획을 만듭니다. 검토 요청은 inspect/plan까지만 수행하도록 분기를 명시합니다.
 2. 각 workflow에 사용할 명령·입력 필드·생성 파일·충돌 처리·실제 기능 보완·검증 명령·최종 보고 필드를 적습니다. 공통 README·테스트·CI 형식을 직접 작성하는 단계는 넣지 않고 T1~T4 도구를 호출합니다. 미확인 기기 기능·번역·예외는 pending/conflicts로 반환합니다.
@@ -82,6 +82,8 @@ T1 → T2 → T3 → T4 → T5 → T6 순서로 진행합니다. 각 단계는 �
 4. 스킬은 계약 버전·검토 SHA가 맞는 중앙 checkout으로 연결합니다. 사용 문서에 중앙 원본 위치·명시적 설치 방법·버전 확인·기존 스킬 갱신 방법을 적되 대상 통합에 에이전트 진입 파일을 자동 설치하지 않습니다. 중앙 규칙·템플릿을 스킬에 복제하지 않습니다.
 
 **검증:** 정적 테스트로 두 스킬의 도구·원본 경로·지원 계약 버전과 필수 분기를 검사합니다. 신규 생성/기존 적용/검토만/imagespec·blesession/충돌/CLI 실패 요청으로 실제 스킬 동작을 검증하고 명령·선택 분기·산출물·미검증 범위를 기록합니다. 정적 SKILL.md 검사를 실제 에이전트 동작 검증으로 보고하지 않습니다.
+
+실제 행동 평가에서 발견한 도구 결함은 좁게 수정하고 재검증합니다. T5에서는 주석만 다른 유효 requirements의 원본 바이트 보존과 실제 minimum requirements/constraints의 Dependabot 제외·current 경로 보존을 보완했습니다. 원행동 실패·중간 재평가·최종 도구 결과를 구분하며 실제 bot/앱 자동 발동/전역 설치나 실제 통합 성공으로 보고하지 않습니다.
 
 ## T6. 실제 생성·갱신 검증과 도입 판정
 

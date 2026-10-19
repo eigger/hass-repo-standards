@@ -13,8 +13,8 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 | [Adoption and change management](docs/adoption.md) | Required/recommended rules, migration, exceptions |
 | [Central adoption status](docs/adoption-status.md) | Progress, changes, verification/review evidence, remaining work |
 | [Recommended adoption order](docs/adoption-plan.md) | Pilot and phased adoption for 22 eligible HA integrations |
-| [Template and skill implementation plan](docs/template-skill-plan.md) | Ownership contracts, CLI and planned skills; T1–T3 merged, T4 generated-output and central-contract checks independently tested (Korean) |
-| [Template and skill usage](docs/template-skill-usage.md) | Inspection, planning, guarded application and recovery; generated device behavior remains unfinished and skills are not implemented (Korean) |
+| [Template and skill implementation plan](docs/template-skill-plan.md) | Contracts, templates, CLI and skills; T1–T4 merged, T5 skills and isolated request branches verified; PR CI pending (Korean) |
+| [Template and skill usage](docs/template-skill-usage.md) | Inspection, planning, application/recovery, static checks and explicit skill installation; device behavior requires implementation (Korean) |
 | [Template and skill validation](docs/template-skill-validation.md) | Stage status, commands, environments, evidence and remaining work (Korean) |
 | [Integration adoption checklist](docs/checklist.md) | Status, evidence, compatible environments, exceptions |
 | [Home Assistant development](docs/home-assistant.md) | Core-like structure, configuration, async, entities, BLE |

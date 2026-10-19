@@ -1,6 +1,6 @@
 # 템플릿·스킬 도구 사용 안내
 
-현재 구현은 계약·공통 렌더러, 읽기 전용 `inspect`·`plan`, `apply`·`recover`와 신규 작성 기반이며 T1~T3은 main에 반영했습니다. T4 생성물 검사·중앙 계약 연결의 독립 코드 검증은 완료했고 PR CI는 대기 중입니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 하고 두 스킬은 미구현입니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
+현재 구현은 계약·공통 렌더러, `inspect`·`plan`·`apply`·`recover`, 신규 작성 기반과 정적 검사이며 T1~T4는 main에 반영했습니다. T5 신규 생성·기존 채택 스킬의 작성·정적 회귀와 격리 요청 분기를 검증했고 PR CI는 대기 중입니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 합니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
 
 ## 실행 준비와 조사
 
@@ -78,6 +78,10 @@ fixture의 최소/current가 같은 것은 실제 대상의 최소를 올릴 근
 
 각 operation의 경로·소유 방식·원본·규칙·전후 해시·content·unified diff를 확인합니다. 기존 README는 관리 영역만 계획하고 본문을 보존하며, 기존 테스트·고유 CI·최소 환경과 충돌하는 내용은 자동 교체하지 않습니다. 원본이 없는 계약 자산과 실제 구현·테스트가 필요한 부분은 `pending`으로 남깁니다. 대상 상태가 조사·렌더링 중 바뀌면 계획을 차단합니다. 실행 시각은 계획에 넣지 않습니다.
 
+기존 `requirements_test.txt`가 생성안과 유효 requirement 줄을 앞뒤 공백을 제외한 같은 순서·문자열로 유지하고 주석/빈 줄만 다르면 기존 바이트를 unchanged로 보존합니다. 버전·extras·연산자·marker·환경 경로·실제 requirement 줄이 다르면 이 보존 규칙으로 병합하지 않습니다. dirty-user-file guard와 실제 충돌 처리는 유지하므로 임의 수동 편집 후 검사를 우회하는 경로가 아닙니다.
+
+Dependabot 생성안은 실제 입력의 minimum requirements/constraints 경로를 제외하고 current 경로는 제외하지 않습니다. 기존 exclude·주기·groups·다른 ecosystem 항목은 보존합니다. minimum/current가 공유하는 경로의 역할을 확인할 수 없으면 pending으로 남기며 최소 지원을 바꾸거나 실제 bot 실행 성공으로 보고하지 않습니다.
+
 `inspect`/`plan`은 충돌이 없으면 종료 코드 0, 충돌·입력 오류·I/O 오류면 2를 반환합니다. 가능한 경우 충돌을 포함한 JSON을 출력하므로 코드와 결과를 함께 확인합니다. `pending`이 있는 코드 0은 조사나 초안 계획 작성 성공만 의미하며 통합 완성·실제 HA 검증 성공이 아닙니다. 출력 파일은 대상 밖에 두며 입력 파일을 덮어쓸 수 없고 출력 부모는 미리 존재해야 합니다. symlink/junction 출력 경로도 거부합니다.
 
 ## 적용과 복구
@@ -112,4 +116,27 @@ python3 scripts/check_repository.py
 
 `check_repository.py`는 중앙 계약·세 스키마 정의·원본과 참조·작성 기반 AST/JSON/YAML·번역 구조를 검사합니다. 중앙 `.tmpl` 안의 의도한 TODO는 자산으로 허용하며 적용된 통합의 TODO를 면제하지 않습니다. 기존 workflow/action 파일은 이번 단계에서 변경하지 않았으며 기존 check 진입과 CI 연결로 같은 검사를 실행합니다. caller checkout·action_path도 유지합니다.
 
-정적 성공은 실제 HA setup·플랫폼·unload·실패 복구·외부 I/O mock 경계나 번역 의미·기기 조건의 검증 결과가 아닙니다. 실제 최소/current HA 환경과 해당 payload current/정확한 하한 실행, 독립 의미 리뷰를 별도로 수행하고 증거를 체크리스트에 기록해야 합니다. 스킬 설치·실행은 T5 후속 단계입니다. 생성·복구 성공이나 중앙 fixture 결과를 실제 채택 완료로 보고하지 않습니다.
+정적 성공은 실제 HA setup·플랫폼·unload·실패 복구·외부 I/O mock 경계나 번역 의미·기기 조건의 검증 결과가 아닙니다. 실제 최소/current HA 환경과 해당 payload current/정확한 하한 실행, 독립 의미 리뷰를 별도로 수행하고 증거를 체크리스트에 기록해야 합니다. 생성·복구 성공이나 중앙 fixture 결과를 실제 채택 완료로 보고하지 않습니다.
+
+## 두 스킬의 원본·명시적 설치
+
+중앙 원본은 [create-ha-integration](../skills/create-ha-integration/SKILL.md)와 [adopt-ha-standards](../skills/adopt-ha-standards/SKILL.md)입니다. 각 디렉터리는 SKILL.md·references/workflow.md·agents/openai.yaml만 포함하며 중앙 템플릿이나 도구를 복제하지 않습니다. 원본 작성·quick_validate 문법 검사와 격리 요청 분기 실행을 마쳤으며 자세한 관측·한계는 검증 기록에 분리합니다. 이번 작업에서 설치나 다른 통합 수정은 수행하지 않았습니다.
+
+설치는 별도의 사용자 요청이 있을 때 다음처럼 수행합니다.
+
+1. 사용자가 선택한 중앙 checkout의 검토 full SHA와 원본 파일을 확인합니다. 설치할 스킬의 원본 SHA를 사용자 설치 기록에 남깁니다.
+2. 사용자가 지정한 설치 경로를 우선합니다. 별도 지정이 없을 때 일반 개인 경로는 `CODEX_HOME/skills`, CODEX_HOME이 없으면 `~/.codex/skills`입니다. 그 아래에 두 스킬 디렉터리를 각각 같은 이름으로 복사합니다. 통합 대상의 `.agents/skills`·AGENTS.md나 다른 진입 파일로 설치하지 않습니다.
+3. 이름이 같은 설치본이 있으면 로컬 변경·기존 원본 SHA를 비교하여 보존한 후 사용자 요청 범위에서 갱신합니다. 전체 skills 디렉터리를 덮어쓰거나 다른 스킬을 삭제하지 않습니다. 설치한 SKILL.md·workflow·metadata가 모두 같은 원본 SHA에서 왔는지 확인합니다.
+4. 실제 호출에는 **별도로 확인한 중앙 checkout 경로·검토 full SHA·대상 경로·요청 범위**를 제공합니다. 설치된 스킬의 상대 `../../` 경로가 중앙 저장소라고 가정하지 않습니다. 중앙 HEAD·깨끗한 실행 자산·계약 버전 1이 맞지 않으면 실행을 중단하고 필요한 경로/버전 근거를 확인합니다.
+
+중앙 checkout에 폴더가 있다는 것만으로 외부 리포에서 자동 발견된다고 주장하지 않습니다. 설치본 갱신은 중앙 규칙·도구와의 호환성 확인이 필요하며 검토 SHA가 다른 이전 계획은 그대로 재사용하지 않습니다.
+
+설치 후 호출 예시는 다음과 같습니다. `<...>`는 실제 확인한 경로·SHA·입력으로 바꿉니다.
+
+```text
+$create-ha-integration: 중앙 <central>의 <full-sha>와 입력 <input.json>으로 <target>에 신규 통합 골격을 생성해줘.
+$adopt-ha-standards: 중앙 <central>의 <full-sha> 공통 규칙을 기존 <target>에 적용해줘.
+$adopt-ha-standards: 기존 <target>의 적용 차이만 검토하고 계획을 만들어줘. 파일은 적용하지 마.
+```
+
+신규는 create, 기존은 adopt로 분기하며 검토/계획만 요청하면 inspect/plan에서 멈춥니다. 이미 생성·적용을 요청했고 필수 근거·입력과 충돌 없는 계획이 있으면 같은 범위를 재승인받지 않고 apply합니다. 필수 입력 부재·실제 새 예외 승인 필요·CLI 실패는 근거를 제시하고 필요한 조치만 확인합니다. 스킬은 commit/push·PR·릴리스·workflow 수동 실행·외부 설치 권한을 추가하지 않습니다.

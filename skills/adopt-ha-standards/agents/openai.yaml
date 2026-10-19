@@ -1,0 +1,3 @@
+interface:
+  display_name: "Adopt HA Standards"
+  short_description: "Review and apply shared Home Assistant standards"
