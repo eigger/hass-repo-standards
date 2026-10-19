@@ -39,6 +39,7 @@ def validate_schema(value, schema, path="input"):
     """Validate the explicitly supported schema vocabulary used by T1 artifacts."""
     allowed = {
         "$schema",
+        "$ref",
         "title",
         "description",
         "type",
@@ -60,6 +61,17 @@ def validate_schema(value, schema, path="input"):
     unknown = set(schema) - allowed
     if unknown:
         _fail(path, f"unsupported schema keywords: {sorted(unknown)}")
+    if "$ref" in schema:
+        references = {
+            f"integration-{kind}.schema.json": kind for kind in ("input", "inventory", "plan")
+        }
+        reference = schema["$ref"]
+        if not isinstance(reference, str) or reference not in references:
+            _fail(
+                path,
+                "unsupported schema reference; only named central integration schemas are allowed",
+            )
+        validate_schema(value, load_schema(references[reference]), path)
     types = {
         "object": lambda x: isinstance(x, dict),
         "array": lambda x: isinstance(x, list),

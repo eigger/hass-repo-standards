@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-19 — T2 읽기 전용 조사·변경 계획 구현
+
+- `manage_integration.py inspect/plan`과 실제 메타데이터·출처·선언 충돌·미확인 상태 조사를 추가합니다. 대상 파일을 변경하지 않고 대상 밖에 조사 결과·계획을 기록합니다.
+- 같은 입력·SHA·대상 상태에서 같은 diff·guards를 만들며 계획에 검증한 입력 스냅샷과 canonical JSON digest를 포함합니다. 깨끗한 기준 checkout·원격 자격 정보 제거·동시 변경·출력 경계를 검증합니다.
+- 현재 실행 명령과 fixture 입력은 [사용 안내](docs/template-skill-usage.md)에, 단계별 결과는 [검증 기록](docs/template-skill-validation.md)에 기록합니다. apply·새 컴포넌트 작성 기반·전체 계약 검사 연결·스킬과 외부 통합 적용은 미완료입니다.
+
 ## 2026-10-19 — T1 적용 계약과 공통 렌더러 구현
 
 - 적용 계약 44개 레코드와 입력·조사·계획 JSON 스키마 및 외부 의존성을 추가하지 않는 스키마 검증기를 추가합니다. 기존 원본 21개와 후속 작성 자산 23개를 available/pending으로 구분합니다.
