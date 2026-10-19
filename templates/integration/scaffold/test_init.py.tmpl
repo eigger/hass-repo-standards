@@ -1,0 +1,21 @@
+"""TODO: Supply real entry/client fixtures and failure/cleanup assertions."""
+
+from homeassistant.config_entries import ConfigEntryState
+
+@@domain_import@@
+
+
+async def test_setup_unload_reload(hass, mock_config_entry):
+    """Load the actual integration through HA; never mock its setup or loader."""
+    assert mock_config_entry.domain == DOMAIN
+    mock_config_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+    assert mock_config_entry.state is ConfigEntryState.LOADED
+    assert await hass.config_entries.async_unload(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+    assert mock_config_entry.state is ConfigEntryState.NOT_LOADED
+    assert await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+    # TODO: Assert actual client, listener and task cleanup, failure and recovery.
+    raise NotImplementedError("TODO: Real cleanup/failure assertions and external I/O fixtures")

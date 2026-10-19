@@ -1,0 +1,13 @@
+"""TODO: Verify real platform entities, registry, actions and recovery."""
+
+@@domain_import@@
+
+
+async def test_platform_state(hass, mock_config_entry):
+    """Load through real HA rather than constructing an isolated entity."""
+    assert mock_config_entry.domain == DOMAIN
+    mock_config_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+    # TODO: Assert actual entity IDs/states, registry values and recovery paths.
+    raise NotImplementedError("TODO: Actual platform state/action assertions")

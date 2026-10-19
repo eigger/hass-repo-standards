@@ -1,0 +1,10 @@
+"""TODO: Connect the actual shared update boundary and error mapping."""
+
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+
+
+class IntegrationCoordinator(DataUpdateCoordinator):
+    """Coordinate only the device data actually shared between entities."""
+
+    async def _async_update_data(self):
+        raise NotImplementedError("TODO: Actual client update and transient/auth error mapping")

@@ -1,0 +1,22 @@
+"""TODO: Implement real integration setup, failure recovery and cleanup."""
+
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+
+from .const import PLATFORMS
+
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Initialize the actual client and cleanup callbacks before forwarding."""
+    # TODO: Connect the real external client, store state and register cleanup.
+    raise NotImplementedError("TODO: Real client/entry data and cleanup are required")
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    return True
+
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload platforms, then close the real connection and outstanding tasks."""
+    if not await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
+        return False
+    # TODO: Close the actual client and check partial-setup cleanup.
+    raise NotImplementedError("TODO: Actual connection/listener/task cleanup is required")

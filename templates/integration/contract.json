@@ -139,7 +139,7 @@
     },
     {
       "id": "component-__init__.py",
-      "source": null,
+      "source": "templates/integration/scaffold/init.py.tmpl",
       "destination": "custom_components/{domain}/__init__.py",
       "ownership": "create_only",
       "condition": "always",
@@ -152,11 +152,11 @@
       "rules": [
         "HA-13"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-manifest.json",
-      "source": null,
+      "source": "templates/integration/scaffold/manifest.json.tmpl",
       "destination": "custom_components/{domain}/manifest.json",
       "ownership": "create_only",
       "condition": "always",
@@ -170,11 +170,11 @@
         "HA-01",
         "HA-02"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-const.py",
-      "source": null,
+      "source": "templates/integration/scaffold/const.py.tmpl",
       "destination": "custom_components/{domain}/const.py",
       "ownership": "create_only",
       "condition": "always",
@@ -187,11 +187,11 @@
       "rules": [
         "HA-13"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-strings.json",
-      "source": null,
+      "source": "templates/integration/scaffold/translations.json.tmpl",
       "destination": "custom_components/{domain}/strings.json",
       "ownership": "create_only",
       "condition": "always",
@@ -204,11 +204,11 @@
       "rules": [
         "HA-11"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-translations-en.json",
-      "source": null,
+      "source": "templates/integration/scaffold/translations.json.tmpl",
       "destination": "custom_components/{domain}/translations/en.json",
       "ownership": "create_only",
       "condition": "always",
@@ -221,11 +221,11 @@
       "rules": [
         "HA-11"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-translations-ko.json",
-      "source": null,
+      "source": "templates/integration/scaffold/translations.json.tmpl",
       "destination": "custom_components/{domain}/translations/ko.json",
       "ownership": "create_only",
       "condition": "always",
@@ -238,11 +238,11 @@
       "rules": [
         "HA-11"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-config_flow.py",
-      "source": null,
+      "source": "templates/integration/scaffold/config_flow.py.tmpl",
       "destination": "custom_components/{domain}/config_flow.py",
       "ownership": "create_only",
       "condition": "ui",
@@ -255,11 +255,11 @@
       "rules": [
         "HA-13"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-{platform}.py",
-      "source": null,
+      "source": "templates/integration/scaffold/platform.py.tmpl",
       "destination": "custom_components/{domain}/{platform}.py",
       "ownership": "create_only",
       "condition": "platforms",
@@ -272,11 +272,11 @@
       "rules": [
         "HA-13"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-coordinator.py",
-      "source": null,
+      "source": "templates/integration/scaffold/coordinator.py.tmpl",
       "destination": "custom_components/{domain}/coordinator.py",
       "ownership": "create_only",
       "condition": "coordinator",
@@ -289,11 +289,11 @@
       "rules": [
         "HA-13"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-entity.py",
-      "source": null,
+      "source": "templates/integration/scaffold/entity.py.tmpl",
       "destination": "custom_components/{domain}/entity.py",
       "ownership": "create_only",
       "condition": "shared_entity",
@@ -306,11 +306,11 @@
       "rules": [
         "HA-13"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-diagnostics.py",
-      "source": null,
+      "source": "templates/integration/scaffold/diagnostics.py.tmpl",
       "destination": "custom_components/{domain}/diagnostics.py",
       "ownership": "create_only",
       "condition": "diagnostics",
@@ -323,11 +323,11 @@
       "rules": [
         "HA-13"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "component-services.yaml",
-      "source": null,
+      "source": "templates/integration/scaffold/services.yaml.tmpl",
       "destination": "custom_components/{domain}/services.yaml",
       "ownership": "create_only",
       "condition": "actions",
@@ -340,11 +340,11 @@
       "rules": [
         "HA-11"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "test-test_init.py",
-      "source": null,
+      "source": "templates/integration/scaffold/test_init.py.tmpl",
       "destination": "tests/components/{domain}/test_init.py",
       "ownership": "create_only",
       "condition": "always",
@@ -356,11 +356,11 @@
         "TEST-07",
         "TEST-08"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "test-test_config_flow.py",
-      "source": null,
+      "source": "templates/integration/scaffold/test_config_flow.py.tmpl",
       "destination": "tests/components/{domain}/test_config_flow.py",
       "ownership": "create_only",
       "condition": "ui",
@@ -372,11 +372,11 @@
         "TEST-07",
         "TEST-08"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "test-test_{platform}.py",
-      "source": null,
+      "source": "templates/integration/scaffold/test_platform.py.tmpl",
       "destination": "tests/components/{domain}/test_{platform}.py",
       "ownership": "create_only",
       "condition": "platforms",
@@ -388,11 +388,11 @@
         "TEST-07",
         "TEST-08"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "test-test_coordinator.py",
-      "source": null,
+      "source": "templates/integration/scaffold/test_coordinator.py.tmpl",
       "destination": "tests/components/{domain}/test_coordinator.py",
       "ownership": "create_only",
       "condition": "coordinator",
@@ -404,11 +404,11 @@
         "TEST-07",
         "TEST-08"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "test-test_diagnostics.py",
-      "source": null,
+      "source": "templates/integration/scaffold/test_diagnostics.py.tmpl",
       "destination": "tests/components/{domain}/test_diagnostics.py",
       "ownership": "create_only",
       "condition": "diagnostics",
@@ -420,7 +420,7 @@
         "TEST-07",
         "TEST-08"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "test-fixtures/",
@@ -596,7 +596,7 @@
     },
     {
       "id": "metadata-hacs.json",
-      "source": null,
+      "source": "templates/integration/scaffold/hacs.json.tmpl",
       "destination": "hacs.json",
       "ownership": "merge",
       "condition": "always",
@@ -606,7 +606,7 @@
       "rules": [
         "DEP-01"
       ],
-      "status": "pending"
+      "status": "available"
     },
     {
       "id": "metadata-requirements_test.txt",
@@ -728,6 +728,21 @@
         "GOV-01"
       ],
       "status": "available"
+    },
+    {
+      "id": "custom-components-package-init",
+      "source": "templates/integration/tests/__init__.py",
+      "destination": "custom_components/__init__.py",
+      "ownership": "create_only",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Empty package marker for custom integration discovery; preserve existing package files.",
+      "rules": [
+        "HA-13",
+        "TEST-03"
+      ],
+      "status": "available"
     }
   ],
   "preserved": [
@@ -740,7 +755,7 @@
     "existing requirement and constraint paths"
   ],
   "notes": [
-    "T1 declares assets and renderers only; inspect, plan, apply and scaffold generation are not implemented here.",
+    "T3 provides authoring assets and guarded apply; available means an asset exists, not a completed integration.",
     "pending means no central scaffold exists; available only means an existing source file exists, not a completed integration."
   ]
 }

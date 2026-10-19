@@ -1,6 +1,6 @@
 # 템플릿·스킬 구조 개편 구현안
 
-2026-10-19 작성. [로드맵](adoption-plan.md#향후-계획--공통-템플릿-생성적용-자동화)의 후속 설계입니다. **T1 계약·공통 렌더러와 T2 읽기 전용 inspect/plan의 구현·독립 코드 검증을 완료했습니다.** T3~T5와 실제 통합 도입은 미완료입니다. 설계 당시 중앙 기준은 `0a0b6271562232db131b3d5a836415878e9ceab8`, T1 구현 커밋은 `1968bbf446e665ab6b496bc62227bf1620d6fd1c`입니다. 실제 사용 범위는 [사용 안내](template-skill-usage.md), 단계별 결과는 [검증 기록](template-skill-validation.md)에 구분합니다.
+2026-10-19 작성. [로드맵](adoption-plan.md#향후-계획--공통-템플릿-생성적용-자동화)의 후속 설계입니다. **T1 계약·공통 렌더러와 T2 읽기 전용 inspect/plan은 main에 반영했고, T3 apply·복구·작성 기반은 독립 코드 검증을 완료했습니다.** T3 커밋/CI 확인과 T4~T5·실제 통합 도입은 남아 있습니다. 설계 당시 중앙 기준은 `0a0b6271562232db131b3d5a836415878e9ceab8`이며 단계별 실제 커밋은 [검증 기록](template-skill-validation.md)에 구분합니다. 실제 사용 범위는 [사용 안내](template-skill-usage.md)를 따릅니다.
 
 이 문서는 구현할 인터페이스·파일 범위·검증 조건을 제안합니다. 아래 경로와 CLI는 명시적으로 현재 구현이라고 설명한 것 외에는 예정입니다. 기존 규칙 ID·필수/권장 수준, 예외 승인, 통합별 적용 순서와 서브 에이전트 운영 지침은 변경하지 않습니다. 이 계획의 병합은 다른 통합 수정·workflow 수동 실행·지원 최소 상향·스킬 설치·릴리스를 승인하지 않습니다.
 
@@ -14,7 +14,7 @@
 | [Bluetooth 검사](../scripts/bluetooth_documents.py)·[payload 검사](../scripts/payload_documents.py) | 실제 requirement/import 조건 판별·문서 계약 | 조건부 생성 목록과 검사 대상의 일치 |
 | [공용 CI](ci.md)·[payload 실행 계약](payload-documentation.md) | caller checkout·실제 HA·설치된 라이브러리 검증 | 같은 중앙 full SHA에서 생성·검사·실행 연결 |
 
-현재 템플릿은 배포 가능한 통합 skeleton이 아닙니다. 검사기가 요구하는 domain별 `test_init.py`도 템플릿에는 없으며 실제 통합에 맞게 작성하도록 되어 있습니다. 파일 생성만으로 동작하는 통합이나 실제 HA 검증 완료를 주장하지 않습니다.
+T3 템플릿은 실제 메타데이터와 domain별 `test_init.py` 등 명시적인 작성 기반을 제공합니다. 실제 entry·client·flow 입력·플랫폼 동작은 미완성이며 TODO·`NotImplementedError`·pending으로 드러냅니다. 파일 생성만으로 동작하는 통합이나 실제 HA 검증 완료를 주장하지 않습니다.
 
 ## 2. 원본과 실행 책임
 
@@ -32,7 +32,7 @@
 
 ## 3. 파일별 적용 계약
 
-`templates/integration/contract.json`에 계약 스키마 버전, 원본·대상 경로, 적용 조건, 소유 방식, 관리 주석, 필수 입력, 확장 위치, 관련 규칙 ID를 기록합니다. 경로 토큰은 검증한 `{domain}`과 실제 선택한 플랫폼의 `{platform}`만 허용하며, 플랫폼 반복은 `platforms` 조건에서만 사용합니다. 일반 문자열 전체 치환이나 템플릿 내 코드 실행은 허용하지 않습니다. T1의 44개 레코드는 기존 원본이 있는 `available` 21개와 작성 기반이 없는 `pending` 23개를 구분합니다. `available`은 생성·적용 CLI나 실제 통합 완성을 뜻하지 않으며, `pending` 원본이 존재한다고 취급하지 않습니다.
+`templates/integration/contract.json`에 계약 스키마 버전, 원본·대상 경로, 적용 조건, 소유 방식, 관리 주석, 필수 입력, 확장 위치, 관련 규칙 ID를 기록합니다. 경로 토큰은 검증한 `{domain}`과 실제 선택한 플랫폼의 `{platform}`만 허용하며, 플랫폼 반복은 `platforms` 조건에서만 사용합니다. 일반 문자열 전체 치환이나 템플릿 내 코드 실행은 허용하지 않습니다. T3의 45개 레코드는 원본이 있는 `available` 40개와 없는 `pending` 5개를 구분합니다. 원본이 있는 작성 기반도 실제 동작은 미완성일 수 있으므로 renderer가 반환하는 실제 작성·검증 pending을 별도로 유지합니다. `available`은 실제 통합 완성을 뜻하지 않습니다.
 
 | 대상 | 소유 방식 | 신규 생성 | 기존 갱신 |
 |---|---|---|---|
@@ -55,10 +55,17 @@
 
 ### 3.1. 컴포넌트와 테스트 생성 구조
 
-신규 UI 설정 기반 장치·서비스 통합은 아래 구조를 생성 계약의 기준으로 사용합니다. 이는 생성 예정 트리이며 현재 중앙 템플릿에 모두 구현되어 있다는 뜻은 아닙니다. 기존 통합에는 같은 역할·경로를 적용하되 동작과 지원 범위·고유 구현을 보존하고, 기존 YAML 설정이나 없는 기능을 공통 형식 때문에 새로 만들거나 제거하지 않습니다.
+신규 UI 설정 기반 장치·서비스 통합은 아래 구조를 생성 계약의 기준으로 사용합니다. T3는 선택 기능에 필요한 코드·번역·테스트 작성 기반을 제공하고 실제 응답 fixture·snapshot·payload 액션 등 미확인 산출물은 pending으로 남깁니다. 기존 통합에는 같은 역할·경로를 적용하되 동작과 지원 범위·고유 구현을 보존하고, 기존 YAML 설정이나 없는 기능을 공통 형식 때문에 새로 만들거나 제거하지 않습니다.
 
 ```text
-custom_components/<domain>/
+custom_components/
+├── __init__.py                  # 빈 패키지 marker; 기존 파일은 create_only로 보존
+└── <domain>/
+```
+
+`custom_components/<domain>/` 내부:
+
+```text
 ├── __init__.py
 ├── manifest.json
 ├── const.py
@@ -144,25 +151,26 @@ README 번역과 HA UI 번역은 별도 산출물입니다. 공식 [커스텀 �
 
 ## 5. CLI와 변경 계획
 
-다음 중 `inspect`와 `plan`은 구현되었습니다. `apply`는 T3 예정 인터페이스이며 실행할 수 없습니다. `check_integration.py`는 기존 검사기로 유지하며 T4의 전체 계약 연결은 미완료입니다. `<...>`는 실제 확인한 값으로 교체하는 설명용 표기이며, 실행 조건과 현재 제한은 [사용 안내](template-skill-usage.md)를 따릅니다.
+`inspect`·`plan`과 T3의 `apply`·`recover`를 구현하고 독립 코드 검증을 완료했습니다. `check_integration.py`는 기존 검사기로 유지하며 T4의 전체 계약 연결은 미완료입니다. `<...>`는 실제 확인한 값으로 교체하는 설명용 표기이며, 실행 조건과 현재 제한은 [사용 안내](template-skill-usage.md)를 따릅니다.
 
 ```text
 python3 scripts/manage_integration.py inspect <target> --output <work>/inventory.json
 python3 scripts/manage_integration.py plan <target> --mode create|adopt --input <input.json> --standards-ref <full-sha> --output <work>/plan.json
-python3 scripts/manage_integration.py apply <target> --plan <work>/plan.json
+python3 scripts/manage_integration.py apply <target> --plan <work>/plan.json --journal <work>/journal.json
+python3 scripts/manage_integration.py recover <target> --journal <work>/journal.json
 python3 scripts/check_integration.py <target> --check
 ```
 
 1. **inspect:** 읽기 전용으로 메타데이터·버전 선언·조건부 기능·관리 경계·사용자 변경을 수집합니다. 불명확한 값에는 원인과 필요한 확인을 표시하고 패키지 설치·workflow 실행·원격 쓰기는 하지 않습니다.
 2. **plan:** 같은 원본·입력·대상에서 같은 변경 계획과 unified diff를 만듭니다. 각 경로에 생성/관리 영역 갱신/변경 없음/충돌/수동 작성 필요, 관련 규칙·원본·입력 출처·전후 해시를 기록합니다. 검증한 sourced 입력의 독립 복사본을 `validated_input`으로 포함하고 canonical JSON의 SHA-256을 `input_digest`에 기록하므로 원본 입력 파일을 다시 읽지 않고 입력 스냅샷을 검증할 수 있습니다. 계획 스키마는 중앙 입력 스키마를 로컬 `$ref`로 연결하며 resolver는 정확한 세 스키마 파일 외 URI·경로를 거부합니다. 내용과 diff는 계획에 담고 경로·SHA·해시를 검증해 읽습니다. 조사·렌더링 도중 대상 상태가 변하면 충돌로 차단합니다.
-3. **apply (T3 예정):** 계획의 내장 입력을 스키마로 검증하고 digest를 확인한 뒤, 동일 SHA와 guards에 대해 재계획하여 operation 경로·소유 방식·content·after hash를 대조합니다. target identity·대상 전후 상태·계약 버전도 확인한 뒤 관리 범위만 적용합니다. 계획 이후 파일 변경, 새 파일 경로 충돌, 경로 이탈·symlink/junction 이탈, 지원 최소 변경, 읽지 못한 기존 파일은 쓰기 전에 차단합니다. 관련 입력·보존 대상의 해시도 확인하고 작업 도중 잠금·쓰기 직전 재확인으로 동시 편집을 보호합니다.
+3. **apply:** 계획의 내장 입력을 스키마로 검증하고 digest를 확인한 뒤, 동일 SHA와 guards에 대해 재계획하여 operation 경로·소유 방식·content·after hash를 대조합니다. target identity의 `root_exists`를 포함한 원래 대상 루트 존재 상태·대상 전후 상태·계약 버전도 확인한 뒤 관리 범위만 적용합니다. 계획 이후 파일 변경, 새 파일 경로 충돌, 경로 이탈·symlink/junction 이탈, 지원 최소 변경, 읽지 못한 기존 파일은 쓰기 전에 차단합니다. 관련 입력·보존 대상의 해시도 확인하고 작업 도중 잠금·쓰기 직전 재확인으로 동시 편집을 보호합니다. 이전 T2 계획에는 새 필수 필드가 없고 기준 SHA도 다르므로 T3 SHA에서 재생성합니다.
 4. **check:** 기존 CLI를 유지한 채 같은 렌더러로 형식·조건·미작성 항목을 검사합니다. 검사 중 파일을 쓰거나 자동 적용·의존성 설치를 하지 않습니다. 기존 `--write-readmes`는 호환 wrapper로 유지하고 사전 검사·본문 보호를 유지합니다.
 
 계획에 미해결 충돌이나 필수 입력 누락이 있으면 apply를 차단합니다. 실제 테스트·기기 설명 등 수동 작성이 필요한 기반 파일은 초안으로 생성할 수 있지만 검사와 체크리스트는 미완료로 남깁니다. 생성 직후 무조건 PASS가 되도록 비어 있는 테스트·가짜 액션·일괄 skip을 만들지 않습니다.
 
 종료 코드는 새 CLI에서 `0`=해당 명령 성공, `1`=형식 불일치·미완료·계약 위반, `2`=입력 오류·충돌·오래된 계획·I/O 오류로 구분합니다. plan의 `0`은 적용 가능한 변경안 작성 성공만 뜻하며 HA 검증 성공이 아닙니다. 초안을 포함한 계획은 `pending` 목록을 출력하고 check는 미완료를 보고합니다. 기존 CLI 종료 코드·오류 의미는 호환을 유지합니다.
 
-apply는 파일별 임시 쓰기·교체와 복구용 원본을 사용합니다. 다중 파일 전체가 원자적이라고 주장하지 않습니다. 중간 실패 시 변경한 경로·복구 방법을 반환하고, 복구 전 현재 파일 해시를 확인해 후속 사용자 편집을 덮어쓰지 않습니다. `git reset`·`git clean`으로 복구하지 않습니다. 생성물의 인코딩·개행 정책을 계약에 정하고, 관리 영역 밖의 기존 바이트는 유지합니다.
+apply는 파일별 임시 쓰기·교체와 대상 밖 journal의 base64 원본·전후 해시를 사용합니다. 대상 쓰기 전에 journal과 고정 형제 `<journal>.plan.json`의 검토 계획 anchor를 기존 파일을 덮어쓰지 않고 게시합니다. 다중 파일 전체가 원자적이라고 주장하지 않습니다. 중간 실패 시 변경한 경로·복구 방법을 반환하며 `recover`는 anchor와 내장 계획·digest를 대조한 뒤 guard·backup으로 원래 상태를 외부 임시 경로에 재현하고 같은 SHA로 재계획합니다. anchor 부재·변조·재현 불가나 현재 파일 해시 불일치는 거부하여 후속 사용자 편집을 덮어쓰지 않습니다. 원래 루트 존재 여부와 생성 경로를 구분하여 복구합니다. journal과 anchor를 함께 보존하며 모든 산출물을 함께 수정하는 동일 사용자에 대한 신원 인증을 보장한다고 주장하지 않습니다. `git reset`·`git clean`으로 복구하지 않습니다. 생성물의 인코딩·개행 정책을 계약에 정하고, 관리 영역 밖의 기존 바이트는 유지합니다.
 
 ## 6. 스킬 실행 계약과 배포
 
@@ -180,7 +188,8 @@ apply는 파일별 임시 쓰기·교체와 복구용 원본을 사용합니다.
 |---|---|
 | T1 | 계약·스키마 검증·공통 렌더러 구현·독립 코드 검증 완료 |
 | T2 | 읽기 전용 inspect/plan 구현·독립 코드 검증 완료 |
-| T3~T5 | TODO: apply·새 작성 기반·전체 계약 검사 연결·두 스킬 미구현 |
+| T3 | apply·recover·새 작성 기반 구현·독립 코드 검증 완료; 커밋/CI 확인 대기 |
+| T4~T5 | TODO: 전체 계약 검사 연결·두 스킬 미구현 |
 | T6 | TODO: 외부 통합 미적용; 중앙 회귀 검증과 실제 도입 검증 구분 |
 
 | 순서 | 구현 범위·주요 경로 | 완료 조건 |

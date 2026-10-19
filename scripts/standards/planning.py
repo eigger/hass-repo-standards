@@ -12,7 +12,7 @@ from pathlib import Path
 
 import yaml
 
-from . import conditions, contract, inventory, readme
+from . import conditions, contract, inventory, readme, scaffold
 
 CENTRAL = contract.CENTRAL
 ASSET_PATHS = ("scripts", "schemas", "templates", "docs", "AGENTS.md", "README.md", "README.ko.md")
@@ -177,6 +177,26 @@ def metadata_conflicts(data, scanned):
     return errors
 
 
+def fixture_block_update(original, template):
+    """Replace complete Python comment-marker lines, preserving all fixture bytes outside."""
+
+    def span(text):
+        readme.block(text, "domain-fixtures")
+        starts = list(
+            re.finditer(r"^# <!-- hass-standards:domain-fixtures:start -->\r?$", text, re.M)
+        )
+        ends = list(re.finditer(r"^# <!-- hass-standards:domain-fixtures:end -->\r?$", text, re.M))
+        if len(starts) != 1 or len(ends) != 1 or starts[0].start() >= ends[0].start():
+            raise ValueError(
+                "Domain fixtures require one ordered pair of complete Python comment markers"
+            )
+        return starts[0].start(), ends[0].end()
+
+    start, end = span(original)
+    first, last = span(template)
+    return original[:start] + template[first:last] + original[end:]
+
+
 def plan(target, mode, data, standards_ref, *, central=None):
     central = verify_standards(standards_ref, central)
     contract.validate_input(data)
@@ -197,6 +217,7 @@ def plan(target, mode, data, standards_ref, *, central=None):
         "standards_ref": standards_ref,
         "target_identity": {
             "path": str(target),
+            "root_exists": target.exists(),
             "repository": data["repository"]["value"],
             "domain": data["domain"]["value"],
         },
@@ -280,6 +301,14 @@ def plan(target, mode, data, standards_ref, *, central=None):
                 continue
             destinations.add(alias)
             guards.setdefault(destination.rstrip("/"), None)
+            for parent in Path(destination.rstrip("/")).parents:
+                if parent == Path("."):
+                    continue
+                name = parent.as_posix()
+                path = inventory.safe_target_path(target, name)
+                guards.setdefault(name, None)
+                if path.exists() and not path.is_dir():
+                    result["conflicts"].append(f"Destination parent is not a directory: {name}")
             active.append((record, destination))
     # Ancestor/descendant operations are also ambiguous, except directory-only pending records.
     concrete = [name for record, name in active if not name.endswith("/")]
@@ -347,6 +376,33 @@ def plan(target, mode, data, standards_ref, *, central=None):
         if destination in {"README.md", "README.ko.md"}:
             delayed.append((record, destination))
             continue
+        if (
+            destination
+            in {"hacs.json", f"custom_components/{data['domain']['value']}/manifest.json"}
+            and (target / destination).is_file()
+        ):
+            result["unchanged"].append(destination)
+            continue
+        if scaffold.handles(record):
+            content, incomplete = scaffold.render(
+                record, destination, validated_input, central=central
+            )
+            existing = target / destination
+            if (
+                record["ownership"] == "create_only"
+                and existing.is_file()
+                and content is not None
+                and existing.read_bytes() != content.encode("utf-8")
+            ):
+                result["pending"].append(
+                    f"Preserve existing integration-owned implementation; verify with actual HA tests: {destination}"
+                )
+                result["unchanged"].append(destination)
+            else:
+                result["pending"].extend(incomplete)
+                if content is not None:
+                    propose(record, destination, content)
+            continue
         if record["status"] == "pending" or destination.endswith("/"):
             result["pending"].append(
                 f"Scaffold/manual implementation not available; preserve and complete: {destination}"
@@ -392,9 +448,7 @@ def plan(target, mode, data, standards_ref, *, central=None):
             if existing.is_file():
                 original = existing.read_bytes().decode("utf-8")
                 try:
-                    content = readme.replace(
-                        original, "domain-fixtures", readme.block(content, "domain-fixtures")
-                    )
+                    content = fixture_block_update(original, content)
                 except ValueError as error:
                     result["conflicts"].append(f"{destination}: {error}")
                     continue
@@ -436,7 +490,11 @@ def plan(target, mode, data, standards_ref, *, central=None):
                 output.parent.mkdir(parents=True, exist_ok=True)
                 output.write_bytes((target / name).read_bytes())
         for operation in result["operations"]:
-            if operation["path"].startswith(".github/workflows/"):
+            if (
+                operation["path"].startswith(".github/workflows/")
+                or operation["path"] == "hacs.json"
+                or re.fullmatch(r"custom_components/[^/]+/manifest\.json", operation["path"])
+            ):
                 path = stage / operation["path"]
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(operation["content"].encode("utf-8"))

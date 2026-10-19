@@ -1,0 +1,10 @@
+"""TODO: Add only actual shared entity behavior."""
+
+from homeassistant.helpers.entity import Entity
+
+
+class IntegrationEntity(Entity):
+    """Base for real shared device/entity properties."""
+
+    def __init__(self):
+        raise NotImplementedError("TODO: Actual shared state and stable identity")
