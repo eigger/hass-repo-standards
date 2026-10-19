@@ -1,0 +1,746 @@
+{
+  "schema_version": 1,
+  "encoding": "utf-8",
+  "newline": "LF inside generated blocks; preserve all bytes outside managed blocks",
+  "tokens": {
+    "domain": "explicit validated domain",
+    "platform": "explicit selected platform, repeated only for condition=platforms"
+  },
+  "records": [
+    {
+      "id": "tests-__init__.py",
+      "source": "templates/integration/tests/__init__.py",
+      "destination": "tests/__init__.py",
+      "ownership": "exact_file",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "TEST-03",
+        "TEST-08"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "tests-components-__init__.py",
+      "source": "templates/integration/tests/components/__init__.py",
+      "destination": "tests/components/__init__.py",
+      "ownership": "exact_file",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "TEST-03",
+        "TEST-08"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "tests-components-domain-__init__.py",
+      "source": "templates/integration/tests/components/example/__init__.py",
+      "destination": "tests/components/{domain}/__init__.py",
+      "ownership": "exact_file",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "TEST-03",
+        "TEST-08"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "tests-conftest.py",
+      "source": "templates/integration/tests/conftest.py",
+      "destination": "tests/conftest.py",
+      "ownership": "exact_file",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "TEST-03",
+        "TEST-08"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "readme-en",
+      "source": "templates/integration/README.md",
+      "destination": "README.md",
+      "ownership": "managed_blocks",
+      "condition": "always",
+      "required_inputs": [
+        "repository",
+        "default_branch",
+        "readme",
+        "license"
+      ],
+      "markers": [
+        "header",
+        "support",
+        "related-projects",
+        "license",
+        "badges"
+      ],
+      "extension": "Content outside managed blocks and unique badges is integration owned.",
+      "rules": [
+        "DOC-01",
+        "DOC-02"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "readme-ko",
+      "source": "templates/integration/README.ko.md",
+      "destination": "README.ko.md",
+      "ownership": "managed_blocks",
+      "condition": "always",
+      "required_inputs": [
+        "repository",
+        "default_branch",
+        "readme",
+        "license"
+      ],
+      "markers": [
+        "header",
+        "support",
+        "related-projects",
+        "license",
+        "badges"
+      ],
+      "extension": "Content outside managed blocks and unique badges is integration owned.",
+      "rules": [
+        "DOC-01",
+        "DOC-02"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "domain-conftest",
+      "source": "templates/integration/tests/components/example/conftest.py",
+      "destination": "tests/components/{domain}/conftest.py",
+      "ownership": "managed_blocks",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [
+        "domain-fixtures"
+      ],
+      "extension": "Retain real entry and external I/O fixtures outside domain-fixtures. If imagespec applies, add real payload_example_setup and payload_example_adapter fixtures without top-level central-tool imports.",
+      "rules": [
+        "TEST-02",
+        "TEST-03",
+        "TEST-06"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "component-__init__.py",
+      "source": null,
+      "destination": "custom_components/{domain}/__init__.py",
+      "ownership": "create_only",
+      "condition": "always",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-manifest.json",
+      "source": null,
+      "destination": "custom_components/{domain}/manifest.json",
+      "ownership": "create_only",
+      "condition": "always",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-01",
+        "HA-02"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-const.py",
+      "source": null,
+      "destination": "custom_components/{domain}/const.py",
+      "ownership": "create_only",
+      "condition": "always",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-strings.json",
+      "source": null,
+      "destination": "custom_components/{domain}/strings.json",
+      "ownership": "create_only",
+      "condition": "always",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-translations-en.json",
+      "source": null,
+      "destination": "custom_components/{domain}/translations/en.json",
+      "ownership": "create_only",
+      "condition": "always",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-translations-ko.json",
+      "source": null,
+      "destination": "custom_components/{domain}/translations/ko.json",
+      "ownership": "create_only",
+      "condition": "always",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-config_flow.py",
+      "source": null,
+      "destination": "custom_components/{domain}/config_flow.py",
+      "ownership": "create_only",
+      "condition": "ui",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-{platform}.py",
+      "source": null,
+      "destination": "custom_components/{domain}/{platform}.py",
+      "ownership": "create_only",
+      "condition": "platforms",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-coordinator.py",
+      "source": null,
+      "destination": "custom_components/{domain}/coordinator.py",
+      "ownership": "create_only",
+      "condition": "coordinator",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-entity.py",
+      "source": null,
+      "destination": "custom_components/{domain}/entity.py",
+      "ownership": "create_only",
+      "condition": "shared_entity",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-diagnostics.py",
+      "source": null,
+      "destination": "custom_components/{domain}/diagnostics.py",
+      "ownership": "create_only",
+      "condition": "diagnostics",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "component-services.yaml",
+      "source": null,
+      "destination": "custom_components/{domain}/services.yaml",
+      "ownership": "create_only",
+      "condition": "actions",
+      "required_inputs": [
+        "domain",
+        "manifest"
+      ],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "HA-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "test-test_init.py",
+      "source": null,
+      "destination": "tests/components/{domain}/test_init.py",
+      "ownership": "create_only",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Integration-owned actual assertions and response data; never replace existing regression files.",
+      "rules": [
+        "TEST-02",
+        "TEST-07",
+        "TEST-08"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "test-test_config_flow.py",
+      "source": null,
+      "destination": "tests/components/{domain}/test_config_flow.py",
+      "ownership": "create_only",
+      "condition": "ui",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Integration-owned actual assertions and response data; never replace existing regression files.",
+      "rules": [
+        "TEST-02",
+        "TEST-07",
+        "TEST-08"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "test-test_{platform}.py",
+      "source": null,
+      "destination": "tests/components/{domain}/test_{platform}.py",
+      "ownership": "create_only",
+      "condition": "platforms",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Integration-owned actual assertions and response data; never replace existing regression files.",
+      "rules": [
+        "TEST-02",
+        "TEST-07",
+        "TEST-08"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "test-test_coordinator.py",
+      "source": null,
+      "destination": "tests/components/{domain}/test_coordinator.py",
+      "ownership": "create_only",
+      "condition": "coordinator",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Integration-owned actual assertions and response data; never replace existing regression files.",
+      "rules": [
+        "TEST-02",
+        "TEST-07",
+        "TEST-08"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "test-test_diagnostics.py",
+      "source": null,
+      "destination": "tests/components/{domain}/test_diagnostics.py",
+      "ownership": "create_only",
+      "condition": "diagnostics",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Integration-owned actual assertions and response data; never replace existing regression files.",
+      "rules": [
+        "TEST-02",
+        "TEST-07",
+        "TEST-08"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "test-fixtures/",
+      "source": null,
+      "destination": "tests/components/{domain}/fixtures/",
+      "ownership": "create_only",
+      "condition": "fixtures",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Integration-owned actual assertions and response data; never replace existing regression files.",
+      "rules": [
+        "TEST-02",
+        "TEST-07",
+        "TEST-08"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "test-snapshots/",
+      "source": null,
+      "destination": "tests/components/{domain}/snapshots/",
+      "ownership": "create_only",
+      "condition": "snapshots",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Integration-owned actual assertions and response data; never replace existing regression files.",
+      "rules": [
+        "TEST-02",
+        "TEST-07",
+        "TEST-08"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "payload-test",
+      "source": "templates/integration/tests/components/example/test_payload_examples.py",
+      "destination": "tests/components/{domain}/test_payload_examples.py",
+      "ownership": "create_only",
+      "condition": "imagespec",
+      "required_inputs": [],
+      "markers": [],
+      "extension": null,
+      "rules": [
+        "DOC-08"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "workflow-tests.yml",
+      "source": "templates/integration/.github/workflows/tests.yml",
+      "destination": ".github/workflows/tests.yml",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [
+        "default_branch",
+        "environments"
+      ],
+      "markers": [],
+      "extension": "Preserve schedules, dedicated jobs, required checks and compatible minimum/current inputs; unresolved changes conflict.",
+      "rules": [
+        "CI-01",
+        "CI-02"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "workflow-validate.yml",
+      "source": "templates/integration/.github/workflows/validate.yml",
+      "destination": ".github/workflows/validate.yml",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [
+        "default_branch",
+        "environments"
+      ],
+      "markers": [],
+      "extension": "Preserve schedules, dedicated jobs, required checks and compatible minimum/current inputs; unresolved changes conflict.",
+      "rules": [
+        "CI-01",
+        "CI-02"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "workflow-update_dependencies.yml",
+      "source": "templates/integration/.github/workflows/update_dependencies.yml",
+      "destination": ".github/workflows/update_dependencies.yml",
+      "ownership": "merge",
+      "condition": "dependency_updates",
+      "required_inputs": [
+        "default_branch",
+        "environments"
+      ],
+      "markers": [],
+      "extension": "Preserve schedules, dedicated jobs, required checks and compatible minimum/current inputs; unresolved changes conflict.",
+      "rules": [
+        "CI-01",
+        "CI-02"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "blesession-.md",
+      "source": "templates/integration/docs/troubleshooting.md",
+      "destination": "docs/troubleshooting.md",
+      "ownership": "merge",
+      "condition": "blesession",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Keep fixed language headings, existing device prose and real examples; structural migration is pending until reviewed.",
+      "rules": [
+        "DOC-07"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "blesession-.ko.md",
+      "source": "templates/integration/docs/troubleshooting.ko.md",
+      "destination": "docs/troubleshooting.ko.md",
+      "ownership": "merge",
+      "condition": "blesession",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Keep fixed language headings, existing device prose and real examples; structural migration is pending until reviewed.",
+      "rules": [
+        "DOC-07"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "imagespec-.md",
+      "source": "templates/integration/docs/payload.md",
+      "destination": "docs/payload.md",
+      "ownership": "merge",
+      "condition": "imagespec",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Keep fixed language headings, existing device prose and real examples; structural migration is pending until reviewed.",
+      "rules": [
+        "DOC-08"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "imagespec-.ko.md",
+      "source": "templates/integration/docs/payload.ko.md",
+      "destination": "docs/payload.ko.md",
+      "ownership": "merge",
+      "condition": "imagespec",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Keep fixed language headings, existing device prose and real examples; structural migration is pending until reviewed.",
+      "rules": [
+        "DOC-08"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "payload-examples",
+      "source": null,
+      "destination": "examples/payload/",
+      "ownership": "create_only",
+      "condition": "imagespec",
+      "required_inputs": [
+        "payload"
+      ],
+      "markers": [],
+      "extension": "Actual full action YAML only; plan tasks without inventing actions.",
+      "rules": [
+        "DOC-08"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "metadata-hacs.json",
+      "source": null,
+      "destination": "hacs.json",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Merge confirmed values only; preserve existing exceptions, metadata, environment files and past evidence. New records remain TODO.",
+      "rules": [
+        "DEP-01"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "metadata-requirements_test.txt",
+      "source": "templates/integration/requirements_test.txt",
+      "destination": "requirements_test.txt",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [
+        "manifest",
+        "environments"
+      ],
+      "markers": [],
+      "extension": "Merge confirmed values only; preserve existing exceptions, metadata, environment files and past evidence. New records remain TODO.",
+      "rules": [
+        "DEP-01"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "metadata-requirements_lint.txt",
+      "source": "templates/integration/requirements_lint.txt",
+      "destination": "requirements_lint.txt",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [
+        "manifest",
+        "environments"
+      ],
+      "markers": [],
+      "extension": "Merge confirmed values only; preserve existing exceptions, metadata, environment files and past evidence. New records remain TODO.",
+      "rules": [
+        "DEP-01"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "metadata-constraints_minimum.txt",
+      "source": null,
+      "destination": "constraints_minimum.txt",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [
+        "manifest",
+        "environments"
+      ],
+      "markers": [],
+      "extension": "Merge confirmed values only; preserve existing exceptions, metadata, environment files and past evidence. New records remain TODO.",
+      "rules": [
+        "DEP-01"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "metadata-pyproject.toml",
+      "source": null,
+      "destination": "pyproject.toml",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Merge confirmed values only; preserve existing exceptions, metadata, environment files and past evidence. New records remain TODO.",
+      "rules": [
+        "DEP-01"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "metadata-.github-dependabot.yml",
+      "source": "templates/integration/.github/dependabot.yml",
+      "destination": ".github/dependabot.yml",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Merge confirmed values only; preserve existing exceptions, metadata, environment files and past evidence. New records remain TODO.",
+      "rules": [
+        "DEP-01"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "metadata-.hass-standards.json",
+      "source": "templates/integration/.hass-standards.json",
+      "destination": ".hass-standards.json",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Merge confirmed values only; preserve existing exceptions, metadata, environment files and past evidence. New records remain TODO.",
+      "rules": [
+        "DEP-01"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "metadata-STANDARDS.md",
+      "source": "templates/integration/STANDARDS.md",
+      "destination": "STANDARDS.md",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Merge confirmed values only; preserve existing exceptions, metadata, environment files and past evidence. New records remain TODO.",
+      "rules": [
+        "GOV-01"
+      ],
+      "status": "available"
+    },
+    {
+      "id": "metadata-ADOPTION_CHECKLIST.md",
+      "source": "templates/integration/ADOPTION_CHECKLIST.md",
+      "destination": "ADOPTION_CHECKLIST.md",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [],
+      "markers": [],
+      "extension": "Merge confirmed values only; preserve existing exceptions, metadata, environment files and past evidence. New records remain TODO.",
+      "rules": [
+        "GOV-01"
+      ],
+      "status": "available"
+    }
+  ],
+  "preserved": [
+    "LICENSE",
+    "AGENTS.md",
+    "repository-specific agent entry files",
+    "dedicated CI",
+    "README content outside managed blocks",
+    "existing regression tests",
+    "existing requirement and constraint paths"
+  ],
+  "notes": [
+    "T1 declares assets and renderers only; inspect, plan, apply and scaffold generation are not implemented here.",
+    "pending means no central scaffold exists; available only means an existing source file exists, not a completed integration."
+  ]
+}

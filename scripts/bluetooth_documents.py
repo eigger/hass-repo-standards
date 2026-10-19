@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import ast
 import re
 import sys
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-from packaging.requirements import Requirement
-from packaging.utils import canonicalize_name
+from standards import conditions as _conditions
 
 SOURCE = "https://github.com/eigger/blesession/blob/main/docs/"
 HEADINGS = {
@@ -95,28 +93,7 @@ def syntax_error_message(error):
 
 
 def uses_package(root, manifest_path, manifest, safe_path, package):
-    # Do not evaluate markers on the checker's OS/Python: every declared target
-    # environment remains part of the integration's support scope.
-    if any(
-        canonicalize_name(Requirement(req).name) == canonicalize_name(package)
-        for req in manifest.get("requirements", [])
-    ):
-        return True
-    for path in manifest_path.parent.rglob("*.py"):
-        safe_path(root, path.relative_to(root))
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import) and any(
-                alias.name.split(".")[0] == package for alias in node.names
-            ):
-                return True
-            if (
-                isinstance(node, ast.ImportFrom)
-                and node.level == 0
-                and (node.module or "").split(".")[0] == package
-            ):
-                return True
-    return False
+    return _conditions.uses_package(root, manifest_path, manifest, safe_path, package)
 
 
 def uses_blesession(root, manifest_path, manifest, safe_path):

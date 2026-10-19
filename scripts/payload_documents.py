@@ -11,9 +11,9 @@ from bluetooth_documents import (
     has_local_link,
     links,
     syntax_error_message,
-    uses_package,
     visible_markdown,
 )
+from standards.conditions import uses_package
 
 SOURCE = "https://github.com/eigger/imagespec/blob/main/docs/"
 UNFINISHED = re.compile(
