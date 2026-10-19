@@ -12,7 +12,9 @@ T3는 실제 커밋 `419c23441cd8b4e6e37ceca6df0c0493b199d7b0`의 [PR #4 CI](htt
 
 T4는 실제 커밋 `53ac269dece6561276480a2d5e86ea884c0abcbb`의 [PR #5 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39200102781) 네 검사가 모두 성공한 뒤 merge commit `c3051910452a13036aafea77976096c2c5841273`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39200292843)도 성공했습니다.
 
-T5는 실제 커밋 `4d837b2e73515517667b0b5555760794d176764e`의 [PR #6 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39201816337) 네 검사가 모두 성공한 뒤 merge commit `7b004342ecc53f191d684b8c9040d296fc0f7578`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39201996349) 네 검사도 모두 성공했습니다. T6 중앙 fixture 검증 대상은 이 main 커밋 위의 작업 트리 변경분이며 구현·독립 코드 검증을 완료했습니다. 실제 커밋/PR·원격 CI/병합 근거는 대기 중입니다. 이전 단계 결과를 T6 검증으로 재사용하지 않습니다.
+T5는 실제 커밋 `4d837b2e73515517667b0b5555760794d176764e`의 [PR #6 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39201816337) 네 검사가 모두 성공한 뒤 merge commit `7b004342ecc53f191d684b8c9040d296fc0f7578`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39201996349) 네 검사도 모두 성공했습니다.
+
+T6 중앙 fixture 구현은 실제 code head `07256a4932cdd80bbf3edae442c810700efc107a`로 [PR #7](https://github.com/eigger/hass-repo-standards/pull/7)에 제출했고 해당 커밋의 [원격 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39202919478) 네 검사가 모두 성공했습니다. 이 기록은 해당 커밋과 실행 시점의 검증 근거이며 main 병합 완료를 뜻하지 않습니다. 현재 병합 상태는 PR에서 별도로 확인합니다. 아래 독립 192개 실행 결과는 T5 merge 위의 같은 T6 구현을 검증한 근거이며 이전 단계 결과를 재사용하지 않습니다.
 
 | 단계 | 구현·검증 상태 | 남은 작업 |
 |---|---|---|
@@ -21,7 +23,7 @@ T5는 실제 커밋 `4d837b2e73515517667b0b5555760794d176764e`의 [PR #6 CI](htt
 | T3 | 새 작성 기반·apply·recover 구현·독립 코드/문서 검증·PR/main CI 각 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
 | T4 | 생성물 검사·중앙 계약 연결 구현·독립 검증·PR/main CI 성공·main 병합 | 후속 단계와 별도 기록 |
 | T5 | 두 스킬·실행 안내·정적/격리 행동·독립 문서 검증·PR/main CI 각 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
-| T6 | 중앙 생성·갱신 자동 회귀 구현·독립 코드/문서 검증 완료 | 실제 커밋/PR CI/병합; 외부 실제 도입은 범위 밖 |
+| T6 | 중앙 생성·갱신 자동 회귀 구현·독립 코드/문서 검증·실제 code head의 PR CI 네 검사 성공 | 현재 병합 상태는 PR #7 확인; 외부 실제 도입은 범위 밖 |
 
 T1은 계약 44개 중 기존 원본 available 21개와 미작성 자산 pending 23개를 구분했습니다. T3는 작성 자산 18개와 빈 `custom_components/__init__.py` 패키지 marker를 추가해 총 45개·available 40개·pending 5개입니다. marker는 기존 빈 테스트 init 원본을 재사용하고 create_only로 기존 파일을 보존합니다. available은 원본이 존재한다는 뜻이며 실제 기기 동작·fixture·검증 미완료는 renderer의 pending으로 별도 반환합니다. CLI에는 T2 inspect/plan과 T3 apply/recover가 있습니다. 외부 통합 수정·지원 최소 변경·스킬 설치·workflow 수동 실행은 수행하지 않았습니다.
 
@@ -236,6 +238,7 @@ Fresh retry의 정확한 산출물은 원행동 루트의 `cases/retry/{report.m
 | 누락·충돌 | payload·출처 누락은 종료 2/대상 미작성; 기존 공용 CI schedule 확장은 정확한 경로 충돌로 차단·원본 보존 |
 | 대표 기존 최소 보존 | adopt-base를 별도 재실행하여 최소/current 메타데이터·환경 경로·hacs·README 분리 보존 |
 | 최종 문서 8개 독립 검토 | 문서 37개/workflow 7개·diff 검사 성공, 신규 22개 fingerprint 불변·필수 미해결 지적 없음 |
+| 실제 code head의 원격 CI | `07256a4932cdd80bbf3edae442c810700efc107a`의 PR #7 run 39202919478 네 검사 성공; 일반 검사 1분 15초·HA 1분 38초·환경 두 검사 각 11초 |
 
 최종 snapshot은 `/home/eigger/hass-standards-review-t6-4a1ddO`, 로그는 그 아래 tools-tests.log·ha-tests.log·repository.log·ruff.log·format.log입니다. 신규 22개 파일 fingerprint는 공유 작업 트리 원시 바이트와 같고 manifest SHA-256은 `8780c985cfc3b083f7078c62339231c6c5a7b576f42bc86162a905e08491f25b`입니다. 이 값은 Git 커밋 SHA가 아닙니다. 대표 재실행 아티팩트는 같은 snapshot 아래 `adopt-base-artifacts`입니다. 미해결 필수 지적은 없습니다.
 
@@ -256,4 +259,4 @@ adopt-base는 최소 HA 2025.3.0/Python 3.13/플러그인 0.13.221과 current HA
 
 ## 남은 검증과 한계
 
-중앙 T1~T6 구현과 T6 독립 코드 검증을 완료했으며 실제 커밋/PR·원격 CI/병합을 기다립니다. 그 근거는 실제 발생 후 추가하며 현재 작업 트리 결과를 원격 성공으로 기록하지 않습니다. 생성 초안의 실제 HA negative smoke는 수행했지만 실제 신규·기존 통합의 HA minimum/current 성공, HACS/Hassfest, UI 번역·기기 의미·하드웨어 검증은 이번 범위 밖·미실행입니다. 다른 에이전트 클라이언트 실행·개인 설치·앱 자동 발동도 미검증입니다. 중앙 fixture와 중앙 도구의 회귀 성공을 외부 통합 도입 완료로 기록하지 않습니다.
+중앙 T1~T6 구현·T6 독립 코드/문서 검증·기록한 실제 code head의 PR CI를 완료했습니다. 현재 병합 상태는 PR #7에서 확인하며 이 문서의 역사적 커밋/CI 근거와 구분합니다. 생성 초안의 실제 HA negative smoke는 수행했지만 실제 신규·기존 통합의 HA minimum/current 성공, HACS/Hassfest, UI 번역·기기 의미·하드웨어 검증은 이번 범위 밖·미실행입니다. 다른 에이전트 클라이언트 실행·개인 설치·앱 자동 발동도 미검증입니다. 중앙 fixture와 중앙 도구의 회귀 성공을 외부 통합 도입 완료로 기록하지 않습니다.

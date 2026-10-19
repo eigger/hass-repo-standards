@@ -1,6 +1,6 @@
 # 템플릿·스킬 도구 사용 안내
 
-현재 구현은 계약·공통 렌더러, `inspect`·`plan`·`apply`·`recover`, 신규 작성 기반과 정적 검사이며 T1~T5는 main에 반영했습니다. T6 중앙 fixture의 생성·갱신 자동 회귀 구현·독립 검증을 완료하고 최종 PR CI/병합을 기다리며 외부 통합 적용은 이번 요청 범위가 아닙니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 합니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
+현재 구현은 계약·공통 렌더러, `inspect`·`plan`·`apply`·`recover`, 신규 작성 기반과 정적 검사이며 T1~T5는 main에 반영했습니다. T6 중앙 fixture의 생성·갱신 자동 회귀 구현·독립 검증과 PR CI도 완료했으며 외부 통합 적용은 이번 요청 범위가 아닙니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 합니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
 
 ## 실행 준비와 조사
 
@@ -126,7 +126,7 @@ python3 scripts/check_repository.py
 python3 -m unittest discover -s tests -p test_integration_scenarios.py -v
 ```
 
-이 명령은 중앙 저장소의 개발 환경에서 실행합니다. T6의 독립 결과와 최종 PR CI/병합 상태는 검증 기록에서 확인합니다. 실행 대상은 임시 Git fixture이고 실제 외부 통합·기기·실제 최소/current HA 채택 성공을 검증하는 명령이 아닙니다. 이번 중앙 도구·템플릿·스킬 요청은 T6 중앙 검증으로 마무리하며 다른 통합 적용과 개인 스킬 설치는 별도 요청 범위입니다.
+이 명령은 중앙 저장소의 개발 환경에서 실행합니다. T6의 실제 독립 192개 실행 결과와 검증 대상 커밋의 PR CI는 [검증 기록](template-skill-validation.md), 현재 병합 상태는 [PR #7](https://github.com/eigger/hass-repo-standards/pull/7)에서 확인합니다. 실행 대상은 임시 Git fixture이고 실제 외부 통합·기기·실제 최소/current HA 채택 성공을 검증하는 명령이 아닙니다. 이번 중앙 도구·템플릿·스킬 요청은 T6 중앙 검증으로 마무리하며 다른 통합 적용과 개인 스킬 설치는 별도 요청 범위입니다.
 
 ## 두 스킬의 원본·명시적 설치
 

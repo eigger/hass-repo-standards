@@ -9,7 +9,7 @@
 | T3 | 신규 작성 기반·apply·recover 구현·독립 검증·PR CI 성공·main 병합 |
 | T4 | 생성물 검사·중앙 계약 연결 구현·독립 검증·PR CI 성공·main 병합 |
 | T5 | 두 스킬·실행 안내·정적/격리 행동 검증·PR CI 성공·main 병합 |
-| T6 | 중앙 자동 회귀 구현·독립 검증 완료; 최종 PR CI/병합 대기, 외부 실제 도입은 범위 밖 |
+| T6 | 중앙 자동 회귀 구현·독립 검증·PR CI 통과; 병합 상태는 [PR #7](https://github.com/eigger/hass-repo-standards/pull/7) 확인, 외부 실제 도입은 범위 밖 |
 
 ## 실행 순서와 공통 완료 조건
 
