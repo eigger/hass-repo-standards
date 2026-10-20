@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-20 — Hassfest source compatibility prototype
+
+- Add an optional reviewed full Core SHA path for the shared Hassfest job, preserving the default official action and failing on fetch/build/validation errors. This local prototype addresses published-image schema lag without altering caller manifests or support minima; actual image-build evidence remains separate.
+
 ## 2026-10-20 — manifest 제품 분류 검토
 
 - HA-02에 실제 제품 categories 1–3개와 근거 기록, 제외 유형의 키 생략, 주 분류 순서·공식 slug·중복/부모-하위 분류 검사를 추가했습니다. upstream 선택 항목/HACS 누락 경고와 중앙 필수 정책을 구분합니다.

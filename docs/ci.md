@@ -8,7 +8,7 @@
 
 | 역할 | 중앙 구현 | 리포별 입력/확장 |
 |---|---|---|
-| HACS·Hassfest | validate-integration.yml | HACS ignore와 사유 |
+| HACS·Hassfest | validate-integration.yml | HACS ignore와 사유, 필요한 경우 검토한 hassfest-core-ref |
 | Ruff·format·pytest | python-tests.yml | Python matrix, requirements, profile, test args |
 | manifest·HA 의존성 설치 | actions/python-environment | domain, 최소 패키지, HA 구성요소 |
 | imagespec·blesession 업데이트 | dependency-update.yml | 패키지 목록, schedule, 검증 명령 |
@@ -70,3 +70,21 @@ standalone standards job은 대상 소스·테스트 문법을 읽을 수 있는
 imagespec 사용 통합의 DOC-08 정적 문서 검사는 Validate에서, 실제 예제 실행 계약은 각 필수 `ha` Tests 환경과 의존성 업데이트 검증에서 수행합니다. caller의 `standards-ref`는 reusable workflow의 검토 full SHA와 같아야 합니다. 중앙 도구는 예약된 별도 `.hass-standards-tools` 경로로 같은 SHA를 checkout하며 해당 경로가 이미 있으면 caller 파일을 덮지 않고 실패합니다. 기존 caller checkout·설치 버전을 유지하고 `actions/check-payload`는 `github.action_path`의 중앙 plugin을 실행합니다. 기기 action을 dispatch하지 않으며 skip/xfail/deselect·설치만 성공·caller 자체 PASS 테스트로 계약 실행을 대체하지 않습니다. 자세한 fixture·메타데이터 계약은 [payload 작성 규칙](payload-documentation.md)을 따릅니다.
 
 DOC-08 적용 대상이라도 개별 matrix에서 imagespec requirement marker가 비활성이면 해당 계약은 N/A·버전 검증 없음으로 명시합니다. 그 job은 중앙 도구 checkout/계약만 생략하고 일반 HA 회귀 검사는 정확한 관리 scaffold만 제외하고 계속합니다. 정적 current/정확한 하한 coverage는 선언한 Python matrix에서 marker 활성 근거가 있는 job만 인정하며 patch 조건의 python_full_version은 실제 patch가 명시된 호환 환경으로 입증해야 합니다. 다른 활성 환경의 계약 실행은 여전히 필수입니다. 활성 환경의 패키지 누락·필수 예제 미실행은 실패이며 marker를 바꾸거나 추가 설치해 숨기지 않습니다.
+
+## Published Hassfest 이미지와 새 manifest 스키마
+
+`validate-integration.yml`의 선택 입력 `hassfest-core-ref`는 빈 문자열이 기본이며 기존 공식 `home-assistant/actions/hassfest` 호출을 그대로 유지합니다. upstream 공식 이미지가 아직 지원하지 않는 manifest 스키마가 필요할 때만 실제 검토한 Core full40SHA를 전달합니다. branch/tag·부분 SHA·임의 저장소 URL은 허용하지 않습니다.
+
+2026-10-20 확인한 공식 `ghcr.io/home-assistant/hassfest:latest`는 stable2026.10.2의 manifest schema로 `categories` 키를 거부했습니다. Core는 `c517d079e1cd3831dd8aa547dd953e336830e846`에서 custom manifest의 categories를 허용했지만 공식 builder는 dev 이미지를 게시하지 않습니다. 선택한 제품 분류를 삭제하거나 실패를 무시하는 대신 해당 변경을 포함한 검토 SHA의 **공식 Dockerfile/entrypoint/전체 validator**를 수정 없이 빌드·실행하는 경로를 제공합니다. 초기 검토 후보는 taxonomy snapshot과 같은 `ec18d8b25d1ee39aa8b85a72a170e42bee33228c`입니다. 이 문서의 후보 SHA만으로 실물·원격 검증 성공을 주장하지 않습니다.
+
+입력을 env로 전달해 엄격히 검사하고 고정 `https://github.com/home-assistant/core.git`의 commit을 runner.temp의 비어 있는 예약 경로로 shallow fetch합니다. 실제 HEAD 일치를 확인하고, 그 source의 `script/hassfest/docker/Dockerfile`로 이미지를 빌드한 뒤 기존 caller checkout을 원래 `/github/workspace`에 mount해 전체 Hassfest를 실행합니다. 원본 caller·manifest를 복사·전처리·제거하지 않으며 HACS job도 유지합니다. fetch/build/실행 실패는 모두 필수 job 실패입니다. secrets·추가 쓰기 권한을 요구하지 않습니다.
+
+이 경로는 검증 도구만 선택하며 통합의 HA 지원 최소나 테스트 runtime을 변경하지 않습니다. cold build 비용과 upstream base image·wheel index·dependency 접근이 추가되고 job timeout은30분입니다. Core source는 fullSHA로 고정하지만 upstream Dockerfile의 base tag/일부 resolve까지 완전 재현하는 digest lock은 아닙니다. 설치된 최신 공식 이미지가 필요한 schema를 지원하면 같은 대상 커밋을 빈 입력으로 실제 재검증한 후 선택 입력을 제거할 수 있습니다. 도입한 대상은 SHA·근거·로컬/원격 build 결과·실제 Hassfest 결과를 STANDARDS/체크리스트에 기록합니다.
+
+공식 근거: [custom categories 지원 변경](https://github.com/home-assistant/core/commit/c517d079e1cd3831dd8aa547dd953e336830e846), [검토 Core Dockerfile](https://github.com/home-assistant/core/blob/ec18d8b25d1ee39aa8b85a72a170e42bee33228c/script/hassfest/docker/Dockerfile), [dev image 미게시 조건](https://github.com/home-assistant/core/blob/ec18d8b25d1ee39aa8b85a72a170e42bee33228c/.github/workflows/builder.yml).
+
+### 로컬 호환 경로 초안 검증 (2026-10-20)
+
+중앙 `0490b2ad8378364b487746ea18fca7a0e1d22edc` 기반 격리 worktree의 초안에서 전체216 unit tests를 구현79.194초·독립76.676초에 통과했습니다. 새7개 검사는 외부 git/docker 경계만 대체하여 잘못된 ref·source 경로 충돌/링크·fetch 오류·HEAD 불일치·build/validator 오류의 실패 전파와 원래 caller mount/manifest 보존을 실행합니다. macOS의 기본 `/var` 임시 경로는 기존 CLI의 symlink 보호로 실패하므로 canonical `TMPDIR=/private/tmp`로 재실행했으며 코드 guard를 완화하지 않았습니다. Ruff0.17.1 check/format92files, actionlint1.7.12, 중앙37documents7workflows 및 diff 검사도 구현·독립 통과했습니다.
+
+실제 Core `ec18d8b25d1ee39aa8b85a72a170e42bee33228c`를 fetch하고 HEAD 일치를 확인해 수정하지 않은 공식 Dockerfile로 local ARM64 build를 시도했습니다. source checkout317MB/context259MB, base image·CI 도구 설치 및115개 패키지 resolve까지 진행했지만85초 이후 일부 wheel 준비에서 진행이 없어서 약5분에 로컬 build를 취소했습니다. 해당 ARM64 wheel의 공식 URL은 host GET200·전체 다운로드로 확인했으나 Docker/uv 내부 정체 원인은 확정하지 않았습니다. 취소는 PASS가 아니며 완성 이미지·실제 공식 Hassfest 실행·원격 job 성공은 아직 미검증입니다. CI의 amd64 경로도 실제 build/run 전에 성공으로 보고하지 않습니다. 이 초안은 중앙 원격에 게시하거나 대상 caller에 적용하지 않았으며, 기존 대상의 published-image Hassfest 실패를 해결했다고 주장하지 않습니다.
