@@ -25,7 +25,10 @@
       "requirements": [],
       "dependencies": [],
       "after_dependencies": [],
-      "config_flow": true
+      "config_flow": true,
+      "categories": [
+        "diy_makers"
+      ]
     },
     "source": "Synthetic adopt/base tool fixture; not device, installation or HA behavior evidence."
   },
@@ -106,5 +109,11 @@
   "remote": {
     "value": "https://github.com/owner/example.git",
     "source": "Synthetic adopt/base tool fixture; not device, installation or HA behavior evidence."
+  },
+  "categories": {
+    "value": [
+      "diy_makers"
+    ],
+    "source": "Synthetic tool fixture product-category decision; not actual integration evidence."
   }
 }

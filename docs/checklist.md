@@ -51,3 +51,5 @@ DOC-08은 imagespec 사용 여부를 실제 requirements/import로 확인합니�
 DOC-08 예제가 YAML 문자열 입력을 사용하는 경우 `payload_format`과 실제 HA 스키마 정규화 후 형태를 기록합니다. matrix별 marker 비활성은 N/A·설치 버전 coverage 없음으로 분리하고 일반 HA 회귀 결과와 활성 환경의 current/정확한 하한 예제 결과를 각각 남깁니다. 실제 patch가 필요한 marker를 minor-only Python 선언으로 입증했다고 적지 않습니다.
 
 DOC-03·DOC-05·DOC-06은 실제 HACS 목록 근거에 따라 Default의 HACS Downloads와 Custom의 manifest domain Usage를 구분하고, 양언어 설치 절의 My HACS 링크가 실제 owner/저장소 이름 및 Custom의 category=integration을 가리키는지 확인합니다. 기존 설치 본문·예제·제목 보존, 링크가 설치를 자동 완료한다는 오해 방지, 데이터 누락과 0 설치의 구분을 리뷰 증거로 남깁니다.
+
+HA-02의 categories는 실제 제품·서비스 용도의 주/보조 분류와 선택 근거·검토자/일자·공식 taxonomy를 기록합니다. 1–3개/중복/부모-자기 하위 분류/주 분류 순서와 categories_review의 값·유형·근거를 대조하며 entity/system/virtual은 manifest 키 생략과 제외 근거를 남깁니다. 누락의 HACS 경고와 중앙 필수 미충족, 오프라인 형식 검사와 실제 제품 의미·HACS/HA 실행 검증을 구분합니다.

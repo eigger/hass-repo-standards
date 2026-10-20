@@ -33,6 +33,7 @@ class IntegrationContract(unittest.TestCase):
             "version": "1.0.0",
             "documentation": "https://github.com/owner/example",
             "issue_tracker": "https://github.com/owner/example/issues",
+            "categories": ["diy_makers"],
             "codeowners": ["@owner"],
             "requirements": [],
         }
@@ -70,6 +71,11 @@ class IntegrationContract(unittest.TestCase):
             "default_branch": "main",
             "readmes": ["README.md", "README.ko.md"],
             "release": True,
+            "categories_review": {
+                "value": ["diy_makers"],
+                "integration_type": None,
+                "source": "Synthetic tool fixture decision, not device evidence.",
+            },
             "readme": {
                 "title": "Example",
                 "descriptions": {"en": "An integration.", "ko": "통합입니다."},
@@ -107,6 +113,30 @@ class IntegrationContract(unittest.TestCase):
         self.assertLess(text.index("[![Release]"), text.index("[![HACS Custom]"))
         self.assertLess(text.index("label=Usage"), text.index("[![Special]"))
         self.assertNotIn("flat-square", text)
+
+    def test_categories_and_recorded_review_are_required_without_automatic_defaults(self):
+        path = self.root / "custom_components/example/manifest.json"
+        original_manifest = path.read_bytes()
+        for review in (
+            None,
+            {**self.config["categories_review"], "source": "TODO"},
+            {**self.config["categories_review"], "value": ["pets"]},
+            {**self.config["categories_review"], "integration_type": "device"},
+        ):
+            config = {**self.config, "categories_review": review}
+            (self.root / ".hass-standards.json").write_text(json.dumps(config))
+            errors = contract.check(self.root)
+            self.assertTrue(
+                any("HA-02" in error and "categories_review" in error for error in errors)
+            )
+            self.assertEqual(path.read_bytes(), original_manifest)
+        self.save_config()
+        manifest = dict(self.manifest)
+        del manifest["categories"]
+        path.write_text(json.dumps(manifest))
+        self.assertTrue(
+            any("HA-02" in error and "categories" in error for error in contract.check(self.root))
+        )
 
     def test_installation_links_use_real_repository_for_both_hacs_modes(self):
         for status in ("custom", "default"):

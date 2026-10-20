@@ -25,6 +25,19 @@
 
 **HA-02 필수**: manifest에는 domain, name, version, documentation, issue_tracker, codeowners를 둡니다. 이 목록은 프로젝트 기준이며 공식 필수 필드의 보편적 목록을 뜻하지 않습니다. iot_class·integration_type·config_flow·discovery·dependencies는 실제 동작에 맞춥니다. keys는 domain, name 이후 알파벳순으로 정리합니다. `quality_scale`에 자가 인증 등급을 넣지 않습니다.
 
+### 통합 제품 카테고리 (HA-02)
+
+**HA-02 필수**의 중앙 정책으로, `integration_type`이 `entity`·`system`·`virtual`인 경우를 제외한 통합은 manifest에 실제 지원 제품·서비스 용도의 `categories`를 명시합니다. 해당 세 유형은 키를 생략하며 빈 배열도 넣지 않습니다. 유형 자체를 경고 회피를 위해 변경하지 않습니다. HA 공식 필드는 현재 선택 항목이고 HACS의 누락은 경고이지만, 이 표준의 채택·생성·재검토에서는 해당 판단과 기록을 필수로 합니다. HACS 경고를 검사 실패로 표현하거나 중앙 정책을 공식 HA 필수 조건으로 표현하지 않습니다.
+
+- 공식 taxonomy의 category 또는 `category.subcategory` slug를 1–3개 사용하며 중복·부모와 자기 하위 분류의 동시 선택을 금지합니다. 첫 항목이 주 분류이므로 알파벳순으로 값 배열을 정렬하지 않습니다.
+- 엔티티 플랫폼(`sensor`, `button`, `switch` 등), 의존성이나 리포 이름만으로 분류를 추정하지 않습니다. 실제 지원 제품·사용 목적·기존 사용자 안내를 확인해 사람이 선택하고 근거와 주/보조 분류 이유를 기록합니다. 공통 기본값·모든 기기에 같은 분류·경고 제거용 임의 값을 넣지 않습니다.
+- 신규/채택 입력의 `categories.value`는 manifest의 배열과 순서까지 같고 `categories.source`는 실제 판단 근거입니다. 제외 유형은 `value: []`와 유형·제외 이유를 기록하고 manifest 키는 생략합니다. 생성한 `.hass-standards.json.categories_review`에는 `value`·`source`·당시 `integration_type`(미선언이면 null)을 남깁니다. 기존 입력·설정에 근거가 없으면 수동 검토로 보완하며 기본값을 자동 채우지 않습니다.
+- 정적 검사는 목록·개수·중복·주 분류 순서 일치·유형별 생략·기록 누락/변경을 확인합니다. 선택 의미와 출처의 사실성은 별도 독립 리뷰가 확인합니다. `source`가 있는 것만으로 실제 제품 검증·HACS/HA 실행 성공을 주장하지 않습니다.
+
+오프라인 목록은 [`integration_categories.json`](../scripts/standards/integration_categories.json)에 Core 원본의 실제 full SHA·확인일과 함께 저장합니다. 새로운 공식 분류를 적용할 때는 원본 taxonomy와 HACS 지원을 확인한 뒤 이 snapshot·근거·회귀 테스트를 함께 재검토합니다. 목록을 자동 최신화하거나 미등록 값을 통과시키지 않습니다. 최신 upstream의 모든 변경·원격 CI·실제 최소 HA 로딩을 이 오프라인 검사만으로 검증하지 않습니다. 메타데이터 보완 때문에 HA 지원 최소·의존성을 올리지 않습니다.
+
+기존 adoption은 manifest를 자동 덮어쓰지 않습니다. 누락·다른 분류·유형 충돌은 조사 pending/계획 conflict로 남기고 실제 근거를 검토해 대상 manifest를 별도 수정·검증한 후 재계획합니다. 이 중앙 정책 변경만으로 다른 통합을 수정하지 않습니다.
+
 **HA-03 권장**: `const.py`에는 공통 상수, `config_flow.py`에는 설정, `coordinator.py`에는 공동 데이터 갱신, 플랫폼 파일에는 엔티티를 둡니다. 파일 분할만을 위한 추상화는 만들지 않습니다. 프로토콜/라이브러리 코드와 HA 엔티티 연결 코드를 분리합니다.
 
 ## 설정과 생명주기

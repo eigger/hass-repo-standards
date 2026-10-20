@@ -93,3 +93,17 @@
 | [My 링크 공식 선언](https://github.com/home-assistant/my.home-assistant.io/blob/60656776768e236d79fc427de79b8bdf6b8771f3/redirect.json) | hacs_repository의 owner/repository/category 매개변수와 공식 SVG 배지 |
 
 이 환경의 data-v2 직접 조회는 HTTP 403이므로 실제 다운로드 수나 배지의 실시간 렌더링 성공을 검증했다고 기록하지 않습니다. 공식 문서·생성/소비 소스의 계약과 로컬 회귀 테스트를 검증하며 누락 데이터를 0으로 바꾸지 않습니다.
+
+## 통합 제품 카테고리 재확인
+
+다음 범위는 **2026-10-20** 확인했습니다. 적용 가능한 통합의 분류/근거 기록 필수는 중앙 HA-02 정책이며 upstream의 선택 항목·HACS 경고와 구분합니다.
+
+| 공식 자료 | 확인 범위 |
+|---|---|
+| [HA manifest categories](https://contributors.home-assistant.io/core/integrations/manifest/#categories) | 현재 선택 필드, 1–3개·중복 금지·알려진 분류·부모/자기 하위 분류 금지, entity/system/virtual 키 생략 |
+| [HA 제품 분류 안내](https://contributors.home-assistant.io/core/integrations/categories/) | 실제 지원 제품·서비스 용도로 주 분류 먼저 선택하며 entity 플랫폼이나 iot_class와 구분 |
+| [Core taxonomy 원본](https://github.com/home-assistant/core/blob/ec18d8b25d1ee39aa8b85a72a170e42bee33228c/homeassistant/generated/integration_categories.json) | 오프라인 snapshot의 category·category.subcategory slug 추출 원본·full SHA |
+| [HACS integration_categories 검사](https://github.com/hacs/integration/blob/a15e87ec0d1c82e58f1ddbaf17669d3eaa261eb8/custom_components/hacs/validate/integration_categories.py) | 누락은 경고 후 반환, 존재하는 값은 schema 검증 |
+| [HACS categories schema](https://github.com/hacs/integration/blob/a15e87ec0d1c82e58f1ddbaf17669d3eaa261eb8/custom_components/hacs/utils/validate.py) | 문자열 목록·1–3개·기지 분류·중복 검사 |
+
+중앙 snapshot은 검토 당시 원본이며 실시간 upstream 전체를 대신하지 않습니다. 새 분류는 실제 Core/HACS 원본·SHA·확인일과 테스트를 함께 재검토합니다. 실제 지원 최소 HA 로딩·원격 HACS action·제품 분류 의미는 별도 검증이며 이 변경으로 수행했다고 주장하지 않습니다.

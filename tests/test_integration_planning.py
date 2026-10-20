@@ -116,6 +116,32 @@ class IntegrationPlanning(unittest.TestCase):
             name: (self.target / name).read_bytes() for name in inventory.file_paths(self.target)
         }
 
+    def test_adopt_category_decision_differences_are_conflicts_without_manifest_writes(self):
+        self.adopt_fixture()
+        path = self.target / "custom_components/example/manifest.json"
+        original = path.read_bytes()
+        self.data["manifest"]["value"]["categories"] = ["pets"]
+        self.data["categories"]["value"] = ["pets"]
+        result = self.plan("adopt")
+        self.assertTrue(
+            any("manifest categories differs" in value for value in result["conflicts"])
+        )
+        self.assertEqual(path.read_bytes(), original)
+        self.assertFalse(
+            any(item["path"].endswith("manifest.json") for item in result["operations"])
+        )
+
+    def test_inspect_missing_categories_records_required_manual_review(self):
+        self.adopt_fixture()
+        path = self.target / "custom_components/example/manifest.json"
+        manifest = json.loads(path.read_text())
+        del manifest["categories"]
+        path.write_text(json.dumps(manifest))
+        result = inventory.inspect(self.target)
+        self.assertTrue(
+            any("HA-02" in value and "categories" in value for value in result["pending"])
+        )
+
     def test_create_missing_and_empty_targets_generate_reproducible_drafts_without_writes(self):
         first = self.plan()
         second = self.plan()

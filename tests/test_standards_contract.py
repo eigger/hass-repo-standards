@@ -35,6 +35,7 @@ def input_fixture():
         "repository": sourced("owner/example"),
         "default_branch": sourced("trunk"),
         "domain": sourced("example"),
+        "categories": sourced(["diy_makers"]),
         "manifest": sourced(
             {
                 "domain": "example",
@@ -42,6 +43,7 @@ def input_fixture():
                 "version": "1.0.0",
                 "documentation": "https://github.com/owner/example",
                 "issue_tracker": "https://github.com/owner/example/issues",
+                "categories": ["diy_makers"],
                 "codeowners": ["@owner"],
                 "requirements": [],
                 "dependencies": [],

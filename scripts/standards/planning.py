@@ -213,6 +213,8 @@ def metadata_conflicts(data, scanned):
             "dependencies",
             "after_dependencies",
             "config_flow",
+            "categories",
+            "integration_type",
         ):
             if existing.get(
                 key, [] if key in {"requirements", "dependencies", "after_dependencies"} else None

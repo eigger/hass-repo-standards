@@ -30,5 +30,10 @@
     },
     "related_projects": []
   },
-  "exceptions": []
+  "exceptions": [],
+  "categories_review": {
+    "value": [],
+    "integration_type": null,
+    "source": "REPLACE with actual product category selection evidence; [] only for exempt integration types."
+  }
 }

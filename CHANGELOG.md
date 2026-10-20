@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-20 — manifest 제품 분류 검토
+
+- HA-02에 실제 제품 categories 1–3개와 근거 기록, 제외 유형의 키 생략, 주 분류 순서·공식 slug·중복/부모-하위 분류 검사를 추가했습니다. upstream 선택 항목/HACS 누락 경고와 중앙 필수 정책을 구분합니다.
+- sourced 입력·설정의 categories_review·오프라인 taxonomy snapshot·생성/조사/계획/정적 검사·체크리스트를 연결합니다. 기존 manifest는 자동 덮어쓰지 않으며 분류를 플랫폼에서 추정하거나 공통 기본값으로 채우지 않습니다. 중앙 변경만 수행하며 다른 통합·지원 최소·의존성·릴리스는 변경하지 않습니다.
+
 ## 2026-10-20 — HACS 집계 배지와 설치 링크
 
 - 확인된 HACS Default 통합은 공식 HACS 데이터의 HACS Downloads, Custom은 manifest domain의 Analytics Usage를 표시하도록 공통 렌더러·규칙·체크리스트를 변경했습니다. 기존 고유 배지를 보존하고 상태 변경 시 이전 공통 집계 배지를 교체합니다.

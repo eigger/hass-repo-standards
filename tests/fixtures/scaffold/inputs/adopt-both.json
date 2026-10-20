@@ -28,7 +28,10 @@
       ],
       "dependencies": [],
       "after_dependencies": [],
-      "config_flow": true
+      "config_flow": true,
+      "categories": [
+        "diy_makers"
+      ]
     },
     "source": "Synthetic adopt/both tool fixture; not device, installation or HA behavior evidence."
   },
@@ -140,5 +143,11 @@
       "adapter": "synthetic tool metadata only; no production callable or registration asserted"
     },
     "source": "Reuses test_integration_planning synthetic schema shape only; production execution remains unverified."
+  },
+  "categories": {
+    "value": [
+      "diy_makers"
+    ],
+    "source": "Synthetic tool fixture product-category decision; not actual integration evidence."
   }
 }

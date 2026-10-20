@@ -11,7 +11,7 @@ import subprocess
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from . import conditions, contract, readme
+from . import categories, conditions, contract, readme
 
 
 def load_json(path):
@@ -255,6 +255,12 @@ def inspect(root):
         else:
             result["domains"].append(domain)
         observe("manifest", data, name)
+        try:
+            categories.validate_manifest(data)
+        except ValueError as error:
+            result["pending"].append(
+                f"HA-02 {name}: {error}; record product evidence, do not infer categories"
+            )
         if "homeassistant" in data:
             observe("minimum_ha", data["homeassistant"], name)
         for package in ("imagespec", "blesession"):
@@ -322,6 +328,21 @@ def inspect(root):
             observe("workflow", (root / name).read_text(encoding="utf-8"), name)
         if name == ".hass-standards.json":
             observe("standards_settings", load_json(root / name), name)
+    settings = next(
+        (item["value"] for item in result["observations"] if item["field"] == "standards_settings"),
+        {},
+    )
+    for item in result["observations"]:
+        if item["field"] == "manifest":
+            try:
+                categories.validate_review(
+                    item["value"],
+                    settings.get("categories_review") if isinstance(settings, dict) else None,
+                )
+            except ValueError as error:
+                result["pending"].append(
+                    f"HA-02 {item['source']}: {error}; record product evidence, do not infer categories"
+                )
     minimums = {
         str(normalized_ha(item["value"]))
         for item in result["observations"]

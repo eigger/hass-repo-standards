@@ -29,12 +29,13 @@ python3 scripts/manage_integration.py plan <empty-or-absent-target> --mode creat
   "remote": {"value": "https://github.com/owner/example.git", "source": "explicit fixture origin"},
   "default_branch": {"value": "trunk", "source": "explicit unit-test input (not device evidence)"},
   "domain": {"value": "example", "source": "explicit unit-test input (not device evidence)"},
+  "categories": {"value": ["diy_makers"], "source": "synthetic tool fixture decision only, not a real product classification"},
   "manifest": {
     "value": {
       "domain": "example", "name": "Example", "version": "1.0.0",
       "documentation": "https://github.com/owner/example",
       "issue_tracker": "https://github.com/owner/example/issues",
-      "codeowners": ["@owner"], "requirements": [], "dependencies": [],
+      "codeowners": ["@owner"], "categories": ["diy_makers"], "requirements": [], "dependencies": [],
       "after_dependencies": [], "config_flow": true
     },
     "source": "explicit unit-test input (not device evidence)"
@@ -165,3 +166,9 @@ $adopt-ha-standards: 기존 <target>의 적용 차이만 검토하고 계획을 
 ```
 
 신규는 create, 기존은 adopt로 분기하며 검토/계획만 요청하면 inspect/plan에서 멈춥니다. 이미 생성·적용을 요청했고 필수 근거·입력과 충돌 없는 계획이 있으면 같은 범위를 재승인받지 않고 apply합니다. 필수 입력 부재·실제 새 예외 승인 필요·CLI 실패는 근거를 제시하고 필요한 조치만 확인합니다. 스킬은 commit/push·PR·릴리스·workflow 수동 실행·외부 설치 권한을 추가하지 않습니다.
+
+## categories 입력과 기존 설정 이관
+
+[HA-02](home-assistant.md#통합-제품-카테고리-ha-02)에 따라 신규·채택 입력에는 sourced `categories` 판단이 필요합니다. 예시의 `diy_makers`는 도구 fixture용 명시 값이며 실제 통합의 기본 분류가 아닙니다. 지원 제품·서비스와 사용 목적에 맞는 공식 slug를 사람이 선택해 manifest와 같은 순서로 기록하고 실제 근거를 `source`에 적습니다. entity/system/virtual은 입력 `value: []`, 실제 유형/제외 이유를 source에 기록하며 manifest 키는 생략합니다. 입력 envelope의 `schema_version: 1`은 유지하며 검토 standards SHA가 세부 계약을 고정합니다. 이 SHA부터 필드가 없는 과거 version 1 입력은 `missing required inputs: categories`로 실패합니다. 실제 판단·근거를 추가하고 같은 새 SHA로 계획을 다시 생성하며, 과거 계획/입력을 그대로 재사용하거나 값을 자동 보충하지 않습니다.
+
+`render_settings`는 `.hass-standards.json.categories_review`에 선택 배열·source·그때의 integration_type을 저장합니다. 과거 설정은 실제 재검토 후 보완하며 값/순서/유형이 달라지면 다시 검토합니다. 기록 존재는 실제 제품 의미·원격 검증 성공을 보장하지 않습니다. adoption 계획은 기존 manifest의 categories와 integration_type 차이를 conflict로 보고하며 자동 수정하지 않습니다. 원래 manifest·버전·지원 최소·의존성을 보존해 필요한 메타데이터 보완을 수동 검토하고 재계획합니다.
