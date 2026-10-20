@@ -332,6 +332,44 @@ def check_contract_integrity():
     return errors
 
 
+def check_hassfest_source_contract(data):
+    """Keep optional source validation fail-closed and the default official action."""
+    errors = []
+    spec = (
+        data.get("on", {}).get("workflow_call", {}).get("inputs", {}).get("hassfest-core-ref", {})
+    )
+    if (
+        spec.get("type") != "string"
+        or spec.get("default") != ""
+        or spec.get("required") is not False
+    ):
+        errors.append(
+            "validate-integration.yml: optional hassfest-core-ref string must default empty"
+        )
+    steps = data.get("jobs", {}).get("hassfest", {}).get("steps", [])
+    default = [
+        step
+        for step in steps
+        if step.get("uses", "").startswith("home-assistant/actions/hassfest@")
+    ]
+    if len(default) != 1 or default[0].get("if") != "inputs.hassfest-core-ref == ''":
+        errors.append("validate-integration.yml: preserve the official default Hassfest action")
+    required = {
+        "Fetch reviewed upstream Hassfest source",
+        "Build official Hassfest Dockerfile",
+        "Validate caller with reviewed upstream Hassfest",
+    }
+    selected = [step for step in steps if step.get("name") in required]
+    if {step.get("name") for step in selected} != required:
+        errors.append("validate-integration.yml: all reviewed source validation steps are required")
+    for step in selected:
+        if step.get("if") != "inputs.hassfest-core-ref != ''" or step.get("continue-on-error"):
+            errors.append(
+                "validate-integration.yml: source fetch/build/validation must fail closed"
+            )
+    return errors
+
+
 def check():
     errors = []
     documents = [
@@ -377,6 +415,10 @@ def check():
             for key, spec in declared.items():
                 if spec.get("required") and key not in supplied:
                     errors.append(f"{file.name}: missing required input {key}")
+    validate = yaml.load(
+        (ROOT / ".github/workflows/validate-integration.yml").read_text(), Loader=Loader
+    )
+    errors.extend(check_hassfest_source_contract(validate))
     for file in ROOT.rglob("*.json"):
         if ".venv" not in file.parts:
             json.loads(file.read_text(encoding="utf-8"))

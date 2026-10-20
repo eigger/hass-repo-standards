@@ -8,6 +8,11 @@ name: Validate integration
         required: false
         type: string
         default: ''
+      hassfest-core-ref:
+        description: Optional reviewed full Core commit SHA to build upstream Hassfest when its published image lacks a required schema
+        required: false
+        type: string
+        default: ''
 permissions:
   contents: read
 jobs:
@@ -25,9 +30,48 @@ jobs:
         comment: 'false'
   hassfest:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
+    env:
+      HASSFEST_CORE_REF: ${{ inputs.hassfest-core-ref }}
+      HASSFEST_IMAGE: hassfest-core:${{ inputs.hassfest-core-ref }}
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
         persist-credentials: false
-    - uses: home-assistant/actions/hassfest@cd6f3635a740c84d8a14f6121a90068b8ece6bf6 # master snapshot 2026-10-17
+    - if: inputs.hassfest-core-ref == ''
+      uses: home-assistant/actions/hassfest@cd6f3635a740c84d8a14f6121a90068b8ece6bf6 # master snapshot 2026-10-17
+    - name: Fetch reviewed upstream Hassfest source
+      if: inputs.hassfest-core-ref != ''
+      shell: bash
+      run: |
+        set -euo pipefail
+        HASSFEST_CORE_PATH="$RUNNER_TEMP/hassfest-core-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+        if [[ ! "$HASSFEST_CORE_REF" =~ ^[0-9a-f]{40}$ ]]; then
+          echo "hassfest-core-ref must be a reviewed full 40-character lowercase commit SHA" >&2
+          exit 1
+        fi
+        if [[ -e "$HASSFEST_CORE_PATH" || -L "$HASSFEST_CORE_PATH" ]]; then
+          echo "Reserved Hassfest source path already exists; refusing to overwrite it" >&2
+          exit 1
+        fi
+        git init "$HASSFEST_CORE_PATH"
+        git -C "$HASSFEST_CORE_PATH" remote add origin https://github.com/home-assistant/core.git
+        git -C "$HASSFEST_CORE_PATH" fetch --depth=1 origin "$HASSFEST_CORE_REF"
+        git -C "$HASSFEST_CORE_PATH" -c advice.detachedHead=false checkout --detach FETCH_HEAD
+        test "$(git -C "$HASSFEST_CORE_PATH" rev-parse HEAD)" = "$HASSFEST_CORE_REF"
+    - name: Build official Hassfest Dockerfile
+      if: inputs.hassfest-core-ref != ''
+      shell: bash
+      env:
+        DOCKER_BUILDKIT: '1'
+      run: |
+        set -euo pipefail
+        HASSFEST_CORE_PATH="$RUNNER_TEMP/hassfest-core-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+        docker build --file "$HASSFEST_CORE_PATH/script/hassfest/docker/Dockerfile" \
+          --tag "$HASSFEST_IMAGE" "$HASSFEST_CORE_PATH"
+    - name: Validate caller with reviewed upstream Hassfest
+      if: inputs.hassfest-core-ref != ''
+      shell: bash
+      run: |
+        set -euo pipefail
+        docker run --rm --volume "$GITHUB_WORKSPACE:/github/workspace" "$HASSFEST_IMAGE"
