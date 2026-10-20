@@ -18,6 +18,22 @@ def git(repo: Path, *args):
     return result.stdout.strip() if result.returncode == 0 else ""
 
 
+INSTALL_ALT = "Open your Home Assistant instance and open a repository inside the Home Assistant Community Store."
+
+
+def install_badge(config):
+    """Use the official owner/name parameters; custom repositories need a category."""
+    repository = config["repository"]
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository):
+        raise ValueError("repository must be owner/name")
+    owner, name = repository.split("/")
+    params = {"owner": owner, "repository": name}
+    if config.get("hacs", "custom") == "custom":
+        params["category"] = "integration"
+    url = "https://my.home-assistant.io/redirect/hacs_repository/?" + urlencode(params)
+    return f"[![{INSTALL_ALT}](https://my.home-assistant.io/badges/hacs_repository.svg)]({url})"
+
+
 def render(repo: Path, config: dict, readme: Path | None = None):
     repository = config.get("repository")
     if not repository:
@@ -92,22 +108,38 @@ def render(repo: Path, config: dict, readme: Path | None = None):
             f"https://img.shields.io/github/license/{repository}?style=flat",
             prefix + "LICENSE",
         )
-    # Every HA integration gets Usage before its domain appears in Analytics.
-    # Legacy analytics=False/evidence settings do not suppress the badge.
-    query = urlencode(
-        {
-            "style": "flat",
-            "color": "41BDF5",
-            "label": "Usage",
-            "query": f"$.{domain}.total",
-            "url": "https://analytics.home-assistant.io/custom_integrations.json",
-        }
-    )
-    badge(
-        "Analytics reporting installs",
-        "https://img.shields.io/badge/dynamic/json?" + query,
-        "https://analytics.home-assistant.io/",
-    )
+    if status == "default":
+        query = urlencode(
+            {
+                "style": "flat",
+                "color": "41BDF5",
+                "label": "HACS Downloads",
+                "query": f'$[?(@.full_name=="{repository}")].downloads',
+                "url": "https://data-v2.hacs.xyz/integration/data.json",
+            }
+        )
+        badge(
+            "HACS Downloads",
+            "https://img.shields.io/badge/dynamic/json?" + query,
+            "https://www.hacs.xyz/",
+        )
+    else:
+        # Custom integrations get Usage before their domain appears in Analytics.
+        # Legacy analytics=False/evidence settings do not suppress the badge.
+        query = urlencode(
+            {
+                "style": "flat",
+                "color": "41BDF5",
+                "label": "Usage",
+                "query": f"$.{domain}.total",
+                "url": "https://analytics.home-assistant.io/custom_integrations.json",
+            }
+        )
+        badge(
+            "Analytics reporting installs",
+            "https://img.shields.io/badge/dynamic/json?" + query,
+            "https://analytics.home-assistant.io/",
+        )
     return "\n".join(badges)
 
 
@@ -124,6 +156,7 @@ def preserve_extra_badges(text: str, rendered: str):
         "Validate",
         "License",
         "Analytics reporting installs",
+        "HACS Downloads",
     }
     extras = []
     for value in existing.splitlines():

@@ -33,7 +33,7 @@ Home Assistant 커스텀 통합의 공통 규칙·템플릿·도구·CI를 관�
 | 작업 | 적용할 원본·핵심 제약 |
 |---|---|
 | 구현·테스트 | [HA 구조](docs/home-assistant.md), [테스트](docs/testing.md): tests/components/domain, 실제 HA fixture·로딩, 외부 통신 경계만 mock |
-| README·배지 | [문서](docs/documentation.md): 양언어·관리 영역·기존 본문 보존, manifest domain의 동적 Usage 포함 |
+| README·배지 | [문서](docs/documentation.md): 양언어·관리 영역·기존 본문 보존, Default는 HACS Downloads·Custom은 manifest domain의 동적 Usage, 양언어 설치 절의 My HACS 배지 |
 | CI·의존성 | [CI](docs/ci.md), [의존성](docs/dependencies.md): caller checkout·github.action_path 유지, 선언 위치 구분, extras·연산자·marker 보존, 실패 은폐 금지 |
 | Bluetooth·blesession | [DOC-07 작성 계약](docs/bluetooth-documentation.md): 같은 언어의 blesession 사용자 원본·로컬 문제 해결 연결, 실제 기기 조건 기록 |
 | imagespec | [DOC-08 실행 계약](docs/payload-documentation.md): 양언어 문서·전체 액션 YAML·실제 production 경로·설치된 current/정확한 하한 검증, 기기 명령·검증 후 패키지 덮어 설치 금지 |

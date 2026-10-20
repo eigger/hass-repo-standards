@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -106,6 +107,109 @@ class IntegrationContract(unittest.TestCase):
         self.assertLess(text.index("[![Release]"), text.index("[![HACS Custom]"))
         self.assertLess(text.index("label=Usage"), text.index("[![Special]"))
         self.assertNotIn("flat-square", text)
+
+    def test_installation_links_use_real_repository_for_both_hacs_modes(self):
+        for status in ("custom", "default"):
+            self.config["hacs"] = status
+            self.config["hacs_default_evidence"] = "https://github.com/hacs/default — 2026-10-20"
+            self.save_config()
+            self.assertEqual(contract.check(self.root, write_readmes=True), [])
+            for name in self.config["readmes"]:
+                text = (self.root / name).read_text()
+                install = contract.block(text, "installation")
+                params = parse_qs(
+                    urlsplit(install.split("]](", 1)[-1].split(")](", 1)[-1][:-1]).query
+                )
+                self.assertEqual(params["owner"], ["owner"])
+                self.assertEqual(params["repository"], ["example"])
+                self.assertEqual(
+                    params.get("category"), ["integration"] if status == "custom" else None
+                )
+                self.assertEqual(text.count("<!-- hass-standards:installation:start -->"), 1)
+
+    def test_installation_insertion_preserves_existing_heading_and_prose(self):
+        for language, name, heading in (
+            ("en", "README.md", "## Installation"),
+            ("ko", "README.ko.md", "## 설치"),
+        ):
+            path = self.root / name
+            text = path.read_bytes().decode()
+            start, end = contract.markers("installation")
+            before, rest = text.split(start)
+            _, after = rest.split(end)
+            text = before + after
+            body = "\nKeep original steps.\r\n\n```yaml\nexample: original\n```\n"
+            text = text.replace(heading, heading + body)
+            path.write_bytes(text.encode())
+            self.assertEqual(contract.check(self.root, write_readmes=True), [])
+            updated = path.read_bytes().decode()
+            self.assertEqual(updated.count(heading), 1)
+            self.assertIn(body, updated)
+            self.assertIn("Keep  exact spaces.\r\n", updated)
+            self.assertEqual(contract.check(self.root), [])
+
+    def test_configured_installation_anchors_preserve_existing_custom_headings(self):
+        self.config["installation_links"] = {
+            "README.md": "#installation-with-hacs",
+            "README.ko.md": "#설치-hacs",
+        }
+        self.save_config()
+        for name, old, new in (
+            ("README.md", "## Installation", "## Installation with HACS"),
+            ("README.ko.md", "## 설치", "## 설치 HACS"),
+        ):
+            path = self.root / name
+            text = path.read_text().replace(old, new)
+            start, end = contract.markers("installation")
+            before, rest = text.split(start)
+            _, after = rest.split(end)
+            path.write_text(before + "Existing installation instructions.\n" + after)
+        self.assertEqual(contract.check(self.root, write_readmes=True), [])
+        for name in self.config["readmes"]:
+            text = (self.root / name).read_text()
+            self.assertEqual(text.count("hass-standards:installation:start"), 1)
+            self.assertIn("Existing installation instructions.", text)
+        self.assertEqual(contract.check(self.root), [])
+
+    def test_fenced_installation_examples_are_preserved_outside_badge_section(self):
+        for fence in ("```", "~~~~"):
+            path = self.root / "README.md"
+            original = path.read_text()
+            start, end = contract.markers("installation")
+            before, rest = original.split(start)
+            _, after = rest.split(end)
+            original = (before + after).replace("## Installation\n", "")
+            sample = f"## Documentation\n{fence}markdown\n## Installation\nexample text\n{fence}\n"
+            path.write_text(
+                original.replace("## Existing section", sample + "\n## Existing section")
+            )
+            self.assertEqual(contract.check(self.root, write_readmes=True), [])
+            updated = path.read_text()
+            self.assertIn(sample, updated)
+            self.assertGreater(updated.index(start), updated.index(sample) + len(sample))
+            self.assertEqual(contract.check(self.root), [])
+
+    def test_missing_configured_installation_heading_fails_without_writing(self):
+        self.config["installation_links"] = {"README.md": "#does-not-exist"}
+        self.save_config()
+        original = (self.root / "README.md").read_bytes()
+        self.assertTrue(contract.check(self.root, write_readmes=True))
+        self.assertEqual((self.root / "README.md").read_bytes(), original)
+
+    def test_installation_block_refuses_to_erase_prose_and_rejects_duplicates(self):
+        path = self.root / "README.md"
+        text = path.read_text()
+        for broken in (
+            text.replace(
+                "<!-- hass-standards:installation:end -->",
+                "Keep this step.\n<!-- hass-standards:installation:end -->",
+            ),
+            text + "<!-- hass-standards:installation:start -->",
+        ):
+            path.write_text(broken)
+            before = path.read_bytes()
+            self.assertTrue(contract.check(self.root, write_readmes=True))
+            self.assertEqual(path.read_bytes(), before)
 
     def test_write_preserves_outside_bytes_and_unique_badges(self):
         path = self.root / "README.md"

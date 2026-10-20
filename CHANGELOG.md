@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-20 — HACS 집계 배지와 설치 링크
+
+- 확인된 HACS Default 통합은 공식 HACS 데이터의 HACS Downloads, Custom은 manifest domain의 Analytics Usage를 표시하도록 공통 렌더러·규칙·체크리스트를 변경했습니다. 기존 고유 배지를 보존하고 상태 변경 시 이전 공통 집계 배지를 교체합니다.
+- 양언어 README 템플릿·렌더러·검사에 실제 저장소의 My Home Assistant HACS 설치 배지를 추가했습니다. 기존 설치 본문·제목·예제를 보존하며 Custom 링크의 category=integration과 공식 owner/저장소 이름 매개변수를 사용합니다. 외부 통합 적용·지원 버전·의존성·릴리스는 변경하지 않습니다.
+
 ## 2026-10-19 — T6 중앙 생성·갱신 시나리오 검증
 
 - 신규/기존 × 기본·imagespec·blesession·둘 다의 8조합과 누락 실패를 실제 중앙 CLI로 실행하는 9개 자동 회귀를 추가했습니다. 보존·멱등성·조건 제거 후 문서/예제 유지와 CI 확장 충돌을 검증했고 도구 186개와 별도 중앙 HA 6개, 총 192개를 실행해 성공했습니다. 실제 code head `07256a4932cdd80bbf3edae442c810700efc107a`의 PR #7 CI 네 검사가 통과했습니다. 병합 상태는 PR에서 별도로 확인합니다.

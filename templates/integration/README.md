@@ -14,6 +14,12 @@ A Home Assistant custom integration for the supported device.
 <!-- hass-standards:badges:end -->
 <!-- hass-standards:header:end -->
 
+## Installation
+
+<!-- hass-standards:installation:start -->
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=eigger&repository=hass-example&category=integration)
+<!-- hass-standards:installation:end -->
+
 <!-- Preserve the repository’s existing section order, headings, content, examples, and notices here. This comment is an adoption placeholder, not a mandatory body outline. -->
 
 <!-- hass-standards:support:start -->

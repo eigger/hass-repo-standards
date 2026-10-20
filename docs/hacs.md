@@ -6,7 +6,7 @@
 
 **HACS-02 필수**: 기본 배포 구조는 `custom_components/<domain>`입니다. `content_in_root`, `zip_release`, `filename`, `persistent_directory` 등은 실제 구조에 필요할 때만 사용합니다. 기존에 사용한 필드를 일괄 삭제하지 않습니다.
 
-**HACS-03 필수**: 기본 목록 등재와 custom repository 설치를 구분합니다. HACS 검증 성공, hacs.json 존재, brands 등록만으로 Default 배지를 표시하지 않습니다. Default 표기는 실제 목록 등재 확인 링크와 날짜를 기록합니다.
+**HACS-03 필수**: 기본 목록 등재와 custom repository 설치를 구분합니다. HACS 검증 성공, hacs.json 존재, brands 등록만으로 Default 배지를 표시하지 않습니다. Default 표기는 실제 목록 등재 확인 링크와 날짜를 기록합니다. [DOC-03·DOC-05](documentation.md)에 따라 Default는 HACS Downloads, Custom은 Analytics Usage를 표시하며 양언어 설치 안내에는 실제 저장소의 My Home Assistant HACS 배지를 제공합니다.
 
 **HACS-04 필수**: 정식 배포는 GitHub Release로 만들고 tag의 `v` 접두사를 제외한 버전과 해당 commit manifest.version을 일치시킵니다. 통합 버전과 최소 HA/HACS 버전은 별개입니다. prerelease는 GitHub에서도 prerelease로 표시합니다.
 
