@@ -16,4 +16,6 @@ HACS-05의 brands 검사는 실제 사용하는 HACS action에서 확인합니�
 
 [HA 이미지 지침](https://contributors.home-assistant.io/core/integrations/brands/)에 따라 실제 PNG 아이콘은 256×256, 선택 `icon@2x.png`는 512×512로 준비하고 사용 권한·출처를 남깁니다. HACS의 경로 존재 검사가 이미지 내용·권리·렌더링까지 보장하지 않으므로 실제 파일 형식과 표시를 별도로 확인합니다. 로컬 brand의 HA UI 사용은 HA 2026.3부터 지원되므로 이전 HA를 지원할 때 로컬 아이콘 제공만으로 그 버전의 UI 표시까지 검증했다고 기록하지 않습니다. [HACS action 선언](https://github.com/hacs/action/blob/1ebf01c408f29afcb6406bd431bc98fd8cbb15aa/action.yml)은 가변 Docker 이미지를 사용하므로 검사 동작이 바뀌면 공식 설명과 실제 CI 로그를 다시 확인합니다.
 
+HACS-05의 `integration_categories` 검사는 manifest에 `categories`가 없으면 현재 경고를 남기고 반환합니다. 값이 있으면 알려진 slug·중복·1–3개를 검사하며 잘못된 값은 실패할 수 있습니다. [HA-02 중앙 정책](home-assistant.md#통합-제품-카테고리-ha-02)은 적용 가능한 통합에 분류·판단 근거를 필수로 기록하고, entity/system/virtual 키 생략과 부모/자기 하위 분류 중복도 확인합니다. 경고를 없애려고 기기와 무관한 분류를 붙이거나 누락 경고를 HACS 실패로 보고하지 않습니다. taxonomy·HACS/HA 원본과 확인일은 [sources](sources.md#통합-제품-카테고리-재확인)에 기록합니다.
+
 **HACS-06 권장**: 공개 리포 description·topics·issue 경로·brands 상태를 관리합니다. `render_readme` 같은 과거 필드의 현재 지원 여부는 사용하는 HACS 버전에서 확인하고, 오래된 예제를 그대로 복사하지 않습니다.

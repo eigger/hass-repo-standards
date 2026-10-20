@@ -131,6 +131,7 @@ def contract_probe_input():
         "repository": sourced("fixture/example"),
         "default_branch": sourced("fixture-default"),
         "domain": sourced("example"),
+        "categories": sourced(["diy_makers"]),
         "manifest": sourced(
             {
                 "domain": "example",
@@ -138,6 +139,7 @@ def contract_probe_input():
                 "version": "1.0.0",
                 "documentation": "https://example.invalid",
                 "issue_tracker": "https://example.invalid/issues",
+                "categories": ["diy_makers"],
                 "codeowners": ["@fixture"],
                 "requirements": [],
                 "dependencies": [],

@@ -110,6 +110,18 @@ class IntegrationScaffold(unittest.TestCase):
         self.assertEqual((ROOT / record["source"]).read_bytes(), b"")
         self.assertFalse(scaffold.handles(record))
 
+    def test_categories_render_exact_explicit_order_and_exempt_type_omits_key(self):
+        selected = ["pets", "computers_network.printers", "energy.solar_batteries"]
+        self.data["manifest"]["value"]["categories"] = selected
+        self.data["categories"]["value"] = selected
+        output, _ = self.render(self.record("component-manifest.json"))
+        self.assertEqual(json.loads(output)["categories"], selected)
+        self.data["manifest"]["value"]["integration_type"] = "system"
+        del self.data["manifest"]["value"]["categories"]
+        self.data["categories"]["value"] = []
+        output, _ = self.render(self.record("component-manifest.json"))
+        self.assertNotIn("categories", json.loads(output))
+
     def test_confirmed_manifest_and_support_minimum_are_preserved(self):
         manifest = self.data["manifest"]["value"]
         manifest["requirements"] = ['imagespec[datamatrix]>=1.0.1; python_version >= "3.9"']

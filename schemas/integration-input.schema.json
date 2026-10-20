@@ -121,6 +121,20 @@
             },
             "config_flow": {
               "type": "boolean"
+            },
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1,
+              "maxItems": 3,
+              "uniqueItems": true
+            },
+            "integration_type": {
+              "type": "string",
+              "minLength": 1
             }
           },
           "required": [
@@ -630,6 +644,32 @@
       ],
       "additionalProperties": false,
       "description": "Original remote URL with provenance. T2 decides when required and verifies observed identity; no normalization is performed by T1."
+    },
+    "categories": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false,
+      "description": "Explicit product category decision and evidence. Must match manifest.categories in order; [] only for entity/system/virtual (omit manifest key). Never infer from entity platforms."
     }
   },
   "required": [
@@ -643,7 +683,8 @@
     "configuration",
     "platforms",
     "features",
-    "environments"
+    "environments",
+    "categories"
   ],
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema",

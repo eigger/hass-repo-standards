@@ -63,3 +63,5 @@ imagespec 사용 통합은 [작성 규칙](../../docs/payload-documentation.md)�
 액션의 payload 필드가 원래 YAML 문자열을 받는다면 그 API를 바꾸지 않습니다. 실제 액션 YAML이 문자열 payload를 제공하면 `payload_format: yaml`, 목록이면 기본 `list`를 선택합니다. yaml 형식은 실제 HA 스키마가 이미 목록으로 파싱한 결과도 허용하며 아직 문자열이면 안전하게 파싱해 통합 production 준비 결과의 최종 목록과 비교합니다. 어댑터에서 가짜 파서를 만들어 production 준비를 대체하지 않습니다. 실제 Jinja 표현식은 호스트의 기존 지원 방식으로 처리하며 미완성 placeholder와 혼동하지 않습니다.
 
 `PreparedPayload`는 `payload_example_adapter` 팩터리 **함수 안에서 지연 import**합니다. domain conftest 최상위에서 중앙 `hass_standards_payload` 또는 계약만을 위한 imagespec을 import하지 않습니다. 중앙 도구가 PYTHONPATH에 없거나 imagespec marker가 비활성인 일반 회귀 실행도 정상 수집되어야 합니다. 타입 전용 import는 `TYPE_CHECKING`과 런타임 평가되지 않는 주석을 사용할 수 있으며 통합 자체의 실제 런타임 의존성은 바꾸지 않습니다.
+
+manifest 제품 분류는 [HA-02](../../docs/home-assistant.md#통합-제품-카테고리-ha-02)를 따릅니다. 입력의 `categories`는 실제 선택 배열과 근거를 제공하며 manifest 배열과 순서까지 일치해야 합니다. entity/system/virtual은 입력 배열이 비어 있고 manifest 키는 없어야 합니다. `.hass-standards.json` 예시의 `categories_review`는 의도적인 미입력 placeholder이므로 실제 검토 없이 복사해 통과했다고 보고하지 않습니다. 기존 manifest는 adoption으로 자동 변경하지 않으며 누락/충돌을 먼저 보완해 재계획합니다.

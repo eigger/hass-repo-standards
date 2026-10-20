@@ -32,7 +32,7 @@
 | GOV-04 | 중앙 표에 작업 시작·단계 변경·종료 상태, 담당·적용 내용·검증/리뷰 근거·남은 작업 갱신, 타 리포 기록 보존 | TODO | 미확인 |
 | GOV-05 | 구현과 독립 리뷰·검증을 별도 서브 에이전트에게 위임, 지적 수정·재검증 및 결과 취합 | TODO | 미확인 |
 | HA-01, HA-13 | `custom_components/<domain>/`와 domain 일치, 필요한 모듈·공개 API·생명주기는 Core 대응 구조 | TODO | 미확인 |
-| HA-02 | manifest 필드·정렬·동작 선언 확인, 공식 품질 등급 자가 표기 없음 | TODO | 미확인 |
+| HA-02 | manifest 필드·정렬·동작 선언, 실제 제품 categories 1–3개·주 분류 순서·공식 slug·선택 근거·categories_review 일치 또는 entity/system/virtual 키 생략 이유, 공식 품질 등급 자가 표기 없음 | TODO | 미확인 |
 | HA-03 (권장) | 공통 상수·설정·갱신·플랫폼 역할 및 프로토콜 경계에 맞게 모듈 구성 | TODO | 미확인 |
 | HA-04, HA-08 | UI 설정·중복·안정적 식별 및 기능별 options/reauth/reconfigure, entity 의미·registry 영향 확인 | TODO | 미확인 |
 | HA-01, HA-04, HA-08, REL-01, REL-03 | domain·unique ID·entry schema·상태/통계 계약 변경 시 migration 테스트와 사용자 조치 안내 | TODO | 미확인 — 변경 유무부터 확인 |
@@ -133,3 +133,13 @@ imagespec 미사용이면 실제 requirement/import 확인 근거와 N/A를 기�
 
 - DOC-08 matrix별 imagespec marker 활성/비활성 근거·비활성 N/A와 버전 coverage 없음·일반 HA 회귀 지속·다른 활성 환경의 current/정확한 하한 결과: 미확인
 - YAML 문자열/목록 액션 입력과 실제 HA 스키마 정규화 후 payload_format 일치·기존 API 보존: 미확인
+
+## HA-02 제품 분류 검토 근거
+
+| 항목 | 실제 판단 / 근거 |
+|---|---|
+| manifest integration_type | TODO — 기존 선언 보존; 미선언이면 그 사실 기록 |
+| categories (주 분류 먼저) | TODO — 실제 지원 제품·서비스 용도 근거로 1–3개; 제외 유형은 키 생략 |
+| 주/보조 분류 선택 또는 제외 이유·출처 | TODO — 실제 제품·사용자 안내·검토자/일자; 플랫폼 이름에서 추정하지 않음 |
+| categories_review와 manifest의 값/순서/유형 일치 | TODO — 과거 검토를 변경 후 결과로 재사용하지 않음 |
+| taxonomy snapshot·HACS warning/실패·실제 실행 결과 | TODO — 중앙 오프라인 검사와 원격 HACS/HA 실행·의미 검토를 구분 |

@@ -166,10 +166,11 @@
       "condition": "always",
       "required_inputs": [
         "domain",
-        "manifest"
+        "manifest",
+        "categories"
       ],
       "markers": [],
-      "extension": null,
+      "extension": "Preserve confirmed manifest metadata and category order. No inferred categories; exempt entity/system/virtual types omit the categories key.",
       "rules": [
         "HA-01",
         "HA-02"

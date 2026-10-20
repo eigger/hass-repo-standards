@@ -160,6 +160,15 @@ def load_schema(kind):
 
 def validate_input(data, required_inputs=()):
     validate_schema(data, load_schema("input"))
+    from . import categories
+
+    categories.validate_review(
+        data["manifest"]["value"],
+        {
+            **data["categories"],
+            "integration_type": data["manifest"]["value"].get("integration_type"),
+        },
+    )
     for name in required_inputs:
         if name not in data:
             _fail("input", f"missing required input {name}")
@@ -327,6 +336,10 @@ def render_settings(data):
         "tests_workflow": "tests.yml",
         "validate_workflow": "validate.yml",
         "readme": readme,
+        "categories_review": {
+            **data["categories"],
+            "integration_type": data["manifest"]["value"].get("integration_type"),
+        },
     }
     if "payload" in data:
         result["payload"] = {"examples": data["payload"]["value"]["examples"]}

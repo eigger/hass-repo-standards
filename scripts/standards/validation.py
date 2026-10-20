@@ -13,7 +13,7 @@ from pathlib import Path
 
 import yaml
 
-from . import conditions, contract, inventory, readme, scaffold
+from . import categories, conditions, contract, inventory, readme, scaffold
 
 UNFINISHED = re.compile(
     r"\b(?:TODO|TBD|FIXME|REPLACE_[A-Z_]+|YOUR_[A-Z_]+)\b|\{\{[^}]+\}\}|@@[a-z_]+@@|example\.com|hass-example|작성 필요|미입력|미확인",
@@ -382,6 +382,10 @@ def check(root, config, manifest_path, manifest, safe_path, central=None):
             errors.append(("HA-02", manifest_name, f"Actual manifest {field} is required"))
         elif UNFINISHED.search(json.dumps(value, ensure_ascii=False)):
             errors.append(("HA-02", manifest_name, f"Unfinished manifest {field}"))
+    try:
+        categories.validate_review(manifest, config.get("categories_review"))
+    except ValueError as error:
+        errors.append(("HA-02", manifest_name, str(error)))
     trees = {}
     for path in sorted(safe_path(root, component).glob("*.py")):
         relative = path.relative_to(root).as_posix()
