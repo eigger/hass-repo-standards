@@ -31,7 +31,7 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 | [Initial implementation validation](docs/validation.md) | Test environment and verified scope |
 | [Official references](docs/sources.md) | Sources and verification dates |
 
-HACS custom integrations use implementation and test structures similar to Core. Every integration provides an English README.md and a Korean README.ko.md, linked to each other. Add a dynamic Usage badge from its manifest domain before Analytics data becomes available; a missing result or failed request does not mean zero installs.
+HACS custom integrations use implementation and test structures similar to Core. Every integration provides an English README.md and a Korean README.ko.md, linked to each other. HACS Default integrations show HACS Downloads from the official HACS data; Custom integrations add a dynamic Usage badge from their manifest domain before Analytics data becomes available. Both provide a repository-specific My Home Assistant HACS badge in their installation guidance. Missing data or a failed request does not mean zero installs.
 
 The hass-kibble pilot completed adoption, real HA validation, and the README language and Usage follow-up. The hass-catprinter second pilot also completed adoption and independent minimum/current HA and final CI validation. Other integrations follow the scope and order recorded in the central status table.
 

@@ -6,7 +6,7 @@ import re
 
 from .badges import END as BADGES_END
 from .badges import START as BADGES_START
-from .badges import preserve_extra_badges
+from .badges import install_badge, preserve_extra_badges
 from .badges import render as render_badges
 
 AREAS = ("header", "support", "related-projects", "license")
@@ -42,6 +42,79 @@ def line(value):
     if not isinstance(value, str) or not value.strip() or "\n" in value or "\r" in value:
         raise ValueError("README metadata must contain nonempty single lines")
     return value
+
+
+def markdown_headings(text):
+    """Find real ATX headings, excluding backtick and tilde fenced examples."""
+    headings = []
+    fence = None
+    for line in re.finditer(r"^.*$", text, re.M):
+        value = line.group().rstrip("\r")
+        boundary = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", value)
+        if fence:
+            if boundary and boundary[1][0] == fence[0] and len(boundary[1]) >= len(fence):
+                if not boundary[2].strip():
+                    fence = None
+            continue
+        if boundary:
+            fence = boundary[1]
+            continue
+        heading = re.compile(r"^#{1,6} ([^\r\n]+)[ \t]*\r?$", re.M).match(text, line.start())
+        if heading:
+            headings.append(heading)
+    return headings
+
+
+def installation_update(text, config, language):
+    """Add only the install badge, retaining the integration's installation prose."""
+    start, end = markers("installation")
+    content = install_badge(config)
+    heading = "## Installation" if language == "en" else "## 설치"
+    name = "README.md" if language == "en" else "README.ko.md"
+    anchor = config.get("installation_links", {}).get(name) or config.get("installation_link")
+    if anchor and not anchor.startswith("#"):
+        raise ValueError("Installation links must name a local README heading anchor")
+    expected = anchor[1:] if anchor else ("installation" if language == "en" else "설치")
+    headings = markdown_headings(text)
+
+    def slug(value):
+        return re.sub(r"[^\w -]", "", value.lower()).replace(" ", "-")
+
+    matches = [match for match in headings if slug(match[1].strip()) == expected]
+    if len(matches) > 1:
+        raise ValueError("Installation anchor is ambiguous; designate one installation heading")
+    if anchor and not matches:
+        raise ValueError("Configured installation anchor does not match a README heading")
+    section = matches[0] if matches else None
+    if start in text or end in text:
+        previous = block(text, "installation")
+        header_end = text.index(markers("header")[1]) + len(markers("header")[1])
+        support_start = text.index(markers("support")[0])
+        if not header_end <= text.index(start) < text.index(end) < support_start:
+            raise ValueError("Installation badge must be in the README body before support")
+        if section:
+            following = next(
+                (h.start() for h in headings if h.start() > section.start()), support_start
+            )
+            if not section.end() <= text.index(start) < text.index(end) < following:
+                raise ValueError(
+                    "Installation badge must be under the configured installation heading"
+                )
+        # An installation badge block never owns user prose or instructions.
+        if previous.strip() and not re.fullmatch(
+            r"\[!\[[^]\n]+\]\(https://my\.home-assistant\.io/badges/hacs_repository\.svg\)\]\(https://my\.home-assistant\.io/redirect/hacs_repository/\?[^)\n]+\)",
+            previous.strip(),
+        ):
+            raise ValueError("Installation block contains non-badge content; preserve it manually")
+        return replace(text, "installation", content)
+    managed = f"{start}\n{content}\n{end}"
+    if section:
+        return text[: section.end()] + "\n\n" + managed + text[section.end() :]
+    if any(re.match(r"(?:installation|설치)\b", h[1], re.I) for h in headings):
+        raise ValueError("Set installation_links to the existing installation heading anchor")
+    support, _ = markers("support")
+    index = text.index(support)
+    return text[:index] + f"{heading}\n\n{managed}\n\n" + text[index:]
 
 
 def render_readme(root, config, language, original):
@@ -113,7 +186,7 @@ def render_readme(root, config, language, original):
     ):
         guard_content(block(original, area), content, area)
         original = replace(original, area, content)
-    return original
+    return installation_update(original, config, language)
 
 
 def guard_content(old, new, area):

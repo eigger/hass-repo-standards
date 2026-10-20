@@ -79,3 +79,17 @@
 | [Antigravity skills](https://antigravity.google/docs/skills) | App·CLI·IDE별 workspace `.agents/skills`, App/IDE 사용자 `~/.gemini/config/skills`, CLI 사용자 `~/.gemini/antigravity-cli/skills` |
 
 형식 호환과 이 리포의 실제 행동 검증을 구분합니다. Codex의 격리 실행만 검증했고 다른 클라이언트·일반 웹 채팅·자동 발동은 검증하지 않았습니다. 중앙 collaboration 위임 등 제품 기능에 의존하는 정책의 호환성을 확인하기 전 모든 클라이언트에서 동일 실행을 보장한다고 주장하지 않습니다. 명시적 설치 방법과 현재 범위는 [사용 안내](template-skill-usage.md)를 따릅니다.
+
+## HACS 배지·설치 링크 재확인
+
+다음 범위는 **2026-10-20** 확인했습니다. 배지 선택·배치 의무는 이 프로젝트 정책이며 HACS의 공식 배지 의무를 뜻하지 않습니다.
+
+| 공식 자료 | 확인한 범위 |
+|---|---|
+| [HACS 데이터 원본](https://www.hacs.xyz/docs/faq/data_sources/) | Default integration 데이터는 data-v2.hacs.xyz/integration/data.json, Custom은 GitHub API 사용 |
+| [HACS 데이터 생성 구현](https://github.com/hacs/integration/blob/a15e87ec0d1c82e58f1ddbaf17669d3eaa261eb8/scripts/data/generate_category_data.py) | 저장소 ID별 객체와 full_name 선택 |
+| [HACS downloads 구현](https://github.com/hacs/integration/blob/a15e87ec0d1c82e58f1ddbaf17669d3eaa261eb8/custom_components/hacs/repositories/base.py) | exports의 downloads와 선택한 ref의 대상 asset download_count, 모든 릴리스·asset 합계나 활성 설치 수 아님 |
+| [HACS My 링크 안내](https://www.hacs.xyz/docs/use/my/) | Default·Custom 모두 지원, owner·저장소 이름·Custom category=integration |
+| [My 링크 공식 선언](https://github.com/home-assistant/my.home-assistant.io/blob/60656776768e236d79fc427de79b8bdf6b8771f3/redirect.json) | hacs_repository의 owner/repository/category 매개변수와 공식 SVG 배지 |
+
+이 환경의 data-v2 직접 조회는 HTTP 403이므로 실제 다운로드 수나 배지의 실시간 렌더링 성공을 검증했다고 기록하지 않습니다. 공식 문서·생성/소비 소스의 계약과 로컬 회귀 테스트를 검증하며 누락 데이터를 0으로 바꾸지 않습니다.

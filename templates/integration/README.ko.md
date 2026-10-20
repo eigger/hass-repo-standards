@@ -16,6 +16,12 @@
 
 <!-- 기존 섹션 순서·제목·본문·예제·고지를 여기에 보존합니다. 이 주석은 적용 위치 표시이며 필수 본문 틀이 아닙니다. -->
 
+## 설치
+
+<!-- hass-standards:installation:start -->
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=eigger&repository=hass-example&category=integration)
+<!-- hass-standards:installation:end -->
+
 <!-- hass-standards:support:start -->
 ## 지원
 

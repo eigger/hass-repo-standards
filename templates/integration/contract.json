@@ -84,12 +84,14 @@
         "support",
         "related-projects",
         "license",
-        "badges"
+        "badges",
+        "installation"
       ],
-      "extension": "Content outside managed blocks and unique badges is integration owned.",
+      "extension": "Content outside managed blocks and unique badges is integration owned. Insert only the installation badge under the existing installation heading; preserve all existing prose.",
       "rules": [
         "DOC-01",
-        "DOC-02"
+        "DOC-02",
+        "DOC-06"
       ],
       "status": "available"
     },
@@ -110,12 +112,14 @@
         "support",
         "related-projects",
         "license",
-        "badges"
+        "badges",
+        "installation"
       ],
-      "extension": "Content outside managed blocks and unique badges is integration owned.",
+      "extension": "Content outside managed blocks and unique badges is integration owned. Insert only the installation badge under the existing installation heading; preserve all existing prose.",
       "rules": [
         "DOC-01",
-        "DOC-02"
+        "DOC-02",
+        "DOC-06"
       ],
       "status": "available"
     },

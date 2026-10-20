@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+from urllib.parse import parse_qs, urlsplit
 
 from packaging.markers import default_environment
 from packaging.version import Version
@@ -276,6 +277,41 @@ class BadgeSafety(unittest.TestCase):
             self.assertEqual(badges.render(root, {**config, "analytics": True}), output)
             with self.assertRaises(ValueError):
                 badges.render(root, {**config, "hacs": "default"})
+
+    def test_default_uses_official_hacs_downloads_and_state_switch_removes_old_badge(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            component = root / "custom_components/domain_not_repository"
+            component.mkdir(parents=True)
+            (component / "manifest.json").write_text('{"domain":"domain_not_repository"}')
+            (root / "hacs.json").write_text("{}")
+            config = {"repository": "owner/repo-name", "default_branch": "stable"}
+            custom = badges.render(root, config)
+            default = badges.render(
+                root,
+                {
+                    **config,
+                    "hacs": "default",
+                    "hacs_default_evidence": "https://github.com/hacs/default — 2026-10-20",
+                },
+            )
+            self.assertNotIn("label=Usage", default)
+            self.assertNotIn("analytics.home-assistant.io", default)
+            self.assertNotIn("github/downloads", default)
+            line = next(line for line in default.splitlines() if "[![HACS Downloads]" in line)
+            query = parse_qs(urlsplit(line.split("](", 1)[1].split(")](", 1)[0]).query)
+            self.assertEqual(query["url"], ["https://data-v2.hacs.xyz/integration/data.json"])
+            self.assertEqual(query["query"], ['$[?(@.full_name=="owner/repo-name")].downloads'])
+            self.assertEqual(query["label"], ["HACS Downloads"])
+            extra = "[![Special](https://example.com/badge)](https://example.com)"
+            marked = badges.START + "\n" + custom + "\n" + extra + "\n" + badges.END
+            converted = badges.preserve_extra_badges(marked, default)
+            self.assertNotIn("label=Usage", converted)
+            self.assertTrue(converted.endswith(extra))
+            reverted = badges.preserve_extra_badges(badges.replace_block(marked, converted), custom)
+            self.assertNotIn("[![HACS Downloads]", reverted)
+            self.assertIn("label=Usage", reverted)
+            self.assertTrue(reverted.endswith(extra))
 
     def test_bilingual_readmes_keep_links_and_local_installation_anchors(self):
         with tempfile.TemporaryDirectory() as directory:

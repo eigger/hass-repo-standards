@@ -49,3 +49,5 @@ DOC-07에서 blesession 사용 통합은 중앙 양언어 기기별 문제 해�
 DOC-08은 imagespec 사용 여부를 실제 requirements/import로 확인합니다. 적용 대상은 양언어 로컬 payload 문서의 여섯 절·상호/공통 링크·전체 액션 YAML·등록 메타데이터·정확한 중앙 테스트 scaffold를 검사합니다. 각 current/정확한 하한 환경의 실제 HA 스키마 처리·production 준비 함수·설치된 imagespec.validate/render·출력 크기/색상·실제 버전·pip check·명령/CI 링크를 증거로 남깁니다. exact pin으로 결과를 재사용했다면 같은 실제 설치값임을 적습니다. 기존 기기 예제·README 본문 보존과 번역 의미, context·fixture가 실제 구현인지 독립 리뷰합니다. 기능이 없으면 해당 없음의 근거를 기록하고, 미실행/실패·API 비호환은 PASS로 바꾸지 않습니다. 중앙 plugin 자체의 성공을 모든 대상 통합의 검증으로 재사용하지 않습니다.
 
 DOC-08 예제가 YAML 문자열 입력을 사용하는 경우 `payload_format`과 실제 HA 스키마 정규화 후 형태를 기록합니다. matrix별 marker 비활성은 N/A·설치 버전 coverage 없음으로 분리하고 일반 HA 회귀 결과와 활성 환경의 current/정확한 하한 예제 결과를 각각 남깁니다. 실제 patch가 필요한 marker를 minor-only Python 선언으로 입증했다고 적지 않습니다.
+
+DOC-03·DOC-05·DOC-06은 실제 HACS 목록 근거에 따라 Default의 HACS Downloads와 Custom의 manifest domain Usage를 구분하고, 양언어 설치 절의 My HACS 링크가 실제 owner/저장소 이름 및 Custom의 category=integration을 가리키는지 확인합니다. 기존 설치 본문·예제·제목 보존, 링크가 설치를 자동 완료한다는 오해 방지, 데이터 누락과 0 설치의 구분을 리뷰 증거로 남깁니다.
