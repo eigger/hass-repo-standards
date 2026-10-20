@@ -278,6 +278,108 @@ async def async_setup_entry(hass, entry, async_add_entities):
         self.save_translations()
         self.assertTrue(any("options.abort.no_change" in error for error in self.errors()))
 
+    def enable_subentries(self, registration=None):
+        self.enable_ui()
+        self.write(
+            "custom_components/example/const.py",
+            'DOMAIN = "example"\nPLATFORMS = ["sensor"]\nSTATION = "station"\n',
+        )
+        path = self.root / "custom_components/example/config_flow.py"
+        content = path.read_text().replace(
+            "class DeviceFlow(config_entries.ConfigFlow, domain=DOMAIN):",
+            "class DeviceFlow(config_entries.ConfigFlow, domain=DOMAIN):\n"
+            "    @classmethod\n"
+            "    def async_get_supported_subentry_types(cls, config_entry):\n"
+            "        return "
+            + (registration or '{STATION: StationFlow, "vehicle": VehicleFlow}')
+            + "\n",
+        )
+        self.write(
+            path.relative_to(self.root).as_posix(),
+            content
+            + """
+from .const import STATION
+from homeassistant.config_entries import ConfigSubentryFlow as SubentryHandler
+class StationFlow(SubentryHandler):
+    async def async_step_user(self, user_input=None):
+        if user_input:
+            return self.async_abort(reason="already_exists")
+        return self.async_show_form(step_id="user")
+class VehicleFlow(config_entries.ConfigSubentryFlow):
+    async def async_step_select(self, user_input=None):
+        return self.async_show_form(step_id="select")
+""",
+        )
+        self.translations["config_subentries"] = {
+            "station": {
+                "step": {"user": {"title": "Station"}},
+                "abort": {"already_exists": "Already exists"},
+            },
+            "vehicle": {"step": {"select": {"title": "Vehicle"}}},
+        }
+        self.save_translations()
+
+    def test_subentry_types_use_their_registered_translation_namespaces(self):
+        self.enable_subentries()
+        self.assertEqual(self.errors(), [])
+        for subentry_type, section, key in (
+            ("station", "step", "user"),
+            ("station", "abort", "already_exists"),
+            ("vehicle", "step", "select"),
+        ):
+            with self.subTest(subentry_type=subentry_type, section=section):
+                self.enable_subentries()
+                del self.translations["config_subentries"][subentry_type][section][key]
+                self.save_translations()
+                self.assertTrue(
+                    any(
+                        f"config_subentries.{subentry_type}.{section}.{key}" in error
+                        for error in self.errors()
+                    )
+                )
+
+    def test_subentry_module_aliases_and_shared_handler_check_every_type(self):
+        self.enable_subentries('{STATION: StationFlow, "vehicle": StationFlow}')
+        path = self.root / "custom_components/example/config_flow.py"
+        content = (
+            path.read_text()
+            .replace(
+                "from homeassistant.config_entries import ConfigSubentryFlow as SubentryHandler",
+                "import homeassistant.config_entries as entries",
+            )
+            .replace(
+                "class StationFlow(SubentryHandler):",
+                "class StationFlow(entries.ConfigSubentryFlow):",
+            )
+        )
+        # The unused class is deliberately removed; an unregistered handler is unresolved.
+        content = content.split("class VehicleFlow", 1)[0]
+        self.write(path.relative_to(self.root).as_posix(), content)
+        self.translations["config_subentries"]["vehicle"] = copy.deepcopy(
+            self.translations["config_subentries"]["station"]
+        )
+        self.save_translations()
+        self.assertEqual(self.errors(), [])
+        del self.translations["config_subentries"]["vehicle"]["abort"]["already_exists"]
+        self.save_translations()
+        self.assertTrue(
+            any(
+                "config_subentries.vehicle.abort.already_exists" in error for error in self.errors()
+            )
+        )
+
+    def test_unresolved_subentry_registration_fails_instead_of_using_config(self):
+        for registration in (
+            "dynamic_types()",
+            "{UNKNOWN: StationFlow}",
+            '{"station": UnknownFlow}',
+        ):
+            with self.subTest(registration=registration):
+                self.enable_subentries(registration)
+                errors = self.errors()
+                self.assertTrue(any("Unresolved subentry" in error for error in errors))
+                self.assertFalse(any("config.step.select" in error for error in errors))
+
     def test_only_central_scaffold_sentinels_fail_not_every_todo_or_abstract_method(self):
         self.enable_ui()
         data = input_fixture()
