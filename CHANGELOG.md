@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-20 — Config subentry translation namespaces
+
+- Resolve registered ConfigSubentryFlow types from literal ConfigFlow registration dictionaries, including local imported string constants and handler aliases, and check their `config_subentries.<type>.step`/`abort` keys instead of `config.step`/`abort`.
+- Keep ordinary config/options checks and missing-key detection; unresolved subentry registrations fail explicitly rather than accepting duplicate fallback translations. Add multiple-type, abort, missing-key and unresolved-registration regressions.
+
 ## 2026-10-20 — Hassfest source compatibility prototype
 
 - Add an optional reviewed full Core SHA path for the shared Hassfest job, preserving the default official action and failing on fetch/build/validation errors. This local prototype addresses published-image schema lag without altering caller manifests or support minima; actual image-build evidence remains separate.

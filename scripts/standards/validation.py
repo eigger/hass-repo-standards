@@ -545,6 +545,131 @@ def check(root, config, manifest_path, manifest, safe_path, central=None):
     return errors
 
 
+def flow_namespaces(trees, errors):
+    """Resolve literal HA subentry registrations without executing integration code."""
+    classes, bindings = {}, {}
+    for relative, tree in trees.items():
+        module = Path(relative).with_suffix("")
+        scope = bindings[relative] = {}
+        for node in tree.body:
+            if isinstance(node, ast.ClassDef):
+                classes[(relative, node.name)] = node
+            elif isinstance(node, (ast.Assign, ast.AnnAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                for target in targets:
+                    if isinstance(target, ast.Name):
+                        scope[target.id] = (relative, node.value)
+            elif isinstance(node, ast.ImportFrom):
+                if node.level:
+                    parent = module.parent
+                    for _ in range(node.level - 1):
+                        parent = parent.parent
+                    source = (parent / (node.module or "").replace(".", "/")).as_posix() + ".py"
+                    for alias in node.names:
+                        scope[alias.asname or alias.name] = (source, ast.Name(id=alias.name))
+                elif node.module == "homeassistant.config_entries":
+                    for alias in node.names:
+                        scope[alias.asname or alias.name] = alias.name
+                elif node.module == "homeassistant":
+                    for alias in node.names:
+                        if alias.name == "config_entries":
+                            scope[alias.asname or alias.name] = "homeassistant.config_entries"
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    if alias.name == "homeassistant.config_entries" and alias.asname:
+                        scope[alias.asname] = alias.name
+
+    def resolve(relative, node, seen=()):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return node.value
+        if isinstance(node, ast.Attribute):
+            if resolve(relative, node.value, seen) == "homeassistant.config_entries":
+                return node.attr
+        if isinstance(node, ast.Name):
+            key = (relative, node.id)
+            if key in seen:
+                return None
+            if key in classes:
+                return key
+            value = bindings.get(relative, {}).get(node.id)
+            if isinstance(value, tuple):
+                return resolve(*value, seen=(*seen, key))
+            return value
+        return None
+
+    def is_flow(relative, owner, kind, seen=()):
+        key = (relative, owner.name)
+        if key in seen:
+            return False
+        for base in owner.bases:
+            value = resolve(relative, base)
+            if value == kind:
+                return True
+            if isinstance(value, tuple) and value in classes:
+                if is_flow(value[0], classes[value], kind, (*seen, key)):
+                    return True
+        return False
+
+    registered = {}
+    for (relative, _), owner in classes.items():
+        if not is_flow(relative, owner, "ConfigFlow"):
+            continue
+        for method in owner.body:
+            if not isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if method.name != "async_get_supported_subentry_types":
+                continue
+            returns = [node for node in ast.walk(method) if isinstance(node, ast.Return)]
+            for node in returns:
+                if not isinstance(node.value, ast.Dict):
+                    errors.append(
+                        ("HA-11", relative, "Unresolved subentry type registration requires review")
+                    )
+                    continue
+                for type_node, class_node in zip(node.value.keys, node.value.values):
+                    subentry_type = resolve(relative, type_node)
+                    handler = resolve(relative, class_node)
+                    if (
+                        not isinstance(subentry_type, str)
+                        or not subentry_type
+                        or not isinstance(handler, tuple)
+                        or handler not in classes
+                        or not is_flow(handler[0], classes[handler], "ConfigSubentryFlow")
+                    ):
+                        errors.append(
+                            (
+                                "HA-11",
+                                relative,
+                                "Unresolved subentry type registration requires review",
+                            )
+                        )
+                        continue
+                    registered.setdefault(handler, set()).add(subentry_type)
+            if not returns:
+                errors.append(
+                    ("HA-11", relative, "Unresolved subentry type registration requires review")
+                )
+    namespaces = {}
+    for (relative, name), owner in classes.items():
+        if is_flow(relative, owner, "ConfigSubentryFlow"):
+            types = registered.get((relative, name))
+            if not types:
+                errors.append(
+                    ("HA-11", relative, f"Unresolved subentry translation namespace for {name}")
+                )
+            paths = [("config_subentries", value) for value in sorted(types or ())]
+        else:
+            options = (
+                owner.name.endswith("OptionsFlow")
+                or is_flow(relative, owner, "OptionsFlow")
+                or is_flow(relative, owner, "OptionsFlowWithConfigEntry")
+            )
+            paths = [("options" if options else "config",)]
+        for child in ast.walk(owner):
+            namespaces[(relative, id(child))] = paths
+    return namespaces
+
+
 def translation_errors(root, component, platforms, trees, safe_path, actions=()):
     errors, documents = [], {}
     for name in ("strings.json", "translations/en.json", "translations/ko.json"):
@@ -597,15 +722,8 @@ def translation_errors(root, component, platforms, trees, safe_path, actions=())
                 return
             value = value[key]
 
+    namespaces = flow_namespaces(trees, errors)
     for relative, tree in trees.items():
-        namespaces = {}
-        for owner in (node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)):
-            options = owner.name.endswith("OptionsFlow") or any(
-                dotted(base).split(".")[-1] in {"OptionsFlow", "OptionsFlowWithConfigEntry"}
-                for base in owner.bases
-            )
-            for child in ast.walk(owner):
-                namespaces[id(child)] = "options" if options else "config"
         for node in ast.walk(tree):
             if (
                 isinstance(node, ast.Call)
@@ -623,10 +741,8 @@ def translation_errors(root, component, platforms, trees, safe_path, actions=())
                         and isinstance(keyword.value, ast.Constant)
                         and isinstance(keyword.value.value, str)
                     ):
-                        require(
-                            (namespaces.get(id(node), "config"), section, keyword.value.value),
-                            relative,
-                        )
+                        for namespace in namespaces.get((relative, id(node)), [("config",)]):
+                            require((*namespace, section, keyword.value.value), relative)
             if isinstance(node, (ast.Assign, ast.AnnAssign)):
                 targets = node.targets if isinstance(node, ast.Assign) else [node.target]
                 if (
