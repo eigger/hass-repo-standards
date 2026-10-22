@@ -5,7 +5,7 @@ In commands, `<central>` is a confirmed central checkout, `<sha>` its reviewed f
 ## Establish the source and input
 
 1. Confirm central `git rev-parse HEAD` equals `<sha>`, its execution assets are clean and `templates/integration/contract.json` has `schema_version: 1`. Use the same revision's rules, schemas, templates and tools. Ask for a missing checkout/ref rather than inferring a path from the skill install directory. The CLI also enforces the revision and dirty-asset checks.
-2. Read `<central>/AGENTS.md`, README.md, docs/adoption.md, docs/checklist.md, docs/home-assistant.md, docs/testing.md and docs/template-skill-usage.md. Follow their delegation and evidence requirements without installing agent entry files into the target.
+2. Read `<central>/AGENTS.md`, README.md, docs/adoption.md, docs/checklist.md, docs/home-assistant.md and docs/testing.md for first adoption. Read only the relevant CLI/input sections of docs/template-skill-usage.md. Use docs/adoption.md for review/status scope; T1–T6 design/history is not required for routine generation.
 3. Collect actual design decisions as `value`/`source` input against `<central>/schemas/integration-input.schema.json`: repository/remote/default branch, domain/manifest, bilingual common text, actual license, configuration/platforms/features and separate minimum/current HA/Python/plugin environments. Use the usage document's schema example as syntax only. Missing device/client/entry/flow/action facts are questions or pending work, never invented defaults. Keep new dependencies in the declaration locations required by docs/dependencies.md.
 
 ## Inspect, plan and route the request
@@ -37,6 +37,6 @@ Use real requirement/import observations to select conditional guidance: docs/bl
 python3 "<central>/scripts/check_integration.py" "<target>" --check
 ```
 
-Run the applicable real HA domain tests using each exact minimum/current environment and the payload contract where applicable, following the central documents. Static check success is not HA behavior or translation-meaning validation. Follow independent implementation/review requirements from central AGENTS.md; report missing environments and failed/skipped checks honestly.
+Run the applicable real HA domain tests using each exact minimum/current environment and the payload contract where applicable, following the central documents. Static check success is not HA behavior or translation-meaning validation. The primary agent implements and verifies by default; use GOV-05 in docs/adoption.md to select self-review or independent review; report missing environments and failed/skipped checks honestly.
 
 Record this run's reviewed SHA, actual target commit, commands, installed versions, results, exceptions, CI links and limits in STANDARDS.md/ADOPTION_CHECKLIST.md using central templates. Do not reuse past PASS. Follow the central adoption-status procedure only for the authorized target row. The final report distinguishes generated structure, real behavior, static/HA evidence, remaining work and any central status not updated. This skill does not authorize external installation, commit/push/PR, workflow dispatch, releases or unrelated repositories.
