@@ -40,7 +40,7 @@ blesession 사용 통합은 [영어 기기별 템플릿](docs/troubleshooting.md
 
 공통 원본은 blesession의 [영어 프록시 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md)·[한국어 프록시 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md)·[영어 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.md)·[한국어 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.ko.md)입니다. 각 README는 같은 언어의 프록시 안내와 로컬 문제 해결로 연결하고, 로컬 문제 해결은 같은 언어의 README·공통 문제 해결·다른 언어판으로 연결합니다. README 세부 구조와 기존 본문·고지를 재작성하지 마세요.
 
-공용 Validate는 blesession의 실제 requirement 이름(extras·연산자·marker 포함, marker 비활성이라도 대상) 또는 절대 import를 읽어 적용 여부를 판단합니다. 문서 존재·고정 구조·필수 링크·미입력 표시를 검사하며 실제 진단 의미·하드웨어·번역·원격 Issues 상태는 별도 독립 리뷰가 필요합니다. 읽기만을 위해 라이브러리 설치를 요구하지 않으며 blesession 미사용 통합에 고정 템플릿 자동 검사를 강제하지 않습니다.
+공용 Validate는 blesession의 실제 requirement 이름(extras·연산자·marker 포함, marker 비활성이라도 대상) 또는 절대 import를 읽어 적용 여부를 판단합니다. 문서 존재·고정 구조·필수 링크·미입력 표시를 검사하며 실제 진단 의미·하드웨어·번역·원격 Issues 상태는 GOV-05에 따른 리뷰로 확인합니다. 읽기만을 위해 라이브러리 설치를 요구하지 않으며 blesession 미사용 통합에 고정 템플릿 자동 검사를 강제하지 않습니다.
 
 공통 문서 이관 공개 순서는 blesession의 새 양언어 원본을 먼저 반영·검증한 뒤 중앙 이전 안내와 새 템플릿 규칙을 반영하는 순서입니다. 로컬 문서 작성만으로 원격 원본이 공개되었다고 보고하지 않습니다. 현재 작업은 commit/push 권한을 자동 부여하지 않으며 다른 리포를 자동 수정하지 않습니다.
 

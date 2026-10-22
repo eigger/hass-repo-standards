@@ -127,7 +127,7 @@ imagespec 미사용이면 실제 requirement/import 확인 근거와 N/A를 기�
 | 미확인 | 미확인 | 미확인 | 미확인 | 미확인 | 미확인 |
 
 - 중앙 계약 완료·등록 예제 전체 실행·skip/xfail/deselect 없음: 미확인
-- adapter가 production 준비 함수를 호출하고 실제 context/정규화 payload를 쓰는 독립 검토: 미확인
+- adapter가 production 준비 함수를 호출하고 실제 context/정규화 payload를 쓰는 검토(자체/독립·GOV-05): 미확인
 - 템플릿·폰트·이미지·history 실제 지원 context와 외부 통신만 mock한 근거: 미확인
 - 공통 원본 실제 기본 브랜치 공개 URL 확인 / 중앙 규칙 반영 순서: 미확인
 
