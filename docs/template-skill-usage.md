@@ -1,6 +1,6 @@
 # 템플릿·스킬 도구 사용 안내
 
-현재 구현은 계약·공통 렌더러, `inspect`·`plan`·`apply`·`recover`, 신규 작성 기반과 정적 검사이며 T1~T5는 main에 반영했습니다. T6 중앙 fixture의 생성·갱신 자동 회귀 구현·독립 검증과 PR CI도 완료했으며 외부 통합 적용은 이번 요청 범위가 아닙니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 합니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
+현재 구현은 계약·공통 렌더러, `inspect`·`plan`·`apply`·`recover`, 신규 작성 기반과 정적 검사이며 T1~T5는 main에 반영했습니다. T6 중앙 fixture의 생성·갱신 자동 회귀 구현·독립 검증과 PR CI도 완료했으며 외부 통합 적용은 이번 요청 범위가 아닙니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 합니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)는 중앙 도구 개발이나 과거 구현 근거를 확인할 때만 참고합니다.
 
 ## 실행 준비와 조사
 
