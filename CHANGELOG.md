@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-23 — 공용화 실행·리뷰 비용 축소
+
+- GOV-05의 구현 서브 에이전트 강제를 없애고 주 에이전트 직접 구현·검증을 기본으로 합니다. 큰 구조·HA 동작·공용 CI 실행 로직 변경의 독립 리뷰와 수정 후 영향 검사 재실행은 유지합니다. 문구·배지·중앙 생성물 변경은 자체 리뷰 방식과 근거를 기록합니다.
+- GOV-04 현황 갱신을 시작·종료·의미 있는 상태 변화로 제한하고 상세 증거는 체크리스트에 한 번 기록해 연결합니다. 첫 채택과 후속 부분 변경의 읽기·검증 범위를 구분하고 T1~T6는 중앙 도구 최초 구현 계약으로 한정합니다.
+- AGENTS·양언어 README·문서 규칙·체크리스트·사용 안내·스킬 참조를 정합화합니다. 기존 채택 리포는 명시적 기준 SHA 갱신 시 새 GOV-04/05를 적용하고 과거 예외·검증 이력은 보존합니다. 이 변경만으로 다른 커밋의 PASS나 전체 재채택 완료를 인정하지 않습니다. 실제 HA·지원 최소·외부 통신 경계·중앙 템플릿·승인 예외 정책은 유지합니다.
+
 ## 2026-10-20 — Config subentry translation namespaces
 
 - Resolve registered ConfigSubentryFlow types from literal ConfigFlow registration dictionaries, including local imported string constants and handler aliases, and check their `config_subentries.<type>.step`/`abort` keys instead of `config.step`/`abort`.

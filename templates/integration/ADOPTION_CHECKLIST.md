@@ -11,7 +11,7 @@
 | 검토 대상 통합 커밋 / 채택 PR | 미확인 |
 | 검토한 표준 전체 커밋 SHA | 미확인 — `STANDARDS.md`와 일치시킬 것 |
 | 검토일 / 조율 담당 | 미확인 |
-| 구현 서브 에이전트 / 독립 리뷰·검증 서브 에이전트 | 미배정 |
+| 구현 담당 / 자체·독립 리뷰 방식·선택 근거 | 미확인 |
 | 중앙 현황표 반영일 / 기록 | 미등록 — 공통 리포 docs/adoption-status.md에 갱신 |
 | 변경 전 지원 최소 HA / 근거 파일(hacs.json·manifest·README) | 미확인 — current 테스트 버전과 별도 기록 |
 | 유지·변경할 지원 최소 / 변경 시 실제 비호환 근거·명시적 승인 | 미확인 — 최신화 요청만으로 상향하지 않음 |
@@ -29,8 +29,8 @@
 |---|---|---|---|
 | GOV-01, GOV-02 | `STANDARDS.md`에 표준 SHA·profile·실제 기본 브랜치·예외 기록, workflow/action은 검토 SHA로 고정 | TODO | 미확인 |
 | GOV-03 | 새 표준 채택 변경의 영향·이관 방법과 명시적 채택 PR 확인. 규칙 자체를 변경하면 공통 CHANGELOG 기록 | TODO | 미확인 |
-| GOV-04 | 중앙 표에 작업 시작·단계 변경·종료 상태, 담당·적용 내용·검증/리뷰 근거·남은 작업 갱신, 타 리포 기록 보존 | TODO | 미확인 |
-| GOV-05 | 구현과 독립 리뷰·검증을 별도 서브 에이전트에게 위임, 지적 수정·재검증 및 결과 취합 | TODO | 미확인 |
+| GOV-04 | 중앙 표에 작업 시작·종료·의미 있는 상태 변화 상태, 담당·적용 내용·검증/리뷰 근거 링크·남은 작업 갱신, 타 리포 기록 보존 | TODO | 미확인 |
+| GOV-05 | 자체/독립 리뷰 방식·선택 근거 기록, 큰 구조·HA 동작·공용 CI 실행 로직 변경의 독립 리뷰, 지적 수정·영향 검사 재실행 | TODO | 미확인 |
 | HA-01, HA-13 | `custom_components/<domain>/`와 domain 일치, 필요한 모듈·공개 API·생명주기는 Core 대응 구조 | TODO | 미확인 |
 | HA-02 | manifest 필드·정렬·동작 선언, 실제 제품 categories 1–3개·주 분류 순서·공식 slug·선택 근거·categories_review 일치 또는 entity/system/virtual 키 생략 이유, 공식 품질 등급 자가 표기 없음 | TODO | 미확인 |
 | HA-03 (권장) | 공통 상수·설정·갱신·플랫폼 역할 및 프로토콜 경계에 맞게 모듈 구성 | TODO | 미확인 |
@@ -81,12 +81,12 @@
 
 | 규칙 ID | 확인 항목 | 상태 | 근거 / 남은 작업 |
 |---|---|---|---|
-| DOC-01, DOC-02, DOC-06 | 중앙 header/support/related-projects/license 관리 영역의 정확한 형식, 기존 공통 내용·고지 보존, 영역 밖 순서·제목·본문 유지, 양언어 같은 구조·내용·상호 링크, 독립 번역 의미·누락 리뷰, 실제 활성 지원 링크·실제 라이선스 | TODO | 미확인 |
+| DOC-01, DOC-02, DOC-06 | 중앙 header/support/related-projects/license 관리 영역의 정확한 형식, 기존 공통 내용·고지 보존, 영역 밖 순서·제목·본문 유지, 양언어 같은 구조·내용·상호 링크, 번역 의미·누락 리뷰(GOV-05), 실제 활성 지원 링크·실제 라이선스 | TODO | 미확인 |
 | DOC-03, DOC-04, DOC-05 | 언어 링크 다음 중첩 배지 관리 블록, flat·Release/HACS/HA minimum/Tests/Validate/License/HACS Downloads(Default) 또는 Usage(Custom) 순서·실제 조건·고유 배지 보존, 실제 기본 브랜치·상태별 필수 동적 집계 배지·양언어 설치 절의 실제 저장소 My HACS 배지·미집계와 0 설치 구분 | TODO | 미확인 |
 | HA-09, HA-10 | BLE 사용 시 HA Bluetooth API·라이브러리 공개 경계, 지원한 proxy 경로·재연결·취소·서비스 변경 검증 | TODO | 미확인 |
 | DOC-07 | blesession 사용 여부(manifest requirement extras·operator·marker/실제 import) 확인. 사용 통합은 중앙 양언어 docs/troubleshooting 템플릿의 고정 제목·순서·증상 표·실제 진단/로그·기존 Issues 연결, README와 로컬 문서의 언어별 상호/공통 blesession 원본 링크·placeholder 제거·공용 Validate 검사. 기존 본문/기기안내 보존, 새 제보 양식 금지. 프록시만 지원하면 기존 기기 조건·사용자 안내를 수동 확인 | TODO | 미확인 |
 | DOC-08 | imagespec 사용 여부·양언어 docs/payload 여섯 절·언어별 README/공통 원본/상호 링크·실제 액션/대상/전체 YAML·기기 출력/지원/제한·기존 예제/본문 보존·기존 지원 연결, 모든 로컬 연결 예제의 payload.examples 등록·실제 경로/payload_format(list 또는 yaml)/크기/모델 색상 | TODO | 미확인 |
-| DOC-08, TEST-02, TEST-05, TEST-09 | 정확한 중앙 test_payload_examples scaffold·실제 HA entry/등록 action schema·production 준비 context/함수·기기 전송 없는 installed imagespec.validate/render 비교·각 예제 크기/색상, current/정확한 하한 실제 버전·pip check·명령/CI 결과, exact pin 재사용 근거·독립 adapter 리뷰 | TODO | 미확인 |
+| DOC-08, TEST-02, TEST-05, TEST-09 | 정확한 중앙 test_payload_examples scaffold·실제 HA entry/등록 action schema·production 준비 context/함수·기기 전송 없는 installed imagespec.validate/render 비교·각 예제 크기/색상, current/정확한 하한 실제 버전·pip check·명령/CI 결과, exact pin 재사용 근거·adapter 리뷰(GOV-05) | TODO | 미확인 |
 | DOC-08, CI-05, CI-07, DEP-08 | 공용 Tests/updater의 standards-ref와 reusable full SHA 일치·caller checkout 보존·도구 별도 checkout·resolver 후 패키지 변경 없음·지원 최소 보존·미실행/skip/xfail/deselect를 PASS로 처리하지 않음 | TODO | 미확인 |
 | DOC-07, HA-12 | 기기별 깨우기·인증·타 앱 연결·전송 제약, 실제 검증 경로와 미검증 범위, 공개 문제 로그 비식별화 | TODO | 미확인 |
 | HACS-04, REL-01, REL-02, REL-03, CI-11 | 통합 릴리스 시 같은 검증 commit/tag·manifest 버전·산출물·권한, 사용자 영향·지원 변경·제한 안내 | TODO | 미확인 — 규칙 리포에는 릴리스하지 않음 |
@@ -114,7 +114,7 @@
 - `scripts/check_integration.py` 명령·결과·대상 커밋: 미확인
 - 세 빈 init·정확한 루트 conftest·domain mock_config_entry/필요 시 mock_client·실제 HA 로딩·기존 회귀 범위 보존: 미확인
 - 공통 fixture의 오류 무시·네트워크 일괄 허용·로딩 생략 금지, 개별 허용 범위·사유: 미확인
-- 양언어 본문 보존·의미 일치·기존 고지·고유 배지 독립 리뷰: 미확인
+- 양언어 본문 보존·의미 일치·기존 고지·고유 배지 리뷰(자체/독립·GOV-05): 미확인
 - 공용 CI 이름·파일명·기존 실행 조건과 전용 CI 명명 형식: 미확인
 - 승인 예외 실제 사용자 근거·일자·경로·범위 및 설정과 STANDARDS.md 대조: 미확인
 
@@ -127,7 +127,7 @@ imagespec 미사용이면 실제 requirement/import 확인 근거와 N/A를 기�
 | 미확인 | 미확인 | 미확인 | 미확인 | 미확인 | 미확인 |
 
 - 중앙 계약 완료·등록 예제 전체 실행·skip/xfail/deselect 없음: 미확인
-- adapter가 production 준비 함수를 호출하고 실제 context/정규화 payload를 쓰는 독립 검토: 미확인
+- adapter가 production 준비 함수를 호출하고 실제 context/정규화 payload를 쓰는 검토(자체/독립·GOV-05): 미확인
 - 템플릿·폰트·이미지·history 실제 지원 context와 외부 통신만 mock한 근거: 미확인
 - 공통 원본 실제 기본 브랜치 공개 URL 확인 / 중앙 규칙 반영 순서: 미확인
 

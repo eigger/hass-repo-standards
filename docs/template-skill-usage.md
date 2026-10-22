@@ -1,6 +1,6 @@
 # 템플릿·스킬 도구 사용 안내
 
-현재 구현은 계약·공통 렌더러, `inspect`·`plan`·`apply`·`recover`, 신규 작성 기반과 정적 검사이며 T1~T5는 main에 반영했습니다. T6 중앙 fixture의 생성·갱신 자동 회귀 구현·독립 검증과 PR CI도 완료했으며 외부 통합 적용은 이번 요청 범위가 아닙니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 합니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)를 함께 확인합니다.
+현재 구현은 계약·공통 렌더러, `inspect`·`plan`·`apply`·`recover`, 신규 작성 기반과 정적 검사이며 T1~T5는 main에 반영했습니다. T6 중앙 fixture의 생성·갱신 자동 회귀 구현·독립 검증과 PR CI도 완료했으며 외부 통합 적용은 이번 요청 범위가 아닙니다. 계획은 대상 파일을 변경하지 않으며 apply는 검증한 계획의 관리 범위를 씁니다. 실제 기기 동작은 작성해야 합니다. [단계별 검증](template-skill-validation.md)과 [구현 작업지시서](template-skill-tasks.md)는 중앙 도구 개발이나 과거 구현 근거를 확인할 때만 참고합니다.
 
 ## 실행 준비와 조사
 
@@ -117,7 +117,7 @@ python3 scripts/check_repository.py
 
 `check_repository.py`는 중앙 계약·세 스키마 정의·원본과 참조·작성 기반 AST/JSON/YAML·번역 구조를 검사합니다. 중앙 `.tmpl` 안의 의도한 TODO는 자산으로 허용하며 적용된 통합의 TODO를 면제하지 않습니다. 기존 workflow/action 파일은 이번 단계에서 변경하지 않았으며 기존 check 진입과 CI 연결로 같은 검사를 실행합니다. caller checkout·action_path도 유지합니다.
 
-정적 성공은 실제 HA setup·플랫폼·unload·실패 복구·외부 I/O mock 경계나 번역 의미·기기 조건의 검증 결과가 아닙니다. 실제 최소/current HA 환경과 해당 payload current/정확한 하한 실행, 독립 의미 리뷰를 별도로 수행하고 증거를 체크리스트에 기록해야 합니다. 생성·복구 성공이나 중앙 fixture 결과를 실제 채택 완료로 보고하지 않습니다.
+정적 성공은 실제 HA setup·플랫폼·unload·실패 복구·외부 I/O mock 경계나 번역 의미·기기 조건의 검증 결과가 아닙니다. 실제 최소/current HA 환경과 해당 payload current/정확한 하한 실행 및 의미 리뷰의 범위는 [채택 절차](adoption.md#필요한-문서와-검증-범위)와 GOV-05를 따르고 증거를 체크리스트에 기록합니다. 생성·복구 성공이나 중앙 fixture 결과를 실제 채택 완료로 보고하지 않습니다.
 
 ## 중앙 시나리오 회귀
 
@@ -146,7 +146,7 @@ SKILL.md의 name/description·본문과 references는 공용 Agent Skills 형식
 
 이 표는 각 [공식 Codex](https://learn.chatgpt.com/docs/build-skills)·[Claude Code](https://code.claude.com/docs/en/skills)·[Antigravity](https://antigravity.google/docs/skills) 문서의 탐색 위치를 요약합니다. 이 환경에서 이미 쓰는 `$CODEX_HOME/skills`·`~/.codex/skills` 기존 경로와 현재 공식 Codex 안내의 `.agents/skills`를 구분합니다. 기존 설치를 자동 이동하거나 해당 기존 경로를 모든 클라이언트의 신규 권장 위치로 제시하지 않습니다.
 
-이 리포의 실제 스킬 행동 평가는 Codex에서 수행했습니다. 다른 클라이언트 실행·자동 발동은 미검증이며 중앙 AGENTS의 collaboration 위임 표현은 Codex 실행 기능을 전제로 합니다. 형식 호환이 제품별 위임·권한·실행 기능까지 같음을 보장하지 않습니다. 다른 클라이언트 적용 시 해당 기능 대응을 검토해야 하며 이번 문서 보완으로 코드·AGENTS 정책을 바꾸거나 실제 설치/검증 범위를 확대하지 않습니다.
+이 리포의 실제 스킬 행동 평가는 Codex에서 수행했습니다. 다른 클라이언트 실행·자동 발동은 미검증입니다. GOV-05는 주 에이전트 직접 수행을 기본으로 하며 독립 리뷰가 필요한 범위에서 사용 가능한 별도 담당자를 활용합니다. 형식 호환이 제품별 위임·권한·실행 기능까지 같음을 보장하지 않으며 독립 리뷰를 수행하지 못하면 그 제약을 기록합니다.
 
 설치는 별도의 사용자 요청이 있을 때 다음처럼 수행합니다.
 

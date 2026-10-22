@@ -8,11 +8,11 @@
 4. 테스트/린트 requirements와 기존 pyproject.toml을 정리합니다. Ruff 설정은 현재 코드에 맞게 채택합니다.
 5. 테스트는 `tests/components/<domain>/`에 배치하고 실제 HA fixture·config entry·플랫폼 로딩으로 검증합니다. 최소 package matrix는 사용하는 package만 넣으며 두 환경 모두 실제 HA 테스트를 실행합니다. 최소 HA가 현재 검증 버전과 다르면 별도 환경에서 검증합니다.
 6. 적용 기록용 STANDARDS.md와 ADOPTION_CHECKLIST.md를 복사하고 참조 커밋·적용 상태·해당 시점의 실제 검증 증거·예외를 기록합니다. 중앙 AGENTS.md나 그 내용을 통합의 AGENTS.md로 복사·생성·추가하지 않으며 다른 파일명으로 에이전트 진입 지침을 설치하지도 않습니다. 사용자 별도 요청 없이는 재설치하지 않고 기존 리포 고유 지침은 임의로 수정·삭제하지 않습니다. blesession/proxy 통합은 [Bluetooth 작성 규칙](../../docs/bluetooth-documentation.md)을 읽고 README.md에는 영어 사용자 가이드, README.ko.md에는 한국어 사용자 가이드를 연결하며 기기별 준비 조건을 추가합니다. 개발자 작성·구현 가이드를 사용자 설정 안내로 연결하지 않습니다.
-7. 작업 시작·단계 변경·종료 시 [중앙 적용 현황](../../docs/adoption-status.md)의 자기 리포 행을 갱신하고, 구현과 리뷰·검증은 서로 다른 서브 에이전트에게 위임합니다.
+7. [GOV-04·GOV-05](../../docs/adoption.md#채택)에 따라 중앙 현황표를 시작·종료·의미 있는 상태 변화에 갱신하고, 주 에이전트가 구현·검증하며 필요한 범위에 독립 리뷰를 받습니다.
 8. [HACS 브랜드 검사 안내](../../docs/hacs.md)에 따라 로컬 custom_components/<domain>/brand/icon.png 또는 실제 원격 brands 등록 근거를 준비하고 해당 커밋에서 HACS를 실행합니다. README 배지·HACS Default 여부와 브랜드 검사 통과는 각각 구분합니다.
 9. README 공통 영역에 중앙 템플릿을 적용하고 기존 공통 내용을 합칩니다. 양언어 본문은 같은 구조·내용으로 번역하며 기존 본문·이전 안내·저작권 고지를 보존합니다. 세부 구성은 리포에 맡기고 긴 YAML·설정·개발 명령을 공통 적용 때문에 이동하지 않습니다. header/support/related-projects/license 관리 주석을 지정하고 badges 주석은 header 안에 유지합니다. 배지는 flat, Release → HACS → HA minimum → Tests → Validate → License → HACS Downloads(Default)/Usage(Custom) 순서이며 기존 고유 배지는 뒤에 보존합니다. Default는 공식 HACS 데이터의 downloads, Custom은 manifest domain의 Usage를 사용합니다. 양언어 기존 설치 절에는 `hass-standards:installation` 관리 주석으로 감싼 My Home Assistant HACS 저장소 배지를 추가하며 실제 owner/저장소 이름과 Custom의 category=integration을 사용합니다. 기존 설치 제목·본문·예제는 유지합니다.
 10. `tests/`의 세 빈 init와 루트 conftest는 중앙 파일을 그대로 적용하고 domain 디렉터리를 실제 domain으로 바꿉니다. domain conftest의 fixture 이름·역할을 유지하며 config entry가 있으면 실제 entry 데이터의 mock_config_entry를, 외부 클라이언트가 있으면 mock_client를 추가합니다. 실제 HA setup·플랫폼·unload 테스트를 작성하고 기존 회귀 범위는 보존합니다. placeholder를 완료된 테스트로 제출하지 않습니다.
-11. `.hass-standards.json`에 실제 메타데이터·양언어 소개·지원 활성 여부·라이선스·기존 고지·관련 프로젝트를 기록한 뒤 `python3 scripts/check_integration.py <대상경로>`를 실행합니다. `--write-readmes`는 기존 관리 영역만 갱신합니다. 최초 갱신 전 기존 공통 내용·고지를 설정으로 옮겨 검토하고, 도구가 미등록 내용을 이유로 중단하면 삭제·우회하지 말고 보존 계획을 확인합니다. Validate caller의 중앙 검사와 별도 독립 리뷰로 번역 의미·본문 보존·실제 HA 동작을 검증합니다.
+11. `.hass-standards.json`에 실제 메타데이터·양언어 소개·지원 활성 여부·라이선스·기존 고지·관련 프로젝트를 기록한 뒤 `python3 scripts/check_integration.py <대상경로>`를 실행합니다. `--write-readmes`는 기존 관리 영역만 갱신합니다. 최초 갱신 전 기존 공통 내용·고지를 설정으로 옮겨 검토하고, 도구가 미등록 내용을 이유로 중단하면 삭제·우회하지 말고 보존 계획을 확인합니다. Validate caller의 중앙 검사와 GOV-05에 따른 리뷰로 번역 의미·본문 보존·실제 HA 동작을 검증합니다.
 12. 공용 caller 이름과 파일명은 Validate/validate.yml, Tests/tests.yml, Update dependencies/update_dependencies.yml로 고정하고 기존 실행 조건을 유지합니다. 전용 CI는 소문자·밑줄 `.yml` 및 역할이 명확한 영어 표시 이름을 사용하되 내용·실행 조건은 리포가 정합니다.
 13. 차이가 필요하면 이유·영향·대안을 제시해 중앙 템플릿 수정·검증 또는 사용자 명시적 승인 후 적용합니다. 승인 근거·일자·허용 범위·재검토 조건은 STANDARDS.md에 기록하고 검사 예외 설정과 연결합니다. CI는 승인을 요청하지 않습니다. 중앙 변경만으로 다른 리포를 자동 수정하지 않습니다.
 
@@ -40,7 +40,7 @@ blesession 사용 통합은 [영어 기기별 템플릿](docs/troubleshooting.md
 
 공통 원본은 blesession의 [영어 프록시 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md)·[한국어 프록시 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md)·[영어 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.md)·[한국어 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.ko.md)입니다. 각 README는 같은 언어의 프록시 안내와 로컬 문제 해결로 연결하고, 로컬 문제 해결은 같은 언어의 README·공통 문제 해결·다른 언어판으로 연결합니다. README 세부 구조와 기존 본문·고지를 재작성하지 마세요.
 
-공용 Validate는 blesession의 실제 requirement 이름(extras·연산자·marker 포함, marker 비활성이라도 대상) 또는 절대 import를 읽어 적용 여부를 판단합니다. 문서 존재·고정 구조·필수 링크·미입력 표시를 검사하며 실제 진단 의미·하드웨어·번역·원격 Issues 상태는 별도 독립 리뷰가 필요합니다. 읽기만을 위해 라이브러리 설치를 요구하지 않으며 blesession 미사용 통합에 고정 템플릿 자동 검사를 강제하지 않습니다.
+공용 Validate는 blesession의 실제 requirement 이름(extras·연산자·marker 포함, marker 비활성이라도 대상) 또는 절대 import를 읽어 적용 여부를 판단합니다. 문서 존재·고정 구조·필수 링크·미입력 표시를 검사하며 실제 진단 의미·하드웨어·번역·원격 Issues 상태는 GOV-05에 따른 리뷰로 확인합니다. 읽기만을 위해 라이브러리 설치를 요구하지 않으며 blesession 미사용 통합에 고정 템플릿 자동 검사를 강제하지 않습니다.
 
 공통 문서 이관 공개 순서는 blesession의 새 양언어 원본을 먼저 반영·검증한 뒤 중앙 이전 안내와 새 템플릿 규칙을 반영하는 순서입니다. 로컬 문서 작성만으로 원격 원본이 공개되었다고 보고하지 않습니다. 현재 작업은 commit/push 권한을 자동 부여하지 않으며 다른 리포를 자동 수정하지 않습니다.
 
