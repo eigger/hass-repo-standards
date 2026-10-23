@@ -1,0 +1,21 @@
+name: Build HACS release ZIP
+description: Package tracked integration files without changing source versions
+inputs:
+  tag:
+    description: Published release tag whose commit and manifest version must match
+    required: true
+outputs:
+  archive:
+    description: Absolute path of the generated ZIP
+    value: ${{ steps.build.outputs.archive }}
+runs:
+  using: composite
+  steps:
+  - id: build
+    shell: bash
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+    run: >-
+      python "${{ github.action_path }}/../../scripts/build_release_zip.py"
+      "$GITHUB_WORKSPACE" --output "$RUNNER_TEMP/hacs-release"
+      --tag "$RELEASE_TAG"

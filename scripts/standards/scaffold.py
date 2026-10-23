@@ -123,6 +123,8 @@ def render(record, destination, validated_input, *, central):
             {
                 "name": manifest["name"],
                 "homeassistant": data["environments"]["value"]["minimum"]["ha"],
+                "zip_release": True,
+                "filename": domain + ".zip",
             }
         ),
         "translations_json": encode(korean if destination.endswith("/ko.json") else english),

@@ -9,3 +9,13 @@
 **REL-04 필수**: 통합 이전·통합·중단은 README 상단에 새 경로, 유지보수 상태, domain/장치 재등록 여부를 적습니다. 기존 설치가 자동으로 이전된다고 가정하지 않습니다. 이전된 리포는 일반 feature 작업 대상으로 자동 편입하지 않습니다.
 
 **REL-05 권장**: dependency/HA API 갱신은 기능 변경과 분리하고 CI 결과를 확인합니다. 규칙 리포의 업데이트는 해당 리포의 채택 PR을 통해 반영합니다.
+
+## ZIP 릴리스 첨부
+
+중앙 `actions/release-zip`과 [caller 템플릿](../templates/integration/.github/workflows/release.yml)을 검토한 동일한 전체 SHA로 고정합니다. 중앙 리포 자체는 태그·릴리스를 만들지 않습니다. caller는 대상 통합의 `release: published` 이벤트에서 해당 태그 커밋을 checkout하고 ZIP을 기존 릴리스에 첨부할 뿐, 릴리스·태그를 생성하거나 manifest 버전을 덮어쓰지 않습니다. 태그의 `v` 하나를 제외한 값과 manifest.version이 다르면 실패합니다. 실제 release tag commit과 checkout HEAD도 일치해야 합니다.
+
+packager는 Git으로 추적된 통합 파일만 포함하고 캐시·심볼릭 링크를 배제/거부합니다. README·tests·저장소 metadata와 추적되지 않은 파일을 넣지 않습니다. 기존 asset을 덮어쓰지 않으며 동일 asset 이름으로 재실행하면 업로드가 실패합니다. 기존 다운로드 수를 지우는 `--clobber`로 우회하지 않습니다.
+
+배포 전에 같은 커밋의 Tests·Validate 성공을 확인해야 합니다(CI-11). ZIP job의 성공은 태그/manifest·패키지 구조 검증이며 실제 HA 회귀·기기 검증을 대체하지 않습니다. Published 이벤트부터 ZIP 업로드까지 잠시 asset이 없을 수 있고 job 실패 시 릴리스 제공이 불완전합니다. 실패를 공개 배포 성공으로 취급하지 말고 원인을 수정해 같은 태그의 올바른 ZIP을 첨부합니다. 기존 파일이 있다면 확인 없이 교체하지 않습니다. Immutable releases가 활성화되어 published 이후 첨부할 수 없는 리포에는 이 caller를 적용하지 않고 draft 단계 패키징으로 별도 설계합니다.
+
+기존 릴리스는 해당 태그의 기존 hacs.json으로 설치하므로 소급 수정하지 않습니다. 다음 릴리스부터 ZIP 방식으로 전환하며, 버전 변경이나 새 릴리스 발행은 별도 사용자 요청 범위입니다. HACS의 표시값은 선택한 asset의 다운로드 수를 읽으며 ZIP 설치 설정 없이 첨부 파일만 있어도 표시될 수 있습니다. 실제 HACS 설치가 asset 다운로드 수에 반영되게 하려면 ZIP 설치 설정과 실제 첨부 파일을 함께 제공합니다.

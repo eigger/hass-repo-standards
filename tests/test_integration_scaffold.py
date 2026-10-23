@@ -133,6 +133,8 @@ class IntegrationScaffold(unittest.TestCase):
         self.assertFalse(pending)
         hacs, pending = self.render(self.record("metadata-hacs.json"))
         self.assertEqual(json.loads(hacs)["homeassistant"], "2025.3.0")
+        self.assertTrue(json.loads(hacs)["zip_release"])
+        self.assertEqual(json.loads(hacs)["filename"], self.data["domain"]["value"] + ".zip")
         self.assertFalse(pending)
 
     def test_render_is_pure_and_deterministic(self):

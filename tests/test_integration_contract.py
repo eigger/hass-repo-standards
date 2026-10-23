@@ -139,6 +139,9 @@ class IntegrationContract(unittest.TestCase):
         )
 
     def test_installation_links_use_real_repository_for_both_hacs_modes(self):
+        (self.root / "hacs.json").write_text(
+            '{"zip_release":true,"filename":"example.zip"}', encoding="utf-8"
+        )
         for status in ("custom", "default"):
             self.config["hacs"] = status
             self.config["hacs_default_evidence"] = "https://github.com/hacs/default — 2026-10-20"

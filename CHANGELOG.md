@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-23 — HACS ZIP 릴리스 배포
+
+- HACS-04·CI-11에 Default 통합의 ZIP 배포 계약, 중앙 릴리스 caller/action·추적 파일 packager·형식 검사를 추가합니다. 태그/manifest 일치와 루트 구조를 검증하고 기존 asset을 덮어쓰지 않습니다.
+- 신규 통합 계약·hacs scaffold·workflow 생성에 ZIP 배포를 포함하고, 기존 Default 통합은 새 중앙 SHA 채택 PR로 이관합니다. 지원 최소·통합 버전·기존 태그/릴리스는 변경하지 않습니다.
+- ZIP 첨부와 HACS 설치 방식은 별개입니다. 설치 다운로드가 실제 asset 카운트에 반영되도록 둘을 함께 설정하며, 중앙 리포 자체에는 릴리스를 만들지 않습니다.
+
 ## 2026-10-23 — 다운로드 배지 조회 수정
 
 - DOC-03·DOC-05의 Default 배지를 지원되지 않는 HACS JSON 필터에서 GitHub 전체 릴리스 asset 누적 다운로드로 변경하고 `Downloads`로 표시합니다. Custom의 Analytics Usage는 유지합니다.

@@ -119,3 +119,13 @@
 | [HACS categories schema](https://github.com/hacs/integration/blob/a15e87ec0d1c82e58f1ddbaf17669d3eaa261eb8/custom_components/hacs/utils/validate.py) | 문자열 목록·1–3개·기지 분류·중복 검사 |
 
 중앙 snapshot은 검토 당시 원본이며 실시간 upstream 전체를 대신하지 않습니다. 새 분류는 실제 Core/HACS 원본·SHA·확인일과 테스트를 함께 재검토합니다. 실제 지원 최소 HA 로딩·원격 HACS action·제품 분류 의미는 별도 검증이며 이 변경으로 수행했다고 주장하지 않습니다.
+
+## 2026-10-23 ZIP 릴리스 지원
+
+[HACS 공식 hacs.json 계약](https://www.hacs.xyz/docs/publish/start/#hacsjson)은 통합의 zip_release와 filename을 함께 사용합니다. [HACS 실제 다운로드 분기](https://github.com/hacs/integration/blob/a15e87ec0d1c82e58f1ddbaf17669d3eaa261eb8/custom_components/hacs/repositories/base.py)는 ZIP 설치 설정과 asset 다운로드 수 읽기를 별도로 처리합니다. ZIP 첨부만으로 HACS에 카운트가 표시될 수 있지만 실제 소스 설치 수가 그 asset 카운트에 더해지는 것은 아닙니다. 이전 대화의 두 조건 혼동을 정정합니다.
+
+새 HACS-04/CI-11 구현은 중앙 release-zip action·caller·packager·정적 검사·생성 계약이며, tag/manifest 일치와 ZIP 내용·기존 asset 비덮어쓰기를 검사합니다. 사용자 요청에 따라 중앙을 먼저 반영한 뒤 Default 10개에 PR로 적용합니다. 과거 태그·릴리스는 수정하지 않으며 실제 새 릴리스 발행·업로드는 이번 검증에서 수행하지 않습니다.
+
+GOV-05 독립 리뷰 zip_release_review의 1차 P1(action SHA 중복 생성)·P2(mutable action 참조 허용)를 수정하고 회귀를 추가했습니다. 재리뷰 추가 지적 없음. Windows focused 테스트의 symlink 권한 skip은 Linux 전체 실행으로 보완했습니다. Linux Python 3.14.4/PyYAML 6.0.3/packaging 26.0에서 전체 226 tests·저장소 검사·actionlint 1.7.12 PASS를 확인했으며 이후 CLI output 회귀를 추가했습니다. 최종 대상 SHA·검증 명령/실제 버전·원격 CI·리뷰 결과는 중앙 PR 본문에 기록합니다.
+
+대상 10개에서 `GET /repos/eigger/<repo>/immutable-releases`를 읽기 전용 조회한 결과 모두 enabled=false/enforced_by_owner=false였습니다. [GitHub immutable release 설명](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/establish-provenance-and-integrity/prevent-release-changes)에 따라 활성화된 리포에는 published 후 업로드 workflow를 그대로 적용하지 않습니다.
