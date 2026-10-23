@@ -34,7 +34,7 @@
 | hass-icscale | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-icscale/pull/19) · head `85a86f5` · [squash dc94477](https://github.com/eigger/hass-icscale/commit/dc944772a10ed6a21e4799e1485f959b0cbec0da) · PR checks 7개 성공/정상 종료 |
 | hass-jaalee | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-jaalee/pull/7) · head `6bed7e4` · [squash dc0c89d](https://github.com/eigger/hass-jaalee/commit/dc0c89d70bce3a39a10e993509012b21f4b609f4) · PR checks 6개 성공/정상 종료 |
 | hass-kma | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-kma/pull/38) · head `3fb1863` · [squash bc88ed6](https://github.com/eigger/hass-kma/commit/bc88ed648634b036743bc66529db9a6a86a565b7) · PR checks 6개 성공/정상 종료 |
-| hass-kocom-smarthome | PR 열림·CI 대기 | [PR](https://github.com/eigger/hass-kocom-smarthome/pull/3) · head `af9fc2f` · 최종 CI 결과 대기 |
+| hass-kocom-smarthome | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-kocom-smarthome/pull/3) · head `af9fc2f` · [squash 61fe926](https://github.com/eigger/hass-kocom-smarthome/commit/61fe926ba7cccf591866a9f13dc2e0940f626ce8) · PR checks 7개 성공/정상 종료 |
 | hass-melk-light | PR 열림·CI 미실행 | [PR](https://github.com/eigger/hass-melk-light/pull/4) · head `f2d6a0c` · 기존 PR CI가 없어 통과로 간주하지 않고 미병합; 로컬 부분 검사·ZIP·독립 리뷰 PASS |
 | hass-vson | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-vson/pull/9) · head `fb7a0da` · [squash c2d462b](https://github.com/eigger/hass-vson/commit/c2d462b4527cd4934da4c825144b858c96b327d6) · PR checks 6개 성공/정상 종료 |
 
