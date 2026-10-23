@@ -810,6 +810,18 @@ def reference_errors(root, safe_path):
             )
         ]
     ref = refs[0]
+    release_fields = re.findall(
+        r"^\s*(?:-\s*)?Reviewed release standards SHA\s*:\s*(.*?)\s*$",
+        visible_markdown(document),
+        re.M,
+    )
+    release_ref = ref
+    if release_fields:
+        if len(release_fields) != 1 or not re.fullmatch(
+            r"(?:[0-9a-f]{40}|`[0-9a-f]{40}`)", release_fields[0]
+        ):
+            return [("GOV-02", "STANDARDS.md", "Record one full reviewed release standards SHA")]
+        release_ref = release_fields[0].strip("`")
     for path in sorted(safe_path(root, ".github/workflows").glob("*.yml")):
         relative = path.relative_to(root).as_posix()
         try:
@@ -844,10 +856,17 @@ def reference_errors(root, safe_path):
                         )
                 for step in job.get("steps", []):
                     use = step.get("uses", "") if isinstance(step, dict) else ""
+                    expected_ref = (
+                        release_ref
+                        if path.name == "release.yml"
+                        and isinstance(use, str)
+                        and use.startswith("eigger/hass-repo-standards/actions/release-zip@")
+                        else ref
+                    )
                     if (
                         isinstance(use, str)
                         and use.startswith("eigger/hass-repo-standards/actions/")
-                        and not use.endswith("@" + ref)
+                        and not use.endswith("@" + expected_ref)
                     ):
                         errors.append(
                             (

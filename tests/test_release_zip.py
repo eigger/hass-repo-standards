@@ -17,7 +17,7 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from build_release_zip import build  # noqa: E402
-from standards import planning, release  # noqa: E402
+from standards import planning, release, validation  # noqa: E402
 
 
 class ReleaseZip(unittest.TestCase):
@@ -172,6 +172,54 @@ class ReleaseZip(unittest.TestCase):
             rendered["jobs"]["release"]["steps"][2]["uses"],
             "eigger/hass-repo-standards/actions/release-zip@" + "a" * 40,
         )
+
+    def test_scoped_release_reference_does_not_upgrade_existing_ci(self):
+        primary, scoped = "a" * 40, "b" * 40
+        document = self.root / "STANDARDS.md"
+        workflows = self.root / ".github/workflows"
+        workflows.mkdir(parents=True)
+        document.write_text(
+            f"- Reviewed standards SHA: `{primary}`\n"
+            f"- Reviewed release standards SHA: `{scoped}`\n",
+            encoding="utf-8",
+        )
+        caller = workflows / "tests.yml"
+        caller.write_text(
+            yaml.safe_dump(
+                {
+                    "jobs": {
+                        "tests": {
+                            "uses": "eigger/hass-repo-standards/.github/workflows/python-tests.yml@"
+                            + primary,
+                            "with": {"standards-ref": primary},
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+        release_caller = workflows / "release.yml"
+        source = (ROOT / "templates/integration/.github/workflows/release.yml").read_text(
+            encoding="utf-8"
+        )
+        release_caller.write_text(source.replace("@main", "@" + scoped), encoding="utf-8")
+
+        def safe(root, name):
+            return root / name
+
+        self.assertEqual(validation.reference_errors(self.root, safe), [])
+        # The scoped ref cannot authorize unrelated central actions or workflows.
+        caller.write_text(caller.read_text().replace(primary, scoped), encoding="utf-8")
+        self.assertTrue(validation.reference_errors(self.root, safe))
+        caller.unlink()
+        release_caller.write_text(source.replace("@main", "@" + primary), encoding="utf-8")
+        self.assertTrue(validation.reference_errors(self.root, safe))
+        for field in ("main", "b" * 7, f"`{scoped}`\n- Reviewed release standards SHA: `{scoped}`"):
+            document.write_text(
+                f"- Reviewed standards SHA: `{primary}`\n- Reviewed release standards SHA: {field}\n",
+                encoding="utf-8",
+            )
+            self.assertTrue(validation.reference_errors(self.root, safe))
 
 
 if __name__ == "__main__":
