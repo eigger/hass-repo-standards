@@ -2,7 +2,7 @@
 
 ## 2026-10-23 — Custom ZIP 통합 Downloads
 
-- ZIP 배포 Custom 통합에도 Downloads 배지를 생성하고 기존 Analytics Usage를 함께 보존합니다. Default 등재 여부와 ZIP 배포 여부를 구분하며 상태 전환·중복 방지 계약은 유지합니다.
+- ZIP 배포 Custom 통합의 Analytics Usage를 Downloads 배지로 교체합니다. Default 등재 여부와 ZIP 배포 여부를 구분하며 상태 전환·중복 방지 계약은 유지합니다.
 - 사용자 요청으로 중앙 현황표의 적용 제외/보관 리포를 제외한 Custom 통합에 ZIP 배포와 Downloads를 후속 적용합니다. 기존 버전·지원 최소·의존성·본문은 보존하고 각 PR에서 검증합니다.
 
 ## 2026-10-23 — HACS ZIP 릴리스 배포

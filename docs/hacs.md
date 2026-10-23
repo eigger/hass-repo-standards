@@ -6,7 +6,7 @@
 
 **HACS-02 필수**: 기본 배포 구조는 `custom_components/<domain>`입니다. `content_in_root`, `zip_release`, `filename`, `persistent_directory` 등은 실제 구조에 필요할 때만 사용합니다. 기존에 사용한 필드를 일괄 삭제하지 않습니다.
 
-**HACS-03 필수**: 기본 목록 등재와 custom repository 설치를 구분합니다. HACS 검증 성공, hacs.json 존재, brands 등록만으로 Default 배지를 표시하지 않습니다. Default 표기는 실제 목록 등재 확인 링크와 날짜를 기록합니다. [DOC-03·DOC-05](documentation.md)에 따라 Default는 Downloads, ZIP 배포 Custom은 Downloads와 Analytics Usage를 함께 표시하며 양언어 설치 안내에는 실제 저장소의 My Home Assistant HACS 배지를 제공합니다.
+**HACS-03 필수**: 기본 목록 등재와 custom repository 설치를 구분합니다. HACS 검증 성공, hacs.json 존재, brands 등록만으로 Default 배지를 표시하지 않습니다. Default 표기는 실제 목록 등재 확인 링크와 날짜를 기록합니다. [DOC-03·DOC-05](documentation.md)에 따라 Default는 Downloads, ZIP 배포 Custom은 Usage 대신 Downloads를 표시하고, ZIP 미배포 Custom은 Usage를 표시하며 양언어 설치 안내에는 실제 저장소의 My Home Assistant HACS 배지를 제공합니다.
 
 **HACS-04 필수**: 확인된 Default 통합은 `hacs.json`에 `zip_release: true`와 `filename: <domain>.zip`을 선언하고 중앙 [릴리스 caller](../templates/integration/.github/workflows/release.yml)로 릴리스 ZIP을 첨부합니다. 기존 파일 이름을 유지해야 하면 안전한 ZIP basename을 사용하고 실제 asset과 일치시킵니다. Custom도 ZIP 배포를 선택하면 같은 계약을 따릅니다. ZIP 루트에 `manifest.json`·`__init__.py`와 통합 파일을 두며 `custom_components/<domain>` 상위 폴더를 넣지 않습니다.
 

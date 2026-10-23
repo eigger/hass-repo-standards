@@ -119,7 +119,7 @@ def render(repo: Path, config: dict, readme: Path | None = None):
             downloads_badge_url(repository),
             base + "/releases",
         )
-    if status == "custom":
+    else:
         # Custom integrations get Usage before their domain appears in Analytics.
         # Legacy analytics=False/evidence settings do not suppress the badge.
         query = urlencode(

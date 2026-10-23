@@ -359,7 +359,7 @@ class BadgeSafety(unittest.TestCase):
             badges.preserve_extra_badges(badges.replace_block(original, result), custom), result
         )
 
-    def test_custom_zip_keeps_usage_and_adds_downloads_without_claiming_default(self):
+    def test_custom_zip_replaces_usage_with_downloads_without_claiming_default(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             component = root / "custom_components/example"
@@ -372,12 +372,20 @@ class BadgeSafety(unittest.TestCase):
             self.assertIn("HACS Custom", output)
             self.assertNotIn("HACS Default", output)
             self.assertIn("github/downloads/owner/repo/total", output)
-            self.assertIn("label=Usage", output)
-            self.assertLess(
-                output.index("[![Downloads]"), output.index("[![Analytics reporting installs]")
-            )
+            self.assertNotIn("label=Usage", output)
+            self.assertNotIn("analytics.home-assistant.io", output)
             marked = badges.START + "\n" + output + "\n" + badges.END
             self.assertEqual(badges.preserve_extra_badges(marked, output), output)
+            legacy = (
+                badges.START
+                + "\n"
+                + (
+                    "[![Analytics reporting installs](https://example.com/usage)](https://example.com)"
+                )
+                + "\n"
+                + badges.END
+            )
+            self.assertEqual(badges.preserve_extra_badges(legacy, output), output)
             hacs.write_text('{"zip_release":false}')
             plain = badges.render(root, config)
             migrated = badges.preserve_extra_badges(marked, plain)
