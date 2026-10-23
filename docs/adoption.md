@@ -15,6 +15,8 @@
 
 **GOV-02 필수**: 이 리포는 별도 태그·GitHub Release·SemVer 없이 main과 커밋 이력으로 관리합니다. 문서는 main에서 확인하며, 실제 채택 PR에서는 `git ls-remote https://github.com/eigger/hass-repo-standards.git refs/heads/main`으로 검토한 commit SHA를 확인해 STANDARDS.md에 기록합니다. 공통 workflow/action 호출은 그 SHA로 고정하여 중앙 변경이 모든 리포에 즉시 적용되지 않도록 합니다. 템플릿의 `@main`은 채택 시 SHA로 교체하는 예시입니다.
 
+ZIP 배포만 후속 추가하는 부분 적용에서는 기존 CI의 검토 SHA를 보존할 수 있습니다. 이 경우 STANDARDS.md에 `Reviewed release standards SHA: <full SHA>`를 한 번 기록하며, 별도 SHA는 `.github/workflows/release.yml`의 `actions/release-zip`에만 적용합니다. 다른 공용 workflow/action과 `standards-ref`는 기존 참조 SHA를 유지합니다. ZIP 계약의 검토·검증과 기존 채택 미충족 범위를 구분해 기록하며 전체 재채택으로 판단하지 않습니다.
+
 **GOV-03 필수**: 규칙 변경은 날짜와 변경 내용을 CHANGELOG에 기록합니다. 기존 채택 리포에 영향을 주는 변경은 영향·이관 방법을 설명하고 각 리포의 명시적 채택 PR로 반영합니다. 이 규칙 리포의 관리 방식과 개별 통합의 배포 버전·릴리스 정책은 별개입니다.
 
 **GOV-04 필수**: 각 리포 적용 작업은 [중앙 현황표](adoption-status.md)를 시작·종료 및 차단·범위 변경 등 의미 있는 상태 변화 시 갱신합니다. 담당자/세션 식별자, 적용 내용, 기준 SHA·대상 커밋·체크리스트·CI·리뷰 근거, 남은 작업과 갱신일을 기록합니다. 상세 명령·버전·리뷰 결과는 체크리스트에 한 번 기록하고 현황표에는 요약과 링크를 남깁니다. 중앙 갱신 직전에 최신 main을 확인하고 자기 리포 행만 변경하며 다른 세션의 기록을 보존합니다. 접근·푸시가 불가능하면 실제 반영 결과를 과장하지 않고 미반영 사유와 반영할 내용을 보고합니다.

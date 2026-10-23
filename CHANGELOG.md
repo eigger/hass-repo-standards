@@ -1,5 +1,7 @@
 # Changelog
 
+- ZIP 배포만 추가할 때 기존 CI 참조를 보존할 수 있도록 STANDARDS의 별도 `Reviewed release standards SHA`를 지원합니다. 예외 범위는 release.yml의 release-zip action으로 제한하며, 불완전·중복 SHA는 거부합니다.
+
 ## 2026-10-23 — Custom ZIP 통합 Downloads
 
 - ZIP 배포 Custom 통합의 Analytics Usage를 Downloads 배지로 교체합니다. Default 등재 여부와 ZIP 배포 여부를 구분하며 상태 전환·중복 방지 계약은 유지합니다.
