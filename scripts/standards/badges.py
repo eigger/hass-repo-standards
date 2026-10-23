@@ -113,15 +113,13 @@ def render(repo: Path, config: dict, readme: Path | None = None):
             {
                 "style": "flat",
                 "color": "41BDF5",
-                "label": "HACS Downloads",
-                "query": f'$[?(@.full_name=="{repository}")].downloads',
-                "url": "https://data-v2.hacs.xyz/integration/data.json",
+                "label": "Downloads",
             }
         )
         badge(
-            "HACS Downloads",
-            "https://img.shields.io/badge/dynamic/json?" + query,
-            "https://www.hacs.xyz/",
+            "Downloads",
+            f"https://img.shields.io/github/downloads/{repository}/total?" + query,
+            base + "/releases",
         )
     else:
         # Custom integrations get Usage before their domain appears in Analytics.
@@ -157,6 +155,8 @@ def preserve_extra_badges(text: str, rendered: str):
         "License",
         "Analytics reporting installs",
         "HACS Downloads",
+        "GitHub Downloads",
+        "Downloads",
     }
     extras = []
     for value in existing.splitlines():
