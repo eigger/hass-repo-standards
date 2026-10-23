@@ -113,7 +113,7 @@ def render(repo: Path, config: dict, readme: Path | None = None):
             f"https://img.shields.io/github/license/{repository}?style=flat",
             prefix + "LICENSE",
         )
-    if status == "default":
+    if status == "default" or hacs.get("zip_release") is True:
         badge(
             "Downloads",
             downloads_badge_url(repository),
