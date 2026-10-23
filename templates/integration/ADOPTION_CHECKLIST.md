@@ -143,3 +143,9 @@ imagespec 미사용이면 실제 requirement/import 확인 근거와 N/A를 기�
 | 주/보조 분류 선택 또는 제외 이유·출처 | TODO — 실제 제품·사용자 안내·검토자/일자; 플랫폼 이름에서 추정하지 않음 |
 | categories_review와 manifest의 값/순서/유형 일치 | TODO — 과거 검토를 변경 후 결과로 재사용하지 않음 |
 | taxonomy snapshot·HACS warning/실패·실제 실행 결과 | TODO — 중앙 오프라인 검사와 원격 HACS/HA 실행·의미 검토를 구분 |
+
+## ZIP 릴리스 배포 (Default 필수)
+
+| 규칙 | 확인 항목 | 상태 | 근거 |
+|---|---|---|---|
+| HACS-04, CI-11 | zip_release/filename·ZIP 루트·추적 파일만 포함·태그/manifest/checkout 일치·동일 SHA 중앙 release action·published 후 asset 첨부·기존 asset 보존·immutable 설정 확인 | TODO | 실제 ZIP 검사·CI 및 다음 릴리스 업로드 근거 기록. 과거 릴리스/태그 소급 수정 없음 |

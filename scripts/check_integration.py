@@ -250,6 +250,9 @@ def check(root, write_readmes=False):
         if not write_readmes:
             errors.append(("DOC-01", path.name, "managed areas differ from central rendering"))
     errors.extend(validation.check(root, config, manifests[0], manifest, safe_path, CENTRAL))
+    from standards import release
+
+    errors.extend(release.errors(root, config, domain, safe_path, CENTRAL))
     errors.extend(test_errors(root, domain))
     errors.extend(workflow_errors(root, config, domain))
     errors.extend(bluetooth_document_errors(root, config, manifests[0], manifest, safe_path))

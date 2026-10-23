@@ -510,6 +510,24 @@
       "status": "available"
     },
     {
+      "id": "workflow-release.yml",
+      "source": "templates/integration/.github/workflows/release.yml",
+      "destination": ".github/workflows/release.yml",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [
+        "default_branch",
+        "environments"
+      ],
+      "markers": [],
+      "extension": "Preserve existing release jobs; add the central archive job without creating tags/releases or replacing published assets.",
+      "rules": [
+        "HACS-04",
+        "CI-11"
+      ],
+      "status": "available"
+    },
+    {
       "id": "workflow-update_dependencies.yml",
       "source": "templates/integration/.github/workflows/update_dependencies.yml",
       "destination": ".github/workflows/update_dependencies.yml",

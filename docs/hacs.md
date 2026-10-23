@@ -8,7 +8,9 @@
 
 **HACS-03 필수**: 기본 목록 등재와 custom repository 설치를 구분합니다. HACS 검증 성공, hacs.json 존재, brands 등록만으로 Default 배지를 표시하지 않습니다. Default 표기는 실제 목록 등재 확인 링크와 날짜를 기록합니다. [DOC-03·DOC-05](documentation.md)에 따라 Default는 Downloads, Custom은 Analytics Usage를 표시하며 양언어 설치 안내에는 실제 저장소의 My Home Assistant HACS 배지를 제공합니다.
 
-**HACS-04 필수**: 정식 배포는 GitHub Release로 만들고 tag의 `v` 접두사를 제외한 버전과 해당 commit manifest.version을 일치시킵니다. 통합 버전과 최소 HA/HACS 버전은 별개입니다. prerelease는 GitHub에서도 prerelease로 표시합니다.
+**HACS-04 필수**: 확인된 Default 통합은 `hacs.json`에 `zip_release: true`와 `filename: <domain>.zip`을 선언하고 중앙 [릴리스 caller](../templates/integration/.github/workflows/release.yml)로 릴리스 ZIP을 첨부합니다. 기존 파일 이름을 유지해야 하면 안전한 ZIP basename을 사용하고 실제 asset과 일치시킵니다. Custom도 ZIP 배포를 선택하면 같은 계약을 따릅니다. ZIP 루트에 `manifest.json`·`__init__.py`와 통합 파일을 두며 `custom_components/<domain>` 상위 폴더를 넣지 않습니다.
+
+정식 배포는 GitHub Release로 만들고 tag의 `v` 접두사를 제외한 버전과 해당 commit manifest.version을 일치시킵니다. 통합 버전과 최소 HA/HACS 버전은 별개입니다. prerelease는 GitHub에서도 prerelease로 표시합니다.
 
 **HACS-05 필수**: HACS와 Hassfest 검증을 실행합니다. 공통 Validate workflow는 둘을 별도 job으로 실행합니다. 검사 제외는 입력에 명시하고 STANDARDS.md에 이유·해제 조건을 기록합니다. 오류를 피하기 위한 무기한 ignore는 금지합니다.
 

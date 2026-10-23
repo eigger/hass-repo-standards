@@ -65,3 +65,7 @@ imagespec 사용 통합은 [작성 규칙](../../docs/payload-documentation.md)�
 `PreparedPayload`는 `payload_example_adapter` 팩터리 **함수 안에서 지연 import**합니다. domain conftest 최상위에서 중앙 `hass_standards_payload` 또는 계약만을 위한 imagespec을 import하지 않습니다. 중앙 도구가 PYTHONPATH에 없거나 imagespec marker가 비활성인 일반 회귀 실행도 정상 수집되어야 합니다. 타입 전용 import는 `TYPE_CHECKING`과 런타임 평가되지 않는 주석을 사용할 수 있으며 통합 자체의 실제 런타임 의존성은 바꾸지 않습니다.
 
 manifest 제품 분류는 [HA-02](../../docs/home-assistant.md#통합-제품-카테고리-ha-02)를 따릅니다. 입력의 `categories`는 실제 선택 배열과 근거를 제공하며 manifest 배열과 순서까지 일치해야 합니다. entity/system/virtual은 입력 배열이 비어 있고 manifest 키는 없어야 합니다. `.hass-standards.json` 예시의 `categories_review`는 의도적인 미입력 placeholder이므로 실제 검토 없이 복사해 통과했다고 보고하지 않습니다. 기존 manifest는 adoption으로 자동 변경하지 않으며 누락/충돌을 먼저 보완해 재계획합니다.
+
+## ZIP 릴리스
+
+Default 통합은 hacs.json에 `zip_release: true`, `filename: <domain>.zip`을 추가하고 `.github/workflows/release.yml`의 중앙 action을 검토 SHA로 고정합니다. 기존 지원 최소와 릴리스 버전은 보존합니다. 실제 태그 커밋과 manifest.version이 일치해야 하며, published 이후 통합 파일을 ZIP 루트로 묶어 기존 릴리스에 첨부합니다. 이전 릴리스·태그를 수정하거나 새 릴리스를 자동 발행하지 않습니다. 업로드 지연·실패와 기존 asset·immutable release 조건은 [릴리스 계약](../../docs/releases.md#zip-릴리스-첨부)을 확인합니다.
