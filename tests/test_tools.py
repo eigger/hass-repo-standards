@@ -359,6 +359,31 @@ class BadgeSafety(unittest.TestCase):
             badges.preserve_extra_badges(badges.replace_block(original, result), custom), result
         )
 
+    def test_custom_zip_keeps_usage_and_adds_downloads_without_claiming_default(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            component = root / "custom_components/example"
+            component.mkdir(parents=True)
+            (component / "manifest.json").write_text('{"domain":"example"}')
+            hacs = root / "hacs.json"
+            hacs.write_text('{"zip_release":true,"filename":"example.zip"}')
+            config = {"repository": "owner/repo", "default_branch": "main"}
+            output = badges.render(root, config)
+            self.assertIn("HACS Custom", output)
+            self.assertNotIn("HACS Default", output)
+            self.assertIn("github/downloads/owner/repo/total", output)
+            self.assertIn("label=Usage", output)
+            self.assertLess(
+                output.index("[![Downloads]"), output.index("[![Analytics reporting installs]")
+            )
+            marked = badges.START + "\n" + output + "\n" + badges.END
+            self.assertEqual(badges.preserve_extra_badges(marked, output), output)
+            hacs.write_text('{"zip_release":false}')
+            plain = badges.render(root, config)
+            migrated = badges.preserve_extra_badges(marked, plain)
+            self.assertNotIn("[![Downloads]", migrated)
+            self.assertIn("label=Usage", migrated)
+
     def test_bilingual_readmes_keep_links_and_local_installation_anchors(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

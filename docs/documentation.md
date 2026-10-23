@@ -8,7 +8,7 @@
 
 **DOC-02 필수**: 기본 `README.md`는 영어, `README.ko.md`는 한국어이며 상호 언어 링크를 제공합니다. 두 문서는 같은 구조·내용을 번역으로 유지합니다. 기존 본문·설정·이전 안내를 보존하고 누락된 번역을 보완합니다. 언어 일치를 이유로 본문을 삭제·요약·임의 재구성하지 않습니다. CI는 공통 구조·링크·배지·누락 여부를 검사하며, 담당자는 양언어 전체 내용을 대조해 번역 의미·정보 누락·임의 삭제 여부를 확인합니다. 독립 리뷰 필요 여부는 GOV-05를 따릅니다. 상세 docs는 한국어를 유지할 수 있습니다. 검증되지 않은 지원 모델·테스트 개수·호환성을 주장하지 않습니다. YAML 예시는 실제 action/schema와 맞추고 secrets는 예시 값으로 씁니다.
 
-**DOC-03 필수**: 배지는 header의 언어 링크 다음, 왼쪽 정렬, `style=flat`입니다. 공통 순서는 Release → HACS → HA minimum → Tests → Validate → License → Downloads(Default)/Usage(Custom)입니다. Downloads 또는 Usage는 마지막 공통 배지이며, 기존 고유 배지가 있으면 공통 배지 뒤에 보존합니다. 조건이 성립하지 않는 항목만 생략합니다(HA 통합은 HACS 상태에 맞는 집계 배지를 항상 포함).
+**DOC-03 필수**: 배지는 header의 언어 링크 다음, 왼쪽 정렬, `style=flat`입니다. 공통 순서는 Release → HACS → HA minimum → Tests → Validate → License → Downloads(Default 또는 ZIP 배포) → Usage(Custom)입니다. Default의 Downloads와 Custom의 Usage는 각각 마지막 공통 배지이며, 기존 고유 배지가 있으면 공통 배지 뒤에 보존합니다. 조건이 성립하지 않는 항목만 생략합니다(HA 통합은 HACS 상태에 맞는 집계 배지를 항상 포함).
 
 | 배지 | 데이터와 표시 조건 | 클릭 대상 |
 |---|---|---|
@@ -17,12 +17,12 @@
 | HA minimum | hacs.json.homeassistant, `HA ≥ 버전` 표기 | hacs.json |
 | Tests / Validate | 해당 caller workflow 파일이 존재할 때 | 해당 workflow |
 | License | 실제 LICENSE가 있을 때 | 상대 경로 LICENSE |
-| Downloads | 확인된 Default 통합. 실제 owner/repository의 `github/downloads/owner/repository/total` | releases |
+| Downloads | 확인된 Default 통합 또는 zip_release:true인 Custom 통합. 실제 owner/repository의 `github/downloads/owner/repository/total` | releases |
 | Usage | Custom 통합에 실제 manifest domain으로 동적 배지를 미리 생성. 사전 조회 불필요 | HA Analytics |
 
 **DOC-04 필수**: Tests는 CI 상태를 사용합니다. 수동 `124 Passed` 같은 상수 배지는 금지합니다. CI branch는 실제 기본 브랜치를 지정하며 폴더명을 원격 리포 이름으로 가정하지 않습니다. Release 없는 리포는 배포 버전을 추측하지 않습니다.
 
-**DOC-05 필수**: Usage는 사용자가 데이터 제공에 동의한 HA Analytics 참여 설치 집계입니다. 데이터 제공의 opt-in과 배지 추가 여부를 혼동하지 않습니다. Custom 통합에는 동적 Usage 배지를 미리 넣어 집계가 제공되면 표시되도록 합니다. HTTP 403·미집계·조회 실패를 이유로 배지를 생략하지 않으며, 이를 설치 수 0으로 표시하거나 해석하지 않습니다. 전체 설치 수·사람 수로 표현하지 않습니다. Default 통합은 Usage 대신 Shields의 `https://img.shields.io/github/downloads/{owner}/{repository}/total`을 **Downloads**로 표시하고 실제 저장소의 releases로 연결합니다. 이 값은 모든 릴리스의 첨부 asset 다운로드 합계이며 HACS 경유 다운로드만 구분하지 않습니다. 활성 설치 수·고유 사용자 수로 표현하거나 HACS Downloads로 이름 붙이지 않습니다. GitHub가 자동 제공하는 Source code ZIP/tarball·clone·개별 소스 파일 다운로드는 집계 대상이 아닙니다. HACS 설치가 집계되려면 통합 ZIP을 릴리스 asset으로 배포하고 `hacs.json`의 `zip_release: true`와 `filename`으로 HACS가 해당 asset을 사용하도록 구성해야 합니다. 배지 도구는 배포 방식이나 workflow를 자동 변경하지 않습니다. ZIP asset이 없는 기존 통합의 설치 이력은 이 배지로 복원할 수 없으며, asset 다운로드 0이나 조회 실패를 0 설치로 해석하거나 고정값으로 덮어쓰지 않습니다. HA 통합이 아닌 리포는 manifest domain이 없으므로 Usage는 N/A입니다. 이전된 리포는 이전 안내와 상태를 우선합니다.
+**DOC-05 필수**: Usage는 사용자가 데이터 제공에 동의한 HA Analytics 참여 설치 집계입니다. 데이터 제공의 opt-in과 배지 추가 여부를 혼동하지 않습니다. Custom 통합에는 동적 Usage 배지를 미리 넣어 집계가 제공되면 표시되도록 합니다. HTTP 403·미집계·조회 실패를 이유로 배지를 생략하지 않으며, 이를 설치 수 0으로 표시하거나 해석하지 않습니다. 전체 설치 수·사람 수로 표현하지 않습니다. Default 통합과 ZIP 배포 Custom 통합은 Shields의 `https://img.shields.io/github/downloads/{owner}/{repository}/total`을 **Downloads**로 표시하고 실제 저장소의 releases로 연결합니다. Custom의 기존 Usage는 Downloads 뒤에 유지합니다. 이 값은 모든 릴리스의 첨부 asset 다운로드 합계이며 HACS 경유 다운로드만 구분하지 않습니다. 활성 설치 수·고유 사용자 수로 표현하거나 HACS Downloads로 이름 붙이지 않습니다. GitHub가 자동 제공하는 Source code ZIP/tarball·clone·개별 소스 파일 다운로드는 집계 대상이 아닙니다. HACS 설치가 집계되려면 통합 ZIP을 릴리스 asset으로 배포하고 `hacs.json`의 `zip_release: true`와 `filename`으로 HACS가 해당 asset을 사용하도록 구성해야 합니다. 배지 도구는 배포 방식이나 workflow를 자동 변경하지 않습니다. ZIP asset이 없는 기존 통합의 설치 이력은 이 배지로 복원할 수 없으며, asset 다운로드 0이나 조회 실패를 0 설치로 해석하거나 고정값으로 덮어쓰지 않습니다. HA 통합이 아닌 리포는 manifest domain이 없으므로 Usage는 N/A입니다. 이전된 리포는 이전 안내와 상태를 우선합니다.
 
 ## HACS 설치 링크
 
@@ -68,7 +68,7 @@ python3 scripts/sync_badges.py ../hass-example --check
 python3 scripts/sync_badges.py ../hass-example --write
 ```
 
-`--check`는 불일치 시 exit 1, `--write`는 관리 영역만 갱신합니다. `release: true`와 `hacs: default`는 운영자가 원격 근거를 확인한 뒤 명시합니다. 스크립트는 원격 Release·목록 존재 여부를 검증하지 않으며 `hacs: default`에는 `hacs_default_evidence`(URL·확인일)가 필요합니다. Custom의 Usage는 실제 manifest domain으로 항상 생성하고 원격 조회나 `analytics_evidence`가 필요하지 않습니다. Default는 Downloads를 생성합니다. 이전 HACS Downloads 배지는 `--write` 시 교체하며 고유 배지와 관리 영역 밖 본문은 보존합니다. 오래된 설정의 `analytics: false`도 Custom의 Usage를 생략하지 않으며 두 analytics 설정 키는 제거합니다. 이 도구는 단일 HA manifest가 있는 통합용이며 비통합 리포에는 실행하지 않습니다.
+`--check`는 불일치 시 exit 1, `--write`는 관리 영역만 갱신합니다. `release: true`와 `hacs: default`는 운영자가 원격 근거를 확인한 뒤 명시합니다. 스크립트는 원격 Release·목록 존재 여부를 검증하지 않으며 `hacs: default`에는 `hacs_default_evidence`(URL·확인일)가 필요합니다. Custom의 Usage는 실제 manifest domain으로 항상 생성하고 원격 조회나 `analytics_evidence`가 필요하지 않습니다. Default 또는 ZIP 배포 Custom은 Downloads를 생성하고, Custom의 Usage는 함께 유지합니다. 이전 HACS Downloads 배지는 `--write` 시 교체하며 고유 배지와 관리 영역 밖 본문은 보존합니다. 오래된 설정의 `analytics: false`도 Custom의 Usage를 생략하지 않으며 두 analytics 설정 키는 제거합니다. 이 도구는 단일 HA manifest가 있는 통합용이며 비통합 리포에는 실행하지 않습니다.
 
 영어·한국어 README를 `readmes`에 함께 나열합니다(`README.md`, `README.ko.md`). 설치 앵커는 `installation_links`에 `{"README.md": "#installation", "README.ko.md": "#설치"}`로 지정합니다. 두 파일은 각각 상대 언어 파일로 연결하고 같은 기능·제한·설치 안내를 유지합니다. 저장소 파일 링크는 각 README 위치 기준으로 계산합니다. 예시 설정은 templates/integration/.hass-standards.json에 있습니다.
 
