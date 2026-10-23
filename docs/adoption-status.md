@@ -20,7 +20,26 @@
 
 ## HA 통합 리포
 
-2026-10-23 후속 부분 작업 진행 중: 비등재 통합 hass-atflee, hass-ble-led-sign, hass-catprinter, hass-esphome-ota, hass-garage, hass-icscale, hass-jaalee, hass-kma, hass-kocom-smarthome, hass-melk-light, hass-vson에 ZIP 릴리스 배포와 Downloads 배지를 적용합니다. Analytics Usage는 제거합니다. 아래 기존 전체 채택 상태·예외는 보존하며 이번 부분 검증으로 재채택 완료를 주장하지 않습니다. hass-icscale의 AGENTS.md는 사용자 명시 요청으로 삭제합니다. 담당 root, 중앙 배지 계약 [PR #16](https://github.com/eigger/hass-repo-standards/pull/16), 대상 PR·검증 결과는 후속 연결합니다.
+2026-10-23 Custom ZIP 후속 부분 적용: Analytics Usage를 Downloads로 교체하고 다음 릴리스에 통합 ZIP을 생성·첨부하도록 구성했습니다. 기존 지원 최소·코드·manifest·의존성·README 본문과 전체 채택 상태·예외는 보존합니다. 중앙 [배지 계약 PR #16](https://github.com/eigger/hass-repo-standards/pull/16)·[부분 ZIP 참조 PR #17](https://github.com/eigger/hass-repo-standards/pull/17)은 CI 4개 성공 후 스쿼시 머지했습니다. 검토 ZIP 기준 SHA는 `fd4162c0b93fbe8e109f99c787773ae09ba157e1`입니다.
+
+로컬 배지·Usage 제거·릴리스 계약·actionlint1.7.12 및 실제 ZIP 11개(275파일) 검증 PASS. zip_release_review의 각 구현 커밋·실제 ZIP 독립 리뷰 지적 없음; 후속 커밋은 검증 문서만 변경한 것을 주 에이전트가 확인했습니다. 전체 중앙 검사는 kocom만 PASS이며 나머지의 기존/미채택 항목 실패는 각 PR·체크리스트에 공개하고 PASS로 처리하지 않았습니다. 새 실제 릴리스 발행·업로드·HACS 설치·실물 검증은 수행하지 않았습니다.
+
+| Custom 리포 | 부분 적용 상태 | PR / 대상 커밋 / 검증 |
+|---|---|---|
+| hass-atflee | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-atflee/pull/30) · head `0b0d1a2` · [squash 5c11ee7](https://github.com/eigger/hass-atflee/commit/5c11ee744e140c120214249ffb9f3f89f57932f8) · PR checks 8개 성공/정상 종료 |
+| hass-ble-led-sign | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-ble-led-sign/pull/14) · head `86f6a11` · [squash b0e4a44](https://github.com/eigger/hass-ble-led-sign/commit/b0e4a448f4ae986073b3b7342005391256b0fcde) · PR checks 8개 성공/정상 종료 |
+| hass-catprinter | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-catprinter/pull/20) · head `14e2cc8` · [squash 1fc7021](https://github.com/eigger/hass-catprinter/commit/1fc70218235b09e185854d9aca5adba39747cf0c) · PR checks 8개 성공/정상 종료 |
+| hass-esphome-ota | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-esphome-ota/pull/35) · head `bae7ed9` · [squash b82eb9d](https://github.com/eigger/hass-esphome-ota/commit/b82eb9d6ab10ed7e9f7ffd13d376e413a4d4e05f) · PR checks 4개 성공/정상 종료 |
+| hass-garage | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-garage/pull/5) · head `b680b0a` · [squash 8bf3d2d](https://github.com/eigger/hass-garage/commit/8bf3d2d300899d169b56a1f9de81d3768fc0f934) · PR checks 6개 성공/정상 종료 |
+| hass-icscale | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-icscale/pull/19) · head `85a86f5` · [squash dc94477](https://github.com/eigger/hass-icscale/commit/dc944772a10ed6a21e4799e1485f959b0cbec0da) · PR checks 7개 성공/정상 종료 |
+| hass-jaalee | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-jaalee/pull/7) · head `6bed7e4` · [squash dc0c89d](https://github.com/eigger/hass-jaalee/commit/dc0c89d70bce3a39a10e993509012b21f4b609f4) · PR checks 6개 성공/정상 종료 |
+| hass-kma | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-kma/pull/38) · head `3fb1863` · [squash bc88ed6](https://github.com/eigger/hass-kma/commit/bc88ed648634b036743bc66529db9a6a86a565b7) · PR checks 6개 성공/정상 종료 |
+| hass-kocom-smarthome | PR 열림·CI 대기 | [PR](https://github.com/eigger/hass-kocom-smarthome/pull/3) · head `af9fc2f` · 최종 CI 결과 대기 |
+| hass-melk-light | PR 열림·CI 미실행 | [PR](https://github.com/eigger/hass-melk-light/pull/4) · head `f2d6a0c` · 기존 PR CI가 없어 통과로 간주하지 않고 미병합; 로컬 부분 검사·ZIP·독립 리뷰 PASS |
+| hass-vson | CI 성공·스쿼시 머지 | [PR](https://github.com/eigger/hass-vson/pull/9) · head `fb7a0da` · [squash c2d462b](https://github.com/eigger/hass-vson/commit/c2d462b4527cd4934da4c825144b858c96b327d6) · PR checks 6개 성공/정상 종료 |
+
+hass-icscale의 AGENTS.md는 사용자 명시 요청에 따라 삭제했습니다. melk-light/vson의 변경은 ZIP·배지만의 부분 채택이며 전체 채택 완료를 뜻하지 않습니다. 담당 root, 2026-10-23.
+
 
 | 리포 / 기본 브랜치 | 상태 | 적용 내용 | 근거: 기준 SHA·체크리스트·커밋/PR·CI | 남은 작업 / 제외 사유 | 갱신일 / 담당 |
 |---|---|---|---|---|---|
