@@ -332,6 +332,33 @@ class BadgeSafety(unittest.TestCase):
             self.assertIn("label=Usage", reverted)
             self.assertTrue(reverted.endswith(extra))
 
+    def test_same_named_custom_download_badges_are_preserved(self):
+        custom = "[![Analytics reporting installs](https://example.com/usage)](https://example.com)"
+        canonical = (
+            "[![Downloads](https://img.shields.io/github/downloads/owner/repo/total"
+            "?style=flat&color=41BDF5&label=Downloads)](https://github.com/owner/repo/releases)"
+        )
+        extras = [
+            f"[![{label}](https://img.shields.io/github/downloads/owner/repo/latest/total)]"
+            "(https://github.com/owner/repo/releases/latest)"
+            for label in ("Downloads", "GitHub Downloads")
+        ]
+        # A different style or destination also identifies a repository-owned badge.
+        extras.extend(
+            [
+                canonical.replace("style=flat", "style=flat-square"),
+                canonical.replace(
+                    "](https://github.com/owner/repo/releases)", "](https://example.com)"
+                ),
+            ]
+        )
+        original = badges.START + "\n" + "\n".join([canonical, *extras]) + "\n" + badges.END
+        result = badges.preserve_extra_badges(original, custom)
+        self.assertEqual(result, "\n".join([custom, *extras]))
+        self.assertEqual(
+            badges.preserve_extra_badges(badges.replace_block(original, result), custom), result
+        )
+
     def test_bilingual_readmes_keep_links_and_local_installation_anchors(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

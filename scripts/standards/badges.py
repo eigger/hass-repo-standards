@@ -34,6 +34,11 @@ def install_badge(config):
     return f"[![{INSTALL_ALT}](https://my.home-assistant.io/badges/hacs_repository.svg)]({url})"
 
 
+def downloads_badge_url(repository):
+    query = urlencode({"style": "flat", "color": "41BDF5", "label": "Downloads"})
+    return f"https://img.shields.io/github/downloads/{repository}/total?{query}"
+
+
 def render(repo: Path, config: dict, readme: Path | None = None):
     repository = config.get("repository")
     if not repository:
@@ -109,16 +114,9 @@ def render(repo: Path, config: dict, readme: Path | None = None):
             prefix + "LICENSE",
         )
     if status == "default":
-        query = urlencode(
-            {
-                "style": "flat",
-                "color": "41BDF5",
-                "label": "Downloads",
-            }
-        )
         badge(
             "Downloads",
-            f"https://img.shields.io/github/downloads/{repository}/total?" + query,
+            downloads_badge_url(repository),
             base + "/releases",
         )
     else:
@@ -155,13 +153,18 @@ def preserve_extra_badges(text: str, rendered: str):
         "License",
         "Analytics reporting installs",
         "HACS Downloads",
-        "GitHub Downloads",
-        "Downloads",
     }
     extras = []
     for value in existing.splitlines():
-        match = re.fullmatch(r"\[!\[([^]]+)\]\(.+\)\]\(.+\)", value)
-        if match and match[1] not in known:
+        match = re.fullmatch(r"\[!\[([^]]+)\]\((.+)\)\]\((.+)\)", value)
+        managed_downloads = False
+        if match and match[1] == "Downloads":
+            repository = re.fullmatch(
+                r"https://github.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)/releases",
+                match[3],
+            )
+            managed_downloads = bool(repository and match[2] == downloads_badge_url(repository[1]))
+        if match and match[1] not in known and not managed_downloads:
             extras.append(value)
         elif value.strip() and not match:
             raise ValueError(
