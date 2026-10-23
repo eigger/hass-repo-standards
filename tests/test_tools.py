@@ -278,7 +278,7 @@ class BadgeSafety(unittest.TestCase):
             with self.assertRaises(ValueError):
                 badges.render(root, {**config, "hacs": "default"})
 
-    def test_default_uses_official_hacs_downloads_and_state_switch_removes_old_badge(self):
+    def test_default_uses_github_downloads_and_migrates_legacy_badge(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             component = root / "custom_components/domain_not_repository"
@@ -297,21 +297,67 @@ class BadgeSafety(unittest.TestCase):
             )
             self.assertNotIn("label=Usage", default)
             self.assertNotIn("analytics.home-assistant.io", default)
-            self.assertNotIn("github/downloads", default)
-            line = next(line for line in default.splitlines() if "[![HACS Downloads]" in line)
-            query = parse_qs(urlsplit(line.split("](", 1)[1].split(")](", 1)[0]).query)
-            self.assertEqual(query["url"], ["https://data-v2.hacs.xyz/integration/data.json"])
-            self.assertEqual(query["query"], ['$[?(@.full_name=="owner/repo-name")].downloads'])
-            self.assertEqual(query["label"], ["HACS Downloads"])
+            self.assertNotIn("data-v2.hacs.xyz", default)
+            self.assertNotIn("badge/dynamic/json", default)
+            line = next(line for line in default.splitlines() if "[![Downloads]" in line)
+            url = urlsplit(line.split("](", 1)[1].split(")](", 1)[0])
+            self.assertEqual(url.netloc, "img.shields.io")
+            self.assertEqual(url.path, "/github/downloads/owner/repo-name/total")
+            self.assertEqual(
+                parse_qs(url.query),
+                {
+                    "style": ["flat"],
+                    "color": ["41BDF5"],
+                    "label": ["Downloads"],
+                },
+            )
+            self.assertTrue(line.endswith("](https://github.com/owner/repo-name/releases)"))
             extra = "[![Special](https://example.com/badge)](https://example.com)"
             marked = badges.START + "\n" + custom + "\n" + extra + "\n" + badges.END
             converted = badges.preserve_extra_badges(marked, default)
             self.assertNotIn("label=Usage", converted)
             self.assertTrue(converted.endswith(extra))
+            legacy = "[![HACS Downloads](https://example.com/old-badge)](https://www.hacs.xyz/)"
+            migrated = badges.preserve_extra_badges(
+                badges.replace_block(marked, legacy + "\n" + extra), default
+            )
+            self.assertEqual(migrated, converted)
+            self.assertEqual(
+                badges.preserve_extra_badges(badges.replace_block(marked, migrated), default),
+                migrated,
+            )
             reverted = badges.preserve_extra_badges(badges.replace_block(marked, converted), custom)
             self.assertNotIn("[![HACS Downloads]", reverted)
+            self.assertNotIn("[![Downloads]", reverted)
             self.assertIn("label=Usage", reverted)
             self.assertTrue(reverted.endswith(extra))
+
+    def test_same_named_custom_download_badges_are_preserved(self):
+        custom = "[![Analytics reporting installs](https://example.com/usage)](https://example.com)"
+        canonical = (
+            "[![Downloads](https://img.shields.io/github/downloads/owner/repo/total"
+            "?style=flat&color=41BDF5&label=Downloads)](https://github.com/owner/repo/releases)"
+        )
+        extras = [
+            f"[![{label}](https://img.shields.io/github/downloads/owner/repo/latest/total)]"
+            "(https://github.com/owner/repo/releases/latest)"
+            for label in ("Downloads", "GitHub Downloads")
+        ]
+        # A different style or destination also identifies a repository-owned badge.
+        extras.extend(
+            [
+                canonical.replace("style=flat", "style=flat-square"),
+                canonical.replace(
+                    "](https://github.com/owner/repo/releases)", "](https://example.com)"
+                ),
+            ]
+        )
+        original = badges.START + "\n" + "\n".join([canonical, *extras]) + "\n" + badges.END
+        result = badges.preserve_extra_badges(original, custom)
+        self.assertEqual(result, "\n".join([custom, *extras]))
+        self.assertEqual(
+            badges.preserve_extra_badges(badges.replace_block(original, result), custom), result
+        )
 
     def test_bilingual_readmes_keep_links_and_local_installation_anchors(self):
         with tempfile.TemporaryDirectory() as directory:

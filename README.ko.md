@@ -33,7 +33,7 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 
 적용 가능한 통합은 [HA-02](docs/home-assistant.md#통합-제품-카테고리-ha-02)에 따라 실제 제품 분류 1–3개와 선택 근거를 기록하며 entity/system/virtual은 키를 생략하고 이유를 남깁니다. 이는 프로젝트 필수 정책이고 upstream은 현재 누락을 선택 항목/HACS 경고로 취급합니다. 엔티티 플랫폼에서 분류를 추정하지 않습니다.
 
-통합의 기본 README.md는 영어, README.ko.md는 한국어로 제공하며 상호 연결합니다. HACS Default 통합은 공식 HACS 데이터의 HACS Downloads, Custom 통합은 집계 존재 사전 확인 없이 manifest domain의 동적 Usage 배지를 추가합니다. 양언어 설치 안내에는 실제 저장소의 My Home Assistant HACS 배지를 제공합니다. 데이터 누락·조회 실패는 0 설치를 뜻하지 않습니다.
+통합의 기본 README.md는 영어, README.ko.md는 한국어로 제공하며 상호 연결합니다. HACS Default 통합은 GitHub 릴리스 asset 누적 다운로드 배지, Custom 통합은 집계 존재 사전 확인 없이 manifest domain의 동적 Usage 배지를 추가합니다. 양언어 설치 안내에는 실제 저장소의 My Home Assistant HACS 배지를 제공합니다. 데이터 누락·조회 실패는 0 설치를 뜻하지 않습니다.
 
 현재 규칙은 HACS 커스텀 통합도 Core와 유사한 구현·테스트 구조를 사용하도록 정의합니다. hass-kibble 첫 파일럿의 공통 규칙 적용·실제 HA 검증·README 언어·Usage 후속 보완을 완료했습니다. hass-catprinter 두 번째 파일럿도 최소·현재 HA와 최종 CI의 독립 검증을 마쳤습니다. 나머지 통합은 중앙 현황표의 순서와 범위에 따라 이관합니다.
 

@@ -34,6 +34,11 @@ def install_badge(config):
     return f"[![{INSTALL_ALT}](https://my.home-assistant.io/badges/hacs_repository.svg)]({url})"
 
 
+def downloads_badge_url(repository):
+    query = urlencode({"style": "flat", "color": "41BDF5", "label": "Downloads"})
+    return f"https://img.shields.io/github/downloads/{repository}/total?{query}"
+
+
 def render(repo: Path, config: dict, readme: Path | None = None):
     repository = config.get("repository")
     if not repository:
@@ -109,19 +114,10 @@ def render(repo: Path, config: dict, readme: Path | None = None):
             prefix + "LICENSE",
         )
     if status == "default":
-        query = urlencode(
-            {
-                "style": "flat",
-                "color": "41BDF5",
-                "label": "HACS Downloads",
-                "query": f'$[?(@.full_name=="{repository}")].downloads',
-                "url": "https://data-v2.hacs.xyz/integration/data.json",
-            }
-        )
         badge(
-            "HACS Downloads",
-            "https://img.shields.io/badge/dynamic/json?" + query,
-            "https://www.hacs.xyz/",
+            "Downloads",
+            downloads_badge_url(repository),
+            base + "/releases",
         )
     else:
         # Custom integrations get Usage before their domain appears in Analytics.
@@ -160,8 +156,15 @@ def preserve_extra_badges(text: str, rendered: str):
     }
     extras = []
     for value in existing.splitlines():
-        match = re.fullmatch(r"\[!\[([^]]+)\]\(.+\)\]\(.+\)", value)
-        if match and match[1] not in known:
+        match = re.fullmatch(r"\[!\[([^]]+)\]\((.+)\)\]\((.+)\)", value)
+        managed_downloads = False
+        if match and match[1] == "Downloads":
+            repository = re.fullmatch(
+                r"https://github.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)/releases",
+                match[3],
+            )
+            managed_downloads = bool(repository and match[2] == downloads_badge_url(repository[1]))
+        if match and match[1] not in known and not managed_downloads:
             extras.append(value)
         elif value.strip() and not match:
             raise ValueError(
