@@ -52,11 +52,12 @@ def errors(root, config, domain, safe_path, central):
             if isinstance(value, list):
                 return [normalize(item) for item in value]
             if isinstance(value, str):
-                return re.sub(
+                value = re.sub(
                     r"(eigger/hass-repo-standards/actions/release-zip@)[a-f0-9]{40}$",
                     r"\1main",
                     value,
                 )
+                return re.sub(r"^(actions/[a-z-]+@)[a-f0-9]{40}( #.*)?$", r"\1pinned", value)
             return value
 
         if (
@@ -65,7 +66,7 @@ def errors(root, config, domain, safe_path, central):
                 actual.get(key) != expected[key]
                 for key in ("name", "on", "permissions", "concurrency")
             )
-            or normalize(actual.get("jobs", {}).get("release")) != expected["jobs"]["release"]
+            or normalize(actual.get("jobs", {}).get("release")) != normalize(expected["jobs"]["release"])
         ):
             result.append(
                 (
