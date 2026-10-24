@@ -66,7 +66,8 @@ def errors(root, config, domain, safe_path, central):
                 actual.get(key) != expected[key]
                 for key in ("name", "on", "permissions", "concurrency")
             )
-            or normalize(actual.get("jobs", {}).get("release")) != normalize(expected["jobs"]["release"])
+            or normalize(actual.get("jobs", {}).get("release"))
+            != normalize(expected["jobs"]["release"])
         ):
             result.append(
                 (
