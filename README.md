@@ -12,6 +12,7 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 |---|---|
 | [Adoption and change management](docs/adoption.md) | Required/recommended rules, migration, exceptions |
 | [Central adoption status](docs/adoption-status.md) | Progress, changes, verification/review evidence, remaining work |
+| [Repository statistics](docs/repository-stats.md) | Live versions, GitHub asset downloads, stars and forks for HA-related `hass*` repositories |
 | [Recommended adoption order](docs/adoption-plan.md) | Pilot and phased adoption for 22 eligible HA integrations |
 | [Template and skill implementation plan](docs/template-skill-plan.md) | Contracts, templates, CLI and skills; T1–T6 implemented and independently verified; T6 PR CI passed, with merge status tracked in [PR #7](https://github.com/eigger/hass-repo-standards/pull/7) (Korean) |
 | [Template and skill usage](docs/template-skill-usage.md) | Inspection, planning, application/recovery, static checks and explicit skill installation; device behavior requires implementation (Korean) |

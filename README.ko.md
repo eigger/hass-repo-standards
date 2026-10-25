@@ -12,6 +12,7 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 |---|---|
 | [적용과 변경 관리](docs/adoption.md) | 필수·권장 구분, 기존 리포 이관, 예외 |
 | [중앙 적용 현황](docs/adoption-status.md) | 리포별 진행 상태·적용 내용·검증/리뷰 근거·남은 작업 |
+| [리포별 배포·관심 현황](docs/repository-stats.ko.md) | HA 관련 `hass*` 리포의 버전·GitHub 누적 다운로드·스타·포크 자동 갱신 |
 | [적용 권장 순서](docs/adoption-plan.md) | 적용 대상 HA 통합 22개 파일럿·단계별 적용 계획 |
 | [템플릿·스킬 구조 개편 구현안](docs/template-skill-plan.md) | 계약·템플릿·CLI·스킬; T1~T6 구현·독립 검증 완료, T6 PR CI 통과·병합 상태는 [PR #7](https://github.com/eigger/hass-repo-standards/pull/7) 확인 |
 | [템플릿·스킬 사용 안내](docs/template-skill-usage.md) | 조사·계획·적용/복구·정적 검사·명시적 스킬 설치; 기기 동작은 별도 구현 |
