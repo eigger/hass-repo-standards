@@ -13,8 +13,7 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 | [Adoption and change management](docs/adoption.md) | Required/recommended rules, migration, exceptions |
 | [Central adoption status](docs/adoption-status.md) | Progress, changes, verification/review evidence, remaining work |
 | [Repository statistics](docs/repository-stats.md) | Live versions, GitHub asset downloads, stars and forks for HA integrations, related projects and shared libraries |
-| [Recommended adoption order](docs/adoption-plan.md) | Pilot and phased adoption for 22 eligible HA integrations |
-| [Template and skill implementation plan](docs/template-skill-plan.md) | Contracts, templates, CLI and skills; T1–T6 implemented and independently verified; T6 PR CI passed, with merge status tracked in [PR #7](https://github.com/eigger/hass-repo-standards/pull/7) (Korean) |
+| [Template and skill implementation plan](docs/template-skill-plan.md) | Contracts, templates, CLI and skills; T1–T6 implementation background (Korean) |
 | [Template and skill usage](docs/template-skill-usage.md) | Inspection, planning, application/recovery, static checks and explicit skill installation; device behavior requires implementation (Korean) |
 | [Template and skill validation](docs/template-skill-validation.md) | Stage status, commands, environments, evidence and remaining work (Korean) |
 | [Integration adoption checklist](docs/checklist.md) | Status, evidence, compatible environments, exceptions |
@@ -44,7 +43,7 @@ Do not copy, generate, append, or install the central AGENTS.md or its contents 
 
 Managed README regions, the test foundation, and shared CI must follow central templates and automated checks. Each repository retains its remaining README structure and content. English and Korean versions carry the same structure and information, with translation meaning reviewed according to GOV-05. Deviations require a central template change or explicit user approval before application, with evidence and scope recorded. The agent requests approval; CI does not wait for approval.
 
-blesession owns common Bluetooth proxy recommendations, setup and troubleshooting. This repository maintains authoring rules, bilingual device-specific troubleshooting templates and their shared Validate checks. Reading the general proxy guide does not require installing blesession. Existing central guide URLs remain as move notices.
+blesession owns common Bluetooth proxy recommendations, setup and troubleshooting. This repository maintains authoring rules, bilingual device-specific troubleshooting templates and their shared Validate checks. Reading the general proxy guide does not require installing blesession.
 
 ## Shared CI
 

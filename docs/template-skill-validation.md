@@ -14,7 +14,7 @@ T4는 실제 커밋 `53ac269dece6561276480a2d5e86ea884c0abcbb`의 [PR #5 CI](htt
 
 T5는 실제 커밋 `4d837b2e73515517667b0b5555760794d176764e`의 [PR #6 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39201816337) 네 검사가 모두 성공한 뒤 merge commit `7b004342ecc53f191d684b8c9040d296fc0f7578`로 main에 반영했습니다. 해당 [main CI](https://github.com/eigger/hass-repo-standards/actions/runs/39201996349) 네 검사도 모두 성공했습니다.
 
-T6 중앙 fixture 구현은 실제 code head `07256a4932cdd80bbf3edae442c810700efc107a`로 [PR #7](https://github.com/eigger/hass-repo-standards/pull/7)에 제출했고 해당 커밋의 [원격 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39202919478) 네 검사가 모두 성공했습니다. 이 기록은 해당 커밋과 실행 시점의 검증 근거이며 main 병합 완료를 뜻하지 않습니다. 현재 병합 상태는 PR에서 별도로 확인합니다. 아래 독립 192개 실행 결과는 T5 merge 위의 같은 T6 구현을 검증한 근거이며 이전 단계 결과를 재사용하지 않습니다.
+T6 중앙 fixture 구현은 실제 code head `07256a4932cdd80bbf3edae442c810700efc107a`로 [PR #7](https://github.com/eigger/hass-repo-standards/pull/7)에 제출했고 해당 커밋의 [원격 CI](https://github.com/eigger/hass-repo-standards/actions/runs/39202919478) 네 검사가 모두 성공했습니다. 이 기록은 해당 커밋과 실행 시점의 검증 근거이며, PR #7은 이후 main에 병합되었습니다. 아래 독립 192개 실행 결과는 T5 merge 위의 같은 T6 구현을 검증한 근거이며 이전 단계 결과를 재사용하지 않습니다.
 
 | 단계 | 구현·검증 상태 | 남은 작업 |
 |---|---|---|
@@ -23,7 +23,7 @@ T6 중앙 fixture 구현은 실제 code head `07256a4932cdd80bbf3edae442c810700e
 | T3 | 새 작성 기반·apply·recover 구현·독립 코드/문서 검증·PR/main CI 각 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
 | T4 | 생성물 검사·중앙 계약 연결 구현·독립 검증·PR/main CI 성공·main 병합 | 후속 단계와 별도 기록 |
 | T5 | 두 스킬·실행 안내·정적/격리 행동·독립 문서 검증·PR/main CI 각 네 검사 성공·main 병합 | 후속 단계와 별도 기록 |
-| T6 | 중앙 생성·갱신 자동 회귀 구현·독립 코드/문서 검증·실제 code head의 PR CI 네 검사 성공 | 현재 병합 상태는 PR #7 확인; 외부 실제 도입은 범위 밖 |
+| T6 | 중앙 생성·갱신 자동 회귀 구현·독립 코드/문서 검증·실제 code head의 PR CI 네 검사 성공 | PR #7 main 병합; 외부 실제 도입은 범위 밖 |
 
 T1은 계약 44개 중 기존 원본 available 21개와 미작성 자산 pending 23개를 구분했습니다. T3는 작성 자산 18개와 빈 `custom_components/__init__.py` 패키지 marker를 추가해 총 45개·available 40개·pending 5개입니다. marker는 기존 빈 테스트 init 원본을 재사용하고 create_only로 기존 파일을 보존합니다. available은 원본이 존재한다는 뜻이며 실제 기기 동작·fixture·검증 미완료는 renderer의 pending으로 별도 반환합니다. CLI에는 T2 inspect/plan과 T3 apply/recover가 있습니다. 외부 통합 수정·지원 최소 변경·스킬 설치·workflow 수동 실행은 수행하지 않았습니다.
 
@@ -259,4 +259,4 @@ adopt-base는 최소 HA 2025.3.0/Python 3.13/플러그인 0.13.221과 current HA
 
 ## 남은 검증과 한계
 
-중앙 T1~T6 구현·T6 독립 코드/문서 검증·기록한 실제 code head의 PR CI를 완료했습니다. 현재 병합 상태는 PR #7에서 확인하며 이 문서의 역사적 커밋/CI 근거와 구분합니다. 생성 초안의 실제 HA negative smoke는 수행했지만 실제 신규·기존 통합의 HA minimum/current 성공, HACS/Hassfest, UI 번역·기기 의미·하드웨어 검증은 이번 범위 밖·미실행입니다. 다른 에이전트 클라이언트 실행·개인 설치·앱 자동 발동도 미검증입니다. 중앙 fixture와 중앙 도구의 회귀 성공을 외부 통합 도입 완료로 기록하지 않습니다.
+중앙 T1~T6 구현·T6 독립 코드/문서 검증·기록한 실제 code head의 PR CI를 완료했고 PR #7은 main에 병합되었습니다. 생성 초안의 실제 HA negative smoke는 수행했지만 실제 신규·기존 통합의 HA minimum/current 성공, HACS/Hassfest, UI 번역·기기 의미·하드웨어 검증은 이번 범위 밖·미실행입니다. 다른 에이전트 클라이언트 실행·개인 설치·앱 자동 발동도 미검증입니다. 중앙 fixture와 중앙 도구의 회귀 성공을 외부 통합 도입 완료로 기록하지 않습니다.

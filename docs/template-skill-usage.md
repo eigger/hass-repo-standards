@@ -130,7 +130,7 @@ python3 scripts/check_repository.py
 python3 -m unittest discover -s tests -p test_integration_scenarios.py -v
 ```
 
-이 명령은 중앙 저장소의 개발 환경에서 실행합니다. T6의 실제 독립 192개 실행 결과와 검증 대상 커밋의 PR CI는 [검증 기록](template-skill-validation.md), 현재 병합 상태는 [PR #7](https://github.com/eigger/hass-repo-standards/pull/7)에서 확인합니다. 실행 대상은 임시 Git fixture이고 실제 외부 통합·기기·실제 최소/current HA 채택 성공을 검증하는 명령이 아닙니다. 이번 중앙 도구·템플릿·스킬 요청은 T6 중앙 검증으로 마무리하며 다른 통합 적용과 개인 스킬 설치는 별도 요청 범위입니다.
+이 명령은 중앙 저장소의 개발 환경에서 실행합니다. T6의 실제 독립 192개 실행 결과와 검증 대상 커밋의 PR CI는 [검증 기록](template-skill-validation.md)에 있으며, [PR #7](https://github.com/eigger/hass-repo-standards/pull/7)은 main에 병합되었습니다. 실행 대상은 임시 Git fixture이고 실제 외부 통합·기기·실제 최소/current HA 채택 성공을 검증하는 명령이 아닙니다. 중앙 도구·템플릿·스킬의 구현과 실제 통합 적용·개인 스킬 설치는 별도 범위입니다.
 
 ## 두 스킬의 원본·명시적 설치
 

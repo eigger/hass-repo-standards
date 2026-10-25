@@ -13,8 +13,7 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 | [적용과 변경 관리](docs/adoption.md) | 필수·권장 구분, 기존 리포 이관, 예외 |
 | [중앙 적용 현황](docs/adoption-status.md) | 리포별 진행 상태·적용 내용·검증/리뷰 근거·남은 작업 |
 | [리포별 배포·관심 현황](docs/repository-stats.ko.md) | HA 통합·관련 프로젝트·공통 라이브러리의 버전·GitHub 누적 다운로드·스타·포크 자동 갱신 |
-| [적용 권장 순서](docs/adoption-plan.md) | 적용 대상 HA 통합 22개 파일럿·단계별 적용 계획 |
-| [템플릿·스킬 구조 개편 구현안](docs/template-skill-plan.md) | 계약·템플릿·CLI·스킬; T1~T6 구현·독립 검증 완료, T6 PR CI 통과·병합 상태는 [PR #7](https://github.com/eigger/hass-repo-standards/pull/7) 확인 |
+| [템플릿·스킬 구조 개편 구현안](docs/template-skill-plan.md) | 계약·템플릿·CLI·스킬의 T1~T6 구현 배경 |
 | [템플릿·스킬 사용 안내](docs/template-skill-usage.md) | 조사·계획·적용/복구·정적 검사·명시적 스킬 설치; 기기 동작은 별도 구현 |
 | [템플릿·스킬 구현 검증](docs/template-skill-validation.md) | 단계별 상태·명령·환경·근거·남은 작업 |
 | [통합별 적용 체크리스트](docs/checklist.md) | 적용 상태·검증 증거·호환 환경·예외 기록 |
@@ -44,7 +43,7 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 
 README 공통 영역·테스트 기본 구조·공용 CI는 중앙 템플릿을 의무 적용하고 자동 검사합니다. README의 나머지 구성과 기존 본문은 각 리포에 맡겨 보존합니다. 양언어는 같은 구조·내용으로 유지하며 GOV-05에 따른 리뷰로 번역 의미를 확인합니다. 차이는 중앙 템플릿 수정 또는 사용자 명시적 승인 후 적용하고 근거·범위를 기록합니다. 승인 요청은 에이전트가 수행하며 CI가 승인 대기하지 않습니다.
 
-공통 Bluetooth 프록시 추천·설정·문제 해결은 blesession에서 관리합니다. 중앙은 작성 규칙·양언어 기기별 문제 해결 템플릿·공용 Validate 검사를 관리합니다. 일반 프록시 안내를 읽기 위해 blesession을 설치할 필요는 없습니다. 기존 중앙 안내 URL은 이전 안내로 유지합니다.
+공통 Bluetooth 프록시 추천·설정·문제 해결은 blesession에서 관리합니다. 중앙은 작성 규칙·양언어 기기별 문제 해결 템플릿·공용 Validate 검사를 관리합니다. 일반 프록시 안내를 읽기 위해 blesession을 설치할 필요는 없습니다.
 
 ## 공통 CI
 

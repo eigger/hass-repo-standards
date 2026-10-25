@@ -24,7 +24,7 @@ python3 scripts/sync_badges.py ../hass-example --check
 python3 scripts/check_integration.py ../hass-example
 ```
 
-공용 Validate 검사기는 blesession 사용 통합의 DOC-07 양언어 로컬 문제 해결 문서·고정 절/표 구조·언어별 원본/지원 링크도 검사합니다. 오프라인 검사로 실물·번역 의미·진단 의미·원격 이슈 템플릿 존재를 검증하지 않습니다. 공통 사용자 안내는 blesession, 중앙은 작성 규칙·템플릿·이전 URL 안내를 관리합니다.
+공용 Validate 검사기는 blesession 사용 통합의 DOC-07 양언어 로컬 문제 해결 문서·고정 절/표 구조·언어별 원본/지원 링크도 검사합니다. 오프라인 검사로 실물·번역 의미·진단 의미·원격 이슈 템플릿 존재를 검증하지 않습니다. 공통 사용자 안내는 blesession, 중앙은 작성 규칙·템플릿을 관리합니다.
 
 로컬 통합 검사기는 대상 통합의 문법과 같거나 더 최신인 Python으로 실행하세요. standalone standards caller 예제는 현재 통합·테스트 소스를 파싱하기 위해 Python 3.14를 사용합니다. 이는 도구 실행 환경이며 지원 최소 HA/Python을 올리거나 최소 검증 환경을 제거하지 않습니다. 중앙 도구 자체의 Python 3.9 단위 테스트 호환성과 구분합니다.
 

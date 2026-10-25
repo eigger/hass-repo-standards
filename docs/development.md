@@ -24,7 +24,7 @@ Follow the [central template instructions](../templates/integration/USAGE.md) fo
 python3 scripts/check_integration.py ../hass-example
 ```
 
-The shared Validate checker also enforces DOC-07 for integrations using blesession: bilingual local troubleshooting documents, fixed section/table structure and language/source/support links. Its offline checks do not verify hardware, translations, diagnostics semantics or remote issue-template availability. Common user instructions live in blesession; the central repository keeps authoring rules, templates and compatibility move notices.
+The shared Validate checker also enforces DOC-07 for integrations using blesession: bilingual local troubleshooting documents, fixed section/table structure and language/source/support links. Its offline checks do not verify hardware, translations, diagnostics semantics or remote issue-template availability. Common user instructions live in blesession; the central repository keeps authoring rules and templates.
 
 Run the local integration checker with Python matching or newer than the target integration’s syntax. The standalone standards caller example uses Python 3.14 to parse current integration and test sources. This is a tooling interpreter choice; it does not raise the integration’s minimum HA/Python support or remove minimum-version tests. Central tool-only unit tests retain Python 3.9 compatibility separately.
 
