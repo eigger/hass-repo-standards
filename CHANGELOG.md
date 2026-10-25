@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-25 — 채택 기록 정리
+
+- 중앙 체크리스트 안내를 작성·판정·증거 기준으로 줄이고 분야별 세부 계약은 원문 링크로 연결했습니다. 규칙 ID·필수/권장 수준과 검증 의무는 유지합니다.
+- 적용 현황을 리포별 한 행으로 모아 전체 채택과 참조 전환을 구분했습니다. 상세 작업 일지는 정리 전 커밋의 원문으로 연결하고, 누락된 Kibble 행·Catprinter의 현재 예외·Omron의 완료 근거를 반영했습니다.
+
 ## Unreleased — Immutable central standards releases
 
 - GOV-02·CI-05의 중앙 기준을 exact immutable `vX.Y.Z` release와 resolved full commit SHA의 단일 descriptor로 확장했습니다. 기존 full-SHA plans/callers는 유지하며 release callers는 tag로 읽기 쉽게 고정하고 payload tooling checkout은 기록한 SHA로 유지합니다.
