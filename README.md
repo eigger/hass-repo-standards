@@ -2,7 +2,7 @@
 
 **English** | [한국어](README.ko.md)
 
-Shared development, documentation, HACS, CI, dependency, and release rules for Home Assistant custom integrations, with reusable workflows. This repository uses **main and commit history**, without tags or GitHub Releases.
+Shared development, documentation, HACS, CI, dependency, and release rules for Home Assistant custom integrations, with reusable workflows. Stable standards releases use immutable exact `vX.Y.Z` tags paired with a recorded resolved commit SHA; legacy full-SHA adoption remains supported. Moving tags, branches, and `latest` are not standards references.
 
 Detailed rules are maintained in Korean; code identifiers, logs, and CI job names use English. Official requirements are distinguished from project policy. Existing repositories migrate gradually and record the reviewed standards commit and any exceptions.
 
@@ -27,7 +27,7 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 | [Payload documentation rules](docs/payload-documentation.md) | Required bilingual device guides and executable HA/imagespec examples; common [English](https://github.com/eigger/imagespec/blob/main/docs/payload.md) / [한국어](https://github.com/eigger/imagespec/blob/main/docs/payload.ko.md) guide owned by imagespec |
 | [Bluetooth documentation rules](docs/bluetooth-documentation.md) | Authoring requirements and user-guide links |
 | [Bluetooth proxy user guide](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md) | Common user guide maintained in blesession ([한국어](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md)); [common troubleshooting](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.md) |
-| [Releases and maintenance](docs/releases.md) | Versions, changelogs, migration, support status |
+| [Releases and maintenance](docs/releases.md) | Integration maintenance and immutable central standards releases |
 | [Repository CI inventory](docs/ci-audit.md) | Local hass* workflow comparison and migration plan |
 | [Initial implementation validation](docs/validation.md) | Test environment and verified scope |
 | [Official references](docs/sources.md) | Sources and verification dates |

@@ -2,6 +2,8 @@
 
 - 표준: https://github.com/eigger/hass-repo-standards/tree/main
 - 참조 커밋 SHA: 채택 시 검토한 main의 전체 SHA 입력
+- Standards release: 채택 시 검토한 exact release 입력 (구형 SHA 채택은 이 행을 삭제)
+- Resolved standards SHA: 채택 시 검토한 main의 전체 SHA 입력
 - 채택일: 실제 채택 PR 날짜 입력
 - profile: integration / ha (실제 HA fixture·통합 로딩 필수)
 - 적용 점검표: [ADOPTION_CHECKLIST.md](ADOPTION_CHECKLIST.md)
@@ -16,7 +18,7 @@
 - 최소 HA 검증 환경: HA/Python/플러그인 버전 또는 미검증 사유
 - 최소 package 검증: 해당 package와 버전
 - imagespec DOC-08 해당 여부 / 예제 계약 검증: 실제 requirement/import·payload.examples·환경별 검증 근거 또는 N/A
-- imagespec 공용 Tests/updater standards-ref: 각 reusable workflow와 같은 검토 full SHA
+- imagespec 공용 Tests/updater standards-ref: release의 resolved SHA (구형 SHA 채택은 reusable workflow SHA)
 
 ## 예외
 

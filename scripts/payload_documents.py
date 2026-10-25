@@ -269,17 +269,25 @@ def check(root, config, manifest_path, manifest, safe_path):
         and "*" not in str(selected.specifier)
     )
     current, minimum = False, False
+    standards = config.get("standards", {})
+    release_tag = standards.get("tag") if standards.get("kind") == "release" else None
+    resolved_sha = standards.get("resolved_sha") if release_tag else None
     for job in data.get("jobs", {}).values():
         reference = job.get("uses", "")
         if "hass-repo-standards/.github/workflows/python-tests.yml@" not in reference:
             continue
         inputs = job.get("with", {})
-        if inputs.get("standards-ref") != reference.rsplit("@", 1)[1]:
+        expected_use = release_tag or reference.rsplit("@", 1)[1]
+        expected_input = resolved_sha or reference.rsplit("@", 1)[1]
+        if (
+            reference.rsplit("@", 1)[1] != expected_use
+            or inputs.get("standards-ref") != expected_input
+        ):
             errors.append(
                 (
                     "DOC-08",
                     ".github/workflows/tests.yml",
-                    "standards-ref must equal the reviewed reusable workflow SHA",
+                    "workflow release/SHA and standards-ref must equal the recorded reviewed descriptor",
                 )
             )
         if inputs.get("test-profile") != "ha":
@@ -338,15 +346,17 @@ def check(root, config, manifest_path, manifest, safe_path):
     if updater.is_file():
         for job in yaml.load(updater.read_text(), Loader=Loader).get("jobs", {}).values():
             reference = job.get("uses", "")
-            if (
-                "hass-repo-standards/.github/workflows/dependency-update.yml@" in reference
-                and job.get("with", {}).get("standards-ref") != reference.rsplit("@", 1)[1]
+            expected_use = release_tag or reference.rsplit("@", 1)[1]
+            expected_input = resolved_sha or reference.rsplit("@", 1)[1]
+            if "hass-repo-standards/.github/workflows/dependency-update.yml@" in reference and (
+                reference.rsplit("@", 1)[1] != expected_use
+                or job.get("with", {}).get("standards-ref") != expected_input
             ):
                 errors.append(
                     (
                         "DOC-08",
                         ".github/workflows/update_dependencies.yml",
-                        "Dependency update standards-ref must equal its reviewed reusable workflow SHA",
+                        "Dependency update release/SHA and standards-ref must match the recorded descriptor",
                     )
                 )
     return errors

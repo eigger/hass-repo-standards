@@ -1,0 +1,2135 @@
+{
+  "observed_date": "2026-10-25 Asia/Seoul",
+  "method": "gh repo list eigger --limit 1000; gh api repos/eigger/{name}/commits/{default_branch}; codeload archive by resolved full SHA; UTF-8 text scan for hass-repo-standards and standards-ref in .md,.yml,.yaml,.json,.py,.sh,.toml,.txt (files <= 2 MB). Searches include historical documentation; current workflow references are listed separately. No CI execution or adoption completion audit.",
+  "local_central_sha": "0ec31111a81b0ee5702f1d8a17f03616a10a5db6",
+  "remote_central_sha": "d8e1bccb729e057f2d37ace13c339743dcfdebac",
+  "central_tags_observed": [],
+  "central_releases_observed": [],
+  "repositories": [
+    {
+      "name": "hass-atflee",
+      "url": "https://github.com/eigger/hass-atflee",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "8512682c776cdfa9095187410723e9118aa9b133",
+      "integration": true,
+      "manifests": [
+        "custom_components/atflee/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 15,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 14,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 16,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "ff46b0c8d9ba53b1d35ab9a4aa38f4db26c06870",
+            "main"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": [
+            "ff46b0c8d9ba53b1d35ab9a4aa38f4db26c06870"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-ble-esl",
+      "url": "https://github.com/eigger/hass-ble-esl",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "6eff6d8d9baa1ffed2f58ef0097dfffe82f24d26",
+      "integration": true,
+      "manifests": [
+        "custom_components/ble_esl/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 18,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 33,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 55,
+          "component": "actions/python-environment",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 14,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 20,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 35,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 16,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "7acd9cab6ac774e4695f2c962e3d88b5faa4620d"
+          ]
+        },
+        {
+          "path": "CHANGELOG.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "b54ac48102d6e326c6929071fdc02ba8fade794e",
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": []
+        }
+      ]
+    },
+    {
+      "name": "hass-ble-led-sign",
+      "url": "https://github.com/eigger/hass-ble-led-sign",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "c58a5b6481a7782ed4b602284a301974c9ac8b6c",
+      "integration": true,
+      "manifests": [
+        "custom_components/ble_led_sign/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 15,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 14,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 16,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-catprinter",
+      "url": "https://github.com/eigger/hass-catprinter",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "24ac52cf77733ae6c1e5e868e7b17f158316cb9d",
+      "integration": true,
+      "manifests": [
+        "custom_components/catprinter/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 15,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests_scheduled.yml",
+          "line": 13,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests_scheduled.yml",
+          "line": 26,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 13,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 31,
+          "component": "actions/check-standards",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 26,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 39,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests_scheduled.yml",
+          "line": 24,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests_scheduled.yml",
+          "line": 37,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 23,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "78d242092eac732a1af48770e77e3f51e566c6c2",
+            "main"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": [
+            "26946e9075503633c16fb1b0f7380d0101ed7b45"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-cyx-rgb-led",
+      "url": "https://github.com/eigger/hass-cyx-rgb-led",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "c1b1ad10785e001642c0420c8ef9689b905271af",
+      "integration": true,
+      "manifests": [
+        "custom_components/cyx_rgb_led/manifest.json"
+      ],
+      "uses": [],
+      "standards_ref_inputs": [],
+      "reference_files_outside_workflows": []
+    },
+    {
+      "name": "hass-divoom",
+      "url": "https://github.com/eigger/hass-divoom",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "34ebe705377909316d2c67061734bc840dc59b5f",
+      "integration": true,
+      "manifests": [
+        "custom_components/divoom/manifest.json"
+      ],
+      "uses": [],
+      "standards_ref_inputs": [],
+      "reference_files_outside_workflows": []
+    },
+    {
+      "name": "hass-esphome-ota",
+      "url": "https://github.com/eigger/hass-esphome-ota",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "6bf4650bc08fb97633e250abe4af601f3987fffd",
+      "integration": true,
+      "manifests": [
+        "custom_components/esphome_ota/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 27,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 17,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 19,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "main"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": [
+            "ba9f3fad8b635c163fb44a4e91b1833cc4ab47b4"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-garage",
+      "url": "https://github.com/eigger/hass-garage",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "d4431e34ee19419dff1130c35f094d19769b88b8",
+      "integration": true,
+      "manifests": [
+        "custom_components/garage/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 27,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 15,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 27,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 17,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 29,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "8bf07f496b4688f64d71980e2c36696751be91fb"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-gicisky",
+      "url": "https://github.com/eigger/hass-gicisky",
+      "isArchived": true,
+      "default_branch": "master",
+      "target_sha": "f144d16b30e59069e1f9e8a1375781fc33e1eefa",
+      "integration": true,
+      "manifests": [
+        "custom_components/gicisky/manifest.json"
+      ],
+      "uses": [],
+      "standards_ref_inputs": [],
+      "reference_files_outside_workflows": []
+    },
+    {
+      "name": "hass-icscale",
+      "url": "https://github.com/eigger/hass-icscale",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "44af64e18b4eeedd2530c3c075deeb060033fd35",
+      "integration": true,
+      "manifests": [
+        "custom_components/icscale/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 16,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 14,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 18,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 32,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 16,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "78d242092eac732a1af48770e77e3f51e566c6c2"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": []
+        }
+      ]
+    },
+    {
+      "name": "hass-imagespec-card",
+      "url": "https://github.com/eigger/hass-imagespec-card",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "99c70eec15353161a5a32b1966db7416e2d493f7",
+      "integration": false,
+      "manifests": [],
+      "uses": [],
+      "standards_ref_inputs": [],
+      "reference_files_outside_workflows": []
+    },
+    {
+      "name": "hass-jaalee",
+      "url": "https://github.com/eigger/hass-jaalee",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "9dcd8ff6ec60010da738cd5f703b86d112e900c5",
+      "integration": true,
+      "manifests": [
+        "custom_components/jaalee/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 16,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 18,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "c696e15c164daa6c7deca4140b899bd0e80e8846"
+          ]
+        },
+        {
+          "path": "README.ko.md",
+          "central_url_refs": [
+            "main"
+          ]
+        },
+        {
+          "path": "README.md",
+          "central_url_refs": [
+            "main"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/ko/troubleshooting.md",
+          "central_url_refs": [
+            "main"
+          ]
+        },
+        {
+          "path": "docs/troubleshooting.md",
+          "central_url_refs": [
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-kibble",
+      "url": "https://github.com/eigger/hass-kibble",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "1865b929150e2b0585e23b6501d348ea9be5d6e6",
+      "integration": true,
+      "manifests": [
+        "custom_components/kibble/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 14,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 26,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 34,
+          "component": "actions/check-standards",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 16,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "4726ab1d5c93ff1af0e9aaead2bb1631d80e1f28",
+            "7528a90b483a6740c0b1bdd9176f3e33355eb385"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0",
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-kma",
+      "url": "https://github.com/eigger/hass-kma",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "e37a40d20a2607b496a09895bd06e83e684b2509",
+      "integration": true,
+      "manifests": [
+        "custom_components/kma/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 16,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 18,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "ec6a6c7b39678c187be069b2d398939c81140ae4"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-kocom-smarthome",
+      "url": "https://github.com/eigger/hass-kocom-smarthome",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "8bf0798c956185d4478d5849fd0004ded18204f6",
+      "integration": true,
+      "manifests": [
+        "custom_components/kocom_smarthome/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 29,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 20,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": ".hass-standards.json",
+          "central_url_refs": []
+        },
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "0ec31111a81b0ee5702f1d8a17f03616a10a5db6",
+            "main"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": [
+            "0ec31111a81b0ee5702f1d8a17f03616a10a5db6"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-lywsd02",
+      "url": "https://github.com/eigger/hass-lywsd02",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "7b1bc88feb2eac8f296eed44f018306a63f581f1",
+      "integration": true,
+      "manifests": [
+        "custom_components/xiaomi_lywsd/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 27,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 15,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 26,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 17,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "648dad941a118c80325f44c7a13cb5b5b9c1c788"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "b54ac48102d6e326c6929071fdc02ba8fade794e",
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-magic-caster-wand",
+      "url": "https://github.com/eigger/hass-magic-caster-wand",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "6733342b710d59557409257ebef71ae1248fdee8",
+      "integration": true,
+      "manifests": [
+        "custom_components/magic_caster_wand/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 17,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 19,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 32,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 19,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "7acd9cab6ac774e4695f2c962e3d88b5faa4620d",
+            "main"
+          ]
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "central_url_refs": [
+            "0ec31111a81b0ee5702f1d8a17f03616a10a5db6"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "b54ac48102d6e326c6929071fdc02ba8fade794e",
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/setup.md",
+          "central_url_refs": [
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-marklife",
+      "url": "https://github.com/eigger/hass-marklife",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "6f2e522ddae8af42e99816675a8fb44d6bff2157",
+      "integration": true,
+      "manifests": [
+        "custom_components/marklife/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 14,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 27,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 14,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 33,
+          "component": "actions/check-standards",
+          "ref": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 16,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 29,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 16,
+          "value": "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "4ccbffa9af618b14d1a32a9939cbf1fcee6cb7a0",
+            "b54ac48102d6e326c6929071fdc02ba8fade794e",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": []
+        }
+      ]
+    },
+    {
+      "name": "hass-melk-light",
+      "url": "https://github.com/eigger/hass-melk-light",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "3a74ba19cb69d0c9645aae0bef05b67167594504",
+      "integration": true,
+      "manifests": [
+        "custom_components/melk_light/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 27,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 15,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 13,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 17,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 15,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "main"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-minibig",
+      "url": "https://github.com/eigger/hass-minibig",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "b3919728481a6572bc396eb500cad0cee84f0088",
+      "integration": true,
+      "manifests": [
+        "custom_components/minibig/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/scheduled_tests.yml",
+          "line": 13,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/scheduled_tests.yml",
+          "line": 26,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 29,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 15,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 14,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/scheduled_tests.yml",
+          "line": 15,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/scheduled_tests.yml",
+          "line": 28,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 16,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "b1c80cf2c4bf8b4bc4e3556409ad948b7f850ea0",
+            "main"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "b1c80cf2c4bf8b4bc4e3556409ad948b7f850ea0",
+            "b54ac48102d6e326c6929071fdc02ba8fade794e",
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": [
+            "0bfb572cbe49b92b3dbc559382c00bd0eb2cbd44"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-niimbot",
+      "url": "https://github.com/eigger/hass-niimbot",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "19134bcc151a8bd3cfa91138be347b23660eefff",
+      "integration": true,
+      "manifests": [
+        "custom_components/niimbot/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 27,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 15,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 13,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 17,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 15,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "7acd9cab6ac774e4695f2c962e3d88b5faa4620d"
+          ]
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "central_url_refs": [
+            "648dad941a118c80325f44c7a13cb5b5b9c1c788"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "7acd9cab6ac774e4695f2c962e3d88b5faa4620d",
+            "b54ac48102d6e326c6929071fdc02ba8fade794e",
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-omron",
+      "url": "https://github.com/eigger/hass-omron",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "cab86f9e3a3a2af88371354c7012925722b56bed",
+      "integration": true,
+      "manifests": [
+        "custom_components/omron/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 29,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 16,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 30,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 14,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 18,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 32,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 16,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "ff46b0c8d9ba53b1d35ab9a4aa38f4db26c06870"
+          ]
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "central_url_refs": [
+            "0ec31111a81b0ee5702f1d8a17f03616a10a5db6"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-opinet",
+      "url": "https://github.com/eigger/hass-opinet",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "a9c56e4944eae281e6b8add6e4938cd7da1f9836",
+      "integration": true,
+      "manifests": [
+        "custom_components/opinet/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/minimum_dependency.yml",
+          "line": 31,
+          "component": "actions/python-environment",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 16,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 26,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 14,
+          "component": ".github/workflows/dependency-update.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 18,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/update_dependencies.yml",
+          "line": 16,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "6839346bc5e2a11157fecd800f4cb490fc3197ab"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "b54ac48102d6e326c6929071fdc02ba8fade794e",
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": [
+            "6839346bc5e2a11157fecd800f4cb490fc3197ab"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-repo-standards",
+      "url": "https://github.com/eigger/hass-repo-standards",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "d8e1bccb729e057f2d37ace13c339743dcfdebac",
+      "integration": false,
+      "manifests": [],
+      "uses": [
+        {
+          "path": ".github/workflows/dependency-update.yml",
+          "line": 84,
+          "component": "actions/update-manifest",
+          "ref": "8e7b3b415dbdb8960ef5b2689c981d99fc8b0028"
+        },
+        {
+          "path": ".github/workflows/dependency-update.yml",
+          "line": 90,
+          "component": "actions/python-environment",
+          "ref": "d5dcaa03cfe91923a5ca2fe0ab79595b222eb90e"
+        },
+        {
+          "path": ".github/workflows/python-tests.yml",
+          "line": 103,
+          "component": "actions/python-environment",
+          "ref": "d5dcaa03cfe91923a5ca2fe0ab79595b222eb90e"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/dependency-update.yml",
+          "line": 38,
+          "value": ""
+        },
+        {
+          "path": ".github/workflows/python-tests.yml",
+          "line": 59,
+          "value": ""
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "README.ko.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "README.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "actions/update-manifest/update.py",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/adoption-status.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/adoption.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/payload-documentation.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/repository-stats.ko.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/repository-stats.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/sources.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/template-skill-plan.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/template-skill-tasks.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/template-skill-usage.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "docs/template-skill-validation.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "scripts/audit_repositories.py",
+          "central_url_refs": []
+        },
+        {
+          "path": "scripts/check_integration.py",
+          "central_url_refs": []
+        },
+        {
+          "path": "scripts/check_repository.py",
+          "central_url_refs": []
+        },
+        {
+          "path": "scripts/payload_documents.py",
+          "central_url_refs": []
+        },
+        {
+          "path": "scripts/standards/planning.py",
+          "central_url_refs": [
+            "main"
+          ]
+        },
+        {
+          "path": "scripts/standards/release.py",
+          "central_url_refs": []
+        },
+        {
+          "path": "scripts/standards/validation.py",
+          "central_url_refs": []
+        },
+        {
+          "path": "templates/integration/.github/workflows/release.yml",
+          "central_url_refs": []
+        },
+        {
+          "path": "templates/integration/.github/workflows/standards.yml",
+          "central_url_refs": []
+        },
+        {
+          "path": "templates/integration/.github/workflows/tests.yml",
+          "central_url_refs": []
+        },
+        {
+          "path": "templates/integration/.github/workflows/update_dependencies.yml",
+          "central_url_refs": []
+        },
+        {
+          "path": "templates/integration/.github/workflows/validate.yml",
+          "central_url_refs": []
+        },
+        {
+          "path": "templates/integration/ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "main"
+          ]
+        },
+        {
+          "path": "templates/integration/STANDARDS.md",
+          "central_url_refs": [
+            "main"
+          ]
+        },
+        {
+          "path": "templates/integration/USAGE.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "tests/test_integration_contract.py",
+          "central_url_refs": []
+        },
+        {
+          "path": "tests/test_release_zip.py",
+          "central_url_refs": []
+        },
+        {
+          "path": "tests/test_scaffold_validation.py",
+          "central_url_refs": []
+        }
+      ]
+    },
+    {
+      "name": "hass-sip",
+      "url": "https://github.com/eigger/hass-sip",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "58dc25025684c4c26b42a2c32a13ffff1cef3529",
+      "integration": true,
+      "manifests": [
+        "custom_components/sip/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 23,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 34,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 25,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 36,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": ".hass-standards.json",
+          "central_url_refs": []
+        },
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "0ec31111a81b0ee5702f1d8a17f03616a10a5db6",
+            "main"
+          ]
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "README.ko.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "README.md",
+          "central_url_refs": []
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "0ec31111a81b0ee5702f1d8a17f03616a10a5db6",
+            "b54ac48102d6e326c6929071fdc02ba8fade794e",
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-vson",
+      "url": "https://github.com/eigger/hass-vson",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "eb247f689bba34371f641907a2453255cc16be56",
+      "integration": true,
+      "manifests": [
+        "custom_components/vson/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 27,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 15,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 26,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 17,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 17,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 28,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "fd4162c0b93fbe8e109f99c787773ae09ba157e1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hass-ws-bridge",
+      "url": "https://github.com/eigger/hass-ws-bridge",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "e69db676934f5ac6f7e8083d07f5c1cbbc9dbedf",
+      "integration": true,
+      "manifests": [
+        "custom_components/ws_bridge/manifest.json"
+      ],
+      "uses": [
+        {
+          "path": ".github/workflows/release.yml",
+          "line": 27,
+          "component": "actions/release-zip",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/standards.yml",
+          "line": 28,
+          "component": "actions/check-standards",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 21,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 36,
+          "component": ".github/workflows/python-tests.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/validate.yml",
+          "line": 18,
+          "component": ".github/workflows/validate-integration.yml",
+          "ref": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "standards_ref_inputs": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 23,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        },
+        {
+          "path": ".github/workflows/tests.yml",
+          "line": 38,
+          "value": "ca740d88b32fa5dcbc94c41fce2908450c76ed50"
+        }
+      ],
+      "reference_files_outside_workflows": [
+        {
+          "path": "ADOPTION_CHECKLIST.md",
+          "central_url_refs": [
+            "ba9f3fad8b635c163fb44a4e91b1833cc4ab47b4",
+            "main"
+          ]
+        },
+        {
+          "path": "STANDARDS.md",
+          "central_url_refs": [
+            "0c1592977591ecba077a4666d699840062711201",
+            "b54ac48102d6e326c6929071fdc02ba8fade794e",
+            "ca740d88b32fa5dcbc94c41fce2908450c76ed50",
+            "main"
+          ]
+        },
+        {
+          "path": "docs/development.md",
+          "central_url_refs": [
+            "ba9f3fad8b635c163fb44a4e91b1833cc4ab47b4"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hassble-android",
+      "url": "https://github.com/eigger/hassble-android",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "4544589239f2dac471b8b6bde500125fa20fd815",
+      "integration": false,
+      "manifests": [],
+      "uses": [],
+      "standards_ref_inputs": [],
+      "reference_files_outside_workflows": []
+    },
+    {
+      "name": "hassble-config",
+      "url": "https://github.com/eigger/hassble-config",
+      "isArchived": false,
+      "default_branch": "main",
+      "target_sha": "9e55c585f989256f8a6d104a37b31ab267631c90",
+      "integration": false,
+      "manifests": [],
+      "uses": [],
+      "standards_ref_inputs": [],
+      "reference_files_outside_workflows": []
+    },
+    {
+      "name": "hassio-apps",
+      "url": "https://github.com/eigger/hassio-apps",
+      "isArchived": false,
+      "default_branch": "master",
+      "target_sha": "c4bb0c4681923c149e7dc5a84fa78fef9ab694f2",
+      "integration": false,
+      "manifests": [],
+      "uses": [],
+      "standards_ref_inputs": [],
+      "reference_files_outside_workflows": []
+    }
+  ]
+}

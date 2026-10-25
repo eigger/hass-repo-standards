@@ -1,6 +1,6 @@
 # 공통 규칙 적용 체크리스트
 
-이 파일은 통합 리포로 복사해 사용하는 **미확인 템플릿**입니다. 기존 통합·공통 CI가 전환됐다는 의미가 아닙니다. [사용법과 판정 기준](https://github.com/eigger/hass-repo-standards/blob/main/docs/checklist.md)을 읽고, 아래 규칙은 `STANDARDS.md`에 기록한 표준 커밋에서 확인합니다. 태그·릴리스 대신 `main`의 검토 커밋을 기준으로 하며, 위 사용법 링크의 `main`은 채택 시 검토한 커밋 SHA로 바꿉니다.
+이 파일은 통합 리포로 복사해 사용하는 **미확인 템플릿**입니다. 기존 통합·공통 CI가 전환됐다는 의미가 아닙니다. [사용법과 판정 기준](https://github.com/eigger/hass-repo-standards/blob/main/docs/checklist.md)을 읽고, 아래 규칙은 `STANDARDS.md`에 기록한 standards release/commit에서 확인합니다. immutable release 채택은 exact tag와 resolved SHA를 함께 기록하고, 기존 full SHA 채택도 유지합니다.
 
 ## 검토 대상
 
@@ -9,7 +9,7 @@
 | 통합 리포 / 실제 기본 브랜치 | 미확인 |
 | domain / 구현 경로 | 미확인 |
 | 검토 대상 통합 커밋 / 채택 PR | 미확인 |
-| 검토한 표준 전체 커밋 SHA | 미확인 — `STANDARDS.md`와 일치시킬 것 |
+| 검토한 표준 release / resolved 전체 커밋 SHA | 미확인 — release면 remote immutable/peeled-tag 증거와 `STANDARDS.md`·`.hass-standards.json`을 일치시킬 것 |
 | 검토일 / 조율 담당 | 미확인 |
 | 구현 담당 / 자체·독립 리뷰 방식·선택 근거 | 미확인 |
 | 중앙 현황표 반영일 / 기록 | 미등록 — 공통 리포 docs/adoption-status.md에 갱신 |
@@ -27,7 +27,7 @@
 
 | 규칙 ID | 확인 항목 | 상태 | 근거 / 남은 작업 |
 |---|---|---|---|
-| GOV-01, GOV-02 | `STANDARDS.md`에 표준 SHA·profile·실제 기본 브랜치·예외 기록, workflow/action은 검토 SHA로 고정 | TODO | 미확인 |
+| GOV-01, GOV-02 | `STANDARDS.md`에 표준 release/SHA·profile·실제 기본 브랜치·예외 기록, workflow/action은 exact release 또는 legacy SHA로 고정 | TODO | 미확인 |
 | GOV-03 | 새 표준 채택 변경의 영향·이관 방법과 명시적 채택 PR 확인. 규칙 자체를 변경하면 공통 CHANGELOG 기록 | TODO | 미확인 |
 | GOV-04 | 중앙 표에 작업 시작·종료·의미 있는 상태 변화 상태, 담당·적용 내용·검증/리뷰 근거 링크·남은 작업 갱신, 타 리포 기록 보존 | TODO | 미확인 |
 | GOV-05 | 자체/독립 리뷰 방식·선택 근거 기록, 큰 구조·HA 동작·공용 CI 실행 로직 변경의 독립 리뷰, 지적 수정·영향 검사 재실행 | TODO | 미확인 |

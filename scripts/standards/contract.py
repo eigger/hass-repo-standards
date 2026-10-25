@@ -176,7 +176,17 @@ def validate_input(data, required_inputs=()):
 
 
 def validate_document(data, kind):
-    return validate_schema(data, load_schema(kind), kind)
+    value = validate_schema(data, load_schema(kind), kind)
+    if kind == "plan":
+        legacy = "standards_ref" in value
+        release = "standards_reference" in value
+        if legacy == release:
+            _fail(kind, "record exactly one standards reference form")
+        if release and "release_attestation" not in value:
+            _fail(kind, "exact release plan requires its remote attestation digest")
+        if legacy and "release_attestation" in value:
+            _fail(kind, "legacy SHA plan cannot carry a release attestation")
+    return value
 
 
 def validate_path(value, *, tokens=False):

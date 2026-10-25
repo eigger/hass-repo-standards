@@ -11,6 +11,7 @@
   "hacs_default_evidence": "",
   "tests_workflow": "tests.yml",
   "validate_workflow": "validate.yml",
+  "standards": {},
   "installation_links": {
     "README.md": "#installation",
     "README.ko.md": "#설치"

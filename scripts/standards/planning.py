@@ -12,10 +12,12 @@ from pathlib import Path
 
 import yaml
 
-from . import conditions, contract, inventory, readme, scaffold
+from . import conditions, contract, inventory, readme, reference, scaffold
 
 CENTRAL = contract.CENTRAL
 ASSET_PATHS = (
+    ".github",
+    "actions",
     "scripts",
     "schemas",
     "templates",
@@ -37,11 +39,12 @@ def digest(value):
 
 def verify_standards(ref, central=None):
     central = Path(central or CENTRAL).resolve()
-    if not isinstance(ref, str) or re.fullmatch(r"[0-9a-f]{40}", ref) is None:
-        raise ValueError("standards-ref must be a reviewed full SHA")
+    # `str` is the deliberately retained pre-release compatibility API.
+    item = reference.descriptor(ref) if isinstance(ref, str) else reference.validate(ref)
+    sha = item["resolved_sha"]
     head = inventory.git(central, "rev-parse", "HEAD")
-    if head is None or head.decode("utf-8").strip() != ref:
-        raise ValueError("Executing standards checkout HEAD must equal standards-ref")
+    if head is None or head.decode("utf-8").strip() != sha:
+        raise ValueError("Executing standards checkout HEAD must equal resolved standards SHA")
     raw = inventory.git(
         central, "status", "--porcelain=v1", "-z", "--untracked-files=all", "--", *ASSET_PATHS
     )
@@ -50,6 +53,13 @@ def verify_standards(ref, central=None):
             "Standards rules, scripts, schemas, templates and skills must be clean at standards-ref"
         )
     return central
+
+
+def plan_reference(document):
+    """Read either the retained full-SHA plan field or the release descriptor."""
+    if "standards_reference" in document:
+        return reference.validate(document["standards_reference"])
+    return reference.descriptor(document["standards_ref"])
 
 
 def observed(data, field):
@@ -104,6 +114,7 @@ def workflow_events(template, default_branch):
 
 
 def render_workflow(source, destination, data, ref):
+    ref = reference.descriptor(ref) if isinstance(ref, str) else reference.validate(ref)
     parsed = yaml.safe_load(source)
     # PyYAML's YAML 1.1 resolver calls the unquoted 'on' key True; templates quote it.
     if not isinstance(parsed, dict) or "on" not in parsed:
@@ -115,16 +126,16 @@ def render_workflow(source, destination, data, ref):
         if not isinstance(job, dict):
             continue
         if isinstance(job.get("uses"), str):
-            job["uses"] = job["uses"].removesuffix("@main") + "@" + ref
+            job["uses"] = job["uses"].removesuffix("@main") + "@" + reference.caller_ref(ref)
         for step in job.get("steps", []):
             if isinstance(step, dict) and str(step.get("uses", "")).startswith(
                 "eigger/hass-repo-standards/"
             ):
-                step["uses"] = step["uses"].removesuffix("@main") + "@" + ref
+                step["uses"] = step["uses"].removesuffix("@main") + "@" + reference.caller_ref(ref)
         params = job.get("with")
         if params is None:
             continue
-        params["standards-ref"] = ref
+        params["standards-ref"] = reference.resolved_sha(ref)
         if "domain" in params:
             params["domain"] = domain
         if "pytest-args" in params:
@@ -253,8 +264,49 @@ def fixture_block_update(original, template):
     return original[:start] + template[first:last] + original[end:]
 
 
-def plan(target, mode, data, standards_ref, *, central=None):
-    central = verify_standards(standards_ref, central)
+def plan(
+    target,
+    mode,
+    data,
+    standards_ref,
+    *,
+    central=None,
+    release_tag=None,
+    release_verification=None,
+    release_attestation=None,
+):
+    legacy_reference = release_tag is None and (
+        isinstance(standards_ref, str)
+        or (isinstance(standards_ref, dict) and standards_ref.get("kind") == "sha")
+    )
+    standards_reference = (
+        reference.descriptor(release_tag, standards_ref)
+        if release_tag
+        else (
+            reference.descriptor(standards_ref)
+            if isinstance(standards_ref, str)
+            else reference.validate(standards_ref)
+        )
+    )
+    if standards_reference["kind"] == "release":
+        if release_attestation is not None:
+            if (
+                not isinstance(release_attestation, str)
+                or re.fullmatch(r"[0-9a-f]{64}", release_attestation) is None
+            ):
+                raise ValueError("release attestation digest is invalid")
+        else:
+            if release_verification is None:
+                raise ValueError(
+                    "exact release planning requires successful remote release verification evidence"
+                )
+            evidence = reference.read_verification(
+                release_verification,
+                "eigger/hass-repo-standards",
+                standards_reference,
+            )
+            release_attestation = digest(canonical_json(evidence).encode("utf-8"))
+    central = verify_standards(standards_reference, central)
     contract.validate_input(data)
     if "remote" in data:
         # Reject credentials/unsupported remotes before persisting an input snapshot.
@@ -270,7 +322,6 @@ def plan(target, mode, data, standards_ref, *, central=None):
     scanned = inventory.inspect(target)
     result = {
         "schema_version": 1,
-        "standards_ref": standards_ref,
         "target_identity": {
             "path": str(target),
             "root_exists": target.exists(),
@@ -288,6 +339,14 @@ def plan(target, mode, data, standards_ref, *, central=None):
         ],
         "conflicts": metadata_conflicts(data, scanned),
     }
+    # Existing reviewed SHA plans remain byte-for-byte shaped as before. Exact
+    # releases use the descriptor instead, so tag and resolved SHA have one
+    # machine-readable source rather than parallel fields.
+    if legacy_reference:
+        result["standards_ref"] = standards_reference["resolved_sha"]
+    else:
+        result["standards_reference"] = standards_reference
+        result["release_attestation"] = release_attestation
     if mode == "create" and target.exists() and any(target.iterdir()):
         result["conflicts"].append("Create requires an explicitly empty target directory")
     if mode == "adopt":
@@ -309,6 +368,7 @@ def plan(target, mode, data, standards_ref, *, central=None):
     dirty = set(scanned["dirty_paths"])
     records = contract.load_contract(central / "templates/integration/contract.json")["records"]
     settings = contract.render_settings(data)
+    settings["standards"] = standards_reference
     known_settings = observed(scanned, "standards_settings")
     if known_settings:
         old = known_settings[0]["value"]
@@ -482,7 +542,7 @@ def plan(target, mode, data, standards_ref, *, central=None):
             content = canonical_json(settings)
         elif destination.startswith(".github/workflows/"):
             try:
-                content = render_workflow(content, destination, data, standards_ref)
+                content = render_workflow(content, destination, data, standards_reference)
             except ValueError as error:
                 result["pending"].append(f"{destination}: {error}")
                 continue
@@ -541,9 +601,15 @@ def plan(target, mode, data, standards_ref, *, central=None):
                 continue
             content = content.replace(
                 "https://github.com/eigger/hass-repo-standards/tree/main",
-                "https://github.com/eigger/hass-repo-standards/tree/" + standards_ref,
+                "https://github.com/eigger/hass-repo-standards/tree/"
+                + reference.caller_ref(standards_reference),
             )
-            content = content.replace("채택 시 검토한 main의 전체 SHA 입력", standards_ref)
+            content = content.replace(
+                "채택 시 검토한 main의 전체 SHA 입력", standards_reference["resolved_sha"]
+            )
+            content = content.replace(
+                "채택 시 검토한 exact release 입력", reference.caller_ref(standards_reference)
+            )
             result["pending"].append(
                 f"Complete actual adoption evidence; template remains TODO: {destination}"
             )
@@ -620,7 +686,7 @@ def plan(target, mode, data, standards_ref, *, central=None):
     for field in ("pending", "conflicts", "unchanged"):
         result[field] = sorted(set(result[field]))
     result["operations"].sort(key=lambda operation: operation["path"])
-    verify_standards(standards_ref, central)
+    verify_standards(standards_reference, central)
     final_hashes = {
         name: digest((target / name).read_bytes()) for name in inventory.file_paths(target)
     }

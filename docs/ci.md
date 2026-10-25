@@ -32,7 +32,7 @@
 
 **CI-04 필수**: 정상 lint/test를 `continue-on-error`, `|| true`, 항상 성공하는 wrapper로 숨기지 않습니다. lint와 test는 의존성이 없다면 병렬 실행합니다. optional matrix는 필수 검사를 대체하지 않습니다. required checks 변경은 채택 PR에 기록합니다. paths 필터로 필수 체크가 영구 Pending이 되는 구성을 피합니다.
 
-**CI-05 필수**: 외부 action·중앙 workflow는 검토한 full SHA로 참조하고 외부 action 버전 또는 검토한 커밋 설명을 주석으로 붙입니다. Dependabot으로 갱신합니다. SHA 고정이 action 내부 Docker 이미지까지 고정하는 것은 아닙니다. HACS/Hassfest는 upstream 이미지가 바뀔 수 있는 validator이며 schedule로 변화를 탐지합니다. 완전한 재현 환경은 별도 image digest 정책이 필요합니다.
+**CI-05 필수**: 외부 action은 검토한 full SHA로 참조하고 외부 action 버전 또는 검토한 커밋 설명을 주석으로 붙입니다. 중앙 workflow/action은 기존 full SHA 또는 기록된 immutable exact release tag만 사용합니다. release tag caller는 `.hass-standards.json`의 단일 descriptor와 STANDARDS의 release/resolved SHA가 일치해야 하며 `standards-ref`·별도 중앙 도구 checkout은 resolved full SHA를 사용합니다. 매 실행 release/`latest`를 조회하거나 branch·moving major/minor tag로 fallback하지 않습니다. Dependabot으로 갱신합니다. SHA 고정이 action 내부 Docker 이미지까지 고정하는 것은 아닙니다. HACS/Hassfest는 upstream 이미지가 바뀔 수 있는 validator이며 schedule로 변화를 탐지합니다. 완전한 재현 환경은 별도 image digest 정책이 필요합니다.
 
 ## 환경과 명령
 

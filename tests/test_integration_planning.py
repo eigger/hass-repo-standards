@@ -762,6 +762,47 @@ class IntegrationPlanning(unittest.TestCase):
             cli.output_path(output_link / "plan.json", self.target)
         self.assertEqual(list(outside.iterdir()), [])
 
+    def test_exact_release_plan_requires_attestation_and_renders_tag_with_resolved_sha(self):
+        proof = self.base / "release-verification.json"
+        proof.write_text(
+            planning.canonical_json(
+                {
+                    "repository": "eigger/hass-repo-standards",
+                    "kind": "release",
+                    "tag": "v1.0.0",
+                    "resolved_sha": self.ref,
+                    "verified": "remote",
+                }
+            ),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(ValueError, "verification evidence"):
+            planning.plan(
+                self.target,
+                "create",
+                self.data,
+                self.ref,
+                central=self.central,
+                release_tag="v1.0.0",
+            )
+        result = planning.plan(
+            self.target,
+            "create",
+            self.data,
+            self.ref,
+            central=self.central,
+            release_tag="v1.0.0",
+            release_verification=proof,
+        )
+        self.assertEqual(
+            result["standards_reference"],
+            {"kind": "release", "tag": "v1.0.0", "resolved_sha": self.ref},
+        )
+        self.assertRegex(result["release_attestation"], r"^[0-9a-f]{64}$")
+        workflows = {item["path"]: item["content"] for item in result["operations"]}
+        self.assertIn("@v1.0.0", workflows[".github/workflows/tests.yml"])
+        self.assertIn("standards-ref: " + self.ref, workflows[".github/workflows/tests.yml"])
+
 
 if __name__ == "__main__":
     unittest.main()

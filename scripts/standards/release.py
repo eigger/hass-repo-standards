@@ -38,12 +38,19 @@ def errors(root, config, domain, safe_path, central):
             if isinstance(actual, dict)
             else []
         )
+        standards = config.get("standards", {})
+        expected_ref = standards.get("tag") if standards.get("kind") == "release" else None
+        allowed_ref = re.escape(expected_ref) if expected_ref else r"[a-f0-9]{40}"
         if not any(
-            re.fullmatch(r"eigger/hass-repo-standards/actions/release-zip@[a-f0-9]{40}", use)
+            re.fullmatch(r"eigger/hass-repo-standards/actions/release-zip@" + allowed_ref, use)
             for use in uses
         ):
             result.append(
-                ("CI-05", path, "Release ZIP action must be pinned to a reviewed full SHA")
+                (
+                    "CI-05",
+                    path,
+                    "Release ZIP action must use the reviewed full SHA or exact recorded release tag",
+                )
             )
 
         def normalize(value):
@@ -53,7 +60,7 @@ def errors(root, config, domain, safe_path, central):
                 return [normalize(item) for item in value]
             if isinstance(value, str):
                 value = re.sub(
-                    r"(eigger/hass-repo-standards/actions/release-zip@)[a-f0-9]{40}$",
+                    r"(eigger/hass-repo-standards/actions/release-zip@)(?:[a-f0-9]{40}|v[0-9]+\.[0-9]+\.[0-9]+)$",
                     r"\1main",
                     value,
                 )

@@ -10,6 +10,14 @@
 
 **REL-05 권장**: dependency/HA API 갱신은 기능 변경과 분리하고 CI 결과를 확인합니다. 규칙 리포의 업데이트는 해당 리포의 채택 PR을 통해 반영합니다.
 
+## 중앙 표준 릴리스 (REL-06)
+
+**REL-06 필수**: 이 중앙 리포의 배포 단위는 규칙·템플릿·schema·scripts·actions·reusable workflows·skills입니다. stable version은 SemVer exact `vX.Y.Z` immutable GitHub Release이며 수정은 새 version으로 발행합니다. published release tag의 이동·재사용·asset 교체, `v1`/`v1.2`·branch·`latest` 참조는 금지합니다. 현황표·통계만의 운영 갱신은 릴리스를 강제하지 않습니다.
+
+release 전에는 candidate commit에서 `check_repository`, regression tests, actionlint와 workflow fixture를 통과시킵니다. workflow는 release metadata asset을 포함한 draft를 먼저 만들고 asset과 notes가 완료된 뒤 publish합니다. 실패한 draft는 published 성공이 아니며 수정·재검증 후 새 version 또는 명시적 정리 절차를 사용합니다. release metadata의 candidate/squash commit SHA는 runtime asset에만 만들고 tracked 파일에 self SHA를 쓰지 않습니다.
+
+release notes에는 exact version과 resolved SHA, contract version, internal action dependency SHAs, 영향·이관 방법, 검증 명령·CI URL, 알려진 제한을 기록합니다. 발행 뒤 `verify-release`로 immutable 상태와 peeled commit을 확인하고 그 결과를 adoption evidence에 연결합니다. 첫 목표 `v1.0.0`은 이 절차가 완료될 때까지 발행된 것으로 간주하지 않습니다.
+
 ## ZIP 릴리스 첨부
 
 중앙 `actions/release-zip`과 [caller 템플릿](../templates/integration/.github/workflows/release.yml)을 검토한 동일한 전체 SHA로 고정합니다. 중앙 리포 자체는 태그·릴리스를 만들지 않습니다. caller는 대상 통합의 `release: published` 이벤트에서 해당 태그 커밋을 checkout하고 ZIP을 기존 릴리스에 첨부할 뿐, 릴리스·태그를 생성하거나 manifest 버전을 덮어쓰지 않습니다. 태그의 `v` 하나를 제외한 값과 manifest.version이 다르면 실패합니다. 실제 release tag commit과 checkout HEAD도 일치해야 합니다.

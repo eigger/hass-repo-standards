@@ -170,7 +170,8 @@ def validate_plan(root, document, *, central=None):
         raise ValueError("Plan target identity does not match the requested target")
     if document["target_identity"]["root_exists"] != root.exists():
         raise ValueError("Plan target root existence changed")
-    planning.verify_standards(document["standards_ref"], central)
+    standards_reference = planning.plan_reference(document)
+    planning.verify_standards(standards_reference, central)
     if document["conflicts"]:
         raise ValueError("A plan with unresolved conflicts cannot be applied")
     validate_guards(root, document)
@@ -178,8 +179,9 @@ def validate_plan(root, document, *, central=None):
         root,
         document["mode"],
         copy.deepcopy(document["validated_input"]),
-        document["standards_ref"],
+        standards_reference,
         central=central,
+        release_attestation=document.get("release_attestation"),
     )
     if planning.canonical_json(regenerated) != planning.canonical_json(document):
         raise ValueError("Plan differs from the current contract replan; inspect and plan again")
@@ -382,7 +384,7 @@ def validate_journal(root, document, *, central=None):
         != plan["input_digest"]
     ):
         raise ValueError("Recovery input digest is invalid")
-    central = planning.verify_standards(plan["standards_ref"], central)
+    central = planning.verify_standards(planning.plan_reference(plan), central)
     records = contract.load_contract(central / "templates/integration/contract.json")["records"]
     allowed = {}
     for record in records:
@@ -522,8 +524,9 @@ def validate_preimage(root, journal, *, central=None):
             stage,
             plan["mode"],
             copy.deepcopy(plan["validated_input"]),
-            plan["standards_ref"],
+            planning.plan_reference(plan),
             central=central,
+            release_attestation=plan.get("release_attestation"),
         )
         reproduced["target_identity"]["path"] = str(root)
         if planning.canonical_json(reproduced) != planning.canonical_json(plan):

@@ -13,11 +13,13 @@
 
 **GOV-01 필수**: `STANDARDS.md`에 참조한 표준 커밋 SHA, 적용 profile, 예외(ID·이유·영향·대안·승인 근거·담당자·재검토 조건)를 기록합니다. 예시는 templates/integration/STANDARDS.md입니다. 새 통합은 main의 규칙을 검토해 적용하고, 기존 통합은 결함을 숨기지 않은 채 단계적으로 이관합니다.
 
-**GOV-02 필수**: 이 리포는 별도 태그·GitHub Release·SemVer 없이 main과 커밋 이력으로 관리합니다. 문서는 main에서 확인하며, 실제 채택 PR에서는 `git ls-remote https://github.com/eigger/hass-repo-standards.git refs/heads/main`으로 검토한 commit SHA를 확인해 STANDARDS.md에 기록합니다. 공통 workflow/action 호출은 그 SHA로 고정하여 중앙 변경이 모든 리포에 즉시 적용되지 않도록 합니다. 템플릿의 `@main`은 채택 시 SHA로 교체하는 예시입니다.
+**GOV-02 필수**: 중앙 표준은 immutable GitHub Release의 exact `vX.Y.Z`와 그 release tag가 가리키는 full resolved commit SHA를 하나의 채택 단위로 사용합니다. `STANDARDS.md`와 `.hass-standards.json`에는 같은 tag/SHA를 기록하고 reusable workflow·action `uses`는 exact tag, `standards-ref`와 별도 도구 checkout은 resolved SHA를 사용합니다. tag·branch·`latest`를 매 실행 조회하거나 major/minor moving tag를 사용하지 않습니다. `verify-release`가 published/non-prerelease/immutable API 상태와 peeled tag commit을 확인한 증거 없이는 exact release plan을 만들지 않습니다. offline 검사는 기록한 descriptor의 정합성만 검사하며 원격 발행을 주장하지 않습니다.
+
+기존 full SHA만 기록한 채택·plan·caller는 호환 경로로 유지합니다. 신규 release 채택을 이유로 기존 지원 최소·기존 상세 검증 증거·현황표를 재작성하거나 운영 현황만으로 갱신을 강제하지 않습니다. 아직 발행하지 않은 후보(첫 `v1.0.0` 포함)는 exact release가 아니라 후보 commit의 기존 full-SHA 검사 경로로 검증하며 발행 후 remote 증거를 새로 얻어 채택합니다.
 
 ZIP 배포만 후속 추가하는 부분 적용에서는 기존 CI의 검토 SHA를 보존할 수 있습니다. 이 경우 STANDARDS.md에 `Reviewed release standards SHA: <full SHA>`를 한 번 기록하며, 별도 SHA는 `.github/workflows/release.yml`의 `actions/release-zip`에만 적용합니다. 다른 공용 workflow/action과 `standards-ref`는 기존 참조 SHA를 유지합니다. ZIP 계약의 검토·검증과 기존 채택 미충족 범위를 구분해 기록하며 전체 재채택으로 판단하지 않습니다.
 
-**GOV-03 필수**: 규칙 변경은 날짜와 변경 내용을 CHANGELOG에 기록합니다. 기존 채택 리포에 영향을 주는 변경은 영향·이관 방법을 설명하고 각 리포의 명시적 채택 PR로 반영합니다. 이 규칙 리포의 관리 방식과 개별 통합의 배포 버전·릴리스 정책은 별개입니다.
+**GOV-03 필수**: 규칙 변경은 날짜와 변경 내용을 CHANGELOG에 기록합니다. 기존 채택 리포에 영향을 주는 변경은 영향·이관 방법을 설명하고 각 리포의 명시적 채택 PR로 반영합니다. 중앙 release notes에는 version→resolved SHA, 계약 버전·내부 action SHA 구성, 영향·이관 방법·검증 범위·CI 링크를 기록합니다. 이 규칙 리포의 관리 방식과 개별 통합의 배포 버전·릴리스 정책은 별개입니다.
 
 **GOV-04 필수**: 각 리포 적용 작업은 [중앙 현황표](adoption-status.md)를 시작·종료 및 차단·범위 변경 등 의미 있는 상태 변화 시 갱신합니다. 담당자/세션 식별자, 적용 내용, 기준 SHA·대상 커밋·체크리스트·CI·리뷰 근거, 남은 작업과 갱신일을 기록합니다. 상세 명령·버전·리뷰 결과는 체크리스트에 한 번 기록하고 현황표에는 요약과 링크를 남깁니다. 중앙 갱신 직전에 최신 main을 확인하고 자기 리포 행만 변경하며 다른 세션의 기록을 보존합니다. 접근·푸시가 불가능하면 실제 반영 결과를 과장하지 않고 미반영 사유와 반영할 내용을 보고합니다.
 

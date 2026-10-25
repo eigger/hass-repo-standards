@@ -94,6 +94,9 @@ def workflow_errors(root, config, domain):
         expected["standards.yml"] = "Standards"
     if (workflow_dir / "update_dependencies.yml").exists():
         expected["update_dependencies.yml"] = "Update dependencies"
+    standards = config.get("standards", {})
+    release_tag = standards.get("tag") if standards.get("kind") == "release" else None
+    expected_action_ref = release_tag or None
     for path in sorted(workflow_dir.glob("*.y*ml")):
         safe_path(root, path.relative_to(root))
         data = yaml.load(path.read_text(), Loader=Loader)
@@ -131,12 +134,20 @@ def workflow_errors(root, config, domain):
         if required and (
             not calls
             or any(
-                not re.fullmatch(re.escape(marker) + r"[0-9a-f]{40}", job.get("uses", ""))
+                not re.fullmatch(
+                    re.escape(marker)
+                    + (re.escape(expected_action_ref) if expected_action_ref else r"[0-9a-f]{40}"),
+                    job.get("uses", ""),
+                )
                 for job in calls
             )
         ):
             errors.append(
-                ("CI-01", rel, "central reusable workflow pinned to reviewed full SHA required")
+                (
+                    "CI-01",
+                    rel,
+                    "central reusable workflow must be pinned to the reviewed full SHA or exact recorded release tag",
+                )
             )
         if path.name == "tests.yml" and any(
             job.get("with", {}).get("test-profile") != "ha"
@@ -194,10 +205,19 @@ def workflow_errors(root, config, domain):
             ]
             action = "eigger/hass-repo-standards/actions/check-standards@"
             if (path.name == "standards.yml" or not separate_standards) and not any(
-                re.fullmatch(re.escape(action) + r"[0-9a-f]{40}", value) for value in actions
+                re.fullmatch(
+                    re.escape(action)
+                    + (re.escape(expected_action_ref) if expected_action_ref else r"[0-9a-f]{40}"),
+                    value,
+                )
+                for value in actions
             ):
                 errors.append(
-                    ("CI-01", rel, "central standards composite action pinned to full SHA required")
+                    (
+                        "CI-01",
+                        rel,
+                        "central standards action must be pinned to the reviewed full SHA or exact recorded release tag",
+                    )
                 )
     for name in expected:
         if not (workflow_dir / name).is_file():

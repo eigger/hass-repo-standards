@@ -1,6 +1,6 @@
 # Existing integration workflow
 
-`<central>` is a separately confirmed central checkout, `<sha>` the reviewed full 40-character SHA, `<target>` the authorized existing integration and `<work>` an existing directory outside it. Substitute actual confirmed paths; these are interface examples, not evidence.
+`<central>` is a separately confirmed central checkout, `<sha>` the reviewed full 40-character SHA, `<target>` the authorized existing integration and `<work>` an existing directory outside it. An immutable release additionally needs exact `<release>` and successful `<work>/release-verification.json`; its tools still run from `<sha>`. Substitute actual confirmed paths; these are interface examples, not evidence.
 
 ## Read the actual baseline
 
@@ -13,6 +13,9 @@
 ```text
 python3 "<central>/scripts/manage_integration.py" inspect "<target>" --output "<work>/inventory.json"
 python3 "<central>/scripts/manage_integration.py" plan "<target>" --mode adopt --input "<work>/input.json" --standards-ref <sha> --output "<work>/plan.json"
+# Published immutable release only:
+python3 "<central>/scripts/manage_integration.py" verify-release --repository eigger/hass-repo-standards --tag <release> --resolved-sha <sha> --output "<work>/release-verification.json"
+python3 "<central>/scripts/manage_integration.py" plan "<target>" --mode adopt --input "<work>/input.json" --standards-ref <sha> --release-tag <release> --release-verification "<work>/release-verification.json" --output "<work>/release-plan.json"
 ```
 
 Build sourced input from actual observations against `<central>/schemas/integration-input.schema.json`, using docs/template-skill-usage.md for field syntax. Inventory JSON is not directly interchangeable with that input. Read pending/conflicts, guards and all diffs. Existing bodies, implementation, fixtures, unique badges and CI conditions must remain. Missing boundaries or incompatible fixed content need an explicit migration plan; do not overwrite them to satisfy a template.
