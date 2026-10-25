@@ -955,6 +955,47 @@ class IntegrationPlanning(unittest.TestCase):
         self.assertEqual(validation.reference_errors(self.target, readme.safe_path, config), [])
         self.assertIn("actions/release-zip@" + override, release_caller.read_text(encoding="utf-8"))
 
+    def test_release_adoption_conflicts_when_flow_style_caller_cannot_be_safely_rewritten(self):
+        self.adopt_fixture()
+        legacy = self.plan("adopt")
+        legacy_path = self.base / "legacy-plan.json"
+        legacy_path.write_text(planning.canonical_json(legacy), encoding="utf-8")
+        self.assertEqual(
+            application.apply_plan(self.target, legacy_path, central=self.central)["status"],
+            "completed",
+        )
+        caller = self.target / ".github/workflows/tests.yml"
+        caller.write_text(
+            yaml.safe_dump(
+                yaml.safe_load(caller.read_text(encoding="utf-8")), default_flow_style=True
+            ),
+            encoding="utf-8",
+        )
+        commit(self.target)
+        evidence = {
+            "repository": "eigger/hass-repo-standards",
+            "kind": "release",
+            "tag": "v1.0.0",
+            "resolved_sha": self.ref,
+            "verified": "remote",
+        }
+        proof = self.base / "release-verification.json"
+        proof.write_text(planning.canonical_json(evidence), encoding="utf-8")
+        with patch.object(planning.reference, "verify_remote", return_value=evidence):
+            migrated = planning.plan(
+                self.target,
+                "adopt",
+                self.data,
+                self.ref,
+                central=self.central,
+                release_tag="v1.0.0",
+                release_verification=proof,
+            )
+        self.assertIn(
+            "Preserve existing extension; reviewed merge required: .github/workflows/tests.yml",
+            migrated["conflicts"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -607,8 +607,11 @@ def plan(
                 if name.startswith(".github/workflows/") and reference_only_workflow_update(
                     before.decode("utf-8"), content
                 ):
-                    content = reference_only_workflow_content(before.decode("utf-8"), content)
-                    if not reference_only_workflow_update(before.decode("utf-8"), content):
+                    desired_content = content
+                    content = reference_only_workflow_content(
+                        before.decode("utf-8"), desired_content
+                    )
+                    if yaml.safe_load(content) != yaml.safe_load(desired_content):
                         result["conflicts"].append(
                             f"Preserve existing extension; reviewed merge required: {name}"
                         )
