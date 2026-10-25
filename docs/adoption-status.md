@@ -125,3 +125,32 @@ jaalee의 최초 버전 커밋 `51ae09e`는 기존 1.0.7 고정 테스트로 [Te
 | hass-kma / `main` | 2.1.3 → **2.2.0** | [6ce30ee](https://github.com/eigger/hass-kma/commit/6ce30ee2303096254965904be06c40777c5c83f5) | [Release 2.2.0](https://github.com/eigger/hass-kma/releases/tag/2.2.0) · [Validate](https://github.com/eigger/hass-kma/actions/runs/39902750553) success · [Tests](https://github.com/eigger/hass-kma/actions/runs/39902750539) success · [ZIP job](https://github.com/eigger/hass-kma/actions/runs/39903455200) success · `kma.zip` 20파일 실다운로드/내용 PASS |
 | hass-vson / `master` | 1.2.1 → **1.3.0** | [0690780](https://github.com/eigger/hass-vson/commit/069078005fdae393a03a28d351bd22625c8bf8d9) | [Release 1.3.0](https://github.com/eigger/hass-vson/releases/tag/1.3.0) · [Validate](https://github.com/eigger/hass-vson/actions/runs/39902756017) success · [Tests](https://github.com/eigger/hass-vson/actions/runs/39902755973) success · [ZIP job](https://github.com/eigger/hass-vson/actions/runs/39903281185) success · `vson.zip` 19파일 실다운로드/내용 PASS |
 | hass-kocom-smarthome / `main` | 1.0.1 → **1.1.0** | [0af1904](https://github.com/eigger/hass-kocom-smarthome/commit/0af1904872a7f58e39a6a5616de41847c006071b) | [Release v1.1.0](https://github.com/eigger/hass-kocom-smarthome/releases/tag/v1.1.0) · [Validate](https://github.com/eigger/hass-kocom-smarthome/actions/runs/39902762070) success · [Tests](https://github.com/eigger/hass-kocom-smarthome/actions/runs/39902762047) success · [ZIP job](https://github.com/eigger/hass-kocom-smarthome/actions/runs/39903460646) success · `kocom_smarthome.zip` 18파일 실다운로드/내용 PASS |
+
+
+## 2026-10-25 최신 검사기 PR 진행 현황
+
+사용자 요청으로 이전 CI 조사에서 확인한 19개 리포에 각각 부분 갱신 PR을 생성했습니다. 담당 `/root` (checker-rollout-20261025), 독립 리뷰 `review_checker_rollout`. 검토한 중앙 main은 `1863343638014adb8a4001afc8fddc1a27dc500f`이며 각 PR의 중앙 pin·standards-ref·STANDARDS 기준을 정합화했습니다. 8개 리포에는 누락된 무조건 실행 중앙 표준 검사 job을 추가했습니다. 통합 코드·의존성·지원 최소·배포 버전은 보존합니다.
+
+로컬 Python 3.14.5 / PyYAML 6.0.3에서 최신 검사기 11개 PASS, 8개는 기존 채택 미충족을 확인해 DRAFT로 생성했습니다. 19개 actionlint·diff 검사 PASS. 독립 리뷰는 workflow 69개·기존 job 100개의 ID·입력·권한·지원 최소 보존을 확인했고 새 회귀 지적은 없었습니다. 원격 CI는 PR 생성 직후 실행 중이며, 아래 상태는 전체 채택 완료 또는 merge 승인을 뜻하지 않습니다. PR check 결과와 각 ADOPTION_CHECKLIST.md의 2026-10-25 기록이 검증 원본입니다. 이번 요청은 PR 생성이며 머지는 수행하지 않습니다.
+
+| 리포 | 적용 PR / head | 최신 로컬 검사 | 상태와 남은 작업 |
+|---|---|---|---|
+| hass-atflee | [PR #31](https://github.com/eigger/hass-atflee/pull/31) / `f578e0ece5d9df827dcac427c3df5624583699df` | FAIL (잔여 진단 14개) | DRAFT — 기존 README/테스트/메타데이터 등 채택 미충족 해소 필요 |
+| hass-ble-esl | [PR #269](https://github.com/eigger/hass-ble-esl/pull/269) / `f67c9821282ade4a42739e2ef12375fc0c6c96cf` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-ble-led-sign | [PR #18](https://github.com/eigger/hass-ble-led-sign/pull/18) / `b2c9c3516075e2c63b77d6ea292f7540b520811d` | FAIL (잔여 진단 22개) | DRAFT — 기존 README/테스트/메타데이터 등 채택 미충족 해소 필요 |
+| hass-esphome-ota | [PR #37](https://github.com/eigger/hass-esphome-ota/pull/37) / `47a3dba92aea50c3ebccec5c5ed814987912b44c` | FAIL (잔여 진단 9개) | DRAFT — 기존 README/테스트/메타데이터 등 채택 미충족 해소 필요 |
+| hass-garage | [PR #7](https://github.com/eigger/hass-garage/pull/7) / `634f75a1ee2e9fec85a6fdb567031d74ddaee977` | FAIL (잔여 진단 10개) | DRAFT — 기존 README/테스트/메타데이터 등 채택 미충족 해소 필요 |
+| hass-icscale | [PR #20](https://github.com/eigger/hass-icscale/pull/20) / `6915aaccb48273605d86a0419f7322a38d290f4c` | FAIL (잔여 진단 18개) | DRAFT — 기존 README/테스트/메타데이터 등 채택 미충족 해소 필요 |
+| hass-jaalee | [PR #9](https://github.com/eigger/hass-jaalee/pull/9) / `c9fc71e6e94dab4501d832834a542f506ea00113` | FAIL (잔여 진단 12개) | DRAFT — 기존 README/테스트/메타데이터 등 채택 미충족 해소 필요 |
+| hass-kma | [PR #41](https://github.com/eigger/hass-kma/pull/41) / `ebccbbfcd5ef4004be1a0b73ffe6328ec258a452` | FAIL (잔여 진단 9개) | DRAFT — 기존 README/테스트/메타데이터 등 채택 미충족 해소 필요 |
+| hass-kocom-smarthome | [PR #4](https://github.com/eigger/hass-kocom-smarthome/pull/4) / `8deeec375f1639e3c2bb4bb9c1e331096b04c412` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-lywsd02 | [PR #13](https://github.com/eigger/hass-lywsd02/pull/13) / `eaf1f3fa6a11af2a2858eef5b997ed996cd6477e` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-magic-caster-wand | [PR #123](https://github.com/eigger/hass-magic-caster-wand/pull/123) / `ac07d14b10399b94fa8aa36cb13c8fd55dd78551` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-melk-light | [PR #7](https://github.com/eigger/hass-melk-light/pull/7) / `c87e8e198fde70fa5a3fc44313643c8ebc304d02` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-minibig | [PR #29](https://github.com/eigger/hass-minibig/pull/29) / `aa1d5dd65394201f05e9fe159edb7f4f6c4e088c` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-niimbot | [PR #134](https://github.com/eigger/hass-niimbot/pull/134) / `7be3764d983c177a625255b8810409392c66e356` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-omron | [PR #258](https://github.com/eigger/hass-omron/pull/258) / `2dfbe85263011f2fe47b48aef912d0920b90d8e7` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-opinet | [PR #18](https://github.com/eigger/hass-opinet/pull/18) / `017c30a8f25a7e27b1702a277c15f31f8d626404` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-sip | [PR #112](https://github.com/eigger/hass-sip/pull/112) / `aff57ec9d94af711536394d7fd5d9f47abaeff08` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
+| hass-vson | [PR #11](https://github.com/eigger/hass-vson/pull/11) / `a9d76740d2a39af44204894a7fec323320672ee1` | FAIL (잔여 진단 6개) | DRAFT — 기존 README/테스트/메타데이터 등 채택 미충족 해소 필요 |
+| hass-ws-bridge | [PR #64](https://github.com/eigger/hass-ws-bridge/pull/64) / `8e3854c56e8f86d9f6a2e8b2ea8fe7737cc275b6` | PASS | OPEN — 원격 CI 완료·리뷰 확인 필요 |
