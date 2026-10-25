@@ -879,6 +879,82 @@ class IntegrationPlanning(unittest.TestCase):
         config = json.loads((self.target / ".hass-standards.json").read_text(encoding="utf-8"))
         self.assertEqual(validation.reference_errors(self.target, readme.safe_path, config), [])
 
+    def test_release_adoption_preserves_quoted_callers_scoped_zip_override_and_history(self):
+        self.adopt_fixture()
+        legacy = self.plan("adopt")
+        legacy_path = self.base / "legacy-plan.json"
+        legacy_path.write_text(planning.canonical_json(legacy), encoding="utf-8")
+        self.assertEqual(
+            application.apply_plan(self.target, legacy_path, central=self.central)["status"],
+            "completed",
+        )
+        override = "b" * 40
+        standards = self.target / "STANDARDS.md"
+        standards.write_text(
+            standards.read_text(encoding="utf-8")
+            + f"- Reviewed release standards SHA: `{override}`\n"
+            + "\n## Historical evidence\n"
+            + f"- 표준: https://github.com/eigger/hass-repo-standards/tree/{self.ref}\n",
+            encoding="utf-8",
+        )
+        tests = self.target / ".github/workflows/tests.yml"
+        tests.write_text(
+            tests.read_text(encoding="utf-8").replace(
+                "uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@" + self.ref,
+                'uses: "eigger/hass-repo-standards/.github/workflows/python-tests.yml@'
+                + self.ref
+                + '" # preserve caller comment',
+            ),
+            encoding="utf-8",
+        )
+        release_caller = self.target / ".github/workflows/release.yml"
+        release_caller.write_text(
+            release_caller.read_text(encoding="utf-8").replace(
+                "eigger/hass-repo-standards/actions/release-zip@" + self.ref,
+                "eigger/hass-repo-standards/actions/release-zip@" + override,
+            ),
+            encoding="utf-8",
+        )
+        commit(self.target)
+        evidence = {
+            "repository": "eigger/hass-repo-standards",
+            "kind": "release",
+            "tag": "v1.0.0",
+            "resolved_sha": self.ref,
+            "verified": "remote",
+        }
+        proof = self.base / "release-verification.json"
+        proof.write_text(planning.canonical_json(evidence), encoding="utf-8")
+        with patch.object(planning.reference, "verify_remote", return_value=evidence):
+            migrated = planning.plan(
+                self.target,
+                "adopt",
+                self.data,
+                self.ref,
+                central=self.central,
+                release_tag="v1.0.0",
+                release_verification=proof,
+            )
+        self.assertEqual(migrated["conflicts"], [])
+        operations = {item["path"]: item["content"] for item in migrated["operations"]}
+        self.assertIn(
+            'uses: "eigger/hass-repo-standards/.github/workflows/python-tests.yml@v1.0.0" # preserve caller comment',
+            operations[".github/workflows/tests.yml"],
+        )
+        self.assertNotIn(".github/workflows/release.yml", operations)
+        self.assertIn("actions/release-zip@" + override, release_caller.read_text(encoding="utf-8"))
+        self.assertIn("/tree/v1.0.0", operations["STANDARDS.md"])
+        self.assertIn("/tree/" + self.ref, operations["STANDARDS.md"])
+        plan_path = self.base / "release-plan.json"
+        plan_path.write_text(planning.canonical_json(migrated), encoding="utf-8")
+        self.assertEqual(
+            application.apply_plan(self.target, plan_path, central=self.central)["status"],
+            "completed",
+        )
+        config = json.loads((self.target / ".hass-standards.json").read_text(encoding="utf-8"))
+        self.assertEqual(validation.reference_errors(self.target, readme.safe_path, config), [])
+        self.assertIn("actions/release-zip@" + override, release_caller.read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

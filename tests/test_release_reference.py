@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -103,26 +104,45 @@ class ReleaseReference(unittest.TestCase):
                 )
             return Result("b" * 40 + "\trefs/tags/v1.0.0^{}\n")
 
-        with self.assertRaisesRegex(ValueError, "peeled"):
+        with self.assertRaisesRegex(ValueError, "peel"):
             reference.verify_remote("eigger/hass-repo-standards", value, runner=moved)
 
-    def test_admin_draft_gate_requires_enabled_setting_metadata_and_exact_tag_commit(self):
+    def test_admin_draft_gate_binds_immutable_setting_draft_asset_and_candidate(self):
+        metadata = {
+            "release": "v1.0.0",
+            "candidate_commit": SHA,
+            "contract": "exact-release-resolved-sha-v1",
+        }
+
         def runner(args, **kwargs):
             if args[:3] == ["gh", "api", "repos/eigger/hass-repo-standards/immutable-releases"]:
                 return Result(json.dumps({"enabled": True}))
-            if args[0] == "gh":
+            if args[:3] == ["gh", "release", "view"]:
+                return Result(
+                    json.dumps(
+                        {
+                            "apiUrl": "https://api.github.com/repos/eigger/hass-repo-standards/releases/1"
+                        }
+                    )
+                )
+            if args[:3] == ["gh", "api", "repos/eigger/hass-repo-standards/releases/1"]:
                 return Result(
                     json.dumps(
                         {
                             "tag_name": "v1.0.0",
                             "draft": True,
                             "prerelease": False,
-                            "assets": [{"name": "release-metadata.json"}],
+                            "target_commitish": SHA,
+                            "assets": [{"name": "release-metadata.json", "id": 7}],
                         }
                     )
                 )
-            return Result(SHA + "\trefs/tags/v1.0.0^{}\n")
+            if args[0] == "gh":
+                return Result(json.dumps(metadata))
+            return Result("")
 
+        # Initial drafts have no remote tag until publication, but are safe when
+        # their target and downloaded metadata bind the exact candidate.
         self.assertEqual(
             operator.check("eigger/hass-repo-standards", "v1.0.0", SHA, runner=runner)[
                 "candidate_sha"
@@ -130,13 +150,36 @@ class ReleaseReference(unittest.TestCase):
             SHA,
         )
 
+        def mutated_metadata(args, **kwargs):
+            result = runner(args, **kwargs)
+            if args[0] == "gh" and "assets/7" in args[2]:
+                return Result(json.dumps({**metadata, "candidate_commit": "b" * 40}))
+            return result
+
+        with self.assertRaisesRegex(ValueError, "metadata"):
+            operator.check("eigger/hass-repo-standards", "v1.0.0", SHA, runner=mutated_metadata)
+
+        def moved_tag(args, **kwargs):
+            if args[0] == "git":
+                return Result("b" * 40 + "\trefs/tags/v1.0.0^{}\n")
+            return runner(args, **kwargs)
+
+        with self.assertRaisesRegex(ValueError, "peel"):
+            operator.check("eigger/hass-repo-standards", "v1.0.0", SHA, runner=moved_tag)
+
         def disabled(args, **kwargs):
             if args[0] == "gh":
                 return Result(json.dumps({"enabled": False}))
-            self.fail("tag must not be checked while immutable releases are disabled")
+            self.fail("draft must not be checked while immutable releases are disabled")
 
         with self.assertRaisesRegex(ValueError, "not enabled"):
             operator.check("eigger/hass-repo-standards", "v1.0.0", SHA, runner=disabled)
+
+        def unavailable(args, **kwargs):
+            raise subprocess.CalledProcessError(1, args)
+
+        with self.assertRaises(subprocess.CalledProcessError):
+            operator.check("eigger/hass-repo-standards", "v1.0.0", SHA, runner=unavailable)
 
 
 if __name__ == "__main__":

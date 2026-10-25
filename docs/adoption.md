@@ -11,7 +11,7 @@
 
 ## 채택
 
-**GOV-01 필수**: `STANDARDS.md`에 참조한 표준 커밋 SHA, 적용 profile, 예외(ID·이유·영향·대안·승인 근거·담당자·재검토 조건)를 기록합니다. 예시는 templates/integration/STANDARDS.md입니다. 새 통합은 main의 규칙을 검토해 적용하고, 기존 통합은 결함을 숨기지 않은 채 단계적으로 이관합니다.
+**GOV-01 필수**: `STANDARDS.md`에 참조한 표준 커밋 SHA, 적용 profile, 예외(ID·이유·영향·대안·승인 근거·담당자·재검토 조건)를 기록합니다. 예시는 templates/integration/STANDARDS.md입니다. 새 통합은 검토한 published immutable release의 규칙을 적용하며, 구형 full-SHA 채택은 호환 절차로만 유지합니다. 기존 통합은 결함을 숨기지 않은 채 단계적으로 이관합니다.
 
 **GOV-02 필수**: 중앙 표준은 immutable GitHub Release의 exact `vX.Y.Z`와 그 release tag가 가리키는 full resolved commit SHA를 하나의 채택 단위로 사용합니다. `STANDARDS.md`와 `.hass-standards.json`에는 같은 tag/SHA를 기록하고 reusable workflow·action `uses`는 exact tag, `standards-ref`와 별도 도구 checkout은 resolved SHA를 사용합니다. tag·branch·`latest`를 매 실행 조회하거나 major/minor moving tag를 사용하지 않습니다. `verify-release`가 published/non-prerelease/immutable API 상태와 peeled tag commit을 확인한 증거 없이는 exact release plan을 만들지 않습니다. offline 검사는 기록한 descriptor의 정합성만 검사하며 원격 발행을 주장하지 않습니다.
 

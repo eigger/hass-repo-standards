@@ -227,11 +227,11 @@ def reference_only_workflow_content(before, after):
     collect(desired)
 
     def replace_use(match):
-        prefix, path = match.group(1), match.group(2)
-        return prefix + path + "@" + references.get(path, match.group(3))
+        prefix, quote, path, current = match.groups()
+        return prefix + quote + path + "@" + references.get(path, current) + quote
 
     value = re.sub(
-        r"(?m)^(\s*(?:-\s*)?uses:\s*)(eigger/hass-repo-standards/[^@\s]+)@([^\s#]+)",
+        r"(?m)^(\s*(?:-\s*)?uses:\s*)(['\"]?)(eigger/hass-repo-standards/[^@\s'\"]+)@([^\s#'\"]+)\2",
         replace_use,
         before,
     )
@@ -265,7 +265,9 @@ def recorded_standards_update(text, standards_reference):
             return value
         if len(matches) != 1:
             raise ValueError("STANDARDS.md has ambiguous reviewed standards reference records")
-        start, end = matches[0].span()
+        match = matches[0]
+        start, end = match.span()
+        replacement = replacement(match) if callable(replacement) else replacement
         return value[:start] + replacement + value[end:]
 
     value = replace_one(
@@ -274,6 +276,13 @@ def recorded_standards_update(text, standards_reference):
         f"- 참조 커밋 SHA: {item['resolved_sha']}",
         required=True,
     )
+    if item["kind"] == "release":
+        value = replace_one(
+            value,
+            r"^(\s*-\s*표준:\s*https://github\.com/eigger/hass-repo-standards/tree/)[^/\s]+(\s*)$",
+            lambda match: match.group(1) + item["tag"] + match.group(2),
+            required=True,
+        )
     value = re.sub(r"^\s*-\s*Standards release\s*:.*\n?", "", value, flags=re.M)
     value = re.sub(r"^\s*-\s*Resolved standards SHA\s*:.*\n?", "", value, flags=re.M)
     if item["kind"] == "release":
@@ -286,6 +295,18 @@ def recorded_standards_update(text, standards_reference):
             raise ValueError("STANDARDS.md reference update became ambiguous")
         value = value.replace(line, addition, 1)
     return value + ("\n## " + tail if separator else "")
+
+
+def recorded_release_override(text):
+    """Return the one explicit ZIP-action SHA override, if the caller recorded one."""
+    matches = re.findall(
+        r"^\s*-\s*Reviewed release standards SHA\s*:\s*`?([0-9a-f]{40})`?\s*$",
+        text,
+        re.M,
+    )
+    if len(matches) > 1:
+        raise ValueError("STANDARDS.md has ambiguous reviewed release SHA overrides")
+    return matches[0] if matches else None
 
 
 def metadata_conflicts(data, scanned):
@@ -587,6 +608,11 @@ def plan(
                     before.decode("utf-8"), content
                 ):
                     content = reference_only_workflow_content(before.decode("utf-8"), content)
+                    if not reference_only_workflow_update(before.decode("utf-8"), content):
+                        result["conflicts"].append(
+                            f"Preserve existing extension; reviewed merge required: {name}"
+                        )
+                        return
                     after = content.encode("utf-8")
                 else:
                     result["conflicts"].append(
@@ -669,6 +695,18 @@ def plan(
         elif destination.startswith(".github/workflows/"):
             try:
                 content = render_workflow(content, destination, data, standards_reference)
+                if destination == ".github/workflows/release.yml":
+                    standards_path = target / "STANDARDS.md"
+                    if standards_path.is_file() and (
+                        override := recorded_release_override(
+                            standards_path.read_text(encoding="utf-8")
+                        )
+                    ):
+                        content = re.sub(
+                            r"(eigger/hass-repo-standards/actions/release-zip@)(?:[0-9a-f]{40}|v[0-9]+\.[0-9]+\.[0-9]+)",
+                            r"\g<1>" + override,
+                            content,
+                        )
             except ValueError as error:
                 result["pending"].append(f"{destination}: {error}")
                 continue

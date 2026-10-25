@@ -269,6 +269,36 @@ class ReleaseZip(unittest.TestCase):
         self.assertEqual(validation.reference_errors(self.root, safe, config), [])
         self.assertEqual(release.errors(self.root, config, "example", safe, ROOT), [])
 
+    def test_recorded_legacy_descriptor_binds_standards_and_callers(self):
+        sha = "a" * 40
+        workflows = self.root / ".github/workflows"
+        workflows.mkdir(parents=True)
+        (self.root / "STANDARDS.md").write_text(
+            f"- Reviewed standards SHA: `{sha}`\n", encoding="utf-8"
+        )
+        (workflows / "tests.yml").write_text(
+            yaml.safe_dump(
+                {
+                    "jobs": {
+                        "tests": {
+                            "uses": "eigger/hass-repo-standards/.github/workflows/python-tests.yml@"
+                            + sha,
+                            "with": {"standards-ref": sha},
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        def safe(root, name):
+            return root / name
+
+        config = {"standards": {"kind": "sha", "resolved_sha": sha}}
+        self.assertEqual(validation.reference_errors(self.root, safe, config), [])
+        config["standards"]["resolved_sha"] = "b" * 40
+        self.assertTrue(validation.reference_errors(self.root, safe, config))
+
 
 if __name__ == "__main__":
     unittest.main()

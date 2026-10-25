@@ -797,32 +797,34 @@ def reference_errors(root, safe_path, config=None):
     from bluetooth_documents import visible_markdown
 
     recorded = (config or {}).get("standards")
-    if isinstance(recorded, dict) and recorded.get("kind") == "release":
+    if isinstance(recorded, dict) and recorded.get("kind") in {"sha", "release"}:
         try:
             from . import reference
 
             recorded = reference.validate(recorded)
         except ValueError as error:
             return [("GOV-02", ".hass-standards.json", str(error))]
-        release_lines = re.findall(
-            r"^\s*(?:-\s*)?(?:Standards release|표준 릴리스)\s*:\s*`?(v[0-9]+\.[0-9]+\.[0-9]+)`?\s*$",
-            visible_markdown(document),
-            re.M,
-        )
-        sha_lines = re.findall(
-            r"^\s*(?:-\s*)?(?:Resolved standards SHA|해석한 표준 커밋 SHA)\s*:\s*`?([0-9a-f]{40})`?\s*$",
-            visible_markdown(document),
-            re.M,
-        )
-        if release_lines != [recorded["tag"]] or sha_lines != [recorded["resolved_sha"]]:
-            return [
-                (
-                    "GOV-02",
-                    "STANDARDS.md",
-                    "Release tag and resolved SHA must match .hass-standards.json",
-                )
-            ]
-        ref, action_ref = recorded["resolved_sha"], recorded["tag"]
+        if recorded["kind"] == "release":
+            release_lines = re.findall(
+                r"^\s*(?:-\s*)?(?:Standards release|표준 릴리스)\s*:\s*`?(v[0-9]+\.[0-9]+\.[0-9]+)`?\s*$",
+                visible_markdown(document),
+                re.M,
+            )
+            sha_lines = re.findall(
+                r"^\s*(?:-\s*)?(?:Resolved standards SHA|해석한 표준 커밋 SHA)\s*:\s*`?([0-9a-f]{40})`?\s*$",
+                visible_markdown(document),
+                re.M,
+            )
+            if release_lines != [recorded["tag"]] or sha_lines != [recorded["resolved_sha"]]:
+                return [
+                    (
+                        "GOV-02",
+                        "STANDARDS.md",
+                        "Release tag and resolved SHA must match .hass-standards.json",
+                    )
+                ]
+        ref = recorded["resolved_sha"]
+        action_ref = recorded.get("tag", ref)
     else:
         ref, action_ref = None, None
     refs = re.findall(
@@ -841,6 +843,14 @@ def reference_errors(root, safe_path, config=None):
     if action_ref is None:
         ref = refs[0]
         action_ref = ref
+    elif refs != [ref]:
+        return [
+            (
+                "GOV-02",
+                "STANDARDS.md",
+                "Reviewed standards SHA must match .hass-standards.json",
+            )
+        ]
     release_fields = re.findall(
         r"^\s*(?:-\s*)?Reviewed release standards SHA\s*:\s*(.*?)\s*$",
         visible_markdown(document),
