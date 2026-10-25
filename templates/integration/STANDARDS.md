@@ -2,7 +2,7 @@
 
 - 표준: https://github.com/eigger/hass-repo-standards/tree/main
 - 참조 커밋 SHA: 채택 시 검토한 main의 전체 SHA 입력
-- Standards release: 채택 시 검토한 exact release 입력 (구형 SHA 채택은 이 행을 삭제)
+- Standards release: 채택 시 검토한 exact release 입력
 - Resolved standards SHA: 채택 시 검토한 main의 전체 SHA 입력
 - 채택일: 실제 채택 PR 날짜 입력
 - profile: integration / ha (실제 HA fixture·통합 로딩 필수)

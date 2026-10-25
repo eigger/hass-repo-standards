@@ -18,7 +18,9 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
-from standards import contract, inventory, planning, readme  # noqa: E402
+from standards import apply as application  # noqa: E402
+from standards import contract, inventory, planning, readme, validation  # noqa: E402
+from standards import reference as standards_reference  # noqa: E402
 from test_standards_contract import input_fixture  # noqa: E402
 
 spec = importlib.util.spec_from_file_location(
@@ -785,15 +787,23 @@ class IntegrationPlanning(unittest.TestCase):
                 central=self.central,
                 release_tag="v1.0.0",
             )
-        result = planning.plan(
-            self.target,
-            "create",
-            self.data,
-            self.ref,
-            central=self.central,
-            release_tag="v1.0.0",
-            release_verification=proof,
-        )
+        evidence = {
+            "repository": "eigger/hass-repo-standards",
+            "kind": "release",
+            "tag": "v1.0.0",
+            "resolved_sha": self.ref,
+            "verified": "remote",
+        }
+        with patch.object(planning.reference, "verify_remote", return_value=evidence):
+            result = planning.plan(
+                self.target,
+                "create",
+                self.data,
+                self.ref,
+                central=self.central,
+                release_tag="v1.0.0",
+                release_verification=proof,
+            )
         self.assertEqual(
             result["standards_reference"],
             {"kind": "release", "tag": "v1.0.0", "resolved_sha": self.ref},
@@ -802,6 +812,72 @@ class IntegrationPlanning(unittest.TestCase):
         workflows = {item["path"]: item["content"] for item in result["operations"]}
         self.assertIn("@v1.0.0", workflows[".github/workflows/tests.yml"])
         self.assertIn("standards-ref: " + self.ref, workflows[".github/workflows/tests.yml"])
+        self.assertRegex(workflows["STANDARDS.md"], r"(?m)^- Standards release: v1\.0\.0$")
+        with self.assertRaisesRegex(ValueError, "reserved for apply/recover"):
+            planning.plan(
+                self.target,
+                "create",
+                self.data,
+                {"kind": "release", "tag": "v1.0.0", "resolved_sha": self.ref},
+                central=self.central,
+                release_attestation=result["release_attestation"],
+            )
+        with patch.object(
+            standards_reference, "verify_remote", side_effect=ValueError("unpublished")
+        ):
+            with self.assertRaisesRegex(ValueError, "unpublished"):
+                planning.plan(
+                    self.target,
+                    "create",
+                    self.data,
+                    self.ref,
+                    central=self.central,
+                    release_tag="v1.0.0",
+                    release_verification=proof,
+                )
+
+    def test_adopt_migrates_only_central_refs_and_standards_record_to_a_release(self):
+        self.adopt_fixture()
+        legacy = self.plan("adopt")
+        plan_path = self.base / "legacy-plan.json"
+        plan_path.write_text(planning.canonical_json(legacy), encoding="utf-8")
+        self.assertEqual(
+            application.apply_plan(self.target, plan_path, central=self.central)["status"],
+            "completed",
+        )
+        commit(self.target)
+        proof = self.base / "release-verification.json"
+        evidence = {
+            "repository": "eigger/hass-repo-standards",
+            "kind": "release",
+            "tag": "v1.0.0",
+            "resolved_sha": self.ref,
+            "verified": "remote",
+        }
+        proof.write_text(planning.canonical_json(evidence), encoding="utf-8")
+        with patch.object(planning.reference, "verify_remote", return_value=evidence):
+            migrated = planning.plan(
+                self.target,
+                "adopt",
+                self.data,
+                self.ref,
+                central=self.central,
+                release_tag="v1.0.0",
+                release_verification=proof,
+            )
+        self.assertEqual(migrated["conflicts"], [])
+        changed = {operation["path"] for operation in migrated["operations"]}
+        self.assertTrue({".hass-standards.json", "STANDARDS.md"} <= changed)
+        self.assertIn(".github/workflows/tests.yml", changed)
+        self.assertNotIn("ADOPTION_CHECKLIST.md", changed)
+        release_plan = self.base / "release-plan.json"
+        release_plan.write_text(planning.canonical_json(migrated), encoding="utf-8")
+        self.assertEqual(
+            application.apply_plan(self.target, release_plan, central=self.central)["status"],
+            "completed",
+        )
+        config = json.loads((self.target / ".hass-standards.json").read_text(encoding="utf-8"))
+        self.assertEqual(validation.reference_errors(self.target, readme.safe_path, config), [])
 
 
 if __name__ == "__main__":

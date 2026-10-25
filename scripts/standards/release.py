@@ -40,6 +40,19 @@ def errors(root, config, domain, safe_path, central):
         )
         standards = config.get("standards", {})
         expected_ref = standards.get("tag") if standards.get("kind") == "release" else None
+        standards_path = safe_path(root, "STANDARDS.md")
+        standards_document = (
+            standards_path.read_text(encoding="utf-8") if standards_path.is_file() else ""
+        )
+        scoped = re.findall(
+            r"^\s*(?:-\s*)?Reviewed release standards SHA\s*:\s*`?([0-9a-f]{40})`?\s*$",
+            standards_document,
+            re.M,
+        )
+        if scoped:
+            if len(scoped) != 1:
+                raise ValueError("Record at most one reviewed release standards SHA override")
+            expected_ref = scoped[0]
         allowed_ref = re.escape(expected_ref) if expected_ref else r"[a-f0-9]{40}"
         if not any(
             re.fullmatch(r"eigger/hass-repo-standards/actions/release-zip@" + allowed_ref, use)

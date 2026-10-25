@@ -1,4 +1,4 @@
-name: Publish central standards release
+name: Prepare central standards release draft
 'on':
   workflow_dispatch:
     inputs:
@@ -57,7 +57,7 @@ jobs:
         if missing or failed:
             raise SystemExit(f"latest required checks are not successful; missing={missing}, failed={failed}")
         CHECKS
-  draft-and-publish:
+  prepare-draft:
     needs: verify-candidate
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -86,11 +86,3 @@ jobs:
         python scripts/build_central_release_metadata.py --version "$VERSION" --ci-run-url "$CI_RUN_URL" --output "$RUNNER_TEMP/release-metadata.json"
         test "$CANDIDATE_SHA" = "$(git rev-parse HEAD)"
         gh release create "$VERSION" "$RUNNER_TEMP/release-metadata.json#release-metadata.json" --target "$CANDIDATE_SHA" --draft --title "$VERSION" --generate-notes
-    - name: Publish the completed draft and attest it remotely
-      env:
-        GH_TOKEN: ${{ github.token }}
-        VERSION: ${{ inputs.version }}
-        CANDIDATE_SHA: ${{ needs.verify-candidate.outputs.candidate-sha }}
-      run: |
-        gh release edit "$VERSION" --draft=false
-        python scripts/manage_integration.py verify-release --repository "$GITHUB_REPOSITORY" --tag "$VERSION" --resolved-sha "$CANDIDATE_SHA" --output "$RUNNER_TEMP/release-verification.json"

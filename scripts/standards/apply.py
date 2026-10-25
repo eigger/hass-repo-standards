@@ -182,6 +182,7 @@ def validate_plan(root, document, *, central=None):
         standards_reference,
         central=central,
         release_attestation=document.get("release_attestation"),
+        internal_replan=True,
     )
     if planning.canonical_json(regenerated) != planning.canonical_json(document):
         raise ValueError("Plan differs from the current contract replan; inspect and plan again")
@@ -527,6 +528,7 @@ def validate_preimage(root, journal, *, central=None):
             planning.plan_reference(plan),
             central=central,
             release_attestation=plan.get("release_attestation"),
+            internal_replan=True,
         )
         reproduced["target_identity"]["path"] = str(root)
         if planning.canonical_json(reproduced) != planning.canonical_json(plan):

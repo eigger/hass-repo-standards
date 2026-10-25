@@ -846,7 +846,9 @@ def reference_errors(root, safe_path, config=None):
         visible_markdown(document),
         re.M,
     )
-    release_ref = ref
+    # A ZIP caller follows the primary reviewed release by default. The older
+    # scoped full-SHA field remains an explicit compatibility override.
+    release_ref = action_ref
     if release_fields:
         if len(release_fields) != 1 or not re.fullmatch(
             r"(?:[0-9a-f]{40}|`[0-9a-f]{40}`)", release_fields[0]

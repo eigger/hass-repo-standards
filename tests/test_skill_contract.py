@@ -128,13 +128,25 @@ class SkillContract(unittest.TestCase):
             commands = [
                 args.command for script, args in examples if script == "manage_integration.py"
             ]
-            self.assertEqual(commands, ["inspect", "plan", "apply"])
-            plan = next(
+            self.assertEqual(commands, ["inspect", "plan", "verify-release", "plan", "apply"])
+            legacy, release = [
                 args for script, args in examples if getattr(args, "command", None) == "plan"
+            ]
+            self.assertEqual(legacy.mode, mode)
+            self.assertEqual(legacy.standards_ref, "<sha>")
+            self.assertIsNone(legacy.release_tag)
+            self.assertNotEqual(legacy.output.parent, legacy.target)
+            verification = next(
+                args
+                for script, args in examples
+                if getattr(args, "command", None) == "verify-release"
             )
-            self.assertEqual(plan.mode, mode)
-            self.assertEqual(plan.standards_ref, "<sha>")
-            self.assertNotEqual(plan.output.parent, plan.target)
+            self.assertEqual(
+                (verification.repository, verification.tag, verification.resolved_sha),
+                ("eigger/hass-repo-standards", "<release>", "<sha>"),
+            )
+            self.assertEqual((release.release_tag, release.standards_ref), ("<release>", "<sha>"))
+            self.assertEqual(release.release_verification.name, "release-verification.json")
             self.assertTrue(
                 any(script == "check_integration.py" and args.check for script, args in examples)
             )

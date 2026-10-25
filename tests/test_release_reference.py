@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import sys
 import tempfile
@@ -11,6 +12,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from standards import reference  # noqa: E402
+
+operator_spec = importlib.util.spec_from_file_location(
+    "central_release_operator", ROOT / "scripts/central_release_operator.py"
+)
+operator = importlib.util.module_from_spec(operator_spec)
+operator_spec.loader.exec_module(operator)
 
 SHA = "a" * 40
 
@@ -98,6 +105,38 @@ class ReleaseReference(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "peeled"):
             reference.verify_remote("eigger/hass-repo-standards", value, runner=moved)
+
+    def test_admin_draft_gate_requires_enabled_setting_metadata_and_exact_tag_commit(self):
+        def runner(args, **kwargs):
+            if args[:3] == ["gh", "api", "repos/eigger/hass-repo-standards/immutable-releases"]:
+                return Result(json.dumps({"enabled": True}))
+            if args[0] == "gh":
+                return Result(
+                    json.dumps(
+                        {
+                            "tag_name": "v1.0.0",
+                            "draft": True,
+                            "prerelease": False,
+                            "assets": [{"name": "release-metadata.json"}],
+                        }
+                    )
+                )
+            return Result(SHA + "\trefs/tags/v1.0.0^{}\n")
+
+        self.assertEqual(
+            operator.check("eigger/hass-repo-standards", "v1.0.0", SHA, runner=runner)[
+                "candidate_sha"
+            ],
+            SHA,
+        )
+
+        def disabled(args, **kwargs):
+            if args[0] == "gh":
+                return Result(json.dumps({"enabled": False}))
+            self.fail("tag must not be checked while immutable releases are disabled")
+
+        with self.assertRaisesRegex(ValueError, "not enabled"):
+            operator.check("eigger/hass-repo-standards", "v1.0.0", SHA, runner=disabled)
 
 
 if __name__ == "__main__":

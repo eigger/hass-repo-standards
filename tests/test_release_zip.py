@@ -221,6 +221,54 @@ class ReleaseZip(unittest.TestCase):
             )
             self.assertTrue(validation.reference_errors(self.root, safe))
 
+    def test_exact_release_default_and_legacy_zip_override_are_checked_together(self):
+        sha, override = "a" * 40, "b" * 40
+        workflows = self.root / ".github/workflows"
+        workflows.mkdir(parents=True)
+        (self.root / "STANDARDS.md").write_text(
+            f"- 참조 커밋 SHA: {sha}\n"
+            "- Standards release: v1.0.0\n"
+            f"- Resolved standards SHA: {sha}\n",
+            encoding="utf-8",
+        )
+        tests = workflows / "tests.yml"
+        tests.write_text(
+            yaml.safe_dump(
+                {
+                    "jobs": {
+                        "tests": {
+                            "uses": "eigger/hass-repo-standards/.github/workflows/python-tests.yml@v1.0.0",
+                            "with": {"standards-ref": sha},
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+        source = (ROOT / "templates/integration/.github/workflows/release.yml").read_text(
+            encoding="utf-8"
+        )
+        release_caller = workflows / "release.yml"
+        release_caller.write_text(source.replace("@main", "@v1.0.0"), encoding="utf-8")
+        config = {
+            "hacs": "default",
+            "standards": {"kind": "release", "tag": "v1.0.0", "resolved_sha": sha},
+        }
+
+        def safe(root, name):
+            return root / name
+
+        self.assertEqual(validation.reference_errors(self.root, safe, config), [])
+        self.assertEqual(release.errors(self.root, config, "example", safe, ROOT), [])
+        (self.root / "STANDARDS.md").write_text(
+            (self.root / "STANDARDS.md").read_text()
+            + f"- Reviewed release standards SHA: `{override}`\n",
+            encoding="utf-8",
+        )
+        release_caller.write_text(source.replace("@main", "@" + override), encoding="utf-8")
+        self.assertEqual(validation.reference_errors(self.root, safe, config), [])
+        self.assertEqual(release.errors(self.root, config, "example", safe, ROOT), [])
+
 
 if __name__ == "__main__":
     unittest.main()
