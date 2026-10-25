@@ -133,26 +133,33 @@ jaalee의 최초 버전 커밋 `51ae09e`는 기존 1.0.7 고정 테스트로 [Te
 
 처음 검사 누락을 확인한 8개 리포는 README·categories·번역·실제 HA 테스트·payload 계약의 누락을 수정했고, 파일 분리 직전 각 수정 head의 원격 Tests/Validate가 모두 성공한 것을 확인해 초안을 해제했습니다. 다른 11개도 기존 갱신 head의 원격 CI가 성공했습니다. 지원 최소·런타임 의존성·릴리스 버전은 보존합니다. 이후 사용자 요청대로 기존 standards job을 standards.yml로 옮기고 workflow/job 표시 이름을 Standards로 줄였습니다. Validate의 HACS/Hassfest job·입력·실행 조건은 유지합니다.
 
-중앙 전체232개·관련38개 테스트 및 신/구19개 배치 동등성 검사 PASS. root 독립 리뷰와 별도 rollout 리뷰가 완료됐고19개 중앙 참조184개 정합성·로컬 검사기·actionlint·diff 검사를 확인했습니다. 모든 대상 기본 브랜치 protection/rulesets에 필수 검사 이름 설정이 없어 rename 대기 충돌이 없습니다. **아래19개 최신 split head의 원격 Standards·Validate·Tests가 모두 SUCCESS임을 확인했습니다.** opinet의 별도 Minimum dependency도 SUCCESS입니다. 중앙 PR #24의 원격 Standards checks도 SUCCESS입니다. 각 PR Checks와 해당 head가 검증 원본입니다. 변경은 PR로 제안했으며 이 기록은 전체 채택 완료나 merge 승인이 아닙니다.
+중앙 전체232개·관련38개 테스트 및 신/구19개 배치 동등성 검사 PASS. root 독립 리뷰와 별도 rollout 리뷰가 완료됐고19개 중앙 참조184개 정합성·로컬 검사기·actionlint·diff 검사를 확인했습니다. 모든 대상 기본 브랜치 protection/rulesets에 필수 검사 이름 설정이 없어 rename 대기 충돌이 없습니다. **아래19개 최신 split head의 원격 Standards·Validate·Tests가 모두 SUCCESS임을 확인했습니다.** opinet의 별도 Minimum dependency도 SUCCESS입니다. 중앙 PR #24의 원격 Standards checks도 SUCCESS입니다. 각 PR Checks와 해당 head가 검증 원본입니다. 사용자 지시에 따라 중앙 PR #24·#23과 적용19개 PR을 CI 통과한 정확한 head에서 스쿼시 머지했습니다. 이 부분 작업의 완료이며, 기존 전체 채택 범위·지원 최소 미검증 기록을 소급해 완료로 바꾸지 않습니다.
 
-| 리포 | PR / 최신 split head | 로컬 새 검사기 | 원격 상태 |
+| 리포 | PR / 검증 head → squash | 로컬 새 검사기 | 원격 상태 |
 |---|---|---|---|
-| hass-atflee | [PR #31](https://github.com/eigger/hass-atflee/pull/31) / `1d89b494d88b568c145ce85c362f68aae8a26138` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-ble-esl | [PR #269](https://github.com/eigger/hass-ble-esl/pull/269) / `296b19f80406b6e9872bd62579f2e22434fbc3ee` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-ble-led-sign | [PR #18](https://github.com/eigger/hass-ble-led-sign/pull/18) / `6d064c406816ab3d46da1f412b6893e6d990704e` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-esphome-ota | [PR #37](https://github.com/eigger/hass-esphome-ota/pull/37) / `1e09cba9bfda2ee63963e3ea568ada72ef3a3911` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-garage | [PR #7](https://github.com/eigger/hass-garage/pull/7) / `976b5cdef761044291bb5d77de91bff2d0482524` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-icscale | [PR #20](https://github.com/eigger/hass-icscale/pull/20) / `a7f66ca832b01c8b793fcb56d7a01afc9918788e` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-jaalee | [PR #9](https://github.com/eigger/hass-jaalee/pull/9) / `108d776e7326806425bb7e8b6d9c9e75fcbeb830` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-kma | [PR #41](https://github.com/eigger/hass-kma/pull/41) / `ad089c452f04d2c31fdbc8d18d6244592ee5c3d5` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-kocom-smarthome | [PR #4](https://github.com/eigger/hass-kocom-smarthome/pull/4) / `f6c5fc030a667cb648d0055a83d79f1b35c88fa1` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-lywsd02 | [PR #13](https://github.com/eigger/hass-lywsd02/pull/13) / `78121e2b3dde467a7ebdf611b74a573a01d902b9` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-magic-caster-wand | [PR #123](https://github.com/eigger/hass-magic-caster-wand/pull/123) / `b4dad0f6afd918805cb74abd3f996069361bc6bb` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-melk-light | [PR #7](https://github.com/eigger/hass-melk-light/pull/7) / `d2a0a8b97bc9457b6e217e810fe9c057ee0cd03d` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-minibig | [PR #29](https://github.com/eigger/hass-minibig/pull/29) / `103a32f4d92abc8f92d10c2ce2ae11f4c6e14c43` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-niimbot | [PR #134](https://github.com/eigger/hass-niimbot/pull/134) / `fa5e3511536dd09f769d7627ab25ad18a77b655d` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-omron | [PR #258](https://github.com/eigger/hass-omron/pull/258) / `39061aed78c2f163ec5b93beaaf525d4aa5897e5` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-opinet | [PR #18](https://github.com/eigger/hass-opinet/pull/18) / `676a7a36f4879b0073c286bf91959554008589f4` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-sip | [PR #112](https://github.com/eigger/hass-sip/pull/112) / `0e1c76c383ac2d9fe31cd4e47d4a838cab605f1c` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-vson | [PR #11](https://github.com/eigger/hass-vson/pull/11) / `c47e802b8da5060e161bbbce30b29435dbdccc78` | PASS | OPEN; Standards·Validate·Tests PASS |
-| hass-ws-bridge | [PR #64](https://github.com/eigger/hass-ws-bridge/pull/64) / `50eae991f6499eda21b4636ae2bd07e5aeb0a04b` | PASS | OPEN; Standards·Validate·Tests PASS |
+| hass-atflee | [PR #31](https://github.com/eigger/hass-atflee/pull/31) / `1d89b494d88b568c145ce85c362f68aae8a26138` → `8512682c776cdfa9095187410723e9118aa9b133` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-ble-esl | [PR #269](https://github.com/eigger/hass-ble-esl/pull/269) / `296b19f80406b6e9872bd62579f2e22434fbc3ee` → `6eff6d8d9baa1ffed2f58ef0097dfffe82f24d26` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-ble-led-sign | [PR #18](https://github.com/eigger/hass-ble-led-sign/pull/18) / `6d064c406816ab3d46da1f412b6893e6d990704e` → `c58a5b6481a7782ed4b602284a301974c9ac8b6c` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-esphome-ota | [PR #37](https://github.com/eigger/hass-esphome-ota/pull/37) / `1e09cba9bfda2ee63963e3ea568ada72ef3a3911` → `6bf4650bc08fb97633e250abe4af601f3987fffd` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-garage | [PR #7](https://github.com/eigger/hass-garage/pull/7) / `976b5cdef761044291bb5d77de91bff2d0482524` → `d4431e34ee19419dff1130c35f094d19769b88b8` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-icscale | [PR #20](https://github.com/eigger/hass-icscale/pull/20) / `a7f66ca832b01c8b793fcb56d7a01afc9918788e` → `44af64e18b4eeedd2530c3c075deeb060033fd35` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-jaalee | [PR #9](https://github.com/eigger/hass-jaalee/pull/9) / `108d776e7326806425bb7e8b6d9c9e75fcbeb830` → `9dcd8ff6ec60010da738cd5f703b86d112e900c5` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-kma | [PR #41](https://github.com/eigger/hass-kma/pull/41) / `ad089c452f04d2c31fdbc8d18d6244592ee5c3d5` → `e37a40d20a2607b496a09895bd06e83e684b2509` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-kocom-smarthome | [PR #4](https://github.com/eigger/hass-kocom-smarthome/pull/4) / `f6c5fc030a667cb648d0055a83d79f1b35c88fa1` → `8bf0798c956185d4478d5849fd0004ded18204f6` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-lywsd02 | [PR #13](https://github.com/eigger/hass-lywsd02/pull/13) / `78121e2b3dde467a7ebdf611b74a573a01d902b9` → `7b1bc88feb2eac8f296eed44f018306a63f581f1` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-magic-caster-wand | [PR #123](https://github.com/eigger/hass-magic-caster-wand/pull/123) / `b4dad0f6afd918805cb74abd3f996069361bc6bb` → `6733342b710d59557409257ebef71ae1248fdee8` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-melk-light | [PR #7](https://github.com/eigger/hass-melk-light/pull/7) / `d2a0a8b97bc9457b6e217e810fe9c057ee0cd03d` → `3a74ba19cb69d0c9645aae0bef05b67167594504` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-minibig | [PR #29](https://github.com/eigger/hass-minibig/pull/29) / `103a32f4d92abc8f92d10c2ce2ae11f4c6e14c43` → `b3919728481a6572bc396eb500cad0cee84f0088` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-niimbot | [PR #134](https://github.com/eigger/hass-niimbot/pull/134) / `fa5e3511536dd09f769d7627ab25ad18a77b655d` → `19134bcc151a8bd3cfa91138be347b23660eefff` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-omron | [PR #258](https://github.com/eigger/hass-omron/pull/258) / `39061aed78c2f163ec5b93beaaf525d4aa5897e5` → `cab86f9e3a3a2af88371354c7012925722b56bed` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-opinet | [PR #18](https://github.com/eigger/hass-opinet/pull/18) / `676a7a36f4879b0073c286bf91959554008589f4` → `a9c56e4944eae281e6b8add6e4938cd7da1f9836` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-sip | [PR #112](https://github.com/eigger/hass-sip/pull/112) / `0e1c76c383ac2d9fe31cd4e47d4a838cab605f1c` → `58dc25025684c4c26b42a2c32a13ffff1cef3529` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-vson | [PR #11](https://github.com/eigger/hass-vson/pull/11) / `c47e802b8da5060e161bbbce30b29435dbdccc78` → `eb247f689bba34371f641907a2453255cc16be56` | PASS | MERGED; Standards·Validate·Tests PASS |
+| hass-ws-bridge | [PR #64](https://github.com/eigger/hass-ws-bridge/pull/64) / `50eae991f6499eda21b4636ae2bd07e5aeb0a04b` → `e69db676934f5ac6f7e8083d07f5c1cbbc9dbedf` | PASS | MERGED; Standards·Validate·Tests PASS |
+
+### 2026-10-25 스쿼시 머지·브랜치 정리 마감
+
+- 중앙 파일/이름 분리 PR #24 squash `5e696fade11dffe13c99f7d45ffcbc07a6d15a1e`; 중앙 진행 기록 PR #23 squash `d8e1bccb729e057f2d37ace13c339743dcfdebac`. 위19개 적용 squash까지 원격 merged 상태로 확인했습니다.
+- 원격 병합 브랜치 49개, 로컬 병합/리뷰 별칭 85개를 PR head와 현재 SHA 또는 병합 PR commit ancestry로 입증한 뒤 정리했습니다. 없어진 경로의 stale worktree metadata만 prune했고 실제 worktree 파일은 제거하지 않았습니다. 이 마감 기록 PR의 브랜치는 머지 뒤 별도로 정리합니다.
+- 병합 입증이 없는 나머지 원격4개(docs/hacs-default, feat/local_gesture, fix/hacs-review-feedback, codex/scaffold-scenario-verification)와 검증되지 않은 로컬 작업·사용자 미커밋 변경은 보존했습니다.
+- 릴리즈 버전 관리 전환은 이번 작업에서 실행하지 않았습니다. 현재 SHA 고정과 태그/Release 미사용 정책을 보존하며, 후속 별도 세션에서 중앙 운영 정책·버전 규칙·릴리즈 노트·소비자 버전/SHA 기록을 검토합니다.
