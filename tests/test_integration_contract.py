@@ -339,7 +339,7 @@ class IntegrationContract(unittest.TestCase):
         self.assertTrue(contract.check(self.root))
 
     def test_common_checks_cannot_be_skipped_or_suppressed(self):
-        path = self.root / ".github/workflows/validate.yml"
+        path = self.root / ".github/workflows/standards.yml"
         original = path.read_text()
         for field in ("if: false", "continue-on-error: true", "needs: skipped"):
             with self.subTest(field=field):
@@ -351,6 +351,111 @@ class IntegrationContract(unittest.TestCase):
             )
         )
         self.assertTrue(any("CI-03" in e for e in contract.check(self.root)))
+
+    def test_standards_layouts_enforce_the_same_existing_job_criteria(self):
+        """A file/name move cannot bypass the existing action and job safeguards."""
+        import copy
+
+        import yaml
+
+        workflows = self.root / ".github/workflows"
+        validate_path = workflows / "validate.yml"
+        standards_path = workflows / "standards.yml"
+        validate = yaml.load(validate_path.read_text(), Loader=contract.Loader)
+        standards = yaml.load(standards_path.read_text(), Loader=contract.Loader)
+        original_job = standards["jobs"]["standards"]
+        mutations = (
+            ("missing job", "CI-01", lambda jobs: jobs.pop("standards")),
+            (
+                "unpinned action",
+                "CI-01",
+                lambda jobs: jobs["standards"]["steps"][-1].update(
+                    uses="eigger/hass-repo-standards/actions/check-standards@main"
+                ),
+            ),
+            ("job conditional", "CI-04", lambda jobs: jobs["standards"].update({"if": False})),
+            ("job dependency", "CI-04", lambda jobs: jobs["standards"].update(needs="skipped")),
+            (
+                "job failure suppression",
+                "CI-04",
+                lambda jobs: jobs["standards"].update({"continue-on-error": True}),
+            ),
+            (
+                "action conditional",
+                "CI-04",
+                lambda jobs: jobs["standards"]["steps"][-1].update({"if": False}),
+            ),
+            (
+                "action failure suppression",
+                "CI-04",
+                lambda jobs: jobs["standards"]["steps"][-1].update({"continue-on-error": True}),
+            ),
+            (
+                "checkout conditional",
+                "CI-03",
+                lambda jobs: jobs["standards"]["steps"][0].update({"if": False}),
+            ),
+            (
+                "checkout failure suppression",
+                "CI-03",
+                lambda jobs: jobs["standards"]["steps"][0].update({"continue-on-error": True}),
+            ),
+            (
+                "persisted credentials",
+                "CI-03",
+                lambda jobs: jobs["standards"]["steps"][0]["with"].update(
+                    {"persist-credentials": True}
+                ),
+            ),
+            ("missing timeout", "CI-03", lambda jobs: jobs["standards"].pop("timeout-minutes")),
+        )
+        for layout in ("split", "legacy inline"):
+            with self.subTest(layout=layout):
+                caller = copy.deepcopy(standards if layout == "split" else validate)
+                caller["jobs"]["standards"] = copy.deepcopy(original_job)
+                if layout == "legacy inline":
+                    caller["jobs"]["standards"]["name"] = "Central template compliance"
+                    standards_path.unlink(missing_ok=True)
+                    path = validate_path
+                else:
+                    validate_path.write_text(yaml.safe_dump(validate, sort_keys=False))
+                    path = standards_path
+                original = copy.deepcopy(caller)
+                path.write_text(yaml.safe_dump(original, sort_keys=False))
+                self.assertEqual(contract.check(self.root), [])
+                for label, expected_rule, mutate in mutations:
+                    with self.subTest(layout=layout, change=label):
+                        changed = copy.deepcopy(original)
+                        mutate(changed["jobs"])
+                        path.write_text(yaml.safe_dump(changed, sort_keys=False))
+                        errors = contract.workflow_errors(self.root, self.config, "example")
+                        self.assertTrue(any(rule == expected_rule for rule, _, _ in errors), errors)
+
+    def test_inline_safeguards_still_apply_when_standards_is_split(self):
+        import yaml
+
+        workflows = self.root / ".github/workflows"
+        standards = yaml.load((workflows / "standards.yml").read_text(), Loader=contract.Loader)
+        validate_path = workflows / "validate.yml"
+        validate = yaml.load(validate_path.read_text(), Loader=contract.Loader)
+        validate["jobs"]["standards"] = standards["jobs"]["standards"]
+        validate["jobs"]["standards"]["continue-on-error"] = True
+        validate_path.write_text(yaml.safe_dump(validate, sort_keys=False))
+        errors = contract.workflow_errors(self.root, self.config, "example")
+        self.assertTrue(any(rule == "CI-04" for rule, _, _ in errors))
+
+    def test_separate_standards_keeps_validate_event_contract(self):
+        path = self.root / ".github/workflows/standards.yml"
+        original = path.read_text()
+        for changed in (
+            original.replace("name: Standards", "name: Other", 1),
+            original.replace("pull_request: null", "pull_request: {branches: [main]}"),
+            original.replace("  schedule:\n  - cron: 23 3 * * 1\n", ""),
+        ):
+            with self.subTest(changed=changed):
+                path.write_text(changed)
+                errors = contract.workflow_errors(self.root, self.config, "example")
+                self.assertTrue(any(rule == "CI-02" for rule, _, _ in errors))
 
     def test_template_license_exemption_is_narrow(self):
         from check_repository import is_destination_license_placeholder

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-25 — Standards workflow 표시 분리
+
+- Validate 안의 중앙 검사 job을 `standards.yml`로 이동하고 workflow/job 표시 이름을 `Standards`로 줄입니다. HACS/Hassfest의 Validate caller와 실제 검사 단계·규칙·기준은 유지합니다.
+- 검사기는 새 위치와 기존 inline 배치를 같은 full SHA·무조건 실행·checkout·timeout 기준으로 검사합니다. 기존 inline caller를 강제로 이관하지 않습니다.
+
 - ZIP 배포만 추가할 때 기존 CI 참조를 보존할 수 있도록 STANDARDS의 별도 `Reviewed release standards SHA`를 지원합니다. 예외 범위는 release.yml의 release-zip action으로 제한하며, 불완전·중복 SHA는 거부합니다.
 
 ## 2026-10-23 — Custom ZIP 통합 Downloads

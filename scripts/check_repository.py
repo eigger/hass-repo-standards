@@ -96,13 +96,13 @@ def check_template_integrity():
                 )
         except (ValueError, KeyError, FileNotFoundError) as err:
             errors.append(f"templates/integration: {err}")
-    caller = yaml.load((source / ".github/workflows/validate.yml").read_text(), Loader=Loader)
+    caller = yaml.load((source / ".github/workflows/standards.yml").read_text(), Loader=Loader)
     steps = caller.get("jobs", {}).get("standards", {}).get("steps", [])
     if not any(
         step.get("uses") == "eigger/hass-repo-standards/actions/check-standards@main"
         for step in steps
     ):
-        errors.append("validate.yml: central standards action adoption placeholder required")
+        errors.append("standards.yml: central standards action adoption placeholder required")
     action = yaml.load((ROOT / "actions/check-standards/action.yml").read_text(), Loader=Loader)
     if action["runs"]["using"] != "composite" or not any(
         "${{ github.action_path }}/../../scripts/check_integration.py" in step.get("run", "")

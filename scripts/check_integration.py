@@ -89,6 +89,9 @@ def workflow_errors(root, config, domain):
     errors = []
     workflow_dir = safe_path(root, ".github/workflows")
     expected = {"validate.yml": "Validate", "tests.yml": "Tests"}
+    separate_standards = (workflow_dir / "standards.yml").exists()
+    if separate_standards:
+        expected["standards.yml"] = "Standards"
     if (workflow_dir / "update_dependencies.yml").exists():
         expected["update_dependencies.yml"] = "Update dependencies"
     for path in sorted(workflow_dir.glob("*.y*ml")):
@@ -120,13 +123,17 @@ def workflow_errors(root, config, domain):
             "validate.yml": "validate-integration.yml",
             "tests.yml": "python-tests.yml",
             "update_dependencies.yml": "dependency-update.yml",
+            "standards.yml": None,
         }[path.name]
         jobs = data.get("jobs", {})
-        calls = [job for job in jobs.values() if required in job.get("uses", "")]
+        calls = [job for job in jobs.values() if required and required in job.get("uses", "")]
         marker = f"eigger/hass-repo-standards/.github/workflows/{required}@"
-        if not calls or any(
-            not re.fullmatch(re.escape(marker) + r"[0-9a-f]{40}", job.get("uses", ""))
-            for job in calls
+        if required and (
+            not calls
+            or any(
+                not re.fullmatch(re.escape(marker) + r"[0-9a-f]{40}", job.get("uses", ""))
+                for job in calls
+            )
         ):
             errors.append(
                 ("CI-01", rel, "central reusable workflow pinned to reviewed full SHA required")
@@ -142,7 +149,7 @@ def workflow_errors(root, config, domain):
                 errors.append(
                     ("CI-04", rel, "common calls must not be skipped or suppress failures")
                 )
-        if path.name == "validate.yml":
+        if path.name in {"validate.yml", "standards.yml"}:
             for job in jobs.values():
                 standard_steps = [
                     step
@@ -186,7 +193,7 @@ def workflow_errors(root, config, domain):
                 step.get("uses", "") for job in jobs.values() for step in job.get("steps", [])
             ]
             action = "eigger/hass-repo-standards/actions/check-standards@"
-            if not any(
+            if (path.name == "standards.yml" or not separate_standards) and not any(
                 re.fullmatch(re.escape(action) + r"[0-9a-f]{40}", value) for value in actions
             ):
                 errors.append(

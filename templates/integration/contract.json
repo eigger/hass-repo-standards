@@ -510,6 +510,24 @@
       "status": "available"
     },
     {
+      "id": "workflow-standards.yml",
+      "source": "templates/integration/.github/workflows/standards.yml",
+      "destination": ".github/workflows/standards.yml",
+      "ownership": "merge",
+      "condition": "always",
+      "required_inputs": [
+        "default_branch",
+        "environments"
+      ],
+      "markers": [],
+      "extension": "Preserve schedules, dedicated jobs, required checks and compatible minimum/current inputs; unresolved changes conflict.",
+      "rules": [
+        "CI-01",
+        "CI-02"
+      ],
+      "status": "available"
+    },
+    {
       "id": "workflow-release.yml",
       "source": "templates/integration/.github/workflows/release.yml",
       "destination": ".github/workflows/release.yml",
