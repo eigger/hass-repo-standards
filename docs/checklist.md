@@ -1,55 +1,30 @@
 # 통합별 적용 체크리스트
 
-[적용 체크리스트 템플릿](../templates/integration/ADOPTION_CHECKLIST.md)을 통합 리포의 `ADOPTION_CHECKLIST.md`로 복사해 채택 PR과 후속 검토에서 사용합니다. 체크리스트는 기존 규칙의 확인 기록이며 새 의무나 공식 HA 품질 등급을 정의하지 않습니다. 필수·권장 수준과 적용 조건은 참조한 규칙 원문을 따릅니다.
-
-hass-kibble 첫 파일럿과 공통 CI·실행용 템플릿의 초기 보완 및 hass-catprinter 두 번째 파일럿을 완료했습니다. 다른 통합은 중앙 현황표에 따라 별도로 이관합니다. 이 파일이나 템플릿의 존재, workflow 입력값만으로 통합의 채택 완료를 뜻하지 않습니다.
+중앙에는 작성 기준과 [템플릿](../templates/integration/ADOPTION_CHECKLIST.md)만 둡니다. 실제 점검 결과는 각 통합의 `ADOPTION_CHECKLIST.md`, 기준·예외는 `STANDARDS.md`, 중앙에는 [적용 현황](adoption-status.md)의 요약과 링크만 관리합니다. 체크리스트는 기존 규칙의 확인 기록이며 새 의무나 공식 HA 품질 등급이 아닙니다.
 
 ## 작성 순서
 
-1. 최신 [중앙 현황표](adoption-status.md)를 읽고 작업 시작과 담당자를 등록합니다. 실제 원격 리포·기본 브랜치·manifest domain을 확인하고 검토 대상 커밋을 적습니다. hacs.json·manifest·README에서 기존 지원 최소를 읽어 근거를 기록하고 current 테스트 HA 및 각 환경의 호환 Python·플러그인과 분리합니다.
-2. 기존 채택은 검토한 full commit SHA를 기록합니다. immutable release 채택은 exact `vX.Y.Z`와 remote에서 확인한 resolved full SHA를 `STANDARDS.md`와 `.hass-standards.json`에 같은 descriptor로 기록합니다. 후속 검토에서는 이전 기록과 새 release/commit을 구분합니다.
-3. 첫 채택은 템플릿의 각 행을 확인하고 상태·근거를 채웁니다. 후속 부분 변경은 영향 있는 행과 기존 증거 링크를 갱신하고 검토 범위를 명시합니다. 조건부 기능과 권장 항목도 검토 결과를 남기되, 구현하지 않은 기능을 체크리스트 때문에 새로 만들지는 않습니다.
-4. 미충족 항목은 후속 작업으로 남기고, 예외는 `STANDARDS.md`에 규칙 ID·이유·영향·대안·승인자·일자·승인 근거·허용 범위·담당자·재검토 조건을 기록해 연결합니다.
-5. GOV-05에 따라 자체/독립 리뷰 방식을 정하고, 지적 수정 후 영향 있는 검사를 재실행합니다. 실제 원격 CI 결과와 환경별 설치 버전·테스트 결과는 한 번 기록해 연결합니다. 중앙 표는 시작·종료·차단·범위 변경 등 의미 있는 상태 변화에 갱신합니다.
+1. 실제 원격·기본 브랜치·domain·대상 커밋과 기존 지원 최소를 확인합니다. 최소 HA와 current HA, 각 Python·테스트 플러그인·라이브러리 조합을 구분합니다.
+2. `STANDARDS.md`에 검토한 full SHA를 기록합니다. immutable release를 채택하면 exact `vX.Y.Z`와 원격에서 확인한 resolved full SHA를 `.hass-standards.json`의 descriptor와 일치시킵니다.
+3. 첫 채택은 전체 적용 항목을 점검합니다. 후속 변경은 영향 있는 항목만 갱신하고 기존 증거를 연결합니다. 점검표를 채우기 위해 없는 기능을 만들지 않습니다.
+4. [GOV-01](adoption.md#중앙-템플릿과-예외)에 따라 예외의 사유·범위·승인 근거·담당자·재검토 조건을 기록합니다. 리뷰 방식은 [GOV-05](adoption.md#채택), 중앙 갱신 시점은 GOV-04를 따릅니다.
 
 ## 상태와 판정
 
-| 상태 | 의미 | 기록할 내용 |
-|---|---|---|
-| `TODO` | 미확인, 미구현 또는 검증 실패 | 현재 상황과 남은 작업. 미확인과 실패를 설명에서 구분 |
-| `PASS` | 해당 규칙을 확인했고 필요한 검증이 통과 | 검토 커밋의 파일·라인, 실행 명령·결과 또는 CI run/job 링크 |
-| `EXCEPTION` | 적용 대상이지만 규칙을 충족하지 못해 예외로 관리 | `STANDARDS.md`의 예외 위치와 규칙 ID·이유·영향·대안·승인자·일자·승인 근거·허용 범위·담당자·재검토 조건 |
-| `N/A` | 규칙의 적용 조건에 해당하지 않음 | 기능·의존성·배포 방식 등 해당 없음의 구체적 근거 |
+| 상태 | 의미와 필요한 근거 |
+|---|---|
+| `TODO` | 미확인·미구현·검증 실패. 현재 상황과 남은 작업을 구분해 기록 |
+| `PASS` | 대상 커밋에 필요한 검증을 수행하고 통과. 파일·명령·결과 또는 CI 링크 연결 |
+| `EXCEPTION` | 적용 대상의 미충족을 승인된 범위로 관리. STANDARDS의 해당 예외 연결 |
+| `N/A` | 기능·의존성 등 적용 조건에 해당하지 않는 구체적인 이유 기록 |
 
-기본 상태는 모두 `TODO`입니다. 실행하지 않은 검사를 `PASS`로 표시하지 않으며, 미검증·실패를 `N/A`로 바꾸지 않습니다. 여러 규칙을 묶은 행은 그중 적용되는 모든 규칙을 확인한 뒤 `PASS`로 바꿉니다. 결과가 다르면 행을 나눕니다. 권장 항목을 채택하지 않을 때는 그 판단을 적고, 필수 미충족과 구분합니다.
+기본값은 `TODO`입니다. 미실행·실패를 PASS나 N/A로 바꾸지 않습니다. 묶인 규칙의 결과가 다르면 행을 나눕니다. 필수 항목이 모두 PASS 또는 근거 있는 N/A이고 실제 기본 브랜치 반영·해당 커밋 검증이 확인돼야 완료입니다. 필수 EXCEPTION이 남으면 예외 포함, 필수 TODO가 남으면 진행 중입니다. 권장 미채택은 필수 미충족과 구분합니다.
 
-적용 대상 필수 항목이 모두 `PASS`이거나 사유가 있는 `N/A`일 때 예외 없이 채택 완료로 기록합니다. 필수 `EXCEPTION`이 남으면 **예외가 있는 채택**, 필수 `TODO`가 남으면 **이관 진행 중**으로 기록합니다. 권장 항목의 미채택만으로 필수 채택을 미완료로 판정하지 않습니다. 이 구분은 검사 기록을 읽기 위한 표현이며 새로운 품질 인증이 아닙니다.
+## 검증 근거
 
-## 근거를 남기는 기준
+- 대상 커밋·명령·실행 환경·실제 설치 버전·결과·CI 링크를 한 번 기록하고 연결합니다. 다른 커밋의 PASS를 재사용하지 않습니다.
+- 최소 HA와 최소 라이브러리는 별도 축입니다. 실제 HA fixture·entry·플랫폼·상태·action 테스트와 `pip check`를 확인합니다. 설치 summary나 coverage만으로 동작 검증을 대체하지 않습니다.
+- 지원 최소 변경에는 비호환 근거와 별도 명시적 승인이 필요합니다. skip·제외·HACS ignore·기기/UI 미검증도 남깁니다.
+- `scripts/check_integration.py`와 중앙 템플릿 diff를 확인합니다. 자동 검사는 번역 의미·기존 본문 보존·실제 제품 용도·승인 근거·HA 동작 검토를 대체하지 않습니다.
 
-- 파일 근거는 검토 커밋에 대응하는 경로·라인 또는 permalink를 사용합니다. `manifest 존재`보다 실제 필드와 값을 적습니다.
-- 실행 근거는 명령·실행 환경·결과와 CI run/job을 연결합니다. 과거 다른 커밋의 성공을 현재 변경의 성공으로 옮겨 적지 않습니다.
-- 버전 조합에는 Python, 실제 HA, `pytest-homeassistant-custom-component`, 대상 라이브러리의 **실제 설치 버전**을 적습니다. 최소 HA와 최소 라이브러리는 서로 다른 검증 축입니다.
-- current는 해당 requirements/constraints 안에서 resolver가 선택한 버전입니다. minimum은 선언한 정확한 하한이 설치됐는지 확인합니다. 두 환경 모두 실제 HA 통합 테스트와 `pip check` 결과를 남깁니다.
-- `ha` profile, 패키지 설치 summary, coverage 수치만으로 실제 HA 통합 로딩을 확인했다고 표시하지 않습니다. entry·플랫폼 로딩과 상태·action 검증을 수행한 테스트를 연결합니다.
-- 독립 리뷰는 변경 전후 지원 최소와 current 테스트 버전을 비교합니다. “최신화”만으로 최소를 상향하거나 최소 테스트를 지우지 않았는지, 상향 시 실제 구버전 비호환 근거와 별도 명시적 사용자 승인이 있는지 확인합니다. 봇 PR의 최소 환경 혼합 갱신·다운그레이드·expected-ha-version/Python 불일치도 검사합니다.
-- 구현 담당, 자체/독립 리뷰 방식과 선택 근거, 검토 대상 커밋·결과·수정 후 재검증 근거를 남깁니다. 독립 리뷰가 필요한 범위는 GOV-05를 따르며 근거 없는 통과 선언만으로 완료 처리하지 않습니다.
-- skip·제외·HACS ignore와 미검증 범위를 기록합니다. 기본 CI 통과와 실물 기기 확인은 구분하며, 실물 확인은 실제 수행한 경우에만 모델·펌웨어·연결 경로를 기록합니다.
-
-## 연결 문서
-
-규칙의 상세 조건은 [적용 관리](adoption.md), [HA 개발](home-assistant.md), [테스트](testing.md), [의존성](dependencies.md), [HACS](hacs.md), [CI](ci.md), [문서·배지](documentation.md), [Bluetooth 문서 작성 규칙](bluetooth-documentation.md), [릴리스·유지보수](releases.md)를 따릅니다. 채택 기록과 예외의 원본은 [`STANDARDS.md` 템플릿](../templates/integration/STANDARDS.md)입니다.
-
-## 템플릿 준수 확인
-
-채택·재검토마다 `scripts/check_integration.py` 결과와 중앙 템플릿 diff를 기록합니다. README 공통 영역 밖의 순서·제목·본문 보존, 양언어 내용·번역 의미 일치, 기존 고지·고유 배지 보존을 리뷰에서 확인합니다. 독립 리뷰 조건은 GOV-05를 따릅니다. 테스트의 세 빈 init·정확한 루트 conftest·domain fixture 역할·실제 HA 로딩과 공용 CI 이름·파일명·실행 조건도 확인합니다. 승인 예외는 실제 사용자 승인 근거·허용 경로·범위를 대조합니다. 자동 검사의 성공은 번역 의미·실제 HA 동작·원격 CI 실행의 증거를 대체하지 않습니다.
-
-DOC-07에서 blesession 사용 통합은 중앙 양언어 기기별 문제 해결 템플릿과 공용 Validate 자동 검사를 확인합니다. 실제 기능·진단·기기 조건·번역 의미·기존 Issues 목적지는 GOV-05에 따른 리뷰로 확인하며 빈 템플릿이나 미검증을 PASS로 표시하지 않습니다. 공통 프록시 안내 원본은 blesession이며 중앙 이전 안내를 새 원본으로 복제하지 않습니다. blesession 미사용 프록시 통합의 기존 사용자 안내 범위는 수동 검토합니다.
-
-DOC-08은 imagespec 사용 여부를 실제 requirements/import로 확인합니다. 적용 대상은 양언어 로컬 payload 문서의 여섯 절·상호/공통 링크·전체 액션 YAML·등록 메타데이터·정확한 중앙 테스트 scaffold를 검사합니다. 각 current/정확한 하한 환경의 실제 HA 스키마 처리·production 준비 함수·설치된 imagespec.validate/render·출력 크기/색상·실제 버전·pip check·명령/CI 링크를 증거로 남깁니다. exact pin으로 결과를 재사용했다면 같은 실제 설치값임을 적습니다. 기존 기기 예제·README 본문 보존과 번역 의미, context·fixture가 실제 구현인지 리뷰합니다. production adapter 동작 변경의 독립 리뷰는 GOV-05를 따릅니다. 기능이 없으면 해당 없음의 근거를 기록하고, 미실행/실패·API 비호환은 PASS로 바꾸지 않습니다. 중앙 plugin 자체의 성공을 모든 대상 통합의 검증으로 재사용하지 않습니다.
-
-DOC-08 예제가 YAML 문자열 입력을 사용하는 경우 `payload_format`과 실제 HA 스키마 정규화 후 형태를 기록합니다. matrix별 marker 비활성은 N/A·설치 버전 coverage 없음으로 분리하고 일반 HA 회귀 결과와 활성 환경의 current/정확한 하한 예제 결과를 각각 남깁니다. 실제 patch가 필요한 marker를 minor-only Python 선언으로 입증했다고 적지 않습니다.
-
-DOC-03·DOC-05·DOC-06은 실제 HACS 목록 근거에 따라 Default와 ZIP 배포 Custom의 Downloads 또는 ZIP 미배포 Custom의 manifest domain Usage를 확인하고, 양언어 설치 절의 My HACS 링크가 실제 owner/저장소 이름 및 Custom의 category=integration을 가리키는지 확인합니다. 기존 설치 본문·예제·제목 보존, 링크가 설치를 자동 완료한다는 오해 방지, 데이터 누락과 0 설치의 구분을 리뷰 증거로 남깁니다.
-
-HA-02의 categories는 실제 제품·서비스 용도의 주/보조 분류와 선택 근거·검토자/일자·공식 taxonomy를 기록합니다. 1–3개/중복/부모-자기 하위 분류/주 분류 순서와 categories_review의 값·유형·근거를 대조하며 entity/system/virtual은 manifest 키 생략과 제외 근거를 남깁니다. 누락의 HACS 경고와 중앙 필수 미충족, 오프라인 형식 검사와 실제 제품 의미·HACS/HA 실행 검증을 구분합니다.
+분야별 세부 조건은 원문에서 관리합니다: [테스트·호환성](testing.md), [CI](ci.md), [의존성](dependencies.md), [README·배지 DOC-03/05/06](documentation.md), [Bluetooth DOC-07](bluetooth-documentation.md), [payload DOC-08](payload-documentation.md), [제품 categories HA-02](home-assistant.md#통합-제품-카테고리-ha-02). DOC-08의 marker·정확한 하한·production 실행·전체 액션 YAML 검증, HA-02의 제품 근거·제외 유형 키 생략 등 필수 조건은 해당 원문과 템플릿을 따릅니다.
