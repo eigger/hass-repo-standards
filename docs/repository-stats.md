@@ -6,14 +6,6 @@
 
 Statistics for eigger's Home Assistant integrations, related projects and shared libraries `blesession` and `imagespec`. Each numeric cell uses a Shields.io badge that reads GitHub data. **Versions and counts are referenced dynamically, without storing their values in this document.** No token, scheduled workflow or statistics update commit is required. Shields.io and GitHub image caches can delay changes; reload an open page to see refreshed images.
 
-## Portfolio totals (snapshot)
-
-| Observed | Repositories | Release-asset downloads | Stars | Forks |
-|---|---:|---:|---:|---:|
-| 2026-10-25 (Asia/Seoul) | 25 | 2,346 | 452 | 79 |
-
-This is a GitHub API snapshot across the repositories listed below, not a live aggregate badge. Per-repository badges remain dynamic.
-
 ## Metrics
 
 | Metric | Source and meaning |
