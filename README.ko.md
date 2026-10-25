@@ -28,8 +28,6 @@ Home Assistant 커스텀 통합의 공통 개발·문서·HACS·CI·의존성·�
 | [Bluetooth 문서 작성 규칙](docs/bluetooth-documentation.md) | 작성자 요구사항과 사용자 안내 연결 |
 | [Bluetooth proxy 사용자 안내](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md) | blesession에서 관리하는 공통 사용자 안내 ([English](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md))·[공통 문제 해결](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.ko.md) |
 | [릴리스·유지보수](docs/releases.md) | 버전, 변경 기록, 이관, 지원 상태 |
-| [전체 리포 CI 조사](docs/ci-audit.md) | 로컬 hass* 전체 workflow 비교와 이관 계획 |
-| [초기 구현 검증](docs/validation.md) | 테스트 환경과 확인 범위 |
 | [공식 자료](docs/sources.md) | 확인한 공식 문서와 확인일 |
 
 적용 가능한 통합은 [HA-02](docs/home-assistant.md#통합-제품-카테고리-ha-02)에 따라 실제 제품 분류 1–3개와 선택 근거를 기록하며 entity/system/virtual은 키를 생략하고 이유를 남깁니다. 이는 프로젝트 필수 정책이고 upstream은 현재 누락을 선택 항목/HACS 경고로 취급합니다. 엔티티 플랫폼에서 분류를 추정하지 않습니다.

@@ -28,8 +28,6 @@ Detailed rules are maintained in Korean; code identifiers, logs, and CI job name
 | [Bluetooth documentation rules](docs/bluetooth-documentation.md) | Authoring requirements and user-guide links |
 | [Bluetooth proxy user guide](https://github.com/eigger/blesession/blob/main/docs/bluetooth.md) | Common user guide maintained in blesession ([한국어](https://github.com/eigger/blesession/blob/main/docs/bluetooth.ko.md)); [common troubleshooting](https://github.com/eigger/blesession/blob/main/docs/troubleshooting.md) |
 | [Releases and maintenance](docs/releases.md) | Integration maintenance and immutable central standards releases |
-| [Repository CI inventory](docs/ci-audit.md) | Local hass* workflow comparison and migration plan |
-| [Initial implementation validation](docs/validation.md) | Test environment and verified scope |
 | [Official references](docs/sources.md) | Sources and verification dates |
 
 Applicable integrations record one to three product categories and the evidence for their selection under [HA-02](docs/home-assistant.md#통합-제품-카테고리-ha-02); entity, system and virtual integrations omit the key with a recorded reason. This is project policy; upstream currently treats a missing category as optional/a HACS warning. Categories are never inferred from entity platforms.
