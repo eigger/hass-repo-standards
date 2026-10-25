@@ -8,6 +8,20 @@
       "type": "string",
       "pattern": "^[0-9a-f]{40}$"
     },
+    "standards_reference": {
+      "type": "object",
+      "properties": {
+        "kind": {"const": "release"},
+        "tag": {"type": "string", "pattern": "^v(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$"},
+        "resolved_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      },
+      "required": ["kind", "tag", "resolved_sha"],
+      "additionalProperties": false
+    },
+    "release_attestation": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
     "target_identity": {
       "type": "object",
       "properties": {
@@ -187,7 +201,6 @@
   },
   "required": [
     "schema_version",
-    "standards_ref",
     "target_identity",
     "input_digest",
     "guards",
@@ -197,6 +210,10 @@
     "mode",
     "unchanged",
     "validated_input"
+  ],
+  "anyOf": [
+    {"required": ["standards_ref"]},
+    {"required": ["standards_reference", "release_attestation"]}
   ],
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema"

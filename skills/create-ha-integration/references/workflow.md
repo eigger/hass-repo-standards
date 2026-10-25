@@ -1,6 +1,6 @@
 # New integration workflow
 
-In commands, `<central>` is a confirmed central checkout, `<sha>` its reviewed full 40-character SHA, `<target>` the authorized missing/empty output path, and `<work>` an existing directory outside the target. Substitute actual confirmed paths; these are interface examples, not execution evidence.
+In commands, `<central>` is a confirmed central checkout, `<sha>` its reviewed full 40-character SHA, `<target>` the authorized missing/empty output path, and `<work>` an existing directory outside the target. An immutable release additionally needs exact `<release>` and successful `<work>/release-verification.json`; its tools still run from `<sha>`. Substitute actual confirmed paths; these are interface examples, not execution evidence.
 
 ## Establish the source and input
 
@@ -13,6 +13,9 @@ In commands, `<central>` is a confirmed central checkout, `<sha>` its reviewed f
 ```text
 python3 "<central>/scripts/manage_integration.py" inspect "<target>" --output "<work>/inventory.json"
 python3 "<central>/scripts/manage_integration.py" plan "<target>" --mode create --input "<work>/input.json" --standards-ref <sha> --output "<work>/plan.json"
+# Published immutable release only:
+python3 "<central>/scripts/manage_integration.py" verify-release --repository eigger/hass-repo-standards --tag <release> --resolved-sha <sha> --output "<work>/release-verification.json"
+python3 "<central>/scripts/manage_integration.py" plan "<target>" --mode create --input "<work>/input.json" --standards-ref <sha> --release-tag <release> --release-verification "<work>/release-verification.json" --output "<work>/release-plan.json"
 ```
 
 Inventory is observations, not a replacement for sourced input. Read command exit status, pending/conflicts and each operation/diff. Nonempty targets must use the existing-adoption workflow; do not erase them to fit create. For review-only requests, report the plan and remaining facts and stop here.

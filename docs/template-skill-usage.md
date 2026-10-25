@@ -4,7 +4,7 @@
 
 ## 실행 준비와 조사
 
-[개발 안내](development.md)의 기존 의존성을 설치하고 대상 문법 이상 Python으로 실행합니다. `plan`은 실행 중인 중앙 checkout의 HEAD와 명시한 full SHA가 같고 `scripts/`, `schemas/`, `templates/`, `docs/`, `skills/`, `AGENTS.md`, 양언어 README가 깨끗해야 합니다. 미커밋 구현 checkout을 임의 SHA로 실행할 수 없습니다.
+[개발 안내](development.md)의 기존 의존성을 설치하고 대상 문법 이상 Python으로 실행합니다. legacy SHA plan은 실행 중인 중앙 checkout의 HEAD와 명시한 full SHA가 같고 `scripts/`, `schemas/`, `templates/`, `docs/`, `skills/`, `AGENTS.md`, 양언어 README, `actions/`, `.github/`가 깨끗해야 합니다. exact release plan도 resolved SHA의 checkout에서 실행하며, 별도 remote attestation 없이는 만들 수 없습니다. 미커밋 구현 checkout을 임의 SHA로 실행할 수 없습니다.
 
 아래 `<target>`은 실제 조사할 대상 경로, `<work>`는 대상 밖에 미리 만든 작업 디렉터리입니다. 명령의 `<...>`는 실제 확인한 값으로 바꿉니다. 아래 표기는 실행 증거가 아닙니다.
 
@@ -12,6 +12,9 @@
 python3 scripts/manage_integration.py inspect <target> --output <work>/inventory.json
 python3 scripts/manage_integration.py plan <target> --mode adopt --input <work>/input.json --standards-ref <reviewed-full-sha> --output <work>/plan.json
 python3 scripts/manage_integration.py plan <empty-or-absent-target> --mode create --input <work>/input.json --standards-ref <reviewed-full-sha> --output <work>/create-plan.json
+# Published immutable release only; this is not a bootstrap/candidate command.
+python3 scripts/manage_integration.py verify-release --repository eigger/hass-repo-standards --tag vX.Y.Z --resolved-sha <full-sha> --output <work>/release-verification.json
+python3 scripts/manage_integration.py plan <target> --mode adopt --input <work>/input.json --standards-ref <full-sha> --release-tag vX.Y.Z --release-verification <work>/release-verification.json --output <work>/release-plan.json
 ```
 
 `inspect`는 Git 원격·기본/현재 브랜치·작업 트리, manifest·hacs·README 지원 선언·requirements·workflow·관리 주석·조건부 기능을 조사합니다. `observations`의 `field/value/source`, `conflicts`, `pending`을 확인합니다. 기본 브랜치를 main/master로 추정하지 않으며 조회 불가 값을 수동 확인할 과제로 남깁니다. 원격 자격 정보를 결과에 그대로 기록하지 않고 Git이 무시하는 환경 디렉터리는 조사에서 제외합니다.
@@ -75,7 +78,7 @@ fixture의 최소/current가 같은 것은 실제 대상의 최소를 올릴 근
 
 ## 계획 검토와 제한
 
-`plan`은 `standards_ref`, `target_identity`, `validated_input`, `input_digest`, `guards`, `operations`, `unchanged`, `pending`, `conflicts`를 기록합니다. T3는 원래 대상 루트 존재 여부인 `target_identity.root_exists`를 필수로 기록합니다. 검증한 입력의 독립 복사본과 canonical JSON SHA-256을 포함하므로 입력 파일의 이후 변경과 구분할 수 있습니다. 스키마의 로컬 `$ref`는 input/inventory/plan 세 파일만 허용하고 외부 URI나 다른 경로를 읽지 않습니다. 이전 T2 계획은 새 필수 필드와 SHA가 맞지 않으므로 T3의 깨끗한 검토 checkout에서 다시 생성해야 합니다.
+`plan`은 legacy의 `standards_ref` 또는 release의 단일 `standards_reference`(exact tag/resolved SHA)와 remote attestation digest, `target_identity`, `validated_input`, `input_digest`, `guards`, `operations`, `unchanged`, `pending`, `conflicts`를 기록합니다. T3는 원래 대상 루트 존재 여부인 `target_identity.root_exists`를 필수로 기록합니다. release attestation은 network 확인 성공을 기록할 뿐 apply/recover에서 network를 다시 조회하지 않으며 tag 이동 fallback도 하지 않습니다. 검증한 입력의 독립 복사본과 canonical JSON SHA-256을 포함하므로 입력 파일의 이후 변경과 구분할 수 있습니다. 스키마의 로컬 `$ref`는 input/inventory/plan 세 파일만 허용하고 외부 URI나 다른 경로를 읽지 않습니다. 이전 T2 계획은 새 필수 필드와 SHA가 맞지 않으므로 깨끗한 검토 checkout에서 다시 생성해야 합니다.
 
 각 operation의 경로·소유 방식·원본·규칙·전후 해시·content·unified diff를 확인합니다. 기존 README는 관리 영역만 계획하고 본문을 보존하며, 기존 테스트·고유 CI·최소 환경과 충돌하는 내용은 자동 교체하지 않습니다. 원본이 없는 계약 자산과 실제 구현·테스트가 필요한 부분은 `pending`으로 남깁니다. 대상 상태가 조사·렌더링 중 바뀌면 계획을 차단합니다. 실행 시각은 계획에 넣지 않습니다.
 

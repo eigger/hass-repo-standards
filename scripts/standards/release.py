@@ -38,12 +38,32 @@ def errors(root, config, domain, safe_path, central):
             if isinstance(actual, dict)
             else []
         )
+        standards = config.get("standards", {})
+        expected_ref = standards.get("tag") if standards.get("kind") == "release" else None
+        standards_path = safe_path(root, "STANDARDS.md")
+        standards_document = (
+            standards_path.read_text(encoding="utf-8") if standards_path.is_file() else ""
+        )
+        scoped = re.findall(
+            r"^\s*(?:-\s*)?Reviewed release standards SHA\s*:\s*`?([0-9a-f]{40})`?\s*$",
+            standards_document,
+            re.M,
+        )
+        if scoped:
+            if len(scoped) != 1:
+                raise ValueError("Record at most one reviewed release standards SHA override")
+            expected_ref = scoped[0]
+        allowed_ref = re.escape(expected_ref) if expected_ref else r"[a-f0-9]{40}"
         if not any(
-            re.fullmatch(r"eigger/hass-repo-standards/actions/release-zip@[a-f0-9]{40}", use)
+            re.fullmatch(r"eigger/hass-repo-standards/actions/release-zip@" + allowed_ref, use)
             for use in uses
         ):
             result.append(
-                ("CI-05", path, "Release ZIP action must be pinned to a reviewed full SHA")
+                (
+                    "CI-05",
+                    path,
+                    "Release ZIP action must use the reviewed full SHA or exact recorded release tag",
+                )
             )
 
         def normalize(value):
@@ -53,7 +73,7 @@ def errors(root, config, domain, safe_path, central):
                 return [normalize(item) for item in value]
             if isinstance(value, str):
                 value = re.sub(
-                    r"(eigger/hass-repo-standards/actions/release-zip@)[a-f0-9]{40}$",
+                    r"(eigger/hass-repo-standards/actions/release-zip@)(?:[a-f0-9]{40}|v[0-9]+\.[0-9]+\.[0-9]+)$",
                     r"\1main",
                     value,
                 )

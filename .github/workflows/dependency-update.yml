@@ -150,6 +150,9 @@ jobs:
         persist-credentials: false
     - name: Validate installed payload examples
       if: steps.payload.outputs.active == 'true'
+      run: test "${{ inputs.standards-ref }}" = "$(git -C .hass-standards-tools rev-parse HEAD)"
+    - name: Run installed payload examples
+      if: steps.payload.outputs.active == 'true'
       uses: ./.hass-standards-tools/actions/check-payload
       with:
         domain: ${{ inputs.domain }}

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Immutable central standards releases
+
+- GOV-02·CI-05의 중앙 기준을 exact immutable `vX.Y.Z` release와 resolved full commit SHA의 단일 descriptor로 확장했습니다. 기존 full-SHA plans/callers는 유지하며 release callers는 tag로 읽기 쉽게 고정하고 payload tooling checkout은 기록한 SHA로 유지합니다.
+- `verify-release`는 GitHub release API의 published/non-prerelease/immutable 상태와 Git peeled tag commit을 함께 확인합니다. exact release plan은 성공 증거 없이는 생성되지 않으며 offline check와 network attestation을 혼동하지 않습니다.
+- 첫 `v1.0.0`은 아직 발행하지 않은 목표입니다. release workflow는 candidate commit gates → draft와 metadata asset → publish 순서이며 실제 squash commit SHA는 runtime asset에만 기록합니다.
+
 ## 2026-10-25 — Standards workflow 표시 분리
 
 - Validate 안의 중앙 검사 job을 `standards.yml`로 이동하고 workflow/job 표시 이름을 `Standards`로 줄입니다. HACS/Hassfest의 Validate caller와 실제 검사 단계·규칙·기준은 유지합니다.

@@ -1,0 +1,88 @@
+name: Prepare central standards release draft
+'on':
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact stable vX.Y.Z version to publish after all gates pass
+        required: true
+        type: string
+      candidate-sha:
+        description: Full squash commit SHA that passed required checks on current default branch
+        required: true
+        type: string
+permissions:
+  contents: read
+  checks: read
+jobs:
+  verify-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      candidate-sha: ${{ steps.candidate.outputs.sha }}
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        ref: ${{ inputs.candidate-sha }}
+        persist-credentials: false
+        fetch-depth: 0
+    - id: candidate
+      name: Bind release dispatch to the current reviewed default-branch commit
+      env:
+        CANDIDATE_SHA: ${{ inputs.candidate-sha }}
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        case "$CANDIDATE_SHA" in
+          [0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]) ;;
+          *) echo "candidate-sha must be a full lowercase SHA" >&2; exit 2 ;;
+        esac
+        test "$CANDIDATE_SHA" = "$(git rev-parse HEAD)"
+        branch=$(gh api "repos/$GITHUB_REPOSITORY" --jq .default_branch)
+        test "$CANDIDATE_SHA" = "$(git ls-remote origin "refs/heads/$branch" | cut -f1)"
+        printf 'sha=%s\n' "$CANDIDATE_SHA" >> "$GITHUB_OUTPUT"
+    - name: Require latest successful central checks for this exact commit
+      env:
+        GH_TOKEN: ${{ github.token }}
+        CANDIDATE_SHA: ${{ inputs.candidate-sha }}
+      run: |
+        gh api "repos/$GITHUB_REPOSITORY/commits/$CANDIDATE_SHA/check-runs?filter=latest&per_page=100" > "$RUNNER_TEMP/check-runs.json"
+        CHECK_RUNS="$RUNNER_TEMP/check-runs.json" python - <<'CHECKS'
+        import json
+        import os
+        from pathlib import Path
+        expected = {"check", "Environment action / current", "Environment action / minimum", "Actual HA payload contract"}
+        runs = json.loads(Path(os.environ["CHECK_RUNS"]).read_text())["check_runs"]
+        by_name = {name: [item for item in runs if item["name"] == name] for name in expected}
+        missing = [name for name, matches in by_name.items() if not matches]
+        failed = [name for name, matches in by_name.items() if any(item.get("conclusion") != "success" for item in matches)]
+        if missing or failed:
+            raise SystemExit(f"latest required checks are not successful; missing={missing}, failed={failed}")
+        CHECKS
+  prepare-draft:
+    needs: verify-candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        ref: ${{ needs.verify-candidate.outputs.candidate-sha }}
+        persist-credentials: false
+        fetch-depth: 0
+    - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+      with:
+        python-version: '3.13'
+    - name: Install and preflight release-attestation dependencies
+      run: |
+        python -m pip install -r requirements_dev.txt
+        PYTHONPATH=scripts python -c 'import yaml; from standards import reference; assert reference.descriptor("v1.0.0", "a" * 40)["kind"] == "release"'
+    - name: Create draft with metadata asset first
+      env:
+        GH_TOKEN: ${{ github.token }}
+        VERSION: ${{ inputs.version }}
+        CANDIDATE_SHA: ${{ needs.verify-candidate.outputs.candidate-sha }}
+        CI_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      run: |
+        python scripts/build_central_release_metadata.py --version "$VERSION" --ci-run-url "$CI_RUN_URL" --output "$RUNNER_TEMP/release-metadata.json"
+        test "$CANDIDATE_SHA" = "$(git rev-parse HEAD)"
+        gh release create "$VERSION" "$RUNNER_TEMP/release-metadata.json#release-metadata.json" --target "$CANDIDATE_SHA" --draft --title "$VERSION" --generate-notes

@@ -59,6 +59,22 @@ def main(argv=None):
     plan_parser.add_argument("--mode", choices=("create", "adopt"), required=True)
     plan_parser.add_argument("--input", type=Path, required=True)
     plan_parser.add_argument("--standards-ref", required=True)
+    plan_parser.add_argument(
+        "--release-tag",
+        help="Exact immutable vX.Y.Z central release; requires --standards-ref resolved SHA",
+    )
+    plan_parser.add_argument(
+        "--release-verification",
+        type=Path,
+        help="JSON evidence written by verify-release; required with --release-tag",
+    )
+    release_parser = commands.add_parser(
+        "verify-release", help="Network-check an immutable published central release descriptor"
+    )
+    release_parser.add_argument("--repository", required=True)
+    release_parser.add_argument("--tag", required=True)
+    release_parser.add_argument("--resolved-sha", required=True)
+    release_parser.add_argument("--output", type=Path, required=True)
     apply_parser = commands.add_parser(
         "apply", help="Apply a current reviewed plan and retain recovery backups"
     )
@@ -79,6 +95,21 @@ def main(argv=None):
                 result = application.recover(args.target, args.journal)
             print(planning.canonical_json(result), end="")
             return 2 if result["status"] == "failed" else 0
+        if args.command == "verify-release":
+            from standards import reference
+
+            # This result is external audit evidence, never an input to offline
+            # validation. It is only written after every remote boundary passes.
+            result = reference.verify_remote(
+                args.repository, reference.descriptor(args.tag, args.resolved_sha)
+            )
+            output = Path(args.output).absolute()
+            if output.exists() or not output.parent.is_dir():
+                raise ValueError(
+                    "Release verification output must be a new file in an existing directory"
+                )
+            reference.write_verification(output, result)
+            return 0
         output = output_path(args.output, args.target)
         if args.command == "inspect":
             result = inventory.inspect(args.target)
@@ -86,7 +117,12 @@ def main(argv=None):
             if output == args.input.resolve():
                 raise ValueError("Plan output cannot overwrite its input")
             result = planning.plan(
-                args.target, args.mode, inventory.load_json(args.input), args.standards_ref
+                args.target,
+                args.mode,
+                inventory.load_json(args.input),
+                args.standards_ref,
+                release_tag=args.release_tag,
+                release_verification=args.release_verification,
             )
         # Recheck after inspection in case output ancestors were concurrently changed.
         output = output_path(output, args.target)

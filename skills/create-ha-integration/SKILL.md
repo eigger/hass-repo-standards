@@ -7,6 +7,6 @@ description: Create a new Home Assistant custom integration using the shared rep
 
 Generate the common foundation with the central tools, then distinguish unfinished device implementation from validated behavior. Read [the workflow](references/workflow.md) for this task.
 
-Use an independently confirmed central checkout and reviewed full SHA with contract version 1. Resolve these from the request or confirmed project records; do not derive the checkout from this installed skill's location. Read the central AGENTS.md and relevant rules at that SHA. The skill contains no copied templates or authority to change other repositories.
+Use an independently confirmed central checkout and either a reviewed full SHA or an immutable exact release plus its remote-verified resolved SHA. Resolve these from the request or confirmed project records; do not derive the checkout from this installed skill's location. Read the central AGENTS.md and relevant rules at the resolved SHA. The skill contains no copied templates or authority to change other repositories.
 
 Use create only for a missing or empty target. Review-only requests stop after inspect/plan. Apply only within the requested scope; missing facts, conflicts and CLI failures remain explicit. Existing implementations belong to the adoption skill.

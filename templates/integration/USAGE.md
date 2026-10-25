@@ -4,7 +4,7 @@
 
 1. `.github/workflows`의 main을 실제 기본 브랜치로 바꿉니다.
 2. example domain, Python 버전, package 목록, requirements 경로를 실제 환경으로 바꾸고 통합의 필수 테스트는 `test-profile: ha`로 지정합니다. `update_dependencies.yml`의 `validation-command`도 `tests/components/<domain>/`를 실행하도록 바꾸고 `test-profile: ha`를 지정합니다. YAML은 current 최신 테스트 job의 예시이며 지원 최소를 선언하지 않습니다. 실제 선언된 최소가 current보다 낮으면 별도 minimum-ha job과 호환 requirements를 추가·유지해야 채택 기준을 충족합니다.
-3. 각 `@main`을 검토한 main의 commit SHA로 바꿉니다.
+3. 기존 채택은 각 `@main`을 검토한 full SHA로 바꿉니다. 발행·검증된 중앙 release 채택은 모든 중앙 `uses`를 exact `vX.Y.Z`로 바꾸고 `.hass-standards.json`의 `standards` descriptor 및 STANDARDS.md의 release/resolved SHA를 함께 생성합니다. `standards-ref`는 tag가 아니라 resolved full SHA로 유지합니다.
 4. 테스트/린트 requirements와 기존 pyproject.toml을 정리합니다. Ruff 설정은 현재 코드에 맞게 채택합니다.
 5. 테스트는 `tests/components/<domain>/`에 배치하고 실제 HA fixture·config entry·플랫폼 로딩으로 검증합니다. 최소 package matrix는 사용하는 package만 넣으며 두 환경 모두 실제 HA 테스트를 실행합니다. 최소 HA가 현재 검증 버전과 다르면 별도 환경에서 검증합니다.
 6. 적용 기록용 STANDARDS.md와 ADOPTION_CHECKLIST.md를 복사하고 참조 커밋·적용 상태·해당 시점의 실제 검증 증거·예외를 기록합니다. 중앙 AGENTS.md나 그 내용을 통합의 AGENTS.md로 복사·생성·추가하지 않으며 다른 파일명으로 에이전트 진입 지침을 설치하지도 않습니다. 사용자 별도 요청 없이는 재설치하지 않고 기존 리포 고유 지침은 임의로 수정·삭제하지 않습니다. blesession/proxy 통합은 [Bluetooth 작성 규칙](../../docs/bluetooth-documentation.md)을 읽고 README.md에는 영어 사용자 가이드, README.ko.md에는 한국어 사용자 가이드를 연결하며 기기별 준비 조건을 추가합니다. 개발자 작성·구현 가이드를 사용자 설정 안내로 연결하지 않습니다.
@@ -54,7 +54,7 @@ imagespec 사용 통합은 [작성 규칙](../../docs/payload-documentation.md)�
 
 `tests/components/example/test_payload_examples.py`는 imagespec 사용 통합에만 실제 domain으로 복사하고 파일 내용은 중앙 scaffold와 정확히 일치하게 유지합니다. domain conftest에 실제 HA entry/서비스를 로딩하는 `payload_example_setup`과 실제 준비 함수를 연결하는 `payload_example_adapter`를 제공합니다. 후자는 `hass_standards_payload.PreparedPayload(payload, context, render_options, prepare)`를 반환합니다. 상세 인자와 실제 함수·외부 mock 경계는 작성 규칙을 따르며 새 가짜 스키마·HA·렌더러로 통과시키지 않습니다.
 
-공용 Tests와 updater의 `standards-ref`는 각각 reusable workflow의 검토 full SHA와 같아야 합니다. `main`은 초안 placeholder이며 실제 중앙 변경을 검토한 커밋이 존재한 뒤 SHA로 바꿉니다. 실제 설치한 current/정확한 하한의 public imagespec.validate/render와 통합 준비 결과·크기·팔레트를 검증하며 단일 exact pin의 같은 설치값만 결과를 재사용할 수 있습니다. 테스트가 실패한다고 하한을 올리거나 설치 후 패키지를 교체하지 않습니다. 해당 없음·미지원 이유·승인 예외·실제 검증 한계는 기록합니다. 일반 pytest는 중앙 plugin 없이 scaffold를 통과시키지 않으며 공용 workflow는 중앙 계약 성공 후에만 일반 회귀 실행에서 그 scaffold를 제외합니다.
+공용 Tests와 updater의 `standards-ref`는 reusable workflow release의 recorded resolved full SHA와 같아야 합니다. `main`은 초안 placeholder이며 실제 중앙 변경을 검토한 commit/release가 존재한 뒤 바꿉니다. 실제 설치한 current/정확한 하한의 public imagespec.validate/render와 통합 준비 결과·크기·팔레트를 검증하며 단일 exact pin의 같은 설치값만 결과를 재사용할 수 있습니다. 테스트가 실패한다고 하한을 올리거나 설치 후 패키지를 교체하지 않습니다. 해당 없음·미지원 이유·승인 예외·실제 검증 한계는 기록합니다. 일반 pytest는 중앙 plugin 없이 scaffold를 통과시키지 않으며 공용 workflow는 중앙 계약 성공 후에만 일반 회귀 실행에서 그 scaffold를 제외합니다.
 
 지원하는 템플릿·폰트/이미지/history·extras·기기 제약만 안내하고 실제 context로 테스트합니다. 마지막 절은 기존 문제 해결·Issues를 사용하며 새 양식을 만들지 않습니다. imagespec 공통 원본을 실제 기본 브랜치에 먼저 공개·확인한 후 중앙 규칙을 공개합니다. 로컬 초안과 중앙 검사기 테스트만으로 원격 URL·대상 통합·실물 검증을 완료했다고 보고하지 않습니다.
 

@@ -541,7 +541,7 @@ def check(root, config, manifest_path, manifest, safe_path, central=None):
                 errors.append(("DOC-01", relative, "Unfinished common README metadata"))
                 break
     errors.extend(translation_errors(root, component, platforms, trees, safe_path, actions))
-    errors.extend(reference_errors(root, safe_path))
+    errors.extend(reference_errors(root, safe_path, config))
     return errors
 
 
@@ -788,7 +788,7 @@ def leaves(value):
         yield value
 
 
-def reference_errors(root, safe_path):
+def reference_errors(root, safe_path, config=None):
     errors = []
     try:
         document = safe_path(root, "STANDARDS.md").read_text(encoding="utf-8")
@@ -796,12 +796,43 @@ def reference_errors(root, safe_path):
         return [("GOV-01", "STANDARDS.md", str(error))]
     from bluetooth_documents import visible_markdown
 
+    recorded = (config or {}).get("standards")
+    if isinstance(recorded, dict) and recorded.get("kind") in {"sha", "release"}:
+        try:
+            from . import reference
+
+            recorded = reference.validate(recorded)
+        except ValueError as error:
+            return [("GOV-02", ".hass-standards.json", str(error))]
+        if recorded["kind"] == "release":
+            release_lines = re.findall(
+                r"^\s*(?:-\s*)?(?:Standards release|표준 릴리스)\s*:\s*`?(v[0-9]+\.[0-9]+\.[0-9]+)`?\s*$",
+                visible_markdown(document),
+                re.M,
+            )
+            sha_lines = re.findall(
+                r"^\s*(?:-\s*)?(?:Resolved standards SHA|해석한 표준 커밋 SHA)\s*:\s*`?([0-9a-f]{40})`?\s*$",
+                visible_markdown(document),
+                re.M,
+            )
+            if release_lines != [recorded["tag"]] or sha_lines != [recorded["resolved_sha"]]:
+                return [
+                    (
+                        "GOV-02",
+                        "STANDARDS.md",
+                        "Release tag and resolved SHA must match .hass-standards.json",
+                    )
+                ]
+        ref = recorded["resolved_sha"]
+        action_ref = recorded.get("tag", ref)
+    else:
+        ref, action_ref = None, None
     refs = re.findall(
         r"^\s*(?:-\s*)?(?:참조 커밋 SHA|Reviewed standards SHA|Standards ref)\s*:\s*`?([0-9a-f]{40})`?\s*$",
         visible_markdown(document),
         re.M,
     )
-    if len(set(refs)) != 1:
+    if action_ref is None and len(set(refs)) != 1:
         return [
             (
                 "GOV-02",
@@ -809,13 +840,25 @@ def reference_errors(root, safe_path):
                 "Record one reviewed full standards SHA in the reference field",
             )
         ]
-    ref = refs[0]
+    if action_ref is None:
+        ref = refs[0]
+        action_ref = ref
+    elif refs != [ref]:
+        return [
+            (
+                "GOV-02",
+                "STANDARDS.md",
+                "Reviewed standards SHA must match .hass-standards.json",
+            )
+        ]
     release_fields = re.findall(
         r"^\s*(?:-\s*)?Reviewed release standards SHA\s*:\s*(.*?)\s*$",
         visible_markdown(document),
         re.M,
     )
-    release_ref = ref
+    # A ZIP caller follows the primary reviewed release by default. The older
+    # scoped full-SHA field remains an explicit compatibility override.
+    release_ref = action_ref
     if release_fields:
         if len(release_fields) != 1 or not re.fullmatch(
             r"(?:[0-9a-f]{40}|`[0-9a-f]{40}`)", release_fields[0]
@@ -835,7 +878,7 @@ def reference_errors(root, safe_path):
                 if isinstance(use, str) and use.startswith(
                     "eigger/hass-repo-standards/.github/workflows/"
                 ):
-                    if not use.endswith("@" + ref):
+                    if not use.endswith("@" + action_ref):
                         errors.append(
                             (
                                 "GOV-02",
@@ -861,7 +904,7 @@ def reference_errors(root, safe_path):
                         if path.name == "release.yml"
                         and isinstance(use, str)
                         and use.startswith("eigger/hass-repo-standards/actions/release-zip@")
-                        else ref
+                        else action_ref
                     )
                     if (
                         isinstance(use, str)
