@@ -219,6 +219,8 @@ updates:
         data = update.yaml_document(update.configure_dependabot())
         item = data["updates"][0]
         del item["cooldown"]
+        update.validate_dependabot(data)  # v1.1.0 bootstrap remains compatible
+        item["cooldown"] = {"default-days": 3}
         with self.assertRaisesRegex(ValueError, "cooldown"):
             update.validate_dependabot(data)
         item["cooldown"] = {"exclude": update.DEPENDENCIES}
