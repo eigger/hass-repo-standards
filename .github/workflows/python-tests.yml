@@ -100,7 +100,7 @@ jobs:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
         persist-credentials: false
-    - uses: eigger/hass-repo-standards/actions/python-environment@d5dcaa03cfe91923a5ca2fe0ab79595b222eb90e # validated environment implementation
+    - uses: eigger/hass-repo-standards/actions/python-environment@d428ba5e0ef532cfad95d20a767d5f9553dd2855 # infer HA from the installed test plugin
       with:
         domain: ${{ inputs.domain }}
         python-version: ${{ matrix.python }}
