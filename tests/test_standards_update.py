@@ -155,7 +155,9 @@ class StandardsUpdate(unittest.TestCase):
         repo.pr["user"]["login"] = "eigger"
         with self.assertRaises(ValueError):
             repo.sync()
-        self.assertTrue(repo.sync(manual=True)["updated"])
+        result = repo.sync(manual=True)
+        self.assertTrue(result["updated"])
+        self.assertFalse(result["auto_eligible"])
 
     def test_concurrent_head_never_overwritten(self):
         repo = Repository()

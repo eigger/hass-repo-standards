@@ -19,7 +19,7 @@ python scripts/install_standards_updater.py /absolute/consumer --release v1.1.0 
 
 설치기는 중앙 `uses` 참조, 단일 descriptor·문서 기록, daily Dependabot group, updater caller를 함께 변경합니다. `standards_update`는 `{"provider":"dependabot","workflow":"update_standards.yml"}`로 명시합니다. 이 opt-in의 release consumer는 `python-tests.yml`·`dependency-update.yml`의 `standards-ref` 입력을 생략하고, 실행 시 체크아웃된 `.hass-standards.json`의 검토 full SHA를 사용합니다. 일반 검증 중 네트워크로 최신 tag를 해석하지 않습니다. 기존 opt-in 없는 caller는 명시적 `standards-ref` 동작을 유지합니다. 새 중앙 버전을 설치할 때 추가로 바뀐 규칙이 있으면 정상 CI가 이를 검출하며 우회하지 않습니다.
 
-예약 reconciliation은 이벤트 실패를 재시도합니다. 수동 실행의 PR 번호가 0이면 열린 Dependabot 표준 PR 전체를 검사합니다. 운영자가 명시적으로 번호를 입력한 `workflow_dispatch`만 사람이 만든 중앙 참조 전용 PR도 허용합니다. PR 코드를 실행하지 않는 검증 경계는 같습니다.
+예약 reconciliation은 이벤트 실패를 재시도합니다. 수동 실행의 PR 번호가 0이면 열린 Dependabot 표준 PR 전체를 검사합니다. 운영자가 명시적으로 번호를 입력한 `workflow_dispatch`만 사람이 만든 중앙 참조 전용 PR도 허용하며, 이 경우 metadata 보정·검증만 수행하고 자동 머지를 예약하지 않습니다. 자동 머지는 작성자가 Dependabot인 same-major PR에만 적용합니다. PR 코드를 실행하지 않는 검증 경계는 같습니다.
 
 ## 누락 감사
 
