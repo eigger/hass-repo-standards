@@ -4,6 +4,8 @@
 
 각 리포의 [update_standards.yml](../templates/integration/.github/workflows/update_standards.yml)은 exact immutable 중앙 release의 [standards-update.yml](../.github/workflows/standards-update.yml)을 호출합니다. 추가 PAT·GitHub App 비밀키 없이 리포의 `GITHUB_TOKEN`을 사용합니다. workflow 파일을 바꾸는 주체는 GitHub 기본 Dependabot입니다. `actions: write`는 검증 dispatch 권한이며 workflow 파일 수정 권한을 제공하지 않습니다.
 
+중앙 `central-standards` 그룹은 이 updater만 자동 머지를 예약합니다. 기존 generic Dependabot auto-merge job은 그 branch prefix만 제외하며 다른 dependency의 author·commit 검증을 유지합니다. 표준 PR의 metadata commit 또는 operator rebase를 generic fetch-metadata가 중복 검증해 실패하는 일을 피합니다. 중앙 updater는 별도로 PR 작성자·전체 파일 변경·release·같은 major를 모두 확인하므로 skip-commit-verification으로 검증을 완화하지 않습니다.
+
 중앙 updater는 신뢰하는 기본 브랜치와 거기 기록된 중앙 full SHA만 checkout합니다. PR은 Git API로 데이터만 읽고 실행하지 않습니다. 같은 리포의 Dependabot PR인지, 기본 브랜치 대상인지, 기존 workflow의 중앙 `uses` ref만 변경했는지, 예외 외 모든 중앙 참조가 같은 새 exact stable tag인지 확인합니다. published immutable release와 peeled SHA를 attest한 다음 `.hass-standards.json`과 `STANDARDS.md`의 현재 참조만 하나의 commit으로 맞춥니다. 기록된 예외·이력은 보존하며 부분 그룹·다른 파일 변경·파일 추가/삭제·symlink/mode 변경·downgrade는 실패합니다. PR HEAD가 바뀌면 덮어쓰지 않고 실패합니다.
 
 메타데이터 commit은 PR 이벤트를 다시 발생시킨다고 가정하지 않습니다. 모든 `pull_request` validator의 `workflow_dispatch` 지원을 먼저 확인하고 PR 브랜치로 직접 dispatch합니다. 각 validator가 성공해야 기존 branch protection에 따라 자동 머지됩니다. dispatch 오류도 실패로 전파합니다. 관리자 우회나 required check 완화는 사용하지 않습니다. 같은 major에서만 updater가 자동 squash를 예약합니다.
