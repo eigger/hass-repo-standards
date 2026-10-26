@@ -1,6 +1,6 @@
 # 중앙 적용 현황
 
-**2026-10-25 (Asia/Seoul)** 기준입니다. 중앙에는 리포별 요약만 두고 상세 점검·실제 설치 버전·명령·리뷰는 각 리포의 `ADOPTION_CHECKLIST.md`, 기준·예외는 `STANDARDS.md`에서 확인합니다. [채택 지침](adoption.md)과 [판정 기준](checklist.md)을 따릅니다.
+**2026-10-27 (Asia/Seoul)** 중앙 참조·자동 업데이트 후속 변경 기준입니다. 전체 채택 상태는 기존 기록을 유지합니다. 중앙에는 리포별 요약만 두고 상세 점검·실제 설치 버전·명령·리뷰는 각 리포의 `ADOPTION_CHECKLIST.md`, 기준·예외는 `STANDARDS.md`에서 확인합니다. [채택 지침](adoption.md)과 [판정 기준](checklist.md)을 따릅니다.
 
 ## 상태 기준
 
@@ -13,9 +13,9 @@
 
 ## HA 통합 리포
 
-적용 대상 22개와 제외 3개입니다. 현재 중앙 참조는 **`v1.0.0` / `44349ee5621eea5d80e5c427f7a2435d2c2491bb`**입니다. 아래 참조 전환은 22개 PR의 실제 squash와 CI 64건 성공을 대조했습니다. 참조 전환의 완료와 전체 채택 상태는 구분합니다.
+적용 대상 22개와 제외 3개입니다. 현재 중앙 참조는 **`v1.1.2` / `df9798509d9228247ec32efb313ec7b687b5b152`**입니다. 중앙 자동 업데이트 설치 PR 22개의 새 HEAD에서 필수 CI 전체 성공과 squash 반영을 확인했고, 실제 기본 브랜치 감사도 current 22개·오류 0개로 통과했습니다. [최신 배포 검증과 리포별 근거](standards-updates-rollout.md)를 확인합니다. 아래 표는 2026-10-25의 v1.0.0 참조 전환 이력(22 PR·CI 64건)과 기존 전체 채택 상태를 보존합니다.
 
-| 리포 / 기본 브랜치 | 전체 채택 기록 | 참조 전환 커밋 / CI | 상세 근거·남은 항목 |
+| 리포 / 기본 브랜치 | 전체 채택 기록 | v1.0.0 전환 이력 / CI | 상세 근거·남은 항목 |
 |---|---|---|---|
 | [hass-atflee](https://github.com/eigger/hass-atflee) / `master` | 완료 | [ad4f5802](https://github.com/eigger/hass-atflee/commit/ad4f5802ac3b4d5a372f1466bb2ae6dec3697956) · [CI 1](https://github.com/eigger/hass-atflee/actions/runs/40183108683) / [CI 2](https://github.com/eigger/hass-atflee/actions/runs/40183108693) / [CI 3](https://github.com/eigger/hass-atflee/actions/runs/40183108329) | [체크리스트](https://github.com/eigger/hass-atflee/blob/ad4f5802ac3b4d5a372f1466bb2ae6dec3697956/ADOPTION_CHECKLIST.md) · [기준·예외](https://github.com/eigger/hass-atflee/blob/ad4f5802ac3b4d5a372f1466bb2ae6dec3697956/STANDARDS.md) — 기존 채택 완료; 실물·proxy·UI 미검증 |
 | [hass-ble-esl](https://github.com/eigger/hass-ble-esl) / `main` | 진행 중 | [d3ac8df5](https://github.com/eigger/hass-ble-esl/commit/d3ac8df583e42fe3dc8de4572d3b5c2b655a33b2) · [CI 1](https://github.com/eigger/hass-ble-esl/actions/runs/40183111549) / [CI 2](https://github.com/eigger/hass-ble-esl/actions/runs/40183111534) / [CI 3](https://github.com/eigger/hass-ble-esl/actions/runs/40183111225) | [체크리스트](https://github.com/eigger/hass-ble-esl/blob/d3ac8df583e42fe3dc8de4572d3b5c2b655a33b2/ADOPTION_CHECKLIST.md) · [기준·예외](https://github.com/eigger/hass-ble-esl/blob/d3ac8df583e42fe3dc8de4572d3b5c2b655a33b2/STANDARDS.md) — 기존 필수 TODO·HA-01/08·HA-10/11/13·GOV-05 예외 재검토 |
