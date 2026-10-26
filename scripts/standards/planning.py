@@ -148,7 +148,11 @@ def render_workflow(source, destination, data, ref):
         env = environments["current"]
         if "python-versions" in params:
             params["python-versions"] = json.dumps([env["python"]])
-            params["expected-ha-version"] = env["ha"]
+            if environments["minimum"] == environments["current"]:
+                # A shared current/minimum job must still assert the support minimum.
+                params["expected-ha-version"] = env["ha"]
+            else:
+                params.pop("expected-ha-version", None)
             params["requirements"] = " ".join(env["requirements"])
             if env["constraints"]:
                 params["constraints"] = " ".join(env["constraints"])

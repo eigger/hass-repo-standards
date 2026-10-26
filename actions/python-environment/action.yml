@@ -24,7 +24,7 @@ inputs:
     description: Optional caller constraints file
     default: ''
   expected-ha-version:
-    description: Optional exact installed HA version assertion
+    description: Exact HA version assertion; empty in ha profile follows the test plugin pin
     default: ''
   test-profile:
     description: unit or ha

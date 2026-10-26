@@ -263,6 +263,7 @@ class IntegrationScenarios(unittest.TestCase):
             json.loads((self.target / "hacs.json").read_text())["homeassistant"], minimum["ha"]
         )
         workflow = yaml.safe_load((self.target / ".github/workflows/tests.yml").read_bytes())
+        self.assertNotIn("expected-ha-version", workflow["jobs"]["current"]["with"])
         self.assertEqual(workflow["jobs"]["minimum"]["with"]["expected-ha-version"], minimum["ha"])
         self.assertEqual(
             json.loads(workflow["jobs"]["minimum"]["with"]["python-versions"]), [minimum["python"]]

@@ -183,6 +183,88 @@ class DependencyUpdates(unittest.TestCase):
 
 
 class HAEnvironment(unittest.TestCase):
+    def test_main_enforces_the_inferred_pin_against_installed_ha(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "custom_components/example/manifest.json"
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text('{"requirements": []}')
+            (root / "requirements_test.txt").write_text("# fixture\n")
+            environment = {
+                "INPUT_DOMAIN": "example",
+                "INPUT_REQUIREMENTS": "requirements_test.txt",
+                "INPUT_TEST_PROFILE": "ha",
+                "RUNNER_TEMP": str(root),
+            }
+            for actual in ("2026.10.1", "2026.10.2"):
+                with (
+                    self.subTest(actual=actual),
+                    patch.dict("os.environ", environment, clear=True),
+                    patch.object(install, "Path", side_effect=lambda path: root / path),
+                    patch.object(install, "pip"),
+                    patch.object(
+                        install, "environment_versions", return_value=(actual, "0.13.373")
+                    ),
+                    patch.object(
+                        install.importlib.metadata,
+                        "requires",
+                        return_value=["homeassistant==2026.10.2"],
+                    ),
+                ):
+                    if actual == "2026.10.1":
+                        with self.assertRaisesRegex(ValueError, "Wrong Home Assistant version"):
+                            install.main()
+                    else:
+                        install.main()
+
+    def test_current_ha_expectation_follows_the_installed_plugin(self):
+        for ha in ("2026.10.1", "2026.10.2"):
+            with (
+                self.subTest(ha=ha),
+                patch.object(
+                    install.importlib.metadata,
+                    "requires",
+                    return_value=["pytest>=8", f"homeassistant=={ha}"],
+                ) as requires,
+            ):
+                self.assertEqual(install.expected_ha_version("ha", ""), ha)
+                requires.assert_called_once_with("pytest-homeassistant-custom-component")
+
+    def test_explicit_minimum_and_unit_profiles_do_not_infer_ha(self):
+        with patch.object(install.importlib.metadata, "requires") as requires:
+            self.assertEqual(install.expected_ha_version("ha", "2025.12.0"), "2025.12.0")
+            self.assertEqual(install.expected_ha_version("unit", ""), "")
+            self.assertEqual(install.expected_ha_version("unit", "2025.12.0"), "2025.12.0")
+            requires.assert_not_called()
+
+    def test_plugin_requires_one_active_exact_ha_pin(self):
+        for requirements in (
+            None,
+            ["pytest>=8"],
+            ["homeassistant>=2026.10.1"],
+            ["homeassistant==2026.10.*"],
+            ["homeassistant==2026.10.1", "homeassistant==2026.10.2"],
+            ['homeassistant==2026.10.1; python_version < "2"'],
+            ["homeassistant @ https://example.com/homeassistant.whl"],
+        ):
+            with (
+                self.subTest(requirements=requirements),
+                patch.object(install.importlib.metadata, "requires", return_value=requirements),
+                self.assertRaises(ValueError),
+            ):
+                install.expected_ha_version("ha", "")
+
+    def test_inactive_plugin_requirement_does_not_conflict_with_active_pin(self):
+        with patch.object(
+            install.importlib.metadata,
+            "requires",
+            return_value=[
+                'homeassistant==2025.12.0; python_version < "2"',
+                'HomeAssistant == 2026.10.2; python_version >= "3"',
+            ],
+        ):
+            self.assertEqual(install.expected_ha_version("ha", ""), "2026.10.2")
+
     def test_workflow_selects_domain_tests_and_preserves_explicit_or_unit_arguments(self):
         workflow = audit.yaml.load(
             (ROOT / ".github/workflows/python-tests.yml").read_text(), Loader=audit.Loader

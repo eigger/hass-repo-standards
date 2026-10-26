@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Follow the test plugin's Home Assistant pin
+
+- `ha` 환경의 빈 `expected-ha-version`은 설치된 테스트 플러그인의 활성 exact HA pin을 읽어 실제 설치값과 비교합니다. 플러그인 업데이트로 HA 버전이 바뀌어도 current/editor에 같은 값을 중복 관리할 필요가 없습니다.
+- 명시적인 최소 HA 기대 버전과 `unit` profile 동작은 유지합니다. exact pin 누락·중복·범위 요구사항은 실패합니다. current 전용 템플릿/렌더러는 자동 모드를 사용하되 최소/current 공용 job은 최소 검증값을 유지합니다.
+- 기존 통합은 새 중앙 참조 채택과 current/editor 기대 버전 제거를 별도 적용해야 합니다. 이 변경은 중앙 구현만 준비하며 대상 리포·지원 최소·릴리스를 변경하지 않습니다.
+
 ## v1.1.2 — 수동·예약 실행 입력 타입 보정
 
 - workflow_dispatch의 숫자 입력 `0`이 문자열로 전달될 때 reusable workflow의 number 계약을 위반하는 문제를 수정합니다. caller에서 format/fromJSON으로 PR 이벤트·수동·예약 값을 명시적으로 숫자로 정규화합니다. PR 작성자·검증·자동 머지 범위는 유지합니다.

@@ -47,7 +47,7 @@ name: Python tests
         type: string
         default: ''
       expected-ha-version:
-        description: Optional exact HA version check
+        description: Exact HA version check; empty in ha profile follows the test plugin pin
         required: false
         type: string
         default: ''

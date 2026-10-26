@@ -90,6 +90,27 @@ def environment_versions(profile: str) -> tuple[str, str]:
     return versions["homeassistant"], versions["pytest-homeassistant-custom-component"]
 
 
+def expected_ha_version(profile: str, explicit: str) -> str:
+    """Keep explicit minimum assertions; otherwise follow the installed HA plugin."""
+    if explicit or profile != "ha":
+        return explicit
+    requirements = importlib.metadata.requires("pytest-homeassistant-custom-component") or []
+    pins = []
+    for text in requirements:
+        requirement = Requirement(text)
+        if canonicalize_name(requirement.name) != "homeassistant":
+            continue
+        if requirement.marker and not requirement.marker.evaluate():
+            continue
+        specs = list(requirement.specifier)
+        if requirement.url or len(specs) != 1 or specs[0].operator != "==":
+            raise ValueError(f"HA test plugin must pin an exact Home Assistant version: {text}")
+        pins.append(str(Version(specs[0].version)))
+    if len(pins) != 1:
+        raise ValueError("HA test plugin must declare exactly one active Home Assistant pin")
+    return pins[0]
+
+
 def main():
     domain = os.environ["INPUT_DOMAIN"]
     if not re.fullmatch(r"[a-z0-9_]+", domain):
@@ -136,7 +157,7 @@ def main():
             raise ValueError(f"Minimum not installed: {name} {actual} != {version}")
     profile = os.environ.get("INPUT_TEST_PROFILE", "unit")
     ha_version, plugin_version = environment_versions(profile)
-    expected_ha = os.environ.get("INPUT_EXPECTED_HA_VERSION", "")
+    expected_ha = expected_ha_version(profile, os.environ.get("INPUT_EXPECTED_HA_VERSION", ""))
     if expected_ha and (
         ha_version == "not installed" or Version(ha_version) != Version(expected_ha)
     ):
