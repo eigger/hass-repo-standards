@@ -804,7 +804,7 @@ def reference_errors(root, safe_path, config=None):
                 source.read_text().replace("@main", "@" + descriptor["tag"])
             )
             actual = update.yaml_document(safe_path(root, update.CALLER).read_text())
-            if actual != expected:
+            if update.caller_contract(actual) != update.caller_contract(expected):
                 raise ValueError("Standards updater caller must match its central template")
             update.validate_dependabot(
                 update.yaml_document(safe_path(root, ".github/dependabot.yml").read_text())
