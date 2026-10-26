@@ -174,15 +174,13 @@ jobs:
         LINT_REQUIREMENTS: ${{ inputs.lint-requirements }}
         PAYLOAD_CONTRACT: ${{ steps.payload.outputs.required }}
         DOMAIN: ${{ inputs.domain }}
-      run: 'python -m pip install -r "$LINT_REQUIREMENTS"
-
+      run: |
+        python -m pip install -r "$LINT_REQUIREMENTS"
         python -m pip check
-
         if [ "$PAYLOAD_CONTRACT" = "true" ]; then
           export PYTEST_ADDOPTS="${PYTEST_ADDOPTS:-} --ignore=tests/components/$DOMAIN/test_payload_examples.py"
         fi
-
-        bash -euo pipefail -c "$VALIDATION_COMMAND"'
+        bash -euo pipefail -c "$VALIDATION_COMMAND"
     - name: Create or update one dependency PR
       # Also synchronize an existing PR when no change remains. The default
       # success() guard still prevents this step after update/validation failures.
