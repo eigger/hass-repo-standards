@@ -212,6 +212,25 @@ updates:
         with self.assertRaisesRegex(ValueError, "immutable"):
             update.attest_release("v1.1.0", api=lambda _: {**api(None), "immutable": False})
 
+    def test_disabled_updates_and_specific_workflow_ignore_are_rejected(self):
+        data = update.yaml_document(update.configure_dependabot())
+        item = data["updates"][0]
+        for field, value in (
+            ("open-pull-requests-limit", 0),
+            ("target-branch", "other"),
+            ("rebase-strategy", "disabled"),
+        ):
+            with self.subTest(field=field):
+                item[field] = value
+                with self.assertRaises(ValueError):
+                    update.validate_dependabot(data)
+                del item[field]
+        item["ignore"] = [
+            {"dependency-name": update.PREFIX + ".github/workflows/dependency-update.yml"}
+        ]
+        with self.assertRaisesRegex(ValueError, "ignore policy"):
+            update.validate_dependabot(data)
+
     def test_metadata_fallback_requires_opt_in_release_and_no_explicit_mismatch(self):
         config = {"standards": NEW, "standards_update": update.PROVIDER}
         self.assertEqual(reference.metadata_input(config), "b" * 40)
