@@ -28,9 +28,11 @@ def working_directory(path):
 
 
 class PayloadWorkflowGate(unittest.TestCase):
-    def run_gate(self, requirement, profile="ha", reference="a" * 40, reserved=False):
+    def run_gate(self, requirement, profile="ha", reference="a" * 40, reserved=False, config=None):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            if config is not None:
+                (root / ".hass-standards.json").write_text(json.dumps(config))
             component = root / "custom_components/example"
             component.mkdir(parents=True)
             (component / "manifest.json").write_text(json.dumps({"requirements": [requirement]}))
@@ -75,8 +77,23 @@ class PayloadWorkflowGate(unittest.TestCase):
         )
 
     def test_active_contract_requires_real_ref_and_absent_reserved_path(self):
-        self.assertEqual(self.run_gate("imagespec==1.0.1"), "required=true\nactive=true\n")
+        self.assertEqual(
+            self.run_gate("imagespec==1.0.1"),
+            "required=true\nactive=true\nstandards-ref=" + "a" * 40 + "\n",
+        )
         with self.assertRaisesRegex(ValueError, "full standards-ref"):
             self.run_gate("imagespec>=1.0.1", reference="main")
         with self.assertRaisesRegex(ValueError, "preserve caller files"):
             self.run_gate("imagespec>=1.0.1", reserved=True)
+
+    def test_recorded_sha_requires_explicit_release_updater_adoption(self):
+        config = {
+            "standards_update": {"provider": "dependabot", "workflow": "update_standards.yml"},
+            "standards": {"kind": "release", "tag": "v1.1.0", "resolved_sha": "b" * 40},
+        }
+        self.assertIn(
+            "standards-ref=" + "b" * 40, self.run_gate("imagespec>=1", reference="", config=config)
+        )
+        del config["standards_update"]
+        with self.assertRaisesRegex(ValueError, "full standards-ref"):
+            self.run_gate("imagespec>=1", reference="", config=config)

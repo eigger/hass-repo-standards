@@ -44,6 +44,8 @@
 
 ## 업데이트·배포
 
+중앙 표준 release 자체의 갱신은 [CI-13·중앙 표준 자동 업데이트](standards-updates.md)를 따릅니다. 명시적으로 채택한 release consumer는 `standards-ref`를 생략하고 descriptor의 검토 full SHA를 사용합니다. 이 opt-in은 같은 PR의 workflow pins·JSON·문서 기록을 함께 검증하며 기존 caller의 명시적 SHA 계약은 유지합니다. 아래 CI-09의 manifest updater와 구분하여 사용자 승인 범위인 patch·minor 표준 PR에만 필수 CI 통과 후 자동 squash를 예약합니다.
+
 **CI-09 필수**: 의존성 변경은 PR로만 제안합니다. branch는 저장소 기본 브랜치를 API로 읽고 하나의 bot branch를 재사용합니다. 연산자/extras/marker를 유지하며 자동 merge·tag·release는 하지 않습니다. 검증 명령 실패 시 PR을 생성/갱신하지 않습니다.
 
 **CI-10 필수**: GITHUB_TOKEN으로 만든 PR의 push/PR 이벤트가 다른 workflow를 자동 실행한다고 가정하지 않습니다. 공통 updater는 변경한 tree에서 선택 package의 정확한 새 하한과 지정한 검증을 먼저 실행하며, 추가 required checks는 수동 dispatch 또는 GitHub App 토큰 등 별도 운영 방식으로 충족합니다. dispatch 실패를 경고만 하고 모든 검증이 끝났다고 표시하지 않습니다. 본 구현은 PAT/App 비밀키를 요구하지 않습니다.

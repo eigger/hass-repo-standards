@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.1.0 — 리포별 중앙 표준 자동 업데이트
+
+- native Dependabot이 중앙 workflow·action 참조를 daily group PR로 갱신하고, 각 소비 리포가 호출하는 중앙 CI가 JSON descriptor·문서 기록을 같은 PR에 맞춥니다. 필수 검증을 명시적으로 dispatch하며 patch·minor만 CI 통과 후 자동 squash, major는 수동 검토합니다.
+- opt-in release consumer는 payload tooling의 SHA를 로컬 descriptor에서 읽습니다. 기존 명시적 standards-ref caller 호환을 유지합니다. runtime writer는 workflow 파일을 수정하지 않으며 추가 토큰이 필요 없습니다.
+- 계정 전체 발견 결과를 명시적 소비 리포 목록과 대조하는 읽기 전용 감사를 추가해 설치 누락·부분 참조·업데이트 PR 부재·실패한 CI를 검출합니다. 설치 및 검증 증거는 docs/standards-updates.md와 docs/standards-updates-validation.md를 따릅니다.
+
 ## 2026-10-25 — 채택 기록 정리
 
 - 중앙 체크리스트 안내를 작성·판정·증거 기준으로 줄이고 분야별 세부 계약은 원문 링크로 연결했습니다. 규칙 ID·필수/권장 수준과 검증 의무는 유지합니다.

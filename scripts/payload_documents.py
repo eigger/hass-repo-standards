@@ -14,6 +14,7 @@ from bluetooth_documents import (
     visible_markdown,
 )
 from standards.conditions import uses_package
+from standards.reference import metadata_input
 
 SOURCE = "https://github.com/eigger/imagespec/blob/main/docs/"
 UNFINISHED = re.compile(
@@ -281,7 +282,7 @@ def check(root, config, manifest_path, manifest, safe_path):
         expected_input = resolved_sha or reference.rsplit("@", 1)[1]
         if (
             reference.rsplit("@", 1)[1] != expected_use
-            or inputs.get("standards-ref") != expected_input
+            or metadata_input(config, inputs.get("standards-ref")) != expected_input
         ):
             errors.append(
                 (
@@ -350,7 +351,8 @@ def check(root, config, manifest_path, manifest, safe_path):
             expected_input = resolved_sha or reference.rsplit("@", 1)[1]
             if "hass-repo-standards/.github/workflows/dependency-update.yml@" in reference and (
                 reference.rsplit("@", 1)[1] != expected_use
-                or job.get("with", {}).get("standards-ref") != expected_input
+                or metadata_input(config, job.get("with", {}).get("standards-ref"))
+                != expected_input
             ):
                 errors.append(
                     (
