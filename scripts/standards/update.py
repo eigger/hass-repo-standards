@@ -328,7 +328,7 @@ def sync_pr(repository, number, *, manual=False, api=gh, listing=pages, attest=a
         "head": head_sha,
         "validators": validators,
         "updated": bool(updates),
-        "auto_eligible": same_major,
+        "auto_eligible": same_major and pr["user"]["login"] == "dependabot[bot]",
     }
 
 
