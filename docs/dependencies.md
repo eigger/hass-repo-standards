@@ -68,9 +68,11 @@ python3 actions/update-manifest/update.py --manifest ../hass-example/custom_comp
 
 Dependabot은 GitHub Actions와 일반 requirements 갱신을 맡습니다. manifest updater와 같은 파일을 동시에 수정하는 bot은 두지 않습니다. [공식 설정 설명](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#exclude-paths)에 따라 과거 최소 지원용 requirements·constraints는 `exclude-paths`로 일반 업데이트에서 제외하여 현재 환경 갱신과 섞이지 않게 합니다. 실제 사용하는 경로를 지정하며 지원 정책 변경 시 검토한 변경으로만 갱신합니다.
 
-DEP-07·DEP-08 적용 시 현재 HA와 테스트 플러그인은 같은 PR에서 호환 조합으로 갱신합니다. Dependabot의 `groups`는 PR 묶음이며 Python·HA 제약·workflow의 `expected-ha-version`·지원 최소 메타데이터를 자동 동기화하지 않습니다. 변경 전 실제 기본 브랜치를 다시 읽고 기존보다 낮아진 제안은 거부합니다. 공식 안정 릴리스·플러그인 메타데이터를 확인하고 Python·requirements·constraints·정확한 HA 검사값을 함께 맞춘 뒤 resolver·`pip check`·실제 HA 테스트를 실행합니다. 현재 테스트 버전 갱신은 지원 최소 변경이 아니므로 최소 메타데이터와 별도 최소 환경은 유지합니다. 최신 HA에서 실패하면 실제 호환 문제를 수정·재검증합니다. 새 API 등 구버전 비호환 근거를 확인하고 별도 명시적 사용자 승인을 받아 최소를 올리는 경우에만 hacs.json·문서·지원 정책 기록과 최소 검증 환경을 같은 변경에서 갱신합니다. 예전 커밋 기준으로 생성된 PR의 제목만 보고 합치지 않습니다.
+DEP-07·DEP-08 적용 시 현재 HA와 테스트 플러그인은 같은 PR에서 호환 조합으로 갱신합니다. Dependabot의 `groups`는 PR 묶음이며 Python·HA 제약·명시적인 `expected-ha-version`·지원 최소 메타데이터를 자동 동기화하지 않습니다. 현재 HA 전용 job은 아래의 플러그인 pin 자동 모드를 사용할 수 있습니다. 변경 전 실제 기본 브랜치를 다시 읽고 기존보다 낮아진 제안은 거부합니다. 공식 안정 릴리스·플러그인 메타데이터를 확인하고 Python·requirements·constraints·정확한 HA 검사값을 함께 맞춘 뒤 resolver·`pip check`·실제 HA 테스트를 실행합니다. 현재 테스트 버전 갱신은 지원 최소 변경이 아니므로 최소 메타데이터와 별도 최소 환경은 유지합니다. 최신 HA에서 실패하면 실제 호환 문제를 수정·재검증합니다. 새 API 등 구버전 비호환 근거를 확인하고 별도 명시적 사용자 승인을 받아 최소를 올리는 경우에만 hacs.json·문서·지원 정책 기록과 최소 검증 환경을 같은 변경에서 갱신합니다. 예전 커밋 기준으로 생성된 PR의 제목만 보고 합치지 않습니다.
 
 설치 action은 `ha`에서 실제 HA와 `pytest-homeassistant-custom-component`의 설치를 확인하고 버전을 보고합니다. 실행용 requirements 예시는 채택할 통합의 실제 지원 범위에 맞춰 검토합니다. 각 통합 manifest는 해당 통합의 채택 범위에서만 변경합니다.
+
+현재 HA 전용 job은 새 중앙 환경 action 채택 후 `expected-ha-version`을 비워 설치된 플러그인의 exact HA pin을 검증값으로 사용할 수 있습니다. 이 경우 Dependabot의 플러그인 변경만으로 기대 HA 버전도 따라가며 별도 PyPI 조회나 리포별 보조 스크립트가 필요하지 않습니다. Python·constraints 검토와 실제 HA 테스트는 그대로 필요합니다. 최소 HA 및 최소/current 공용 job의 명시적 기대 버전은 유지하고, 기존 caller의 하드코딩 값은 별도 적용 PR에서 검토하여 제거합니다.
 
 중앙 문서 검사 action은 기존 공통 도구와 같은 `packaging==26.3`을 사용해 blesession·imagespec requirement의 실제 배포 이름을 파싱합니다. extras·연산자·URL·marker를 문자열 prefix로 추정하지 않고, 검사 호스트에서 비활성인 marker도 통합의 지원 범위 선언으로 유지합니다. 이는 검사 도구 의존성이며 통합 manifest 런타임 의존성에 추가하지 않습니다.
 

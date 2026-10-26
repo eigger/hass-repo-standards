@@ -346,6 +346,18 @@ class IntegrationPlanning(unittest.TestCase):
         result = self.plan("adopt", data)
         self.assertTrue(any("share incompatible" in item for item in result["conflicts"]))
 
+    def test_shared_minimum_current_job_keeps_the_explicit_support_assertion(self):
+        data = input_fixture()
+        environment = data["environments"]["value"]
+        self.assertEqual(environment["minimum"], environment["current"])
+        source = (ROOT / "templates/integration/.github/workflows/tests.yml").read_text()
+        rendered = planning.render_workflow(source, ".github/workflows/tests.yml", data, self.ref)
+        jobs = yaml.safe_load(rendered)["jobs"]
+        self.assertEqual(list(jobs), ["current"])
+        self.assertEqual(
+            jobs["current"]["with"]["expected-ha-version"], environment["minimum"]["ha"]
+        )
+
     def test_wrong_or_modified_standards_sha_is_rejected(self):
         for ref in ("main", "0" * 40, self.ref[:7]):
             with self.subTest(ref=ref), self.assertRaisesRegex(ValueError, "SHA|HEAD"):

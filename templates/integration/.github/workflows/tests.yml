@@ -23,6 +23,7 @@ jobs:
       domain: example
       python-versions: '["3.14"]'
       requirements: requirements_test.txt
-      expected-ha-version: '2026.10.2'
+      # Current HA follows the installed test plugin's exact pin.
+      # Keep an explicit expected-ha-version on minimum-support jobs.
       test-profile: ha
       pytest-args: tests/components/example/ -v

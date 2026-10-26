@@ -87,7 +87,7 @@ jobs:
         packages: ${{ inputs.packages }}
         allow-major: ${{ inputs.allow-major }}
     - if: steps.update.outputs.updated == 'true'
-      uses: eigger/hass-repo-standards/actions/python-environment@d5dcaa03cfe91923a5ca2fe0ab79595b222eb90e # validated environment implementation
+      uses: eigger/hass-repo-standards/actions/python-environment@d428ba5e0ef532cfad95d20a767d5f9553dd2855 # infer HA from the installed test plugin
       with:
         domain: ${{ inputs.domain }}
         python-version: ${{ inputs.python-version }}

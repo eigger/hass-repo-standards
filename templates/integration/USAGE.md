@@ -26,7 +26,9 @@ requirements_lint.txt는 복사할 수 있는 실제 고정 예시입니다. req
 
 선언된 최소 지원과 현재 검증 HA가 원래 정확히 같으면 하나의 필수 job으로 검증합니다. 예전 최소 HA를 실제로 지원하는 통합만 requirements_test_min.txt·필요한 constraints와 별도 minimum-ha job을 추가하여 Python·requirements·expected-ha-version을 각각 지정합니다. 명시적 지원 정책 변경으로 옛 최소를 지원하지 않으면 관련 파일과 job을 함께 제거합니다. 라이브러리 하한이 있으면 dependency-modes/current·minimum 및 minimum-packages를 별도로 지정하며, 외부 Python 의존성이 없으면 minimum 라이브러리 job과 updater를 만들지 않습니다.
 
-`.github/dependabot.yml`은 현재 HA·플러그인을 묶고, 과거 최소 환경이 존재할 때만 그 파일을 자동 갱신에서 제외하는 예시입니다. 제외 경로를 실제 구조에 맞춥니다. 묶인 PR도 workflow의 expected-ha-version·Python·관련 constraints를 자동 갱신하지 않으므로 함께 검토하고 동기화합니다. 기본 브랜치보다 낮아진 제안은 거부합니다. 구버전 비호환 근거와 별도 명시적 승인을 받아 최소 상향을 결정한 경우에만 hacs.json과 README·지원 정책 기록도 함께 맞춥니다. 공통 workflow는 과거 caller 호환을 위해 unit 기본값을 유지하므로 통합은 ha를 명시합니다. pytest-args 생략 시 ha는 tests/components/<domain>/ -v를 사용합니다.
+`.github/dependabot.yml`은 현재 HA·플러그인을 묶고, 과거 최소 환경이 존재할 때만 그 파일을 자동 갱신에서 제외하는 예시입니다. 제외 경로를 실제 구조에 맞춥니다. 묶인 PR도 Python·관련 constraints·명시적 최소 기대값을 자동 갱신하지 않으므로 함께 검토합니다. 현재 HA 전용 job은 아래의 플러그인 pin 자동 모드를 사용합니다. 기본 브랜치보다 낮아진 제안은 거부합니다. 구버전 비호환 근거와 별도 명시적 승인을 받아 최소 상향을 결정한 경우에만 hacs.json과 README·지원 정책 기록도 함께 맞춥니다. 공통 workflow는 과거 caller 호환을 위해 unit 기본값을 유지하므로 통합은 ha를 명시합니다. pytest-args 생략 시 ha는 tests/components/<domain>/ -v를 사용합니다.
+
+새 중앙 구현의 현재 HA 전용 job은 `expected-ha-version`을 생략해 설치된 테스트 플러그인의 exact HA pin을 자동 검증합니다. 최소 HA job과 최소/current를 겸하는 job에는 정확한 지원 최소 기대 버전을 명시합니다. 기존 리포는 중앙 참조를 새 구현으로 갱신한 뒤 current와 editor의 중복 기대 버전만 제거하며, Python·constraints·최소 지원 파일은 별도로 검토합니다.
 
 [실제 HA 테스트 구조](../../docs/testing.md), [의존성 선언·추가 규칙](../../docs/dependencies.md), [Bluetooth 문서 작성 규칙](../../docs/bluetooth-documentation.md)을 채택 기준으로 사용합니다.
 

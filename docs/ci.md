@@ -56,7 +56,9 @@
 
 현재 테스트의 Python·HA·플러그인을 최신화해도 지원 최소 메타데이터와 최소 검증 job은 유지합니다. 최신 환경의 실패는 호환성을 수정하여 재검증하고, 새 API 등 확인한 구버전 비호환 근거와 별도 명시적 사용자 승인 없이 최소 지원 상향으로 우회하지 않습니다.
 
-공통 workflow/action은 과거 caller 호환을 위해 `unit` 기본값을 유지합니다. 실행용 템플릿은 `ha`를 명시하며, HA 최소/현재 버전이 다르면 각기 Python·requirements·expected-ha-version을 지정한 별도 caller job으로 실행하고, 정확히 같으면 하나의 필수 job을 사용합니다. `pytest-args`를 생략하면 `ha`는 `tests/components/<domain>/ -v`, `unit`은 `tests/ -v`를 실행합니다. 환경 action은 실제 HA와 테스트 플러그인 설치·버전을 확인하지만 실제 통합 로딩 테스트의 성공은 별도로 검증해야 합니다.
+공통 workflow/action은 과거 caller 호환을 위해 `unit` 기본값을 유지합니다. 실행용 템플릿은 `ha`를 명시하며, HA 최소/현재 버전이 다르면 각기 Python·requirements를 지정한 별도 caller job으로 실행하고, 최소 job에는 정확한 expected-ha-version을 명시합니다. 정확히 같으면 명시적 최소 기대값을 가진 하나의 필수 job을 사용합니다. `pytest-args`를 생략하면 `ha`는 `tests/components/<domain>/ -v`, `unit`은 `tests/ -v`를 실행합니다. 환경 action은 실제 HA와 테스트 플러그인 설치·버전을 확인하지만 실제 통합 로딩 테스트의 성공은 별도로 검증해야 합니다.
+
+`ha` profile에서 `expected-ha-version`을 생략하거나 비우면 설치된 `pytest-homeassistant-custom-component` 배포 메타데이터의 활성 `homeassistant==...` 요구사항을 읽고 실제 HA 버전과 비교합니다. 활성 exact pin이 없거나 여러 개면 실패하며 버전 검사를 생략하지 않습니다. 현재 HA 전용 job과 editor의 환경 action은 이 기본 동작을 사용해 플러그인 업데이트를 함께 따라갈 수 있습니다. 최소 HA job 및 최소/current를 겸하는 단일 job은 기존의 명시적 exact 기대 버전을 유지합니다. `unit` profile의 빈 입력은 기존처럼 HA 버전 검사를 요구하지 않습니다. 이 동작은 새 중앙 구현을 채택해야 적용되며 기존 caller의 명시적 기대 버전을 자동으로 제거하지 않습니다.
 
 ## 입력과 경계
 
