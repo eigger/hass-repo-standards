@@ -29,6 +29,36 @@ MANAGED = {".hass-standards.json", "STANDARDS.md"}
 PROVIDER = reference.UPDATE_PROVIDER
 LEGACY_NUMBER_INPUT = "${{ github.event.pull_request.number || inputs.pull-request-number || 0 }}"
 NUMBER_INPUT = "${{ fromJSON(format('{0}', github.event.pull_request.number || inputs.pull-request-number || 0)) }}"
+AUTO_EXCLUSION = "!startsWith(github.event.pull_request.head.ref, 'dependabot/github_actions/central-standards-')"
+
+
+def exclude_central_automerge(text):
+    """Keep generic metadata verification strict; the standards writer owns its group."""
+    data = yaml_document(text)
+    condition = data["jobs"]["auto-merge"]["if"]
+    base = (
+        "github.event.pull_request.user.login == 'dependabot[bot]' && "
+        "github.event.pull_request.head.repo.full_name == github.repository && "
+        "github.event.pull_request.base.ref == github.event.repository.default_branch"
+    )
+    actual = " ".join(condition.split())
+    if actual == base + " && " + AUTO_EXCLUSION:
+        return text
+    if actual != base:
+        raise ValueError("Custom generic auto-merge guard requires explicit review")
+    result, count = re.subn(
+        r"(?m)^(\s*)github.event.pull_request.base.ref == github.event.repository.default_branch\s*$",
+        lambda match: (
+            match.group(1)
+            + "github.event.pull_request.base.ref == github.event.repository.default_branch &&\n"
+            + match.group(1)
+            + AUTO_EXCLUSION
+        ),
+        text,
+    )
+    if count != 1:
+        raise ValueError("Cannot safely locate generic auto-merge guard")
+    return result
 
 
 def caller_contract(document):
@@ -497,6 +527,11 @@ def bootstrap_changes(root, new, template):
             raise ValueError(f"Unsupported caller formatting: {path}")
         result[path.relative_to(root).as_posix()] = after
     result[CALLER] = template.replace("@main", "@" + new["tag"])
+    generic = root / ".github/workflows/dependabot_auto_merge.yml"
+    if generic.exists():
+        result[generic.relative_to(root).as_posix()] = exclude_central_automerge(
+            generic.read_text()
+        )
     dep = root / ".github/dependabot.yml"
     result[".github/dependabot.yml"] = configure_dependabot(
         dep.read_text() if dep.exists() else None,

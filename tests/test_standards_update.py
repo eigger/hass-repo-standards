@@ -104,6 +104,16 @@ class Repository:
 
 
 class StandardsUpdate(unittest.TestCase):
+    def test_generic_automerge_owns_other_dependencies_and_retains_author_verification(self):
+        path = Path(__file__).resolve().parents[1] / ".github/workflows/dependabot_auto_merge.yml"
+        current = path.read_text()
+        old = current.replace(" &&\n      " + update.AUTO_EXCLUSION, "")
+        migrated = update.exclude_central_automerge(old)
+        self.assertEqual(migrated, current)
+        self.assertEqual(update.exclude_central_automerge(current), current)
+        with self.assertRaisesRegex(ValueError, "explicit review"):
+            update.exclude_central_automerge("jobs: {auto-merge: {if: 'always()'}}")
+
     def test_previous_caller_expression_is_compatible_without_weakening_security_fields(self):
         source = Path(__file__).resolve().parents[1] / "templates/integration" / update.CALLER
         current = update.yaml_document(source.read_text())
