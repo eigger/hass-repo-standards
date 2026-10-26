@@ -14,6 +14,20 @@ from pathlib import Path
 
 SHA = re.compile(r"[0-9a-f]{40}")
 TAG = re.compile(r"v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)")
+UPDATE_PROVIDER = {"provider": "dependabot", "workflow": "update_standards.yml"}
+
+
+def metadata_input(config, supplied=None):
+    """Allow omitted payload-tool SHA only for explicitly adopted release consumers."""
+    if supplied is not None:
+        return supplied
+    if (config or {}).get("standards_update") != UPDATE_PROVIDER:
+        return None
+    try:
+        value = validate(config.get("standards"))
+    except ValueError:
+        return None
+    return value["resolved_sha"] if value["kind"] == "release" else None
 
 
 def descriptor(ref, resolved_sha=None):

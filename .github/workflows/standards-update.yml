@@ -1,0 +1,76 @@
+name: Reconcile central standards PR
+'on':
+  workflow_call:
+    inputs:
+      pull-request-number:
+        description: Dependabot PR number, or zero for scheduled reconciliation
+        required: false
+        type: number
+        default: 0
+permissions:
+  contents: read
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: standards-reference-update-${{ github.repository }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - name: Resolve actual default branch
+        id: repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch=$(gh api "repos/$GITHUB_REPOSITORY" --jq .default_branch)
+          printf 'branch=%s\n' "$branch" >> "$GITHUB_OUTPUT"
+      # Only the trusted default branch is checked out. PR source is read as data.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ steps.repository.outputs.branch }}
+          persist-credentials: false
+      - name: Read the recorded updater SHA without network version resolution
+        id: reference
+        run: |
+          python - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          config = json.loads(Path('.hass-standards.json').read_text())
+          if config.get('standards_update') != {'provider': 'dependabot', 'workflow': 'update_standards.yml'}:
+              raise ValueError('Consumer has not adopted the standards updater')
+          descriptor = config['standards']
+          if descriptor.get('kind') != 'release' or not re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+', descriptor.get('tag', '')):
+              raise ValueError('An exact release descriptor is required')
+          sha = descriptor['resolved_sha']
+          if not re.fullmatch(r'[0-9a-f]{40}', sha):
+              raise ValueError('Recorded standards SHA must be a full SHA')
+          path = Path('.hass-standards-update-tools')
+          if path.exists() or path.is_symlink():
+              raise ValueError('Reserved updater tools path exists')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as stream:
+              stream.write('sha=' + sha + '\n')
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: eigger/hass-repo-standards
+          ref: ${{ steps.reference.outputs.sha }}
+          path: .hass-standards-update-tools
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: '3.14'
+      - name: Install pinned updater dependencies
+        run: python -m pip install -r .hass-standards-update-tools/actions/check-standards/requirements.txt
+      - name: Reconcile metadata and dispatch validation (no PR code execution)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pull-request-number }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          args=()
+          if [ "$EVENT_NAME" = 'workflow_dispatch' ]; then args+=(--manual); fi
+          python .hass-standards-update-tools/scripts/update_standards.py --pr "$PR_NUMBER" "${args[@]}"

@@ -13,7 +13,7 @@ from pathlib import Path
 
 import yaml
 
-from . import categories, conditions, contract, inventory, readme, scaffold
+from . import categories, conditions, contract, inventory, readme, reference, scaffold
 
 UNFINISHED = re.compile(
     r"\b(?:TODO|TBD|FIXME|REPLACE_[A-Z_]+|YOUR_[A-Z_]+)\b|\{\{[^}]+\}\}|@@[a-z_]+@@|example\.com|hass-example|작성 필요|미입력|미확인",
@@ -790,6 +790,27 @@ def leaves(value):
 
 def reference_errors(root, safe_path, config=None):
     errors = []
+    if (config or {}).get("standards_update") is not None:
+        from . import update
+
+        try:
+            if config["standards_update"] != reference.UPDATE_PROVIDER:
+                raise ValueError("Unknown standards updater provider")
+            descriptor = reference.validate(config["standards"])
+            if descriptor["kind"] != "release":
+                raise ValueError("Standards updater requires an exact release descriptor")
+            source = contract.CENTRAL / "templates/integration" / update.CALLER
+            expected = update.yaml_document(
+                source.read_text().replace("@main", "@" + descriptor["tag"])
+            )
+            actual = update.yaml_document(safe_path(root, update.CALLER).read_text())
+            if actual != expected:
+                raise ValueError("Standards updater caller must match its central template")
+            update.validate_dependabot(
+                update.yaml_document(safe_path(root, ".github/dependabot.yml").read_text())
+            )
+        except (ValueError, KeyError, OSError, TypeError) as error:
+            errors.append(("CI-13", update.CALLER, str(error)))
     try:
         document = safe_path(root, "STANDARDS.md").read_text(encoding="utf-8")
     except (ValueError, OSError) as error:
@@ -799,8 +820,6 @@ def reference_errors(root, safe_path, config=None):
     recorded = (config or {}).get("standards")
     if isinstance(recorded, dict) and recorded.get("kind") in {"sha", "release"}:
         try:
-            from . import reference
-
             recorded = reference.validate(recorded)
         except ValueError as error:
             return [("GOV-02", ".hass-standards.json", str(error))]
@@ -888,7 +907,10 @@ def reference_errors(root, safe_path, config=None):
                         )
                     if (
                         any(name in use for name in ("python-tests.yml@", "dependency-update.yml@"))
-                        and job.get("with", {}).get("standards-ref") != ref
+                        and reference.metadata_input(
+                            config, job.get("with", {}).get("standards-ref")
+                        )
+                        != ref
                     ):
                         errors.append(
                             (

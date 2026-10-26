@@ -1,0 +1,11 @@
+{
+  "owner": "eigger",
+  "repositories": [
+    "hass-atflee", "hass-ble-esl", "hass-ble-led-sign", "hass-catprinter",
+    "hass-esphome-ota", "hass-garage", "hass-icscale", "hass-jaalee",
+    "hass-kibble", "hass-kma", "hass-kocom-smarthome", "hass-lywsd02",
+    "hass-magic-caster-wand", "hass-marklife", "hass-melk-light", "hass-minibig",
+    "hass-niimbot", "hass-omron", "hass-opinet", "hass-sip", "hass-vson",
+    "hass-ws-bridge"
+  ]
+}

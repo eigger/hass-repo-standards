@@ -143,7 +143,15 @@ jobs:
                         if isinstance(node, ast.ImportFrom) and node.level == 0 and (node.module or "").split(".")[0] == "imagespec":
                             needed = active = True
         if active:
-            if not re.fullmatch(r"[0-9a-f]{40}", os.environ["STANDARDS_REF"]):
+            standards_ref = os.environ["STANDARDS_REF"]
+            if not standards_ref and (root / ".hass-standards.json").is_file():
+                config = json.loads((root / ".hass-standards.json").read_text())
+                if config.get("standards_update") == {"provider": "dependabot", "workflow": "update_standards.yml"}:
+                    descriptor = config["standards"]
+                    if descriptor.get("kind") != "release" or not re.fullmatch(r"v[0-9]+\.[0-9]+\.[0-9]+", descriptor.get("tag", "")):
+                        raise ValueError("Metadata-backed tools require an exact release")
+                    standards_ref = descriptor["resolved_sha"]
+            if not re.fullmatch(r"[0-9a-f]{40}", standards_ref):
                 raise ValueError("imagespec HA validation requires the reviewed full standards-ref SHA")
             reserved = root / ".hass-standards-tools"
             if reserved.exists() or reserved.is_symlink():
@@ -151,6 +159,8 @@ jobs:
         with open(os.environ["GITHUB_OUTPUT"], "a") as stream:
             stream.write("required=" + str(needed).lower() + "\n")
             stream.write("active=" + str(active).lower() + "\n")
+            if active:
+                stream.write("standards-ref=" + standards_ref + "\n")
         if needed and not active:
             print("N/A: imagespec marker inactive in this matrix; ordinary regression continues, no payload version coverage is claimed")
         PAYLOAD
@@ -159,12 +169,12 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
         repository: eigger/hass-repo-standards
-        ref: ${{ inputs.standards-ref }}
+        ref: ${{ steps.payload.outputs.standards-ref }}
         path: .hass-standards-tools
         persist-credentials: false
     - name: Validate installed payload examples
       if: steps.payload.outputs.active == 'true'
-      run: test "${{ inputs.standards-ref }}" = "$(git -C .hass-standards-tools rev-parse HEAD)"
+      run: test "${{ steps.payload.outputs.standards-ref }}" = "$(git -C .hass-standards-tools rev-parse HEAD)"
     - name: Run installed payload examples
       if: steps.payload.outputs.active == 'true'
       uses: ./.hass-standards-tools/actions/check-payload
