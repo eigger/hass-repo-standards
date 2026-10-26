@@ -347,6 +347,10 @@ def validate_dependabot(data):
             "GitHub Actions updater must target the default branch at / with PRs enabled"
         )
     groups = item.get("groups", {})
+    if "cooldown" in item and not all(
+        name in item["cooldown"].get("exclude", []) for name in DEPENDENCIES
+    ):
+        raise ValueError("Central dependencies must be excluded from native release cooldown")
     if (
         item.get("schedule", {}).get("interval") != "daily"
         or next(iter(groups), None) != "central-standards"
@@ -393,6 +397,11 @@ def configure_dependabot(text=None, *, override=None):
         ]
         data["updates"].extend(actions)
     for item in actions:
+        cooldown = item.setdefault("cooldown", {})
+        excluded = cooldown.setdefault("exclude", [])
+        for name in DEPENDENCIES:
+            if name not in excluded:
+                excluded.append(name)
         item["schedule"] = {**item.get("schedule", {}), "interval": "daily"}
         item["schedule"].pop("day", None)
         if "allow" in item:

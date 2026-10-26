@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.1 — 중앙 release 대기 정책 보정
+
+- native Dependabot의 기본 3일 cooldown에서 두 형태의 중앙 dependency 이름만 명시적으로 제외해 새 중앙 release를 다음 daily 검사에서 제안하도록 합니다. 다른 패키지의 대기 정책은 유지하고, 정적 검사·누락 감사도 이 설정을 검증합니다.
+
 ## v1.1.0 — 리포별 중앙 표준 자동 업데이트
 
 - native Dependabot이 중앙 workflow·action 참조를 daily group PR로 갱신하고, 각 소비 리포가 호출하는 중앙 CI가 JSON descriptor·문서 기록을 같은 PR에 맞춥니다. 필수 검증을 명시적으로 dispatch하며 patch·minor만 CI 통과 후 자동 squash, major는 수동 검토합니다.

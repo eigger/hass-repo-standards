@@ -198,6 +198,7 @@ updates:
         actions = result["updates"][1]
         self.assertEqual(actions["schedule"], {"interval": "daily"})
         self.assertEqual(list(actions["groups"]), ["central-standards", "all"])
+        self.assertEqual(actions["cooldown"]["exclude"], update.DEPENDENCIES)
         self.assertEqual(
             update.yaml_document(update.configure_dependabot())["updates"][0]["allow"],
             [{"dependency-name": name} for name in update.DEPENDENCIES],
@@ -217,6 +218,12 @@ updates:
     def test_disabled_updates_and_specific_workflow_ignore_are_rejected(self):
         data = update.yaml_document(update.configure_dependabot())
         item = data["updates"][0]
+        del item["cooldown"]
+        update.validate_dependabot(data)  # v1.1.0 bootstrap remains compatible
+        item["cooldown"] = {"default-days": 3}
+        with self.assertRaisesRegex(ValueError, "cooldown"):
+            update.validate_dependabot(data)
+        item["cooldown"] = {"exclude": update.DEPENDENCIES}
         for field, value in (
             ("open-pull-requests-limit", 0),
             ("target-branch", "other"),
