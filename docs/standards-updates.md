@@ -10,6 +10,8 @@
 
 ## 첫 설치와 호환성
 
+v1.1.2 caller는 PR 번호를 `fromJSON(format(...))`으로 숫자로 정규화합니다. GitHub가 수동 입력 `0`을 문자열로 반환해 재사용 workflow의 number 검증에 실패했던 실행을 실제 파일럿에서 확인했습니다. 이전 caller 식도 검증 계약에서 정확히 식별해 tag-only Dependabot PR의 업그레이드를 차단하지 않습니다. 이전 식의 수동 `0` 한계는 operator bootstrap으로 수정하며 다른 event·permission·author guard는 완화하지 않습니다. 이후 caller 구조 변경도 native Dependabot이 workflow 내용을 이관한다고 가정하지 말고 호환성 또는 별도 operator 이관을 명시해야 합니다.
+
 기존 리포의 최초 설치는 workflow 수정 권한을 가진 운영자가 검토 가능한 PR로 수행합니다. 중앙 release를 publish하고 원격 검증한 후 다음 명령으로 변경 계획을 출력합니다. `--write`를 추가하면 관리 파일만 수정합니다.
 
 ```text

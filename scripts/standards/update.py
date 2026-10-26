@@ -27,6 +27,17 @@ DEPENDENCIES = [CENTRAL, PREFIX + "*"]
 CALLER = ".github/workflows/update_standards.yml"
 MANAGED = {".hass-standards.json", "STANDARDS.md"}
 PROVIDER = reference.UPDATE_PROVIDER
+LEGACY_NUMBER_INPUT = "${{ github.event.pull_request.number || inputs.pull-request-number || 0 }}"
+NUMBER_INPUT = "${{ fromJSON(format('{0}', github.event.pull_request.number || inputs.pull-request-number || 0)) }}"
+
+
+def caller_contract(document):
+    """Recognize the one prior input expression without relaxing other caller fields."""
+    result = copy.deepcopy(document)
+    inputs = result.get("jobs", {}).get("update", {}).get("with", {})
+    if inputs.get("pull-request-number") == LEGACY_NUMBER_INPUT:
+        inputs["pull-request-number"] = NUMBER_INPUT
+    return result
 
 
 class Loader(yaml.SafeLoader):

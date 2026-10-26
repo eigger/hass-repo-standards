@@ -104,6 +104,16 @@ class Repository:
 
 
 class StandardsUpdate(unittest.TestCase):
+    def test_previous_caller_expression_is_compatible_without_weakening_security_fields(self):
+        source = Path(__file__).resolve().parents[1] / "templates/integration" / update.CALLER
+        current = update.yaml_document(source.read_text())
+        old = update.yaml_document(
+            source.read_text().replace(update.NUMBER_INPUT, update.LEGACY_NUMBER_INPUT)
+        )
+        self.assertEqual(update.caller_contract(current), update.caller_contract(old))
+        old["jobs"]["update"]["if"] = "always()"
+        self.assertNotEqual(update.caller_contract(current), update.caller_contract(old))
+
     def test_atomic_bundle_preserves_history_and_only_writes_metadata(self):
         repo = Repository()
         result = repo.sync()
