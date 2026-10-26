@@ -23,6 +23,8 @@ python scripts/install_standards_updater.py /absolute/consumer --release v1.1.0 
 
 ## 누락 감사
 
+GitHub의 [기본 cooldown](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference)은 새 버전 제안을 3일 지연할 수 있습니다. 설치기는 중앙 dependency의 두 이름만 `cooldown.exclude`에 명시해 다음 daily 검사 대상으로 만들고, 나머지 패키지의 대기 정책은 보존합니다. 이 보정은 v1.1.1부터 포함됩니다. 검사기는 이 exclude가 빠지면 CI-13으로 실패합니다.
+
 [standards-consumers.json](../standards-consumers.json)은 운영 대상 목록입니다. [audit-consumers.yml](../.github/workflows/audit-consumers.yml)은 매일 계정의 모든 nonfork·nonarchived 리포와 실제 기본 브랜치 tree를 페이지 끝까지 열거합니다. GitHub code search의 인덱싱·결과 제한에 의존하지 않습니다. 발견된 중앙 참조/descriptor와 등록 목록을 대조하므로 새 리포 등록 누락도 실패합니다. 읽기 실패·잘린 tree·버전/메타데이터 불일치·설치 누락·최신 release 업데이트 PR 부재를 성공으로 처리하지 않습니다. 최신 버전이면 `current`, 업데이트 PR이 있으면 `pending`과 링크를 기록합니다. pending은 CI 통과나 머지 완료를 뜻하지 않습니다. 감사는 읽기 전용이며 다른 리포를 수정하지 않습니다.
 
 Dependabot 검사 시각과 Actions schedule에는 지연이 있을 수 있습니다. 새 release 직후 아직 PR이 없다면 감사가 실패하고 다음 daily 실행에서 재평가합니다. 운영자는 해당 리포의 Dependabot update job과 updater run을 확인합니다. 기존 필수 CI, major 수동 검토, 브랜치 자동 삭제 설정은 별개로 유지합니다.
