@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.2 — 수동·예약 실행 입력 타입 보정
+
+- workflow_dispatch의 숫자 입력 `0`이 문자열로 전달될 때 reusable workflow의 number 계약을 위반하는 문제를 수정합니다. caller에서 format/fromJSON으로 PR 이벤트·수동·예약 값을 명시적으로 숫자로 정규화합니다. PR 작성자·검증·자동 머지 범위는 유지합니다.
+
 ## v1.1.1 — 중앙 release 대기 정책 보정
 
 - native Dependabot의 기본 3일 cooldown에서 두 형태의 중앙 dependency 이름만 명시적으로 제외해 새 중앙 release를 다음 daily 검사에서 제안하도록 합니다. 다른 패키지의 대기 정책은 유지하고, 정적 검사·누락 감사도 이 설정을 검증합니다.
