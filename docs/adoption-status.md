@@ -13,7 +13,13 @@
 
 ## HA 통합 리포
 
-적용 대상 22개와 제외 3개입니다. 현재 중앙 참조는 **`v1.1.2` / `df9798509d9228247ec32efb313ec7b687b5b152`**입니다. 중앙 자동 업데이트 설치 PR 22개의 새 HEAD에서 필수 CI 전체 성공과 squash 반영을 확인했고, 실제 기본 브랜치 감사도 current 22개·오류 0개로 통과했습니다. [최신 배포 검증과 리포별 근거](standards-updates-rollout.md)를 확인합니다. 아래 표는 2026-10-25의 v1.0.0 참조 전환 이력(22 PR·CI 64건)과 기존 전체 채택 상태를 보존합니다.
+### 2026-10-27 current HA 자동 기대값 후속
+
+담당 root / 독립 리뷰 review_pr36. 중앙 [PR #36](https://github.com/eigger/hass-repo-standards/pull/36)은 독립 리뷰 차단 지적 없이 squash `c8c2771a2de68769af40f56e19e958e374e6e091`로 병합했습니다. 해당 커밋의 [필수 CI 4개](https://github.com/eigger/hass-repo-standards/actions/runs/40413753268)와 [draft 준비](https://github.com/eigger/hass-repo-standards/actions/runs/40413976945)가 성공했고, 이번 세션의 명시적 사용자 승인으로 [immutable v1.1.3](https://github.com/eigger/hass-repo-standards/releases/tag/v1.1.3)을 발행했습니다. release metadata·내부 action SHA·관리자 preflight 및 발행 후 `verify-release`의 immutable/peeled SHA 확인을 완료했습니다. 로컬 Python 3.14.6/packaging 26.3/PyYAML 6.0.3/Ruff 0.17.1에서 UTF-8 `test_tools` 31개·Ruff check/format·actionlint 1.7.12·중앙 검사 통과. 초기 CRLF 템플릿 비교 실패는 중앙 snapshot을 LF로 읽어 재검증했으며 대상 파일을 우회하지 않았습니다. Windows 전체 suite는 플랫폼 오류 발생 후 중단했고 PASS로 기록하지 않습니다. 전체 회귀·실제 HA runtime 성공 근거는 해당 Linux CI입니다.
+
+hass-ble-esl은 기본 브랜치 `5137b9d`에서 [후속 PR #277](https://github.com/eigger/hass-ble-esl/pull/277) 적용 중입니다. 중앙 v1.1.3 채택, current/editor의 고정 HA 기대값 제거, [#275](https://github.com/eigger/hass-ble-esl/pull/275)의 플러그인 0.13.373 갱신을 함께 검증합니다. 최소 HA 2025.12.0·최소 requirements/constraints·지원 메타데이터와 기존 전체 채택 상태·예외는 유지합니다. 다른 21개 리포의 참조는 기존 Dependabot daily PR·메타데이터 동기화·same-major 자동 머지 경로에 맡기며 이번 세션에서 일괄 수정하지 않습니다. updater는 고정 기대값을 제거하지 않으므로 해당 전환은 별도 부분 적용 대상입니다. 상세 후속 검증은 대상 ADOPTION_CHECKLIST와 적용 PR에 기록합니다.
+
+적용 대상 22개와 제외 3개입니다. 자동 업데이트 설치 완료 시점의 중앙 참조는 **`v1.1.2` / `df9798509d9228247ec32efb313ec7b687b5b152`**입니다. 중앙 자동 업데이트 설치 PR 22개의 새 HEAD에서 필수 CI 전체 성공과 squash 반영을 확인했고, 해당 시점의 실제 기본 브랜치 감사도 current 22개·오류 0개로 통과했습니다. [설치 배포 검증과 리포별 근거](standards-updates-rollout.md)를 확인합니다. 이후 v1.1.3 갱신은 위 후속 기록과 각 자동 PR의 실제 결과로 확인하며 발행만으로 22개 채택 완료를 주장하지 않습니다. 아래 표는 2026-10-25의 v1.0.0 참조 전환 이력(22 PR·CI 64건)과 기존 전체 채택 상태를 보존합니다.
 
 | 리포 / 기본 브랜치 | 전체 채택 기록 | v1.0.0 전환 이력 / CI | 상세 근거·남은 항목 |
 |---|---|---|---|
