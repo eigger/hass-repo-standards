@@ -314,6 +314,14 @@ class IntegrationContract(unittest.TestCase):
         self.assertFalse(errors())
         path.write_text(explicit.rstrip("\n") + "\n" + minimum)
         self.assertTrue(any("CI-07" in e for e in errors()))
+        # Library-mode split with the same HA is not a separate minimum HA job.
+        same = "  minimum:
+" + body.replace(key, "      expected-ha-version: '2026.10.2'
+" + key, 1)
+        path.write_text(explicit.rstrip("
+") + "
+" + same)
+        self.assertFalse(errors())
 
     def test_unpinned_central_workflows_and_action_fail(self):
         path = self.root / ".github/workflows/validate.yml"

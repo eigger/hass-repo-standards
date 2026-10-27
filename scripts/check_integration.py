@@ -159,14 +159,14 @@ def workflow_errors(root, config, domain):
             # A separate minimum HA job asserts its own exact HA; `current` follows the plugin pin.
             current = jobs.get("current")
 
-            def expected(job):
+            def ha_pin(job):
                 return str(job.get("with", {}).get("expected-ha-version") or "").strip()
 
             if (
                 current in calls
-                and expected(current)
+                and ha_pin(current)
                 and any(
-                    job is not current and expected(job) != expected(current) and expected(job)
+                    job is not current and ha_pin(job) != ha_pin(current) and ha_pin(job)
                     for job in calls
                 )
             ):
