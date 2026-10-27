@@ -20,7 +20,7 @@
 
 공통 영역의 실제 파일은 [README.md](README.md)·[README.ko.md](README.ko.md)입니다. 이 안내 파일을 통합 README로 복사하지 않습니다. 기존 본문의 섹션 순서·제목·내용은 각 리포에 맡기고 그대로 보존합니다. 중앙 템플릿은 공통 영역의 문구·순서·줄바꿈만 강제하며 본문 전체 틀을 강제하지 않습니다.
 
-requirements_lint.txt는 복사할 수 있는 실제 고정 예시입니다. requirements_test.txt는 PyPI 메타데이터에서 HA 2026.10.2와 pytest-homeassistant-custom-component 0.13.373의 호환 선언을 확인한 예시이며 Python 3.14를 사용합니다. 모든 통합의 지원 최소를 이 버전으로 올리라는 뜻은 아닙니다. 실제 지원 범위를 확인하고 조합을 검증합니다.
+requirements_lint.txt는 복사할 수 있는 실제 고정 예시입니다. requirements_test.txt는 PyPI 메타데이터에서 pytest-homeassistant-custom-component 0.13.373이 HA 2026.10.2를 정확히 요구함을 확인한 예시(HA는 별도로 적지 않음)이며 Python 3.14를 사용합니다. 모든 통합의 지원 최소를 이 버전으로 올리라는 뜻은 아닙니다. 실제 지원 범위를 확인하고 조합을 검증합니다.
 
 **최신 테스트 환경과 지원 최소는 별개입니다.** 최신화 요청으로 hacs.json의 최소 버전을 올리거나 기존 최소 job을 삭제하지 않습니다. 최신 테스트 실패는 호환 문제를 수정하고 재검증합니다. 새 API 등 구버전 비호환 근거와 별도 명시적 사용자 승인이 있는 지원 정책 변경만 최소 상향을 허용합니다.
 

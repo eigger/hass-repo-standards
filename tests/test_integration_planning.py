@@ -381,12 +381,12 @@ class IntegrationPlanning(unittest.TestCase):
         requirements = [
             line for line in generated.splitlines() if line and not line.startswith("#")
         ]
+        self.assertEqual(len(requirements), 1)
+        self.assertTrue(requirements[0].startswith("pytest-homeassistant-custom-component=="))
         original = (
             "# Existing compatible environment; retain this explanation.\r\n\r\n  "
             + requirements[0]
-            + "  \r\n\t# Existing plugin rationale\r\n\t"
-            + requirements[1]
-            + "\t\r\n"
+            + "\t\r\n\t# Existing plugin rationale\r\n"
         ).encode("utf-8")
         path = self.target / "requirements_test.txt"
         path.write_bytes(original)
@@ -426,15 +426,22 @@ class IntegrationPlanning(unittest.TestCase):
         )
         lines = [line for line in generated.splitlines() if line and not line.startswith("#")]
         path = self.target / "requirements_test.txt"
+        legacy = "homeassistant==2026.10.2"  # the plugin already pins the exact HA
         variants = (
-            [lines[0].replace("==", ">="), lines[1]],
-            [lines[0] + '; python_version >= "3.14"', lines[1]],
-            [lines[0].replace("homeassistant", "homeassistant[extra]"), lines[1]],
+            [lines[0].replace("==", ">=")],
+            [lines[0] + '; python_version >= "3.14"'],
+            [
+                lines[0].replace(
+                    "pytest-homeassistant-custom-component",
+                    "pytest-homeassistant-custom-component[extra]",
+                )
+            ],
             [*lines, "pytest-timeout==2.4.0"],
             [*lines, "-r other.txt"],
             [*lines, "-c constraints.txt"],
-            [lines[0] + " # inline comment retained for review", lines[1]],
-            [lines[0], lines[0], lines[1]],
+            [*lines, legacy],
+            [lines[0] + " # inline comment retained for review"],
+            [lines[0], lines[0]],
         )
         for variant in variants:
             with self.subTest(variant=variant):

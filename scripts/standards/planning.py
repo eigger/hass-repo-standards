@@ -748,7 +748,8 @@ def plan(
                 continue
             content = (
                 "# Confirmed current HA test environment; execution remains pending.\n"
-                + f"homeassistant=={env['ha']}\npytest-homeassistant-custom-component=={env['pytest_homeassistant_custom_component']}\n"
+                "# The plugin pins the exact homeassistant, so it is not listed separately.\n"
+                + f"pytest-homeassistant-custom-component=={env['pytest_homeassistant_custom_component']}\n"
             )
         elif destination == "tests/components/" + data["domain"]["value"] + "/conftest.py":
             existing = target / destination
