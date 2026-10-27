@@ -28,7 +28,7 @@
 
 HA domain과 PyPI 배포 이름은 같다고 가정하지 않습니다. HA가 제공하는 모듈을 통합의 직접 의존성처럼 다시 추가하지 않고, 테스트 전용 패키지를 런타임 manifest에 넣지 않습니다. 설치된 HA 패키지를 기본으로 하며 Core 저장소의 최신 requirements 전체를 다른 HA 버전에 섞어 설치하지 않습니다.
 
-**DEP-07 필수**: HA 통합 테스트 환경에는 호환되는 `pytest-homeassistant-custom-component`와 실제 `homeassistant`가 반드시 설치돼야 합니다. 플러그인과 HA의 정확한 호환 버전을 requirements/lock/constraints로 기록합니다. 플러그인이 HA를 고정하면 해당 제약을 따르며 중복 선언을 충돌시키지 않습니다. 현재 환경의 requirements에는 플러그인만 고정하고 `homeassistant`를 따로 적지 않습니다. 별도 pin은 Dependabot이 둘을 따로 올려 설치 충돌을 만듭니다. 최소 HA 환경만 지원 최소를 exact로 고정합니다. pytest·asyncio·timeout·snapshot은 선택한 플러그인이 제공하는 요구사항을 우선하고, 직접 사용하는 추가 도구만 호환 버전으로 명시합니다.
+**DEP-07 필수**: HA 통합 테스트 환경에는 호환되는 `pytest-homeassistant-custom-component`와 실제 `homeassistant`가 반드시 설치돼야 합니다. 플러그인과 HA의 정확한 호환 버전을 requirements/lock/constraints로 기록합니다. 플러그인이 HA를 고정하면 해당 제약을 따르며 중복 선언을 충돌시키지 않습니다. 현재 환경의 requirements에는 플러그인만 고정하고 `homeassistant`를 따로 적지 않습니다. 별도 pin은 Dependabot이 둘을 따로 올려 설치 충돌을 만듭니다. 최소 HA 환경은 별도 requirements에서 지원 최소를 exact로 고정하고, 최소/current 공용 job은 명시적 `expected-ha-version`으로 검증합니다. pytest·asyncio·timeout·snapshot은 선택한 플러그인이 제공하는 요구사항을 우선하고, 직접 사용하는 추가 도구만 호환 버전으로 명시합니다.
 
 사용하는 HA 구성요소의 `requirements`와 필수 `dependencies`를 재귀적으로 설치하고, 선택 경로에서 실제 로딩하는 `after_dependencies`도 테스트 대상에 명시합니다. Bluetooth 등을 가짜 모듈로 바꿔 missing dependency를 숨기거나, 모듈 import만 되는 환경을 HA 실행 검증으로 취급하지 않습니다. 설치 확인 후 [실제 통합 로딩 테스트](testing.md)를 실행합니다.
 

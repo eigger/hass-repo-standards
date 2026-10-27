@@ -430,7 +430,12 @@ class IntegrationPlanning(unittest.TestCase):
         variants = (
             [lines[0].replace("==", ">=")],
             [lines[0] + '; python_version >= "3.14"'],
-            [lines[0].replace("pytest-homeassistant", "pytest-homeassistant[extra]")],
+            [
+                lines[0].replace(
+                    "pytest-homeassistant-custom-component",
+                    "pytest-homeassistant-custom-component[extra]",
+                )
+            ],
             [*lines, "pytest-timeout==2.4.0"],
             [*lines, "-r other.txt"],
             [*lines, "-c constraints.txt"],
