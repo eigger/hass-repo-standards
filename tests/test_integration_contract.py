@@ -295,6 +295,26 @@ class IntegrationContract(unittest.TestCase):
             path.write_text(replacement)
             self.assertTrue(any("CI-02" in e for e in contract.check(self.root)))
 
+    def test_current_job_follows_plugin_pin_when_minimum_job_exists(self):
+        path = self.root / ".github/workflows/tests.yml"
+        original = path.read_text()
+        key = "      test-profile: ha\n"
+        explicit = original.replace(key, "      expected-ha-version: '2026.10.2'\n" + key, 1)
+        body = original.split("  current:\n", 1)[1]
+        minimum = "  minimum-ha:\n" + body.replace(
+            key, "      expected-ha-version: '2025.1.0'\n" + key, 1
+        )
+
+        def errors():
+            return [e for e in contract.check(self.root) if "expected-ha-version" in e]
+
+        path.write_text(explicit)  # a single shared job keeps its explicit minimum
+        self.assertFalse(errors())
+        path.write_text(original.rstrip("\n") + "\n" + minimum)
+        self.assertFalse(errors())
+        path.write_text(explicit.rstrip("\n") + "\n" + minimum)
+        self.assertTrue(any("CI-07" in e for e in errors()))
+
     def test_unpinned_central_workflows_and_action_fail(self):
         path = self.root / ".github/workflows/validate.yml"
         path.write_text(path.read_text().replace("@" + "a" * 40, "@main"))
