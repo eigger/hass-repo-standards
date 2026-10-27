@@ -1,7 +1,5 @@
 name: Audit standards consumers
 'on':
-  schedule:
-    - cron: '17 6 * * *'
   workflow_dispatch: null
 permissions:
   contents: read
