@@ -155,6 +155,29 @@ def workflow_errors(root, config, domain):
             for job in calls
         ):
             errors.append(("CI-07", rel, "HA profile and actual domain required"))
+        if path.name == "tests.yml":
+            # A separate minimum HA job asserts its own exact HA; `current` follows the plugin pin.
+            current = jobs.get("current")
+
+            def ha_pin(job):
+                return str(job.get("with", {}).get("expected-ha-version") or "").strip()
+
+            if (
+                current in calls
+                and ha_pin(current)
+                and any(
+                    job is not current and ha_pin(job) != ha_pin(current) and ha_pin(job)
+                    for job in calls
+                )
+            ):
+                errors.append(
+                    (
+                        "CI-07",
+                        rel,
+                        "current job must leave expected-ha-version empty when a separate "
+                        "minimum HA job exists; it follows the test plugin HA pin",
+                    )
+                )
         for job in calls:
             if job.get("if") is not None or job.get("needs") or job.get("continue-on-error", False):
                 errors.append(
