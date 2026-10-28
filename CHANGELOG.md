@@ -3,8 +3,8 @@
 ## Unreleased — Dependabot 자동 머지를 중앙 재사용 workflow로 이동
 
 - 소비 리포마다 복사하던 `dependabot_auto_merge.yml` 로직(작성자·같은 저장소·기본 브랜치 검증, patch·minor squash 자동 머지)을 재사용 workflow `dependabot-auto-merge.yml`로 옮기고, 리포에는 트리거·권한·`uses: ...@vX`만 가진 caller 템플릿을 둡니다. 이후 로직 변경은 중앙 릴리스와 기존 `central-standards` Dependabot PR의 참조 갱신으로 전파됩니다.
-- 병합된 Dependabot PR의 같은 저장소 `dependabot/*` 브랜치를 삭제하는 `cleanup` job을 추가합니다. `GITHUB_TOKEN`으로 예약된 자동 머지는 저장소의 head branch 자동 삭제에 의존할 수 없고 Dependabot 후처리가 누락되면 브랜치가 남기 때문입니다. PR 코드는 체크아웃하지 않으며 이미 삭제된 브랜치는 무시합니다.
-- `install_standards_updater.py`는 기존의 표준 복사본만 caller로 교체하고 사용자 지정 guard는 명시적 검토 대상으로 거부합니다. CI-13은 caller가 중앙 템플릿과 같은지 검사합니다. 이미 설치된 리포는 이 릴리스 이후 설치 PR 한 번으로 전환합니다.
+- 병합된 Dependabot 브랜치를 정리하는 `cleanup` job을 추가합니다. `GITHUB_TOKEN`으로 예약된 자동 머지는 `closed`·`push` 같은 후속 workflow 이벤트를 발생시키지 않아 병합 이벤트에만 의존할 수 없으므로, 일 1회 `schedule`(과 수동 `workflow_dispatch`) 정리를 기본 경로로 두고 `closed`는 빠른 경로로만 씁니다. 병합된 같은 저장소 Dependabot PR의 head SHA와 브랜치 끝이 같고 열린 PR이 없는 `dependabot/*` 브랜치만 삭제하며, PR 코드는 체크아웃하지 않고 같은 이름으로 다시 만들어진 브랜치는 건드리지 않습니다.
+- `install_standards_updater.py`는 이전에 복사되던 표준 파일(central-standards 제외 조건 유무만 허용)만 caller로 교체하고, job·trigger·step이 다른 사용자 지정 파일은 명시적 검토 대상으로 거부합니다. CI-13은 caller 또는 표준 복사본을 허용하므로, 설치 전의 리포도 중앙 표준 갱신 PR이 막히지 않습니다. 복사본을 caller로 바꾸기 전에는 정리 job이 동작하지 않으므로, 이 릴리스 이후 설치 PR을 리포마다 한 번 보내야 하며 이후 릴리스에서 CI-13을 caller 필수로 강화할 수 있습니다.
 
 ## Unreleased — Follow the test plugin's Home Assistant pin
 

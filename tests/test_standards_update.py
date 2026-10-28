@@ -3,6 +3,7 @@
 import base64
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -31,6 +32,9 @@ DOC = """# Standards
 ## Adoption history
 Keep this historical SHA aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
 """
+
+
+EXTRA_JOB = "  label:\n    runs-on: ubuntu-latest\n    steps: []\n"
 
 
 class Repository:
@@ -135,44 +139,119 @@ class StandardsUpdate(unittest.TestCase):
 
     def test_automerge_caller_replaces_only_the_standard_generic_copy(self):
         template = (ROOT / "templates/integration" / update.AUTOMERGE_CALLER).read_text()
-        generic = GENERIC_AUTOMERGE
-        legacy = generic.replace(" &&\n      " + update.AUTO_EXCLUSION, "")
+        legacy = update.LEGACY_AUTOMERGE
+        grouped = legacy.replace(
+            "default_branch\n", "default_branch &&\n      " + update.AUTO_EXCLUSION + "\n", 1
+        )
+        self.assertIn(update.AUTO_EXCLUSION, grouped)
         rendered = template.replace("@main", "@v1.1.0")
-        self.assertEqual(update.automerge_caller(generic, template, "v1.1.0"), rendered)
         self.assertEqual(update.automerge_caller(legacy, template, "v1.1.0"), rendered)
+        self.assertEqual(update.automerge_caller(grouped, template, "v1.1.0"), rendered)
         self.assertEqual(update.automerge_caller(rendered, template, "v1.1.0"), rendered)
         older = template.replace("@main", "@v1.0.1")
         self.assertEqual(update.automerge_caller(older, template, "v1.1.0"), rendered)
-        with self.assertRaisesRegex(ValueError, "explicit review"):
-            update.automerge_caller(
-                generic.replace("dependabot[bot]", "someone"), template, "v1.1.0"
-            )
-        with self.assertRaisesRegex(ValueError, "explicit review"):
-            update.automerge_caller(
-                template.replace("pull-requests: write", "pull-requests: read"), template, "v1.1.0"
-            )
+        customized = {
+            "other author": legacy.replace("dependabot[bot]", "someone"),
+            "merge method": legacy.replace("--squash", "--merge"),
+            "extra trigger": legacy.replace("types: [", "branches: [x]\n    types: ["),
+            "extra job": legacy + EXTRA_JOB,
+            "weaker permissions": template.replace("pull-requests: write", "pull-requests: read"),
+        }
+        for name, text in customized.items():
+            with self.subTest(name), self.assertRaisesRegex(ValueError, "explicit review"):
+                update.automerge_caller(text, template, "v1.1.0")
 
-    def test_automerge_cleanup_is_limited_to_merged_same_repo_dependabot_branches(self):
+    def test_automerge_workflow_runs_cleanup_from_schedule_not_only_closed_events(self):
         reusable = update.yaml_document(
             (ROOT / ".github/workflows/dependabot-auto-merge.yml").read_text()
         )
-        cleanup = reusable["jobs"]["cleanup"]
+        jobs = reusable["jobs"]
+        merge = " ".join(jobs["auto-merge"]["if"].split())
+        self.assertIn("github.event_name == 'pull_request_target'", merge)
+        self.assertIn("github.event.action != 'closed'", merge)
+        cleanup = jobs["cleanup"]
         condition = " ".join(cleanup["if"].split())
         for required in (
+            "github.event_name != 'pull_request_target'",
             "github.event.action == 'closed'",
             "github.event.pull_request.merged == true",
             "github.event.pull_request.user.login == 'dependabot[bot]'",
             "github.event.pull_request.head.repo.full_name == github.repository",
-            "startsWith(github.event.pull_request.head.ref, 'dependabot/')",
         ):
             self.assertIn(required, condition)
-        self.assertEqual(cleanup["permissions"], {"contents": "write"})
+        self.assertEqual(cleanup["permissions"], {"contents": "write", "pull-requests": "read"})
         self.assertFalse(any("uses" in step for step in cleanup["steps"]))
-        self.assertIn("closed", " ".join(reusable["jobs"]["auto-merge"]["if"].split()))
+        script = cleanup["steps"][0]["run"]
+        self.assertNotIn("${{", script)
+        for guard in (
+            "dependabot/*",
+            '[ "$ref" != "$default" ]',
+            ".head.sha == $sha",
+            '.state == "open"',
+            "dependabot[bot]",
+        ):
+            self.assertIn(guard, script)
+        for path in (".github/workflows/dependabot_auto_merge.yml",):
+            central = update.yaml_document((ROOT / path).read_text())
+            self.assertIn("schedule", central["on"])
         template = update.yaml_document(
             (ROOT / "templates/integration" / update.AUTOMERGE_CALLER).read_text()
         )
         self.assertIn("closed", template["on"]["pull_request_target"]["types"])
+        self.assertIn("schedule", template["on"])
+        self.assertIn("workflow_dispatch", template["on"])
+        self.assertEqual(
+            template["jobs"]["auto-merge"]["permissions"],
+            {"contents": "write", "pull-requests": "write"},
+        )
+
+    def test_bootstrap_converts_only_an_existing_standard_copy(self):
+        templates = ROOT / "templates/integration"
+        caller = (templates / update.CALLER).read_text()
+        automerge = (templates / update.AUTOMERGE_CALLER).read_text()
+        config = json.dumps({"repository": "eigger/sample", "standards": OLD})
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / ".github/workflows").mkdir(parents=True)
+            (root / ".hass-standards.json").write_text(config)
+            (root / "STANDARDS.md").write_text(DOC)
+            (root / ".github/workflows/tests.yml").write_text(WORKFLOW)
+            changes = update.bootstrap_changes(root, NEW, caller, automerge)
+            self.assertNotIn(update.AUTOMERGE_CALLER, changes)
+            (root / update.AUTOMERGE_CALLER).write_text(update.LEGACY_AUTOMERGE)
+            changes = update.bootstrap_changes(root, NEW, caller, automerge)
+            self.assertEqual(
+                changes[update.AUTOMERGE_CALLER], automerge.replace("@main", "@v1.1.0")
+            )
+            (root / update.AUTOMERGE_CALLER).write_text(changes[update.AUTOMERGE_CALLER])
+            self.assertNotIn(
+                update.AUTOMERGE_CALLER, update.bootstrap_changes(root, NEW, caller, automerge)
+            )
+            (root / update.AUTOMERGE_CALLER).write_text(update.LEGACY_AUTOMERGE + EXTRA_JOB)
+            with self.assertRaisesRegex(ValueError, "explicit review"):
+                update.bootstrap_changes(root, NEW, caller, automerge)
+
+    def test_ci13_accepts_caller_or_standard_copy_and_rejects_customizations(self):
+        from standards import validation
+
+        template = (ROOT / "templates/integration" / update.AUTOMERGE_CALLER).read_text()
+        config = {"standards": OLD, "standards_update": update.PROVIDER}
+
+        def problems(text):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / ".github/workflows").mkdir(parents=True)
+                (root / "STANDARDS.md").write_text(DOC, encoding="utf-8")
+                if text is not None:
+                    (root / update.AUTOMERGE_CALLER).write_text(text)
+                found = validation.reference_errors(root, lambda base, name: base / name, config)
+                return [e for e in found if e[0] == "CI-13" and e[1] == update.AUTOMERGE_CALLER]
+
+        self.assertEqual(problems(None), [])
+        self.assertEqual(problems(template.replace("@main", "@v1.0.1")), [])
+        self.assertEqual(problems(update.LEGACY_AUTOMERGE), [])
+        self.assertTrue(problems(template.replace("@main", "@v1.1.0")))
+        self.assertTrue(problems(update.LEGACY_AUTOMERGE.replace("--squash", "--merge")))
 
     def test_previous_caller_expression_is_compatible_without_weakening_security_fields(self):
         source = Path(__file__).resolve().parents[1] / "templates/integration" / update.CALLER

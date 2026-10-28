@@ -806,19 +806,27 @@ def reference_errors(root, safe_path, config=None):
             actual = update.yaml_document(safe_path(root, update.CALLER).read_text())
             if update.caller_contract(actual) != update.caller_contract(expected):
                 raise ValueError("Standards updater caller must match its central template")
-            auto = safe_path(root, update.AUTOMERGE_CALLER)
-            if auto.is_file():
-                source = contract.CENTRAL / "templates/integration" / update.AUTOMERGE_CALLER
-                expected = update.yaml_document(
-                    source.read_text().replace("@main", "@" + descriptor["tag"])
-                )
-                if update.yaml_document(auto.read_text()) != expected:
-                    raise ValueError("Dependabot auto-merge must be the central caller")
             update.validate_dependabot(
                 update.yaml_document(safe_path(root, ".github/dependabot.yml").read_text())
             )
         except (ValueError, KeyError, OSError, TypeError) as error:
             errors.append(("CI-13", update.CALLER, str(error)))
+        try:
+            auto = safe_path(root, update.AUTOMERGE_CALLER)
+            if auto.is_file():
+                text = auto.read_text()
+                source = contract.CENTRAL / "templates/integration" / update.AUTOMERGE_CALLER
+                expected = update.yaml_document(
+                    source.read_text().replace("@main", "@" + config["standards"]["tag"])
+                )
+                # The former copied workflow stays valid until the installer migrates it,
+                # so a central-standards bump PR is not blocked by an unmigrated consumer.
+                if update.yaml_document(text) != expected and not update.is_legacy_automerge(text):
+                    raise ValueError(
+                        "Dependabot auto-merge must be the central caller or the standard copy"
+                    )
+        except (ValueError, KeyError, OSError, TypeError) as error:
+            errors.append(("CI-13", update.AUTOMERGE_CALLER, str(error)))
     try:
         document = safe_path(root, "STANDARDS.md").read_text(encoding="utf-8")
     except (ValueError, OSError) as error:

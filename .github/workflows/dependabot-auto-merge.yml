@@ -6,6 +6,7 @@ permissions:
 jobs:
   auto-merge:
     if: >-
+      github.event_name == 'pull_request_target' &&
       github.event.action != 'closed' &&
       github.event.pull_request.user.login == 'dependabot[bot]' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
@@ -35,30 +36,61 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
         run: gh pr merge --auto --squash "$PR_URL"
   cleanup:
-    # Auto-merge by GITHUB_TOKEN does not reliably trigger branch deletion, so
-    # remove the merged Dependabot branch here. No PR code is checked out.
+    # A merge made by GITHUB_TOKEN auto-merge starts no workflow runs, so the
+    # `closed` event is only a fast path. The scheduled sweep is what guarantees
+    # that merged Dependabot branches are removed. No PR code is checked out.
     if: >-
-      github.event.action == 'closed' &&
-      github.event.pull_request.merged == true &&
-      github.event.pull_request.user.login == 'dependabot[bot]' &&
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.head.ref != github.event.repository.default_branch &&
-      startsWith(github.event.pull_request.head.ref, 'dependabot/')
+      github.event_name != 'pull_request_target' ||
+      (github.event.action == 'closed' &&
+       github.event.pull_request.merged == true &&
+       github.event.pull_request.user.login == 'dependabot[bot]' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
+    concurrency:
+      group: dependabot-branch-cleanup-${{ github.repository }}
+      cancel-in-progress: false
     permissions:
       contents: write
+      pull-requests: read
     steps:
-      - name: Delete the merged Dependabot branch
+      - name: Delete merged Dependabot branches
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EVENT_HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           set -euo pipefail
-          # Dependabot or the repository setting may have deleted it first.
-          if ! output=$(gh api --method DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$HEAD_REF" 2>&1); then
-            case "$output" in
-              *"Reference does not exist"*) echo "Branch already deleted: $HEAD_REF" ;;
-              *) echo "$output" >&2; exit 1 ;;
-            esac
+          owner=${GITHUB_REPOSITORY%%/*}
+          default=$(gh api "repos/$GITHUB_REPOSITORY" --jq .default_branch)
+          if [ -n "$EVENT_HEAD_REF" ]; then
+            refs=$EVENT_HEAD_REF
+          else
+            refs=$(gh api --paginate "repos/$GITHUB_REPOSITORY/git/matching-refs/heads/dependabot/" \
+              --jq '.[].ref | sub("^refs/heads/"; "")')
           fi
+          while IFS= read -r ref; do
+            case "$ref" in
+              dependabot/*) ;;
+              *) continue ;;
+            esac
+            [ "$ref" != "$default" ] || continue
+            sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$ref" --jq .object.sha 2>/dev/null) || continue
+            prs=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls" \
+              -f state=all -f head="$owner:$ref" -f per_page=100 --jq '.[]' | jq -s '.')
+            # Delete only a branch whose tip is exactly a merged same-repo Dependabot PR
+            # head and that no open PR uses, so a recreated branch of the same name stays.
+            if jq -e --arg sha "$sha" --arg repo "$GITHUB_REPOSITORY" '
+                (map(select(.state == "open")) | length) == 0 and
+                (map(select(.merged_at != null and .user.login == "dependabot[bot]"
+                  and .head.repo.full_name == $repo and .head.sha == $sha)) | length) > 0
+              ' <<<"$prs" >/dev/null; then
+              if ! output=$(gh api --method DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$ref" 2>&1); then
+                case "$output" in
+                  *"Reference does not exist"*) echo "Already deleted: $ref" ;;
+                  *) echo "$output" >&2; exit 1 ;;
+                esac
+              else
+                echo "Deleted: $ref"
+              fi
+            fi
+          done <<<"$refs"
