@@ -120,6 +120,13 @@ def is_legacy_automerge(text):
         job = document["jobs"]["auto-merge"]
         terms = [" ".join(term.split()) for term in job["if"].split("&&")]
         job["if"] = [term for term in terms if term and term != AUTO_EXCLUSION]
+        # Consumers' own Dependabot bumps this pinned action, so its version may differ.
+        for step in job["steps"]:
+            uses = step.get("uses")
+            if isinstance(uses, str) and uses.startswith("dependabot/fetch-metadata@"):
+                if not re.fullmatch(r"dependabot/fetch-metadata@[0-9a-f]{40}", uses):
+                    raise ValueError("fetch-metadata must stay pinned to a full SHA")
+                step["uses"] = "dependabot/fetch-metadata"
         return document
 
     try:

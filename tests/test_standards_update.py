@@ -160,6 +160,19 @@ class StandardsUpdate(unittest.TestCase):
         for name, text in customized.items():
             with self.subTest(name), self.assertRaisesRegex(ValueError, "explicit review"):
                 update.automerge_caller(text, template, "v1.1.0")
+        # The consumer's own Dependabot bumps the pinned action; that must not block migration.
+        bumped = legacy.replace(
+            "dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98",
+            "dependabot/fetch-metadata@" + "c" * 40,
+        )
+        self.assertNotEqual(bumped, legacy)
+        self.assertEqual(update.automerge_caller(bumped, template, "v1.1.0"), rendered)
+        unpinned = legacy.replace(
+            "dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98",
+            "dependabot/fetch-metadata@v3",
+        )
+        with self.assertRaisesRegex(ValueError, "explicit review"):
+            update.automerge_caller(unpinned, template, "v1.1.0")
 
     def test_automerge_workflow_runs_cleanup_from_schedule_not_only_closed_events(self):
         reusable = update.yaml_document(

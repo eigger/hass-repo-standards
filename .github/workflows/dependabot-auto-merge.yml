@@ -74,7 +74,10 @@ jobs:
               *) continue ;;
             esac
             [ "$ref" != "$default" ] || continue
-            sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$ref" --jq .object.sha 2>/dev/null) || continue
+            if ! sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$ref" --jq .object.sha 2>/dev/null); then
+              echo "Skipped (ref not readable or already gone): $ref"
+              continue
+            fi
             prs=$(gh api --method GET --paginate "repos/$GITHUB_REPOSITORY/pulls" \
               -f state=all -f head="$owner:$ref" -f per_page=100 --jq '.[]' | jq -s '.')
             # Delete only a branch whose tip is exactly a merged same-repo Dependabot PR
