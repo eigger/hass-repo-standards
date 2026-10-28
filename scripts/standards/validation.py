@@ -811,6 +811,22 @@ def reference_errors(root, safe_path, config=None):
             )
         except (ValueError, KeyError, OSError, TypeError) as error:
             errors.append(("CI-13", update.CALLER, str(error)))
+        try:
+            auto = safe_path(root, update.AUTOMERGE_CALLER)
+            if auto.is_file():
+                text = auto.read_text()
+                source = contract.CENTRAL / "templates/integration" / update.AUTOMERGE_CALLER
+                expected = update.yaml_document(
+                    source.read_text().replace("@main", "@" + config["standards"]["tag"])
+                )
+                # The former copied workflow stays valid until the installer migrates it,
+                # so a central-standards bump PR is not blocked by an unmigrated consumer.
+                if update.yaml_document(text) != expected and not update.is_legacy_automerge(text):
+                    raise ValueError(
+                        "Dependabot auto-merge must be the central caller or the standard copy"
+                    )
+        except (ValueError, KeyError, OSError, TypeError) as error:
+            errors.append(("CI-13", update.AUTOMERGE_CALLER, str(error)))
     try:
         document = safe_path(root, "STANDARDS.md").read_text(encoding="utf-8")
     except (ValueError, OSError) as error:

@@ -14,8 +14,13 @@ def main():
     parser.add_argument("--write", action="store_true")
     args = parser.parse_args()
     new = update.attest_release(args.release)
-    template = Path(__file__).resolve().parents[1] / "templates/integration" / update.CALLER
-    changes = update.bootstrap_changes(args.root, new, template.read_text())
+    templates = Path(__file__).resolve().parents[1] / "templates/integration"
+    changes = update.bootstrap_changes(
+        args.root,
+        new,
+        (templates / update.CALLER).read_text(),
+        (templates / update.AUTOMERGE_CALLER).read_text(),
+    )
     print(json.dumps({"standards": new, "files": sorted(changes)}, indent=2))
     if args.write:
         for relative, text in changes.items():

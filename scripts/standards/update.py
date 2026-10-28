@@ -25,11 +25,50 @@ CENTRAL = "eigger/hass-repo-standards"
 PREFIX = CENTRAL + "/"
 DEPENDENCIES = [CENTRAL, PREFIX + "*"]
 CALLER = ".github/workflows/update_standards.yml"
+AUTOMERGE_CALLER = ".github/workflows/dependabot_auto_merge.yml"
 MANAGED = {".hass-standards.json", "STANDARDS.md"}
 PROVIDER = reference.UPDATE_PROVIDER
 LEGACY_NUMBER_INPUT = "${{ github.event.pull_request.number || inputs.pull-request-number || 0 }}"
 NUMBER_INPUT = "${{ fromJSON(format('{0}', github.event.pull_request.number || inputs.pull-request-number || 0)) }}"
 AUTO_EXCLUSION = "!startsWith(github.event.pull_request.head.ref, 'dependabot/github_actions/central-standards-')"
+
+
+LEGACY_AUTOMERGE = """name: Dependabot auto-merge
+'on':
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+permissions:
+  contents: read
+concurrency:
+  group: dependabot-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+jobs:
+  auto-merge:
+    if: >-
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.base.ref == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # Inspect GitHub metadata only; never check out or execute PR code.
+      - name: Read verified Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Enable squash auto-merge for patch and minor updates
+        if: >-
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --squash "$PR_URL"
+"""
 
 
 def exclude_central_automerge(text):
@@ -59,6 +98,41 @@ def exclude_central_automerge(text):
     if count != 1:
         raise ValueError("Cannot safely locate generic auto-merge guard")
     return result
+
+
+def automerge_caller(current, template, tag):
+    """Replace the standard generic copy with the central caller; custom guards need review."""
+    rendered = template.replace("@main", "@" + tag)
+    pattern = (
+        r"(eigger/hass-repo-standards/\.github/workflows/dependabot-auto-merge\.yml)@[^\s#'\"]+"
+    )
+    pinned = re.sub(pattern, lambda match: match.group(1) + "@" + tag, current)
+    if yaml_document(pinned) == yaml_document(rendered) or is_legacy_automerge(current):
+        return rendered
+    raise ValueError("Custom generic auto-merge workflow requires explicit review")
+
+
+def is_legacy_automerge(text):
+    """True only for the former copied workflow, with or without the central-group exclusion."""
+
+    def normalized(document):
+        document = copy.deepcopy(document)
+        job = document["jobs"]["auto-merge"]
+        terms = [" ".join(term.split()) for term in job["if"].split("&&")]
+        job["if"] = [term for term in terms if term and term != AUTO_EXCLUSION]
+        # Consumers' own Dependabot bumps this pinned action, so its version may differ.
+        for step in job["steps"]:
+            uses = step.get("uses")
+            if isinstance(uses, str) and uses.startswith("dependabot/fetch-metadata@"):
+                if not re.fullmatch(r"dependabot/fetch-metadata@[0-9a-f]{40}", uses):
+                    raise ValueError("fetch-metadata must stay pinned to a full SHA")
+                step["uses"] = "dependabot/fetch-metadata"
+        return document
+
+    try:
+        return normalized(yaml_document(text)) == normalized(yaml_document(LEGACY_AUTOMERGE))
+    except (KeyError, TypeError, AttributeError, ValueError, yaml.YAMLError):
+        return False
 
 
 def caller_contract(document):
@@ -467,10 +541,17 @@ def configure_dependabot(text=None, *, override=None):
     return yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
 
 
-def bootstrap_changes(root, new, template):
+def bootstrap_changes(root, new, template, automerge_template):
     """Explicit installer run by an operator with workflow write authority, not in CI."""
     root = Path(root).resolve()
-    for relative in (*MANAGED, ".github", ".github/workflows", ".github/dependabot.yml", CALLER):
+    for relative in (
+        *MANAGED,
+        ".github",
+        ".github/workflows",
+        ".github/dependabot.yml",
+        CALLER,
+        AUTOMERGE_CALLER,
+    ):
         path = root / relative
         if path.is_symlink() or not path.resolve().is_relative_to(root):
             raise ValueError(f"Managed path escapes checkout: {relative}")
@@ -527,10 +608,10 @@ def bootstrap_changes(root, new, template):
             raise ValueError(f"Unsupported caller formatting: {path}")
         result[path.relative_to(root).as_posix()] = after
     result[CALLER] = template.replace("@main", "@" + new["tag"])
-    generic = root / ".github/workflows/dependabot_auto_merge.yml"
+    generic = root / AUTOMERGE_CALLER
     if generic.exists():
-        result[generic.relative_to(root).as_posix()] = exclude_central_automerge(
-            generic.read_text()
+        result[AUTOMERGE_CALLER] = automerge_caller(
+            generic.read_text(), automerge_template, new["tag"]
         )
     dep = root / ".github/dependabot.yml"
     result[".github/dependabot.yml"] = configure_dependabot(

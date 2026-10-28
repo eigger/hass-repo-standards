@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased — Follow the test plugin's Home Assistant pin
+## v1.1.4 — 재사용 Dependabot 자동 머지·브랜치 정리와 HA pin 추종
+
+### Dependabot 자동 머지를 중앙 재사용 workflow로 이동
+
+- 소비 리포마다 복사하던 `dependabot_auto_merge.yml` 로직(작성자·같은 저장소·기본 브랜치 검증, patch·minor squash 자동 머지)을 재사용 workflow `dependabot-auto-merge.yml`로 옮기고, 리포에는 트리거·권한·`uses: ...@vX`만 가진 caller 템플릿을 둡니다. 이후 로직 변경은 중앙 릴리스와 기존 `central-standards` Dependabot PR의 참조 갱신으로 전파됩니다.
+- 병합된 Dependabot 브랜치를 정리하는 `cleanup` job을 추가합니다. `GITHUB_TOKEN`으로 예약된 자동 머지는 `closed`·`push` 같은 후속 workflow 이벤트를 발생시키지 않아 병합 이벤트에만 의존할 수 없으므로, 일 1회 `schedule`(과 수동 `workflow_dispatch`) 정리를 기본 경로로 두고 `closed`는 빠른 경로로만 씁니다. 병합된 같은 저장소 Dependabot PR의 head SHA와 브랜치 끝이 같고 열린 PR이 없는 `dependabot/*` 브랜치만 삭제하며, PR 코드는 체크아웃하지 않고 같은 이름으로 다시 만들어진 브랜치는 건드리지 않습니다.
+- `install_standards_updater.py`는 이전에 복사되던 표준 파일(central-standards 제외 조건 유무만 허용)만 caller로 교체하고, job·trigger·step이 다른 사용자 지정 파일은 명시적 검토 대상으로 거부합니다. CI-13은 caller 또는 표준 복사본을 허용하므로, 설치 전의 리포도 중앙 표준 갱신 PR이 막히지 않습니다. 복사본을 caller로 바꾸기 전에는 정리 job이 동작하지 않으므로, 이 릴리스 이후 설치 PR을 리포마다 한 번 보내야 하며 이후 릴리스에서 CI-13을 caller 필수로 강화할 수 있습니다.
+
+### Follow the test plugin's Home Assistant pin
 
 - 현재 환경의 `requirements_test.txt` 템플릿·렌더러는 `pytest-homeassistant-custom-component`만 고정하고 `homeassistant`를 따로 적지 않습니다. 플러그인이 정확한 HA를 요구하므로 별도 pin은 Dependabot이 둘을 따로 올릴 때 설치 충돌만 만듭니다. 기존 리포에서 별도 `homeassistant==` 줄이 남은 파일은 `adopt`에서 reviewed merge 대상이 됩니다. 최소 HA 환경 requirements는 지원 최소를 exact로 고정하는 기존 방식을 유지합니다.
 - `ha` 환경의 빈 `expected-ha-version`은 설치된 테스트 플러그인의 활성 exact HA pin을 읽어 실제 설치값과 비교합니다. 플러그인 업데이트로 HA 버전이 바뀌어도 current/editor에 같은 값을 중복 관리할 필요가 없습니다.
