@@ -806,6 +806,14 @@ def reference_errors(root, safe_path, config=None):
             actual = update.yaml_document(safe_path(root, update.CALLER).read_text())
             if update.caller_contract(actual) != update.caller_contract(expected):
                 raise ValueError("Standards updater caller must match its central template")
+            auto = safe_path(root, update.AUTOMERGE_CALLER)
+            if auto.is_file():
+                source = contract.CENTRAL / "templates/integration" / update.AUTOMERGE_CALLER
+                expected = update.yaml_document(
+                    source.read_text().replace("@main", "@" + descriptor["tag"])
+                )
+                if update.yaml_document(auto.read_text()) != expected:
+                    raise ValueError("Dependabot auto-merge must be the central caller")
             update.validate_dependabot(
                 update.yaml_document(safe_path(root, ".github/dependabot.yml").read_text())
             )

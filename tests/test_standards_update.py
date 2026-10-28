@@ -10,6 +10,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from standards import reference, update  # noqa: E402
 
+ROOT = Path(__file__).resolve().parents[1]
 OLD = reference.descriptor("v1.0.1", "a" * 40)
 NEW = reference.descriptor("v1.1.0", "b" * 40)
 WORKFLOW = """name: Test
@@ -103,16 +104,75 @@ class Repository:
         return update.sync_pr("eigger/sample", 1, api=self.api, attest=lambda tag: NEW, **kwargs)
 
 
+GENERIC_AUTOMERGE = """name: Dependabot auto-merge
+'on':
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+permissions:
+  contents: read
+jobs:
+  auto-merge:
+    if: >-
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.base.ref == github.event.repository.default_branch &&
+      !startsWith(github.event.pull_request.head.ref, 'dependabot/github_actions/central-standards-')
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh pr merge --auto --squash "$PR_URL"
+"""
+
+
 class StandardsUpdate(unittest.TestCase):
     def test_generic_automerge_owns_other_dependencies_and_retains_author_verification(self):
-        path = Path(__file__).resolve().parents[1] / ".github/workflows/dependabot_auto_merge.yml"
-        current = path.read_text()
+        current = GENERIC_AUTOMERGE
         old = current.replace(" &&\n      " + update.AUTO_EXCLUSION, "")
         migrated = update.exclude_central_automerge(old)
         self.assertEqual(migrated, current)
         self.assertEqual(update.exclude_central_automerge(current), current)
         with self.assertRaisesRegex(ValueError, "explicit review"):
             update.exclude_central_automerge("jobs: {auto-merge: {if: 'always()'}}")
+
+    def test_automerge_caller_replaces_only_the_standard_generic_copy(self):
+        template = (ROOT / "templates/integration" / update.AUTOMERGE_CALLER).read_text()
+        generic = GENERIC_AUTOMERGE
+        legacy = generic.replace(" &&\n      " + update.AUTO_EXCLUSION, "")
+        rendered = template.replace("@main", "@v1.1.0")
+        self.assertEqual(update.automerge_caller(generic, template, "v1.1.0"), rendered)
+        self.assertEqual(update.automerge_caller(legacy, template, "v1.1.0"), rendered)
+        self.assertEqual(update.automerge_caller(rendered, template, "v1.1.0"), rendered)
+        older = template.replace("@main", "@v1.0.1")
+        self.assertEqual(update.automerge_caller(older, template, "v1.1.0"), rendered)
+        with self.assertRaisesRegex(ValueError, "explicit review"):
+            update.automerge_caller(
+                generic.replace("dependabot[bot]", "someone"), template, "v1.1.0"
+            )
+        with self.assertRaisesRegex(ValueError, "explicit review"):
+            update.automerge_caller(
+                template.replace("pull-requests: write", "pull-requests: read"), template, "v1.1.0"
+            )
+
+    def test_automerge_cleanup_is_limited_to_merged_same_repo_dependabot_branches(self):
+        reusable = update.yaml_document(
+            (ROOT / ".github/workflows/dependabot-auto-merge.yml").read_text()
+        )
+        cleanup = reusable["jobs"]["cleanup"]
+        condition = " ".join(cleanup["if"].split())
+        for required in (
+            "github.event.action == 'closed'",
+            "github.event.pull_request.merged == true",
+            "github.event.pull_request.user.login == 'dependabot[bot]'",
+            "github.event.pull_request.head.repo.full_name == github.repository",
+            "startsWith(github.event.pull_request.head.ref, 'dependabot/')",
+        ):
+            self.assertIn(required, condition)
+        self.assertEqual(cleanup["permissions"], {"contents": "write"})
+        self.assertFalse(any("uses" in step for step in cleanup["steps"]))
+        self.assertIn("closed", " ".join(reusable["jobs"]["auto-merge"]["if"].split()))
+        template = update.yaml_document(
+            (ROOT / "templates/integration" / update.AUTOMERGE_CALLER).read_text()
+        )
+        self.assertIn("closed", template["on"]["pull_request_target"]["types"])
 
     def test_previous_caller_expression_is_compatible_without_weakening_security_fields(self):
         source = Path(__file__).resolve().parents[1] / "templates/integration" / update.CALLER

@@ -25,6 +25,7 @@ CENTRAL = "eigger/hass-repo-standards"
 PREFIX = CENTRAL + "/"
 DEPENDENCIES = [CENTRAL, PREFIX + "*"]
 CALLER = ".github/workflows/update_standards.yml"
+AUTOMERGE_CALLER = ".github/workflows/dependabot_auto_merge.yml"
 MANAGED = {".hass-standards.json", "STANDARDS.md"}
 PROVIDER = reference.UPDATE_PROVIDER
 LEGACY_NUMBER_INPUT = "${{ github.event.pull_request.number || inputs.pull-request-number || 0 }}"
@@ -59,6 +60,22 @@ def exclude_central_automerge(text):
     if count != 1:
         raise ValueError("Cannot safely locate generic auto-merge guard")
     return result
+
+
+def automerge_caller(current, template, tag):
+    """Replace the standard generic copy with the central caller; custom guards need review."""
+    rendered = template.replace("@main", "@" + tag)
+    pattern = (
+        r"(eigger/hass-repo-standards/\.github/workflows/dependabot-auto-merge\.yml)@[^\s#'\"]+"
+    )
+    pinned = re.sub(pattern, lambda match: match.group(1) + "@" + tag, current)
+    if yaml_document(pinned) == yaml_document(rendered):
+        return rendered
+    try:
+        exclude_central_automerge(current)
+    except (KeyError, TypeError) as error:
+        raise ValueError("Custom generic auto-merge workflow requires explicit review") from error
+    return rendered
 
 
 def caller_contract(document):
@@ -467,10 +484,17 @@ def configure_dependabot(text=None, *, override=None):
     return yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
 
 
-def bootstrap_changes(root, new, template):
+def bootstrap_changes(root, new, template, automerge_template):
     """Explicit installer run by an operator with workflow write authority, not in CI."""
     root = Path(root).resolve()
-    for relative in (*MANAGED, ".github", ".github/workflows", ".github/dependabot.yml", CALLER):
+    for relative in (
+        *MANAGED,
+        ".github",
+        ".github/workflows",
+        ".github/dependabot.yml",
+        CALLER,
+        AUTOMERGE_CALLER,
+    ):
         path = root / relative
         if path.is_symlink() or not path.resolve().is_relative_to(root):
             raise ValueError(f"Managed path escapes checkout: {relative}")
@@ -527,10 +551,10 @@ def bootstrap_changes(root, new, template):
             raise ValueError(f"Unsupported caller formatting: {path}")
         result[path.relative_to(root).as_posix()] = after
     result[CALLER] = template.replace("@main", "@" + new["tag"])
-    generic = root / ".github/workflows/dependabot_auto_merge.yml"
+    generic = root / AUTOMERGE_CALLER
     if generic.exists():
-        result[generic.relative_to(root).as_posix()] = exclude_central_automerge(
-            generic.read_text()
+        result[AUTOMERGE_CALLER] = automerge_caller(
+            generic.read_text(), automerge_template, new["tag"]
         )
     dep = root / ".github/dependabot.yml"
     result[".github/dependabot.yml"] = configure_dependabot(
