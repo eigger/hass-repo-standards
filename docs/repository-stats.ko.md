@@ -51,6 +51,7 @@ HACS를 통한 GitHub 릴리스 첨부 파일 다운로드도 해당 GitHub asse
 | 리포 | 최신 정식 버전 | 다운로드 | 스타 | 포크 |
 |---|---|---|---|---|
 | [hassble-android](https://github.com/eigger/hassble-android) | [![hassble-android Release](https://img.shields.io/github/v/release/eigger/hassble-android?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hassble-android/releases) | [![hassble-android GitHub downloads](https://img.shields.io/github/downloads/eigger/hassble-android/latest/total?style=flat&sort=date)](https://github.com/eigger/hassble-android/releases) | [![hassble-android Stars](https://img.shields.io/github/stars/eigger/hassble-android?style=flat)](https://github.com/eigger/hassble-android/stargazers) | [![hassble-android Forks](https://img.shields.io/github/forks/eigger/hassble-android?style=flat)](https://github.com/eigger/hassble-android/forks) |
+| [imagespec-designer](https://github.com/eigger/imagespec-designer) | [![imagespec-designer Release](https://img.shields.io/github/v/release/eigger/imagespec-designer?style=flat&sort=date&display_name=tag)](https://github.com/eigger/imagespec-designer/releases) | [![imagespec-designer GitHub downloads](https://img.shields.io/github/downloads/eigger/imagespec-designer/latest/total?style=flat&sort=date)](https://github.com/eigger/imagespec-designer/releases) | [![imagespec-designer Stars](https://img.shields.io/github/stars/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/stargazers) | [![imagespec-designer Forks](https://img.shields.io/github/forks/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/forks) |
 
 ## 공통 라이브러리
 
@@ -61,6 +62,6 @@ HACS를 통한 GitHub 릴리스 첨부 파일 다운로드도 해당 GitHub asse
 
 ## 범위와 데이터 출처
 
-사용자가 지정한 공개 `eigger` 리포를 대상으로 하며 통합 22개·관련 프로젝트 1개·공통 라이브러리 2개를 포함합니다. `hass-cyx-rgb-led`, `hass-gicisky`, `hass-divoom`, `hass-imagespec-card`, `hassble-config`, `hassio-apps`, `hass-repo-standards`는 현황표에서 제외합니다. 통계는 공통 규칙 적용 완료 여부와 독립적입니다. **수치는 자동 갱신되지만 리포 추가·이름 변경·삭제는 양언어 문서의 행과 참조 URL을 수정해야 합니다.**
+사용자가 지정한 공개 `eigger` 리포를 대상으로 하며 통합 22개·관련 프로젝트 2개·공통 라이브러리 2개를 포함합니다. `hass-cyx-rgb-led`, `hass-gicisky`, `hass-divoom`, `hass-imagespec-card`, `hassble-config`, `hassio-apps`, `hass-repo-standards`는 현황표에서 제외합니다. 통계는 공통 규칙 적용 완료 여부와 독립적입니다. **수치는 자동 갱신되지만 리포 추가·이름 변경·삭제는 양언어 문서의 행과 참조 URL을 수정해야 합니다.**
 
 배지 계약은 Shields.io 공식 문서의 [Release](https://shields.io/badges/git-hub-release), [최신 릴리스 다운로드](https://shields.io/badges/git-hub-downloads-all-assets-latest-release), [Stars](https://shields.io/badges/git-hub-repo-stars), [Forks](https://shields.io/badges/git-hub-forks)를 참조합니다. 배지별 캐시 정책은 Shields.io가 관리합니다.

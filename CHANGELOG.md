@@ -11,10 +11,14 @@
 ### Follow the test plugin's Home Assistant pin
 
 - 현재 환경의 `requirements_test.txt` 템플릿·렌더러는 `pytest-homeassistant-custom-component`만 고정하고 `homeassistant`를 따로 적지 않습니다. 플러그인이 정확한 HA를 요구하므로 별도 pin은 Dependabot이 둘을 따로 올릴 때 설치 충돌만 만듭니다. 기존 리포에서 별도 `homeassistant==` 줄이 남은 파일은 `adopt`에서 reviewed merge 대상이 됩니다. 최소 HA 환경 requirements는 지원 최소를 exact로 고정하는 기존 방식을 유지합니다.
+- `tests.yml`에 `current`와 다른 `expected-ha-version`을 명시한 별도 최소 HA job이 있으면 `current` job의 `expected-ha-version`을 CI-07 위반으로 검사합니다. 최소/current를 겸하는 단일 job과 최소 job의 명시값은 허용합니다. 이미 배포된 caller의 하드코딩이 Dependabot의 HA/플러그인 갱신을 막는 문제를 새 중앙 참조 채택 시점에 잡습니다.
+
+## v1.1.3 — 테스트 플러그인의 HA pin 추종
+
+- 기대 HA 버전 추종 방식을 정의한 변경입니다. 이후 v1.1.4가 템플릿 requirements와 CI-07 검사를 보강합니다.
 - `ha` 환경의 빈 `expected-ha-version`은 설치된 테스트 플러그인의 활성 exact HA pin을 읽어 실제 설치값과 비교합니다. 플러그인 업데이트로 HA 버전이 바뀌어도 current/editor에 같은 값을 중복 관리할 필요가 없습니다.
 - 명시적인 최소 HA 기대 버전과 `unit` profile 동작은 유지합니다. exact pin 누락·중복·범위 요구사항은 실패합니다. current 전용 템플릿/렌더러는 자동 모드를 사용하되 최소/current 공용 job은 최소 검증값을 유지합니다.
 - 기존 통합은 새 중앙 참조 채택과 current/editor 기대 버전 제거를 별도 적용해야 합니다. 이 변경은 중앙 구현만 준비하며 대상 리포·지원 최소·릴리스를 변경하지 않습니다.
-- `tests.yml`에 `current`와 다른 `expected-ha-version`을 명시한 별도 최소 HA job이 있으면 `current` job의 `expected-ha-version`을 CI-07 위반으로 검사합니다. 최소/current를 겸하는 단일 job과 최소 job의 명시값은 허용합니다. 이미 배포된 caller의 하드코딩이 Dependabot의 HA/플러그인 갱신을 막는 문제를 새 중앙 참조 채택 시점에 잡습니다.
 
 ## v1.1.2 — 수동·예약 실행 입력 타입 보정
 
