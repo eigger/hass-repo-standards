@@ -1,6 +1,6 @@
 # 중앙 적용 현황
 
-**2026-10-27 (Asia/Seoul)** 중앙 참조·자동 업데이트 후속 변경 기준입니다. 전체 채택 상태는 기존 기록을 유지합니다. 중앙에는 리포별 요약만 두고 상세 점검·실제 설치 버전·명령·리뷰는 각 리포의 `ADOPTION_CHECKLIST.md`, 기준·예외는 `STANDARDS.md`에서 확인합니다. [채택 지침](adoption.md)과 [판정 기준](checklist.md)을 따릅니다.
+**2026-10-30 (Asia/Seoul)** 중앙 참조·자동 업데이트 후속 변경 기준입니다. 전체 채택 상태는 기존 기록을 유지합니다. 중앙에는 리포별 요약만 두고 상세 점검·실제 설치 버전·명령·리뷰는 각 리포의 `ADOPTION_CHECKLIST.md`, 기준·예외는 `STANDARDS.md`에서 확인합니다. [채택 지침](adoption.md)과 [판정 기준](checklist.md)을 따릅니다.
 
 ## 상태 기준
 
@@ -12,6 +12,10 @@
 참조·배지·ZIP 같은 부분 변경의 성공은 전체 채택 완료를 뜻하지 않습니다. 과거 다른 커밋의 PASS를 최신 검증으로 재사용하지 않습니다. 실물·실서비스·HA UI 검증은 실제 HA 테스트와 별개입니다.
 
 ## HA 통합 리포
+
+### 2026-10-30 v1.1.4 참조 전환 확인
+
+적용 대상 22개 리포 모두 기본 브랜치의 중앙 workflow 참조가 immutable [v1.1.4](https://github.com/eigger/hass-repo-standards/releases/tag/v1.1.4) (`a90531d05613597632a4c10c11ce1dbc45e0bab6`)임을 GitHub API로 확인했습니다. 각 기본 브랜치 HEAD의 check run에 실패 결론은 없었습니다. skipped는 조건부 job입니다. 다만 hass-icscale(1개)·hass-kocom-smarthome(3개)·hass-minibig(3개)는 check run 수가 적어 필수 CI 전체 성공으로 단정하지 않으며, 필요한 필수 검사 목록은 각 리포에서 확인해야 합니다. 아래 v1.1.2·v1.1.3 기록은 당시 이력이고 같은 항목의 "다른 21개 리포는 일괄 수정하지 않습니다"는 이 전환으로 해소되었습니다. 전체 채택 상태·예외는 변경하지 않으며 실물·HA UI 검증은 미실시입니다.
 
 ### 2026-10-27 current HA 자동 기대값 후속
 
