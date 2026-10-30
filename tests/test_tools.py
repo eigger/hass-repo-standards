@@ -384,7 +384,7 @@ class BadgeSafety(unittest.TestCase):
             line = next(line for line in default.splitlines() if "[![Downloads]" in line)
             url = urlsplit(line.split("](", 1)[1].split(")](", 1)[0])
             self.assertEqual(url.netloc, "img.shields.io")
-            self.assertEqual(url.path, "/github/downloads/owner/repo-name/total")
+            self.assertEqual(url.path, "/github/downloads/owner/repo-name/latest/total")
             self.assertEqual(
                 parse_qs(url.query),
                 {
@@ -442,10 +442,9 @@ class BadgeSafety(unittest.TestCase):
         )
 
     def test_all_releases_downloads_badge_migrates_to_latest_release_scope(self):
-        custom = badges.downloads_badge_url("owner/repo")
-        legacy = badges.downloads_badge_url("owner/repo", "")
-        self.assertIn("/owner/repo/latest/total?", custom)
-        self.assertIn("/owner/repo/total?", legacy)
+        query = "?style=flat&color=41BDF5&label=Downloads"
+        custom = f"https://img.shields.io/github/downloads/owner/repo/latest/total{query}"
+        legacy = f"https://img.shields.io/github/downloads/owner/repo/total{query}"
         old = f"[![Downloads]({legacy})](https://github.com/owner/repo/releases)"
         new = f"[![Downloads]({custom})](https://github.com/owner/repo/releases)"
         original = badges.START + "\n" + old + "\n" + badges.END
@@ -463,7 +462,7 @@ class BadgeSafety(unittest.TestCase):
             output = badges.render(root, config)
             self.assertIn("HACS Custom", output)
             self.assertNotIn("HACS Default", output)
-            self.assertIn("github/downloads/owner/repo/total", output)
+            self.assertIn("github/downloads/owner/repo/latest/total", output)
             self.assertNotIn("label=Usage", output)
             self.assertNotIn("analytics.home-assistant.io", output)
             marked = badges.START + "\n" + output + "\n" + badges.END
