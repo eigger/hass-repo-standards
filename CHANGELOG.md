@@ -1,6 +1,6 @@
 # Changelog
 
-## 미릴리스 — Downloads 배지를 최신 릴리스 범위로 변경
+## v1.1.5 — Downloads 배지 범위 변경
 
 - DOC-03·DOC-05의 Downloads 배지를 `github/downloads/owner/repository/latest/total`로 변경합니다. 라벨은 그대로 `Downloads`입니다. 렌더러는 기존 전체 릴리스 누적 URL(`.../total`)을 관리 배지로 인식해 교체하므로 채택된 리포는 새 중앙 참조로 올린 뒤 `--write`로 README 관리 영역만 갱신하면 됩니다.
 
