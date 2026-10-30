@@ -17,7 +17,7 @@
 | HA minimum | hacs.json.homeassistant, `HA ≥ 버전` 표기 | hacs.json |
 | Tests / Validate | 해당 caller workflow 파일이 존재할 때 | 해당 workflow |
 | License | 실제 LICENSE가 있을 때 | 상대 경로 LICENSE |
-| Downloads | 확인된 Default 통합 또는 zip_release:true인 Custom 통합. 실제 owner/repository의 `github/downloads/owner/repository/total` | releases |
+| Downloads | 확인된 Default 통합 또는 zip_release:true인 Custom 통합. 실제 owner/repository의 `github/downloads/owner/repository/latest/total` | releases |
 | Usage | ZIP 미배포 Custom 통합에 실제 manifest domain으로 동적 배지를 미리 생성. 사전 조회 불필요 | HA Analytics |
 
 **DOC-04 필수**: Tests는 CI 상태를 사용합니다. 수동 `124 Passed` 같은 상수 배지는 금지합니다. CI branch는 실제 기본 브랜치를 지정하며 폴더명을 원격 리포 이름으로 가정하지 않습니다. Release 없는 리포는 배포 버전을 추측하지 않습니다.

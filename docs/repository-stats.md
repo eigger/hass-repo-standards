@@ -15,7 +15,7 @@ Statistics for eigger's Home Assistant integrations, related projects and shared
 | Stars | Current GitHub repository star count. |
 | Forks | Current GitHub repository fork count. |
 
-HACS downloads of a GitHub release asset contribute to that asset's GitHub download count. However, [HACS Downloads (Korean)](documentation.md) counts the target asset in the release selected by HACS, so its scope differs from the **latest release, all assets total** shown here. Do not add these counts or interpret them as active installations or unique users. README badges for HACS Default integrations continue to use official HACS data under DOC-05.
+HACS downloads of a GitHub release asset contribute to that asset's GitHub download count. However, [HACS Downloads (Korean)](documentation.md) counts the target asset in the release selected by HACS, so its scope differs from the **all assets total of a release** shown here. Do not add these counts or interpret them as active installations or unique users. README badges for HACS Default integrations continue to use official HACS data under DOC-05.
 
 Missing releases or failed requests may produce badge states such as `no releases`, `not found` or `invalid`; these do not mean zero downloads or version zero. Click a badge to inspect the repository's releases, stargazers or forks.
 

@@ -417,7 +417,7 @@ class BadgeSafety(unittest.TestCase):
     def test_same_named_custom_download_badges_are_preserved(self):
         custom = "[![Analytics reporting installs](https://example.com/usage)](https://example.com)"
         canonical = (
-            "[![Downloads](https://img.shields.io/github/downloads/owner/repo/total"
+            "[![Downloads](https://img.shields.io/github/downloads/owner/repo/latest/total"
             "?style=flat&color=41BDF5&label=Downloads)](https://github.com/owner/repo/releases)"
         )
         extras = [
@@ -440,6 +440,16 @@ class BadgeSafety(unittest.TestCase):
         self.assertEqual(
             badges.preserve_extra_badges(badges.replace_block(original, result), custom), result
         )
+
+    def test_all_releases_downloads_badge_migrates_to_latest_release_scope(self):
+        custom = badges.downloads_badge_url("owner/repo")
+        legacy = badges.downloads_badge_url("owner/repo", "")
+        self.assertIn("/owner/repo/latest/total?", custom)
+        self.assertIn("/owner/repo/total?", legacy)
+        old = f"[![Downloads]({legacy})](https://github.com/owner/repo/releases)"
+        new = f"[![Downloads]({custom})](https://github.com/owner/repo/releases)"
+        original = badges.START + "\n" + old + "\n" + badges.END
+        self.assertEqual(badges.preserve_extra_badges(original, new), new)
 
     def test_custom_zip_replaces_usage_with_downloads_without_claiming_default(self):
         with tempfile.TemporaryDirectory() as directory:

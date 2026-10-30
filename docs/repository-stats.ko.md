@@ -15,7 +15,7 @@ eigger의 Home Assistant 통합과 관련 프로젝트, 공통 라이브러리 `
 | 스타 | GitHub 리포의 현재 스타 수. |
 | 포크 | GitHub 리포의 현재 포크 수. |
 
-HACS를 통한 GitHub 릴리스 첨부 파일 다운로드도 해당 GitHub asset의 다운로드 수에 포함됩니다. 다만 [HACS Downloads](documentation.md)는 HACS가 선택한 릴리스의 대상 asset 다운로드 수이므로, 이 표의 **최신 릴리스·모든 asset 합계와 범위가 다릅니다.** 두 수치는 더하지 않으며 활성 설치 수·고유 사용자 수로 해석하지 않습니다. HACS Default 통합의 README 배지는 기존 DOC-05대로 HACS 공식 데이터를 사용합니다.
+HACS를 통한 GitHub 릴리스 첨부 파일 다운로드도 해당 GitHub asset의 다운로드 수에 포함됩니다. 다만 [HACS Downloads](documentation.md)는 HACS가 선택한 릴리스의 대상 asset 다운로드 수이므로, 이 표의 **릴리스 asset 합계와 범위가 다릅니다.** 두 수치는 더하지 않으며 활성 설치 수·고유 사용자 수로 해석하지 않습니다. HACS Default 통합의 README 배지는 기존 DOC-05대로 HACS 공식 데이터를 사용합니다.
 
 릴리스가 없거나 조회가 실패하면 배지에 `no releases`, `not found`, `invalid` 등의 상태가 표시될 수 있으며 버전이나 다운로드가 0이라는 뜻이 아닙니다. 배지를 클릭하면 해당 리포의 릴리스·스타·포크 원본 화면을 확인할 수 있습니다.
 
