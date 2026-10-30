@@ -34,9 +34,9 @@ def install_badge(config):
     return f"[![{INSTALL_ALT}](https://my.home-assistant.io/badges/hacs_repository.svg)]({url})"
 
 
-def downloads_badge_url(repository):
+def downloads_badge_url(repository, scope="latest/"):
     query = urlencode({"style": "flat", "color": "41BDF5", "label": "Downloads"})
-    return f"https://img.shields.io/github/downloads/{repository}/total?{query}"
+    return f"https://img.shields.io/github/downloads/{repository}/{scope}total?{query}"
 
 
 def render(repo: Path, config: dict, readme: Path | None = None):
@@ -163,7 +163,12 @@ def preserve_extra_badges(text: str, rendered: str):
                 r"https://github.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)/releases",
                 match[3],
             )
-            managed_downloads = bool(repository and match[2] == downloads_badge_url(repository[1]))
+            # The previous all-releases URL is still ours so it migrates instead of duplicating.
+            managed_downloads = bool(
+                repository
+                and match[2]
+                in (downloads_badge_url(repository[1]), downloads_badge_url(repository[1], ""))
+            )
         if match and match[1] not in known and not managed_downloads:
             extras.append(value)
         elif value.strip() and not match:

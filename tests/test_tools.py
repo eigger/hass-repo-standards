@@ -384,7 +384,7 @@ class BadgeSafety(unittest.TestCase):
             line = next(line for line in default.splitlines() if "[![Downloads]" in line)
             url = urlsplit(line.split("](", 1)[1].split(")](", 1)[0])
             self.assertEqual(url.netloc, "img.shields.io")
-            self.assertEqual(url.path, "/github/downloads/owner/repo-name/total")
+            self.assertEqual(url.path, "/github/downloads/owner/repo-name/latest/total")
             self.assertEqual(
                 parse_qs(url.query),
                 {
@@ -417,7 +417,7 @@ class BadgeSafety(unittest.TestCase):
     def test_same_named_custom_download_badges_are_preserved(self):
         custom = "[![Analytics reporting installs](https://example.com/usage)](https://example.com)"
         canonical = (
-            "[![Downloads](https://img.shields.io/github/downloads/owner/repo/total"
+            "[![Downloads](https://img.shields.io/github/downloads/owner/repo/latest/total"
             "?style=flat&color=41BDF5&label=Downloads)](https://github.com/owner/repo/releases)"
         )
         extras = [
@@ -441,6 +441,21 @@ class BadgeSafety(unittest.TestCase):
             badges.preserve_extra_badges(badges.replace_block(original, result), custom), result
         )
 
+    def test_all_releases_downloads_badge_migrates_to_latest_release_scope(self):
+        query = "?style=flat&color=41BDF5&label=Downloads"
+        custom = f"https://img.shields.io/github/downloads/owner/repo/latest/total{query}"
+        legacy = f"https://img.shields.io/github/downloads/owner/repo/total{query}"
+        old = f"[![Downloads]({legacy})](https://github.com/owner/repo/releases)"
+        new = f"[![Downloads]({custom})](https://github.com/owner/repo/releases)"
+        original = badges.START + "\n" + old + "\n" + badges.END
+        self.assertEqual(badges.preserve_extra_badges(original, new), new)
+        self.assertEqual(
+            badges.preserve_extra_badges(badges.replace_block(original, new), new), new
+        )
+        own = f"[![Downloads](https://img.shields.io/github/downloads/owner/repo/total)]({'https://github.com/owner/repo/releases'})"
+        kept = badges.START + "\n" + own + "\n" + badges.END
+        self.assertEqual(badges.preserve_extra_badges(kept, new), "\n".join([new, own]))
+
     def test_custom_zip_replaces_usage_with_downloads_without_claiming_default(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -453,7 +468,7 @@ class BadgeSafety(unittest.TestCase):
             output = badges.render(root, config)
             self.assertIn("HACS Custom", output)
             self.assertNotIn("HACS Default", output)
-            self.assertIn("github/downloads/owner/repo/total", output)
+            self.assertIn("github/downloads/owner/repo/latest/total", output)
             self.assertNotIn("label=Usage", output)
             self.assertNotIn("analytics.home-assistant.io", output)
             marked = badges.START + "\n" + output + "\n" + badges.END
