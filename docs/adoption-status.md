@@ -13,6 +13,10 @@
 
 ## HA 통합 리포
 
+### 2026-10-30 v1.1.5 참조 전환 확인
+
+중앙 [PR #43](https://github.com/eigger/hass-repo-standards/pull/43)을 squash `f56987f7f765a774c926fb8005fe5df68bb32451`로 병합하고 immutable [v1.1.5](https://github.com/eigger/hass-repo-standards/releases/tag/v1.1.5)를 발행해 `verify-release`로 원격 immutable 상태와 SHA를 확인했습니다. 적용 대상 22개 리포 모두 리포별 PR로 workflow 참조·`.hass-standards.json`·`STANDARDS.md`를 v1.1.5로 올리고 README 관리 영역의 Downloads 배지를 `github/downloads/<repo>/latest/total`(라벨 `Downloads`)로 재생성한 뒤 독립 리뷰(opus)를 거쳐 기본 브랜치에 squash 병합했습니다. Downloads 설명의 "모든 릴리스" 표현은 현재 릴리스 기준으로 정리했고, hass-garage의 남은 Usage 배지 설명은 Downloads로 바꿨습니다. 병합 뒤 22개 기본 브랜치 HEAD의 check run에 실패·취소 결론이 없고 미완료도 없음을 GitHub API로 확인했습니다. skipped는 조건부 job입니다. 통합 코드·버전·지원 최소·전체 채택 상태·예외는 변경하지 않았고 실물·HA UI 검증은 미실시입니다. 일부 workflow 첫 줄의 옛 `Shared standards` 주석은 동작과 무관해 그대로 둡니다.
+
 ### 2026-10-30 v1.1.4 참조 전환 확인
 
 적용 대상 22개 리포 모두 기본 브랜치의 중앙 workflow 참조가 immutable [v1.1.4](https://github.com/eigger/hass-repo-standards/releases/tag/v1.1.4) (`a90531d05613597632a4c10c11ce1dbc45e0bab6`)임을 GitHub API로 확인했습니다. 각 기본 브랜치 HEAD의 check run에 실패 결론은 없었습니다. skipped는 조건부 job입니다. 다만 hass-icscale(1개)·hass-kocom-smarthome(3개)·hass-minibig(3개)는 check run 수가 적어 필수 CI 전체 성공으로 단정하지 않으며, 필요한 필수 검사 목록은 각 리포에서 확인해야 합니다. 아래 v1.1.2·v1.1.3 기록은 당시 이력이고 같은 항목의 "다른 21개 리포는 일괄 수정하지 않습니다"는 이 전환으로 해소되었습니다. 전체 채택 상태·예외는 변경하지 않으며 실물·HA UI 검증은 미실시입니다.
