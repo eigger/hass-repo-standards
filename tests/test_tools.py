@@ -449,6 +449,12 @@ class BadgeSafety(unittest.TestCase):
         new = f"[![Downloads]({custom})](https://github.com/owner/repo/releases)"
         original = badges.START + "\n" + old + "\n" + badges.END
         self.assertEqual(badges.preserve_extra_badges(original, new), new)
+        self.assertEqual(
+            badges.preserve_extra_badges(badges.replace_block(original, new), new), new
+        )
+        own = f"[![Downloads](https://img.shields.io/github/downloads/owner/repo/total)]({'https://github.com/owner/repo/releases'})"
+        kept = badges.START + "\n" + own + "\n" + badges.END
+        self.assertEqual(badges.preserve_extra_badges(kept, new), "\n".join([new, own]))
 
     def test_custom_zip_replaces_usage_with_downloads_without_claiming_default(self):
         with tempfile.TemporaryDirectory() as directory:

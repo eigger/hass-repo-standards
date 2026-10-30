@@ -30,7 +30,7 @@
 | [HA Analytics](https://www.home-assistant.io/integrations/analytics) | opt-in 통계 의미 |
 | [Shields Release](https://shields.io/badges/git-hub-release) | release 배지 옵션 |
 | [Shields Workflow](https://shields.io/badges/git-hub-actions-workflow-status) | branch와 상태 배지 |
-| [Shields Downloads](https://shields.io/badges/git-hub-downloads-all-assets-all-releases) | release asset 집계 의미 |
+| [Shields Downloads](https://shields.io/badges/git-hub-downloads-all-assets-latest-release) | release asset 집계 의미 |
 
 ## 템플릿 생성 구조 검토
 
