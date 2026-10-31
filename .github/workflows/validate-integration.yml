@@ -39,7 +39,7 @@ jobs:
       with:
         persist-credentials: false
     - if: inputs.hassfest-core-ref == ''
-      uses: home-assistant/actions/hassfest@cd6f3635a740c84d8a14f6121a90068b8ece6bf6 # master snapshot 2026-10-17
+      uses: home-assistant/actions/hassfest@86d4564712fa02543c808e3a693dd04f9d3f8361 # master snapshot 2026-10-17
     - name: Fetch reviewed upstream Hassfest source
       if: inputs.hassfest-core-ref != ''
       shell: bash
