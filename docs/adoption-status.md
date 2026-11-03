@@ -1,6 +1,6 @@
 # 중앙 적용 현황
 
-**2026-10-30 (Asia/Seoul)** 중앙 참조·자동 업데이트 후속 변경 기준입니다. 전체 채택 상태는 기존 기록을 유지합니다. 중앙에는 리포별 요약만 두고 상세 점검·실제 설치 버전·명령·리뷰는 각 리포의 `ADOPTION_CHECKLIST.md`, 기준·예외는 `STANDARDS.md`에서 확인합니다. [채택 지침](adoption.md)과 [판정 기준](checklist.md)을 따릅니다.
+**2026-11-03 (Asia/Seoul)** 신규 통합 `hass-chirp` 채택 확인 및 중앙 등록 기준입니다. 전체 채택 상태는 기존 기록을 유지합니다. 중앙에는 리포별 요약만 두고 상세 점검·실제 설치 버전·명령·리뷰는 각 리포의 `ADOPTION_CHECKLIST.md`, 기준·예외는 `STANDARDS.md`에서 확인합니다. [채택 지침](adoption.md)과 [판정 기준](checklist.md)을 따릅니다.
 
 ## 상태 기준
 
@@ -12,6 +12,10 @@
 참조·배지·ZIP 같은 부분 변경의 성공은 전체 채택 완료를 뜻하지 않습니다. 과거 다른 커밋의 PASS를 최신 검증으로 재사용하지 않습니다. 실물·실서비스·HA UI 검증은 실제 HA 테스트와 별개입니다.
 
 ## HA 통합 리포
+
+### 2026-11-03 hass-chirp 신규 통합 채택 확인
+
+신규 통합 hass-chirp(Chirp 서버 디스크 SMART·CPU 모니터링)가 표준 v1.1.5(`f56987f7f765a774c926fb8005fe5df68bb32451`)를 처음부터 채택하여 작성되었습니다. PR #3 스쿼시 머지([`f255fce`](https://github.com/eigger/hass-chirp/commit/f255fce028ca9746e8eb8ad65cf3388701918fa9)), 0.1.1 릴리스 발행(`chirp.zip` HACS 애셋 첨부 완료), 그리고 기본 브랜치 푸시 CI(Tests, Validate, Standards)의 전체 성공을 확인했습니다. 적용 대상 HA 통합은 총 23개입니다.
 
 ### 2026-10-30 v1.1.5 참조 전환 확인
 
@@ -27,7 +31,7 @@
 
 hass-ble-esl은 기본 브랜치 `5137b9d`에서 [후속 PR #277](https://github.com/eigger/hass-ble-esl/pull/277)을 적용하고, head `49ed975`의 필수 9 checks 성공·독립 리뷰 차단 지적 없음 확인 후 squash [`436eb18313bbe79cef103b058f07465b860f0b6b`](https://github.com/eigger/hass-ble-esl/commit/436eb18313bbe79cef103b058f07465b860f0b6b)로 병합했습니다. 중앙 v1.1.3 채택, current/editor 고정 기대값 제거, [#275](https://github.com/eigger/hass-ble-esl/pull/275)의 플러그인 0.13.373 갱신을 포함하며 #275는 대체 완료로 닫혔습니다. 최소 HA 2025.12.0·최소 requirements/constraints·지원 메타데이터와 기존 전체 채택 상태·예외는 유지합니다. 상세 명령·실제 버전·각 환경 결과·skip 근거·CI·리뷰는 [ADOPTION_CHECKLIST](https://github.com/eigger/hass-ble-esl/blob/436eb18313bbe79cef103b058f07465b860f0b6b/ADOPTION_CHECKLIST.md)의 링크를 통해 PR #277에서 한 번 기록합니다. merge push CI는 PR 성공과 별도로 해당 PR에서 확인하며 실물·HA UI는 미검증입니다. 다른 21개 리포의 참조는 기존 Dependabot daily PR·메타데이터 동기화·same-major 자동 머지 경로에 맡기며 이번 세션에서 일괄 수정하지 않습니다. updater는 고정 기대값을 제거하지 않으므로 해당 전환은 별도 부분 적용 대상입니다.
 
-적용 대상 22개와 제외 3개입니다. 자동 업데이트 설치 완료 시점의 중앙 참조는 **`v1.1.2` / `df9798509d9228247ec32efb313ec7b687b5b152`**입니다. 중앙 자동 업데이트 설치 PR 22개의 새 HEAD에서 필수 CI 전체 성공과 squash 반영을 확인했고, 해당 시점의 실제 기본 브랜치 감사도 current 22개·오류 0개로 통과했습니다. [설치 배포 검증과 리포별 근거](standards-updates-rollout.md)를 확인합니다. 이후 v1.1.3 갱신은 위 후속 기록과 각 자동 PR의 실제 결과로 확인하며 발행만으로 22개 채택 완료를 주장하지 않습니다. 아래 표는 2026-10-25의 v1.0.0 참조 전환 이력(22 PR·CI 64건)과 기존 전체 채택 상태를 보존합니다.
+적용 대상 23개와 제외 3개입니다. 자동 업데이트 설치 완료 시점의 중앙 참조는 **`v1.1.2` / `df9798509d9228247ec32efb313ec7b687b5b152`**입니다. 중앙 자동 업데이트 설치 PR 22개의 새 HEAD에서 필수 CI 전체 성공과 squash 반영을 확인했고, 해당 시점의 실제 기본 브랜치 감사도 current 22개·오류 0개로 통과했습니다. [설치 배포 검증과 리포별 근거](standards-updates-rollout.md)를 확인합니다. 이후 v1.1.3 갱신은 위 후속 기록과 각 자동 PR의 실제 결과로 확인하며 발행만으로 22개 채택 완료를 주장하지 않습니다. 아래 표는 2026-10-25의 v1.0.0 참조 전환 이력(22 PR·CI 64건)과 기존 전체 채택 상태를 보존합니다.
 
 | 리포 / 기본 브랜치 | 전체 채택 기록 | v1.0.0 전환 이력 / CI | 상세 근거·남은 항목 |
 |---|---|---|---|
@@ -35,6 +39,7 @@ hass-ble-esl은 기본 브랜치 `5137b9d`에서 [후속 PR #277](https://github
 | [hass-ble-esl](https://github.com/eigger/hass-ble-esl) / `main` | 진행 중 | [d3ac8df5](https://github.com/eigger/hass-ble-esl/commit/d3ac8df583e42fe3dc8de4572d3b5c2b655a33b2) · [CI 1](https://github.com/eigger/hass-ble-esl/actions/runs/40183111549) / [CI 2](https://github.com/eigger/hass-ble-esl/actions/runs/40183111534) / [CI 3](https://github.com/eigger/hass-ble-esl/actions/runs/40183111225) | [체크리스트](https://github.com/eigger/hass-ble-esl/blob/d3ac8df583e42fe3dc8de4572d3b5c2b655a33b2/ADOPTION_CHECKLIST.md) · [기준·예외](https://github.com/eigger/hass-ble-esl/blob/d3ac8df583e42fe3dc8de4572d3b5c2b655a33b2/STANDARDS.md) — 기존 필수 TODO·HA-01/08·HA-10/11/13·GOV-05 예외 재검토 |
 | [hass-ble-led-sign](https://github.com/eigger/hass-ble-led-sign) / `master` | 완료 | [344aafd6](https://github.com/eigger/hass-ble-led-sign/commit/344aafd617daf792b4753b6811ab9005a7973861) · [CI 1](https://github.com/eigger/hass-ble-led-sign/actions/runs/40183114737) / [CI 2](https://github.com/eigger/hass-ble-led-sign/actions/runs/40183115016) / [CI 3](https://github.com/eigger/hass-ble-led-sign/actions/runs/40183114994) | [체크리스트](https://github.com/eigger/hass-ble-led-sign/blob/344aafd617daf792b4753b6811ab9005a7973861/ADOPTION_CHECKLIST.md) · [기준·예외](https://github.com/eigger/hass-ble-led-sign/blob/344aafd617daf792b4753b6811ab9005a7973861/STANDARDS.md) — 기존 채택 완료; 실물 미검증 |
 | [hass-catprinter](https://github.com/eigger/hass-catprinter) / `main` | 예외 포함 | [66363fc3](https://github.com/eigger/hass-catprinter/commit/66363fc372eda04dcc9a926ce5c8fcc890e846ec) · [CI 1](https://github.com/eigger/hass-catprinter/actions/runs/40183119026) / [CI 2](https://github.com/eigger/hass-catprinter/actions/runs/40183119157) | [체크리스트](https://github.com/eigger/hass-catprinter/blob/66363fc372eda04dcc9a926ce5c8fcc890e846ec/ADOPTION_CHECKLIST.md) · [기준·예외](https://github.com/eigger/hass-catprinter/blob/66363fc372eda04dcc9a926ce5c8fcc890e846ec/STANDARDS.md) — HA-02 임시 예외 `catprinter-categories-pending-hacs`; HACS 지원 시 categories 복원. Standards 분리 [PR #24](https://github.com/eigger/hass-catprinter/pull/24) CI 9개 성공 후 squash [b8d4f914](https://github.com/eigger/hass-catprinter/commit/b8d4f914c82bc8b18223f5406eb3235c19aef51b) 반영 |
+| [hass-chirp](https://github.com/eigger/hass-chirp) / `master` | 완료 | [f255fce](https://github.com/eigger/hass-chirp/commit/f255fce028ca9746e8eb8ad65cf3388701918fa9) · [CI 1](https://github.com/eigger/hass-chirp/actions/runs/41646756174) / [CI 2](https://github.com/eigger/hass-chirp/actions/runs/41646755986) / [CI 3](https://github.com/eigger/hass-chirp/actions/runs/41646755768) | [체크리스트](https://github.com/eigger/hass-chirp/blob/master/ADOPTION_CHECKLIST.md) · [기준·예외](https://github.com/eigger/hass-chirp/blob/master/STANDARDS.md) — 신규 통합 0.1.0/0.1.1 릴리스; 표준 v1.1.5 전체 채택 완료 |
 | [hass-cyx-rgb-led](https://github.com/eigger/hass-cyx-rgb-led) / `master` | 적용 제외 | — | 사용자 지정 제외; 별도 요청 전 수정하지 않음 |
 | [hass-divoom](https://github.com/eigger/hass-divoom) / `master` | 적용 제외 | — | 사용자 지정 제외; 별도 요청 전 수정하지 않음 |
 | [hass-esphome-ota](https://github.com/eigger/hass-esphome-ota) / `main` | 예외 포함 | [407ec528](https://github.com/eigger/hass-esphome-ota/commit/407ec52839f8979f471bacc06d967725b1e0fd8f) · [CI 1](https://github.com/eigger/hass-esphome-ota/actions/runs/40183122440) / [CI 2](https://github.com/eigger/hass-esphome-ota/actions/runs/40183122412) / [CI 3](https://github.com/eigger/hass-esphome-ota/actions/runs/40183122239) | [체크리스트](https://github.com/eigger/hass-esphome-ota/blob/407ec52839f8979f471bacc06d967725b1e0fd8f/ADOPTION_CHECKLIST.md) · [기준·예외](https://github.com/eigger/hass-esphome-ota/blob/407ec52839f8979f471bacc06d967725b1e0fd8f/STANDARDS.md) — GOV-05·TEST-04/HACS-01 예외; 선언 최소 HA 2024.1.0 정확 검증 미완료 |
