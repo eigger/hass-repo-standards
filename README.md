@@ -49,6 +49,7 @@ Standards references use immutable `vX.Y.Z` release tags and their full resolved
 ## Support
 
 - [Issues](https://github.com/eigger/hass-repo-standards/issues): Report bugs or request features.
+- [Discussions](https://github.com/eigger/hass-repo-standards/discussions): Ask questions and share your experience.
 
 ## License
 
