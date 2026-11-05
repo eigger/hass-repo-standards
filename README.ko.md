@@ -1,8 +1,8 @@
 # Home Assistant Repository Standards
 
-[English](README.md) | **한국어**
+eigger의 Home Assistant 커스텀 통합을 위한 공통 규칙·템플릿·재사용 workflow입니다.
 
-eigger의 Home Assistant 커스텀 통합을 위한 공통 규칙·템플릿·재사용 workflow입니다. 표준은 immutable exact `vX.Y.Z` 릴리스와 해석한 전체 커밋 SHA를 함께 기록하며, moving tag·branch·`latest`는 표준 참조로 사용하지 않습니다.
+[English](README.md) | **한국어**
 
 ## 리포별 현황
 
@@ -35,6 +35,7 @@ eigger의 Home Assistant 커스텀 통합을 위한 공통 규칙·템플릿·�
 | 25 | [imagespec-designer](https://github.com/eigger/imagespec-designer) | [![Release](https://img.shields.io/github/v/release/eigger/imagespec-designer?style=flat&sort=date&display_name=tag)](https://github.com/eigger/imagespec-designer/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/imagespec-designer/latest/total?style=flat&label=Downloads)](https://github.com/eigger/imagespec-designer/releases) | [![Stars](https://img.shields.io/github/stars/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/forks) |
 | 26 | [blesession](https://github.com/eigger/blesession) | [![Release](https://img.shields.io/github/v/release/eigger/blesession?style=flat&sort=date&display_name=tag)](https://github.com/eigger/blesession/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/blesession/latest/total?style=flat&label=Downloads)](https://github.com/eigger/blesession/releases) | [![Stars](https://img.shields.io/github/stars/eigger/blesession?style=flat)](https://github.com/eigger/blesession/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/blesession?style=flat)](https://github.com/eigger/blesession/forks) |
 | 27 | [imagespec](https://github.com/eigger/imagespec) | [![Release](https://img.shields.io/github/v/release/eigger/imagespec?style=flat&sort=date&display_name=tag)](https://github.com/eigger/imagespec/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/imagespec/latest/total?style=flat&label=Downloads)](https://github.com/eigger/imagespec/releases) | [![Stars](https://img.shields.io/github/stars/eigger/imagespec?style=flat)](https://github.com/eigger/imagespec/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/imagespec?style=flat)](https://github.com/eigger/imagespec/forks) |
+
 ## 문서
 
 [문서 구조](docs/index.md)에 규칙·템플릿·도구·참조를 역할별로 정리했습니다. 현재 이관 상태는 [중앙 적용 현황](docs/adoption-status.md)에서 확인합니다.
@@ -42,6 +43,8 @@ eigger의 Home Assistant 커스텀 통합을 위한 공통 규칙·템플릿·�
 ## 적용 방법
 
 에이전트에게 **“hass-repo-standards 공통 규칙 적용해줘”**라고 요청하세요. 적용 작업은 [AGENTS.md](AGENTS.md), 적용되는 규칙과 [통합 템플릿 사용 안내](templates/integration/USAGE.md)를 읽고, `STANDARDS.md`에 검토한 릴리즈/SHA·승인 예외를, `ADOPTION_CHECKLIST.md`에 검증 근거를 기록합니다.
+
+표준을 참조할 때는 변경할 수 없는 `vX.Y.Z` 릴리스 태그와 그 태그가 가리키는 전체 커밋 SHA를 함께 기록합니다.
 
 ## 지원
 
