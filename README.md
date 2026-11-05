@@ -1,8 +1,8 @@
 # Home Assistant Repository Standards
 
-**English** | [한국어](README.ko.md)
+Shared rules, templates and reusable workflows for eigger's Home Assistant custom integrations.
 
-Shared rules, templates and reusable workflows for eigger's Home Assistant custom integrations. Standards releases use immutable exact `vX.Y.Z` tags with a recorded resolved commit SHA; moving tags, branches and `latest` are never standards references.
+**English** | [한국어](README.ko.md)
 
 ## Live repository status
 
@@ -35,6 +35,7 @@ Shared rules, templates and reusable workflows for eigger's Home Assistant custo
 | 25 | [imagespec-designer](https://github.com/eigger/imagespec-designer) | [![Release](https://img.shields.io/github/v/release/eigger/imagespec-designer?style=flat&sort=date&display_name=tag)](https://github.com/eigger/imagespec-designer/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/imagespec-designer/latest/total?style=flat&label=Downloads)](https://github.com/eigger/imagespec-designer/releases) | [![Stars](https://img.shields.io/github/stars/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/forks) |
 | 26 | [blesession](https://github.com/eigger/blesession) | [![Release](https://img.shields.io/github/v/release/eigger/blesession?style=flat&sort=date&display_name=tag)](https://github.com/eigger/blesession/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/blesession/latest/total?style=flat&label=Downloads)](https://github.com/eigger/blesession/releases) | [![Stars](https://img.shields.io/github/stars/eigger/blesession?style=flat)](https://github.com/eigger/blesession/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/blesession?style=flat)](https://github.com/eigger/blesession/forks) |
 | 27 | [imagespec](https://github.com/eigger/imagespec) | [![Release](https://img.shields.io/github/v/release/eigger/imagespec?style=flat&sort=date&display_name=tag)](https://github.com/eigger/imagespec/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/imagespec/latest/total?style=flat&label=Downloads)](https://github.com/eigger/imagespec/releases) | [![Stars](https://img.shields.io/github/stars/eigger/imagespec?style=flat)](https://github.com/eigger/imagespec/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/imagespec?style=flat)](https://github.com/eigger/imagespec/forks) |
+
 ## Documentation
 
 [Documentation map](docs/index.md) groups the rules, templates, tool guidance and reference material. The current rollout state is in [adoption status](docs/adoption-status.md).
@@ -42,6 +43,8 @@ Shared rules, templates and reusable workflows for eigger's Home Assistant custo
 ## Using these standards
 
 Ask an agent to “Apply the shared standards from eigger/hass-repo-standards.” It should read [AGENTS.md](AGENTS.md), the applicable rules and [the integration template instructions](templates/integration/USAGE.md). Record the reviewed release/SHA and any approved exception in `STANDARDS.md`; record verification evidence in `ADOPTION_CHECKLIST.md`.
+
+Standards references use immutable `vX.Y.Z` release tags and their full resolved commit SHAs.
 
 ## Support
 
