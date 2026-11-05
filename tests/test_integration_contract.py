@@ -114,7 +114,7 @@ class IntegrationContract(unittest.TestCase):
         self.assertLess(text.index("label=Usage"), text.index("[![Special]"))
         self.assertNotIn("flat-square", text)
 
-    def test_related_projects_heading_migrates_without_dropping_content(self):
+    def test_related_projects_heading_preserves_released_format_and_notices(self):
         self.config["readme"]["related_projects"] = [
             {
                 "name": "Library",
@@ -129,8 +129,7 @@ class IntegrationContract(unittest.TestCase):
         text = text.replace(f"{start}\n{end}", f"{start}\n{old}\n{end}")
         path.write_text(text, encoding="utf-8")
         updated = contract.render_readme(self.root, self.config, "en", text)
-        self.assertIn("## Related projects\n\n- [Library]", updated)
-        self.assertNotIn("## Related Projects", updated)
+        self.assertIn("## Related Projects\n\n- [Library]", updated)
         unknown = text.replace(old, old + "\n\nKeep this notice.")
         with self.assertRaisesRegex(ValueError, "Preserve existing related-projects content"):
             contract.render_readme(self.root, self.config, "en", unknown)
