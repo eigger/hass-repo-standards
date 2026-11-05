@@ -167,7 +167,7 @@ def render_readme(root, config, language, original):
     projects = data.get("related_projects", [])
     related = []
     if projects:
-        related = ["## Related projects" if language == "en" else "## 관련 프로젝트", ""]
+        related = ["## Related Projects" if language == "en" else "## 관련 프로젝트", ""]
         related.extend(
             f"- [{line(p['name'])}]({line(p['url'])}): {line(p['description'][language])}"
             for p in projects
@@ -211,12 +211,6 @@ def guard_content(old, new, area):
         return
     for value in old.splitlines():
         if not value.strip() or value in new.splitlines():
-            continue
-        if (
-            area == "related-projects"
-            and value == "## Related Projects"
-            and "## Related projects" in new.splitlines()
-        ):
             continue
         if area == "support" and (
             value in {"## Support", "## 지원"}

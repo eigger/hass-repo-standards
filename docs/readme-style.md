@@ -20,7 +20,7 @@ A Home Assistant custom integration that {connects the device or service and des
 
 ## 본문 순서와 제목
 
-적용되는 절을 아래 순서로 배치하며 고유 절은 내용에 맞는 위치에 유지합니다. 해당하지 않는 절을 만들지 않습니다. 제목 변경 전에 기존 링크를 조사하고 필요한 참조를 갱신합니다. 영어 제목은 sentence case, 고유명사·기술 식별자는 실제 표기를 사용합니다.
+적용되는 절을 아래 순서로 배치하며 고유 절은 내용에 맞는 위치에 유지합니다. 해당하지 않는 절을 만들지 않습니다. 제목 변경 전에 기존 링크를 조사하고 필요한 참조를 갱신합니다. 영어 본문 제목은 sentence case, 고유명사·기술 식별자는 실제 표기를 사용합니다. 관리 영역의 관련 프로젝트 제목은 기존 릴리스와 호환되는 Related Projects를 유지합니다.
 
 | 영어 | 한국어 | 내용 |
 |---|---|---|
@@ -30,7 +30,7 @@ A Home Assistant custom integration that {connects the device or service and des
 | Configuration / Quick start | 설정 / 빠른 시작 | 등록, 인증, 최초 사용 |
 | Important limitations | 중요 제한사항 | 제한, 안전·이전 안내 |
 | Documentation | 문서 | 상세 안내·문제 해결·개발 문서 |
-| Support / Related projects / License | 지원 / 관련 프로젝트 / 라이선스 | 중앙 관리 영역 |
+| Support / Related Projects / License | 지원 / 관련 프로젝트 / 라이선스 | 중앙 관리 영역 |
 
 기능에 따라 센서·액션·자동화·프록시·마이그레이션 등 고유 절을 추가할 수 있습니다. 코드 블록·표·기존 주의와 근거, 검증되지 않은 상태는 보존합니다. 강조는 안전·필수 조건 등 독자의 판단에 필요한 곳에 사용합니다. 기존 고유 배지와 본문 이모지는 의미를 확인해 처리하며, 모든 제목의 이모지는 제거합니다.
 
