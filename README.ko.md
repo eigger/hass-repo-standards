@@ -49,6 +49,7 @@ eigger의 Home Assistant 커스텀 통합을 위한 공통 규칙·템플릿·�
 ## 지원
 
 - [Issues](https://github.com/eigger/hass-repo-standards/issues): 버그 신고와 기능 요청
+- [Discussions](https://github.com/eigger/hass-repo-standards/discussions): 질문하고 사용 경험을 공유하세요.
 
 ## 라이선스
 
