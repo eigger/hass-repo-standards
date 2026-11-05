@@ -114,6 +114,27 @@ class IntegrationContract(unittest.TestCase):
         self.assertLess(text.index("label=Usage"), text.index("[![Special]"))
         self.assertNotIn("flat-square", text)
 
+    def test_related_projects_heading_migrates_without_dropping_content(self):
+        self.config["readme"]["related_projects"] = [
+            {
+                "name": "Library",
+                "url": "https://example.com/library",
+                "description": {"en": "Used for rendering.", "ko": "렌더링에 사용합니다."},
+            }
+        ]
+        path = self.root / "README.md"
+        text = path.read_text(encoding="utf-8")
+        start, end = contract.markers("related-projects")
+        old = "## Related Projects\n\n- [Library](https://example.com/library): Used for rendering."
+        text = text.replace(f"{start}\n{end}", f"{start}\n{old}\n{end}")
+        path.write_text(text, encoding="utf-8")
+        updated = contract.render_readme(self.root, self.config, "en", text)
+        self.assertIn("## Related projects\n\n- [Library]", updated)
+        self.assertNotIn("## Related Projects", updated)
+        unknown = text.replace(old, old + "\n\nKeep this notice.")
+        with self.assertRaisesRegex(ValueError, "Preserve existing related-projects content"):
+            contract.render_readme(self.root, self.config, "en", unknown)
+
     def test_categories_and_recorded_review_are_required_without_automatic_defaults(self):
         path = self.root / "custom_components/example/manifest.json"
         original_manifest = path.read_bytes()

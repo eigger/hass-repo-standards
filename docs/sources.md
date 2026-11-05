@@ -129,3 +129,10 @@
 GOV-05 독립 리뷰 zip_release_review의 1차 P1(action SHA 중복 생성)·P2(mutable action 참조 허용)를 수정하고 회귀를 추가했습니다. 재리뷰 추가 지적 없음. Windows focused 테스트의 symlink 권한 skip은 Linux 전체 실행으로 보완했습니다. Linux Python 3.14.4/PyYAML 6.0.3/packaging 26.0에서 전체 226 tests·저장소 검사·actionlint 1.7.12 PASS를 확인했으며 이후 CLI output 회귀를 추가했습니다. 최종 대상 SHA·검증 명령/실제 버전·원격 CI·리뷰 결과는 중앙 PR 본문에 기록합니다.
 
 대상 10개에서 `GET /repos/eigger/<repo>/immutable-releases`를 읽기 전용 조회한 결과 모두 enabled=false/enforced_by_owner=false였습니다. [GitHub immutable release 설명](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/establish-provenance-and-integrity/prevent-release-changes)에 따라 활성화된 리포에는 published 후 업로드 workflow를 그대로 적용하지 않습니다.
+
+## 마켓플레이스와 README (2026-11-05)
+
+- [마켓플레이스 동작](https://contributors.home-assistant.io/marketplace/how-it-works/): 2026.11 내장, 기존 HACS 마이그레이션, 카탈로그·설치와 재시작 조건.
+- [저장소 구조](https://contributors.home-assistant.io/marketplace/reference/repository-structure/): `hacs.json`과 README 표시 제외 주석.
+- [HACS 용어](https://contributors.home-assistant.io/glossary/hacs/): 기존 HACS와 유지되는 카탈로그·도구 명칭.
+- [마켓플레이스 카탈로그 My 링크](https://contributors.home-assistant.io/marketplace/guides/catalog/): 기존 `hacs_repository` 링크의 이전 HACS·2026.11 이상 마켓플레이스 호환.
