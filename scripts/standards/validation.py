@@ -537,7 +537,7 @@ def check(root, config, manifest_path, manifest, safe_path, central=None):
             config.get("readme", {}).get("title"),
             *config.get("readme", {}).get("descriptions", {}).values(),
         ):
-            if isinstance(value, str) and (UNFINISHED.search(value) or value == "Integration Name"):
+            if isinstance(value, str) and (UNFINISHED.search(value) or value in {"Integration Name", "Integration Name for Home Assistant"}):
                 errors.append(("DOC-01", relative, "Unfinished common README metadata"))
                 break
     errors.extend(translation_errors(root, component, platforms, trees, safe_path, actions))

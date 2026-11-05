@@ -45,7 +45,7 @@ python3 scripts/manage_integration.py plan <target> --mode adopt --input <work>/
   },
   "readme": {
     "value": {
-      "title": "Example", "descriptions": {"en": "An integration.", "ko": "통합입니다."},
+      "title": "Example for Home Assistant", "descriptions": {"en": "An integration.", "ko": "통합입니다."},
       "issues": true, "discussions": false, "related_projects": []
     },
     "source": "explicit unit-test input (not device evidence)"
