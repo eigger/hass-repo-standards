@@ -1,12 +1,16 @@
 # README와 배지 규칙
 
-**DOC-01 필수**: README 공통 영역은 [중앙 영어 템플릿](../templates/integration/README.md)·[한국어 템플릿](../templates/integration/README.ko.md)의 문구·순서·줄바꿈·관리 주석을 의무 적용합니다. 상단은 왼쪽 정렬 프로젝트명 → 한 줄 소개 → 언어 링크 → 배지, 하단은 지원 → 관련 프로젝트(대상이 있을 때) → 라이선스입니다. 공통 영역 밖의 섹션 순서·제목·본문·예제·세부 구성은 각 리포에 맡기며 그대로 보존합니다. 간결화·문체 통일·공통 적용을 이유로 전면 재작성하거나 긴 YAML·참조·개발 명령을 다른 문서로 이동하지 않습니다. 번역 누락·깨진 링크·실제 동작과 다른 설명은 근거를 확인해 수정하되, 본문 재구성은 이유와 변경안을 제시하고 사용자 승인 후 적용합니다.
+**DOC-01 필수**: README 공통 영역은 [중앙 영어 템플릿](../templates/integration/README.md)·[한국어 템플릿](../templates/integration/README.ko.md)의 문구·순서·줄바꿈·관리 주석을 의무 적용합니다. 상단은 왼쪽 정렬 프로젝트명 → 한 줄 소개 → 언어 링크 → 배지, 하단은 지원 → 관련 프로젝트(대상이 있을 때) → 라이선스입니다. 기존 고유 기능·설정·제약·예제·이전·안전 고지와 번역 의미를 보존하면서 양언어 본문의 제목·순서·문체를 통일합니다. 긴 YAML·참조·개발 명령을 삭제하거나 공통 적용만을 이유로 다른 문서로 이동하지 않습니다. 기존 리포는 변경 계획을 먼저 만들고 제목 변경에 따른 링크·앵커와 관리 영역을 확인합니다. 자동 렌더러는 관리 영역 밖 본문을 재작성하지 않습니다.
+
+양언어 문구·제목 대응·설치 예시는 [README 작성 형식](readme-style.md)을 따릅니다. 공통 제목은 `# {표시 이름} for Home Assistant`를 사용하고 소개는 연결 대상과 제공 기능을 한두 문장으로 설명합니다. 제목에는 이모지를 사용하지 않고 영어 본문 제목은 sentence case로 씁니다. 관리 영역의 Related Projects는 기존 릴리스 표기를 유지합니다. 해당하는 절을 지원 기기·기능, 요구사항, 설치, 설정·빠른 시작, 상세 사용·제약, 문서, 지원·관련 프로젝트·라이선스 순으로 배치합니다. 실제 내용에 필요한 고유 절은 유지하며 없는 기능이나 빈 절을 만들지 않습니다. 두 언어의 제목과 순서는 대응시키되 기존 정보·코드 블록을 보존합니다.
+
+설치 절은 Home Assistant 2026.11 이상의 **설정 → 마켓플레이스**에서 배지로 저장소를 여는 경로를 안내합니다. 카탈로그에 없는 저장소를 링크에서 직접 추가하는 방법과 설치, 필요한 재시작, 통합 설정을 안내합니다. 지원 최소 버전과 기존 마이그레이션·인증·기기별 준비 조건을 유지합니다. `hacs.json`, HACS 카탈로그·검증 도구 등 실제 기술 명칭은 유지합니다. 마켓플레이스에서 설치 안내를 숨기는 `ha-marketplace:exclude-start`/`exclude-end`는 관리 주석의 경계와 기존 내용에 영향을 주지 않도록 확인 후 사용할 수 있습니다. [마켓플레이스 동작](https://contributors.home-assistant.io/marketplace/how-it-works/), [README 표시 제어](https://contributors.home-assistant.io/marketplace/reference/repository-structure/).
 
 기존 공통 영역의 내용은 보존해 합치고 중복 영역을 만들지 않습니다. 지원은 제목 다음 빈 줄과 항목별 한 줄의 Markdown 목록을 사용합니다. Issues는 버그 신고·기능 요청, Discussions는 질문·사용 경험 공유로 연결합니다. 원격 설정·주소를 확인하고 비활성 Discussions 항목은 생략하며 임의 활성화하지 않습니다. Issues도 비활성인 경우 실제 대체 지원 경로를 확인하고 중앙 템플릿 개선 또는 승인 예외로 처리합니다. 관련 프로젝트는 기존에 명시했거나 실제 참고·사용한 대상만 링크와 짧은 관계 설명으로 적고, 없으면 제목과 목록을 생략합니다. 라이선스는 마지막에 실제 이름과 LICENSE 파일 링크를 한 문장으로 표시하고 기존 저작권·출처·추가 고지를 보존합니다. 강제 줄바꿈용 `<br>`·줄 끝 공백을 추가하지 않습니다.
 
 공통 영역은 `hass-standards:header`, `support`, `related-projects`, `license`의 `start`/`end` 관리 주석으로 감쌉니다. 선택 영역이 비어도 경계 주석은 유지합니다. 기존 `hass-standards:badges` 주석은 header 안에 중첩합니다. 최초 적용은 기존 내용을 보존하며 경계를 지정하고, 이후 도구는 관리 영역 안만 수정합니다. 이전·안전 고지도 보존합니다. 중앙 템플릿을 임의 변형하지 않으며 불가피한 차이는 [승인 절차](adoption.md#중앙-템플릿과-예외)를 먼저 따릅니다.
 
-**DOC-02 필수**: 기본 `README.md`는 영어, `README.ko.md`는 한국어이며 상호 언어 링크를 제공합니다. 두 문서는 같은 구조·내용을 번역으로 유지합니다. 기존 본문·설정·이전 안내를 보존하고 누락된 번역을 보완합니다. 언어 일치를 이유로 본문을 삭제·요약·임의 재구성하지 않습니다. CI는 공통 구조·링크·배지·누락 여부를 검사하며, 담당자는 양언어 전체 내용을 대조해 번역 의미·정보 누락·임의 삭제 여부를 확인합니다. 독립 리뷰 필요 여부는 GOV-05를 따릅니다. 상세 docs는 한국어를 유지할 수 있습니다. 검증되지 않은 지원 모델·테스트 개수·호환성을 주장하지 않습니다. YAML 예시는 실제 action/schema와 맞추고 secrets는 예시 값으로 씁니다.
+**DOC-02 필수**: 기본 `README.md`는 영어, `README.ko.md`는 한국어이며 상호 언어 링크를 제공합니다. 두 문서는 같은 구조·내용을 번역으로 유지합니다. 기존 본문·설정·이전 안내를 보존하고 누락된 번역을 보완합니다. 언어 일치를 이유로 본문의 정보를 삭제하거나 요약하지 않습니다. CI는 공통 구조·링크·배지·누락 여부를 검사하며, 담당자는 양언어 전체 내용을 대조해 번역 의미·정보 누락·임의 삭제 여부를 확인합니다. 독립 리뷰 필요 여부는 GOV-05를 따릅니다. 상세 docs는 한국어를 유지할 수 있습니다. 검증되지 않은 지원 모델·테스트 개수·호환성을 주장하지 않습니다. YAML 예시는 실제 action/schema와 맞추고 secrets는 예시 값으로 씁니다.
 
 **DOC-03 필수**: 배지는 header의 언어 링크 다음, 왼쪽 정렬, `style=flat`입니다. 공통 순서는 Release → HACS → HA minimum → Tests → Validate → License → Downloads(Default 또는 ZIP 배포) → Usage(ZIP 미배포 Custom)입니다. Downloads와 Usage 중 조건에 맞는 하나만 마지막 공통 배지로 표시하며, 기존 고유 배지가 있으면 공통 배지 뒤에 보존합니다. 조건이 성립하지 않는 항목만 생략합니다(HA 통합은 HACS 상태에 맞는 집계 배지를 항상 포함).
 
@@ -26,15 +30,15 @@
 
 ## HACS 설치 링크
 
-**DOC-06 필수**의 설치 안내로 양언어 README의 기존 설치 절에 공식 [My Home Assistant HACS 저장소 배지](https://my.home-assistant.io/create-link/?redirect=hacs_repository)를 제공합니다. Default·Custom 모두 실제 저장소의 `owner`와 저장소 이름 `repository`를 사용하며 Custom은 `category=integration`을 포함합니다. `repository`에 전체 GitHub URL을 넣지 않습니다. 이 링크는 HACS의 저장소 화면을 열며 HACS 사전 설치와 사용자의 다운로드·재시작 등 기존 설치 절차를 대체하지 않습니다.
+**DOC-06 필수**의 설치 안내로 양언어 README의 기존 설치 절에 공식 [My Home Assistant HACS 저장소 배지](https://my.home-assistant.io/create-link/?redirect=hacs_repository)를 제공합니다. Default·Custom 모두 실제 저장소의 `owner`와 저장소 이름 `repository`를 사용하며 Custom은 `category=integration`을 포함합니다. `repository`에 전체 GitHub URL을 넣지 않습니다. 이 링크는 저장소 화면을 열며 사용자의 다운로드·설정 절차를 대체하지 않습니다. 2026.11 미만에서는 HACS가 필요하며, 공식 문서에 따르면 같은 링크는 2026.11 이상에서 마켓플레이스를 엽니다. [My 링크](https://contributors.home-assistant.io/marketplace/guides/catalog/).
 
 배지 이미지는 `https://my.home-assistant.io/badges/hacs_repository.svg`, 링크는 `https://my.home-assistant.io/redirect/hacs_repository/?owner=eigger&repository=hass-example&category=integration` 형태입니다. Markdown을 중앙 형식으로 사용하며 HTML도 수동 문서 예제로는 가능하지만 자동 관리 블록은 중앙 Markdown과 일치해야 합니다. 설치 배지는 상단 통계 배지의 flat 규칙 대상이 아닙니다.
 
-`hass-standards:installation:start`/`end` 블록은 설치 배지만 소유합니다. 기존 설치 제목·본문·예제를 보존하고 배지 블록을 해당 절에 추가합니다. 중앙 README 렌더러는 `installation_links`의 로컬 앵커와 일치하는 기존 제목 바로 아래에 블록을 추가합니다. 설정이 없으면 표준 `## Installation`/`## 설치`를 사용하며 설치 절도 없을 때만 지원 영역 앞에 새 절을 추가합니다. 기존 다른 설치 제목을 쓰는 리포는 제목을 바꾸거나 중복 절을 만들지 말고 실제 앵커를 설정하거나 최초 적용 때 해당 절에 배지 관리 주석을 직접 지정합니다. 설정한 앵커가 없거나 중복·위치가 잘못된 경우 기존 본문을 변경하지 않고 실패합니다. 기존 관리 블록은 내용만 갱신합니다. `sync_badges.py`는 상단 배지만 변경하며 설치 블록은 `check_integration.py --write-readmes` 또는 계획/apply로 갱신합니다.
+`hass-standards:installation:start`/`end` 블록은 설치 배지만 소유합니다. 기존 설치 제목·본문·예제를 보존하고 배지 블록을 해당 절에 추가합니다. 중앙 README 렌더러는 `installation_links`의 로컬 앵커와 일치하는 기존 제목 바로 아래에 블록을 추가합니다. 설정이 없으면 표준 `## Installation`/`## 설치`를 사용하며 설치 절도 없을 때만 지원 영역 앞에 새 절을 추가합니다. 자동 렌더러는 기존 설치 제목을 바꾸거나 중복 절을 만들지 않습니다. 다른 제목을 쓰는 리포는 실제 앵커를 설정하거나 최초 적용 때 해당 절에 배지 관리 주석을 직접 지정합니다. 별도 계획에 따른 수동 제목 통일은 링크와 설정 앵커를 함께 갱신합니다. 설정한 앵커가 없거나 중복·위치가 잘못된 경우 기존 본문을 변경하지 않고 실패합니다. 기존 관리 블록은 내용만 갱신합니다. `sync_badges.py`는 상단 배지만 변경하며 설치 블록은 `check_integration.py --write-readmes` 또는 계획/apply로 갱신합니다.
 
 ## 개발·Bluetooth 공통 문서
 
-**DOC-06 필수**: README에는 HACS 커스텀 통합임을 명확히 쓰고 Core와 유사한 구조라는 이유로 공식 Core 포함·품질 등급을 주장하지 않습니다. 개발 안내에는 [Core 대응 구조](home-assistant.md), [실제 HA 테스트 구조](testing.md), [의존성 추가 절차](dependencies.md)를 반영합니다. 개발 환경·실제 테스트 명령과 검증 환경 표를 제공하고 양언어 README에서 찾을 수 있게 연결합니다. 본문·상세 문서 배치는 리포가 결정하며 기존 내용을 공통 적용 때문에 이동하지 않습니다. 양언어 README에서 문서 경로가 유효해야 합니다. 상세 문서 언어가 한국어인 경우 링크에 언어를 표시합니다. 검증한 HA/Python/pytest 플러그인 조합과 미검증 범위를 기록합니다.
+**DOC-06 필수**: README에는 커스텀 통합임을 명확히 쓰고 Core와 유사한 구조라는 이유로 공식 Core 포함·품질 등급을 주장하지 않습니다. 개발 안내에는 [Core 대응 구조](home-assistant.md), [실제 HA 테스트 구조](testing.md), [의존성 추가 절차](dependencies.md)를 반영합니다. 개발 환경·실제 테스트 명령과 검증 환경 표를 제공하고 양언어 README에서 찾을 수 있게 연결합니다. 본문·상세 문서 배치는 리포가 결정하며 기존 내용을 공통 적용 때문에 이동하지 않습니다. 양언어 README에서 문서 경로가 유효해야 합니다. 상세 문서 언어가 한국어인 경우 링크에 언어를 표시합니다. 검증한 HA/Python/pytest 플러그인 조합과 미검증 범위를 기록합니다.
 
 **DOC-07 필수**: blesession 사용 통합은 [작성 규칙](bluetooth-documentation.md)과 중앙 [영어](../templates/integration/docs/troubleshooting.md)·[한국어](../templates/integration/docs/troubleshooting.ko.md) 기기별 템플릿을 의무 적용해 `docs/troubleshooting.md`와 `docs/troubleshooting.ko.md`를 제공합니다. 고정 H2 제목·순서, 증상/실패 단계/확인 사항/조치 표, 실제 진단·로그 안내, 기존 Issues/이슈 템플릿 연결을 유지합니다. 전원·깨우기·페어링·인증·타 앱·전송 조건은 실제 기기에 맞게 적고 기능이 없거나 해당 없으면 이유를 밝힙니다. 미검증을 검증 완료로 쓰거나 빈 템플릿·TODO·가짜 기능을 통과시키지 않습니다. 기존 기기 안내와 README 본문·고지는 보존하고 새 제보 양식·이슈 템플릿을 만들지 않습니다.
 

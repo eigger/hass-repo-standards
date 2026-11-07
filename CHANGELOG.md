@@ -1,5 +1,9 @@
 # Changelog
 
+## 미출시 — README 구조와 마켓플레이스 안내
+
+- DOC-01·DOC-02의 본문 정보 보존을 유지하면서 제목·순서·문체 정리를 허용하고 양언어 공통 구조를 정의합니다. 2026.11 이상 마켓플레이스와 이전 지원 버전 HACS 설치를 구분합니다. 설치 관리 블록은 배지만 소유합니다. 관련 프로젝트 관리 제목은 기존 릴리스와 동일한 Related Projects를 유지합니다. 기존 통합은 별도 계획과 검증 후 적용합니다.
+
 ## v1.1.5 — Downloads 배지 범위 변경
 
 - DOC-03·DOC-05의 Downloads 배지를 `github/downloads/owner/repository/latest/total`로 변경합니다. 라벨은 그대로 `Downloads`입니다. 렌더러는 기존 전체 릴리스 누적 URL(`.../total`)을 관리 배지로 인식해 교체하므로 채택된 리포는 새 중앙 참조로 올린 뒤 `--write`로 README 관리 영역만 갱신하면 됩니다.

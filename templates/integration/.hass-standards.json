@@ -17,7 +17,7 @@
     "README.ko.md": "#설치"
   },
   "readme": {
-    "title": "Integration Name",
+    "title": "Integration Name for Home Assistant",
     "descriptions": {
       "en": "A Home Assistant custom integration for the supported device.",
       "ko": "지원 기기를 위한 Home Assistant 커스텀 통합입니다."

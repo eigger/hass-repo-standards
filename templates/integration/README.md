@@ -1,5 +1,5 @@
 <!-- hass-standards:header:start -->
-# Integration Name
+# Integration Name for Home Assistant
 
 A Home Assistant custom integration for the supported device.
 
@@ -20,7 +20,7 @@ A Home Assistant custom integration for the supported device.
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=eigger&repository=hass-example&category=integration)
 <!-- hass-standards:installation:end -->
 
-<!-- Preserve the repository’s existing section order, headings, content, examples, and notices here. This comment is an adoption placeholder, not a mandatory body outline. -->
+<!-- Arrange repository-specific sections using the README style guide; preserve existing information, examples and notices. This comment is an adoption placeholder. -->
 
 <!-- hass-standards:support:start -->
 ## Support
