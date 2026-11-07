@@ -84,7 +84,14 @@ HA 통합 전용 구조·테스트는 강제하지 않습니다. 카드는 [CARD
 - hass-compact-cards의 [PR #44](https://github.com/eigger/hass-compact-cards/pull/44)에 공유 workflow와 양언어 README를 함께 반영했습니다. PR head `96778ef`의 [CI](https://github.com/eigger/hass-compact-cards/actions/runs/42382553161) 통과 후 [`22ba20e`](https://github.com/eigger/hass-compact-cards/commit/22ba20e1ed9d6f761c577762f58cf64dbe0008c8)로 스쿼시 병합했고, 병합 커밋의 [push CI](https://github.com/eigger/hass-compact-cards/actions/runs/42382611188)도 통과했습니다. [체크리스트](https://github.com/eigger/hass-compact-cards/blob/22ba20e1ed9d6f761c577762f58cf64dbe0008c8/ADOPTION_CHECKLIST.md) · [기준](https://github.com/eigger/hass-compact-cards/blob/22ba20e1ed9d6f761c577762f58cf64dbe0008c8/STANDARDS.md)
 - hass-overview-cards의 [PR #4](https://github.com/eigger/hass-overview-cards/pull/4)에 공유 workflow와 양언어 README를 함께 반영했습니다. PR head `7fb3343`의 [CI](https://github.com/eigger/hass-overview-cards/actions/runs/42382551984) 통과 후 [`37f0b4a`](https://github.com/eigger/hass-overview-cards/commit/37f0b4af2f0036e5f01ee6e4cd1396401af95837)로 스쿼시 병합했고, 병합 커밋의 [push CI](https://github.com/eigger/hass-overview-cards/actions/runs/42382611138)도 통과했습니다. [체크리스트](https://github.com/eigger/hass-overview-cards/blob/37f0b4af2f0036e5f01ee6e4cd1396401af95837/ADOPTION_CHECKLIST.md) · [기준](https://github.com/eigger/hass-overview-cards/blob/37f0b4af2f0036e5f01ee6e4cd1396401af95837/STANDARDS.md)
 
-공통 TODO는 실제 태그 배포, 마켓플레이스·HACS 설치, HA 화면·최소 HA 확인, 소유자의 라이선스 결정입니다. 이 항목이 남아 두 카드의 전체 상태는 진행 중입니다.
+### 카드 README·라이선스 후속 (2026-11-08 KST)
+
+담당 root. 사용자 요청에 따라 설치 안내를 마켓플레이스와 수동 설치로 통일하고, 배지 순서와 MIT 표기를 맞췄습니다. GitHub가 두 기본 브랜치의 라이선스를 MIT로 인식합니다.
+
+- hass-compact-cards [PR #45](https://github.com/eigger/hass-compact-cards/pull/45) → [`6b6c1b6`](https://github.com/eigger/hass-compact-cards/commit/6b6c1b64b2acebb79cfe0f0f5ca81265320dd316) · [push CI](https://github.com/eigger/hass-compact-cards/actions/runs/42424189426) · [체크리스트](https://github.com/eigger/hass-compact-cards/blob/6b6c1b64b2acebb79cfe0f0f5ca81265320dd316/ADOPTION_CHECKLIST.md) · [기준·예외](https://github.com/eigger/hass-compact-cards/blob/6b6c1b64b2acebb79cfe0f0f5ca81265320dd316/STANDARDS.md)
+- hass-overview-cards [PR #5](https://github.com/eigger/hass-overview-cards/pull/5) → [`8560fe7`](https://github.com/eigger/hass-overview-cards/commit/8560fe70f0adb4ed51a5ab1e8edc7396b6359ad7) · [push CI](https://github.com/eigger/hass-overview-cards/actions/runs/42424190374) · [체크리스트](https://github.com/eigger/hass-overview-cards/blob/8560fe70f0adb4ed51a5ab1e8edc7396b6359ad7/ADOPTION_CHECKLIST.md) · [기준·예외](https://github.com/eigger/hass-overview-cards/blob/8560fe70f0adb4ed51a5ab1e8edc7396b6359ad7/STANDARDS.md)
+
+공통 TODO는 실제 태그 배포, 마켓플레이스 설치, HA 화면·최소 HA 확인입니다. 이 항목이 남아 두 카드의 전체 상태는 진행 중입니다.
 
 ## 로컬 checkout 참고
 
