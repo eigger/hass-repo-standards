@@ -30,7 +30,7 @@ CI는 [CI-01](ci.md)처럼 읽기 전용 권한, 외부 action의 전체 SHA pin
 
 ## 채택 기록
 
-**CARD-07 필수**: 카드 리포는 `STANDARDS.md`에 새 채택은 검토한 중앙 exact 릴리스(및 resolved full SHA)를, 비릴리스 full SHA는 기존 참조 호환으로만 유지하며 적용·제외 규칙과 사유를 기록하고 `ADOPTION_CHECKLIST.md`에 대상 커밋·명령·실제 Node/npm 버전·결과·CI를 남깁니다. 미실행·원격 CI 미확인·실제 HA 미검증은 TODO로 유지합니다. 중앙 [적용 현황](adoption-status.md)은 GOV-04의 항목(대상 커밋·체크리스트·기준·남은 작업·갱신일)을 카드 리포에도 동일하게 기록하되 통합 적용 실적에는 포함하지 않으며, 상태는 현황표에 정의된 값만 씁니다. 중앙 재사용 workflow가 추가되기 전에는 로컬 workflow를 유지하고, 전환은 별도 PR로 수행합니다.
+**CARD-07 필수**: 카드 리포는 `STANDARDS.md`에 새 채택은 검토한 중앙 exact 릴리스(및 resolved full SHA)를, 비릴리스 full SHA는 기존 참조 호환으로만 유지하며 적용·제외 규칙과 사유를 기록하고 `ADOPTION_CHECKLIST.md`에 대상 커밋·명령·실제 Node/npm 버전·결과·CI를 남깁니다. 미실행·원격 CI 미확인·실제 HA 미검증은 TODO로 유지합니다. 중앙 [적용 현황](adoption-status.md)은 GOV-04 항목 전체(담당자/세션, 적용 내용, 기준 SHA·대상 커밋·체크리스트·CI·리뷰 근거, 남은 작업, 갱신일)를 카드 리포에도 동일하게 기록하되 통합 적용 실적에는 포함하지 않으며, 상태는 현황표에 정의된 값만 씁니다. 중앙 재사용 workflow가 추가되기 전에는 로컬 workflow를 유지하고, 전환은 별도 PR로 수행합니다.
 
 ## 후속 범위
 

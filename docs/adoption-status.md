@@ -70,12 +70,18 @@ HA 통합 전용 구조·테스트는 강제하지 않습니다. 카드는 [CARD
 
 | 리포 / 기본 브랜치 | 적용 범위 | 상태 |
 |---|---|---|
-| [hass-compact-cards](https://github.com/eigger/hass-compact-cards) / `main` | 카드 규칙(CARD) | 미착수(부분 참조만): [STANDARDS.md](https://github.com/eigger/hass-compact-cards/blob/main/STANDARDS.md)·[체크리스트](https://github.com/eigger/hass-compact-cards/blob/main/ADOPTION_CHECKLIST.md) 기준 `ef7762d` 선택 참조(2026-10-30), dependabot-auto-merge는 v1.1.5(`f56987f`) 재사용이나 리포 주석·STANDARDS는 v1.1.4로 남음(갱신 TODO). LICENSE·원격 CI·실제 HA/브라우저 검증 TODO. 갱신 2026-11-07 |
-| [hass-overview-cards](https://github.com/eigger/hass-overview-cards) / `main` | 카드 규칙(CARD) | 미착수(부분 참조만): [STANDARDS.md](https://github.com/eigger/hass-overview-cards/blob/main/STANDARDS.md)·[체크리스트](https://github.com/eigger/hass-overview-cards/blob/main/ADOPTION_CHECKLIST.md) 기준 `ef7762d` 선택 참조, dependabot-auto-merge v1.1.5(`f56987f`), 주석·STANDARDS는 v1.1.4로 남음. 동일 TODO. 갱신 2026-11-07 |
+| [hass-compact-cards](https://github.com/eigger/hass-compact-cards) / `main` | 카드 규칙(CARD) | 미착수 |
+| [hass-overview-cards](https://github.com/eigger/hass-overview-cards) / `main` | 카드 규칙(CARD) | 미착수 |
 | [hass-imagespec-card](https://github.com/eigger/hass-imagespec-card) / `main` | 카드 문서·CI | 미착수 |
 | [hassble-android](https://github.com/eigger/hassble-android) / `main` | Android 문서·CI | 미착수 |
 | [hassble-config](https://github.com/eigger/hassble-config) / `main` | YAML 문서·CI | 미착수 |
 | [hassio-apps](https://github.com/eigger/hassio-apps) / `master` | 앱 문서·CI | 미착수 |
+
+카드 리포 기록(2026-11-07 갱신, 중앙 채택 아님):
+
+- hass-compact-cards [`43440d3`](https://github.com/eigger/hass-compact-cards/commit/43440d3): [STANDARDS.md](https://github.com/eigger/hass-compact-cards/blob/43440d3/STANDARDS.md)·[체크리스트](https://github.com/eigger/hass-compact-cards/blob/43440d3/ADOPTION_CHECKLIST.md)에 기준 `ef7762d` 선택 참조(2026-10-30) 기록, 담당 eigger.
+- hass-overview-cards [`f4f6195`](https://github.com/eigger/hass-overview-cards/commit/f4f6195): [STANDARDS.md](https://github.com/eigger/hass-overview-cards/blob/f4f6195/STANDARDS.md)·[체크리스트](https://github.com/eigger/hass-overview-cards/blob/f4f6195/ADOPTION_CHECKLIST.md)에 같은 기준 `ef7762d` 선택 참조 기록, 담당 eigger.
+- 공통 남은 작업: dependabot-auto-merge는 v1.1.5(`f56987f`)를 쓰나 리포 주석·STANDARDS는 v1.1.4로 남음, LICENSE 미정, 원격 CI·실제 HA/브라우저 검증 미확인. 중앙 CI 실행·리뷰 근거는 아직 없습니다.
 
 ## 로컬 checkout 참고
 
