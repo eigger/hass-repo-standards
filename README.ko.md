@@ -1,6 +1,6 @@
 # Home Assistant Repository Standards
 
-eigger의 Home Assistant 커스텀 통합을 위한 공통 규칙·템플릿·재사용 workflow입니다.
+eigger의 Home Assistant 커스텀 통합과 대시보드 카드를 위한 공통 규칙·템플릿·재사용 workflow입니다.
 
 [English](README.md) | **한국어**
 
@@ -35,6 +35,15 @@ eigger의 Home Assistant 커스텀 통합을 위한 공통 규칙·템플릿·�
 | 25 | [imagespec-designer](https://github.com/eigger/imagespec-designer) | [![Release](https://img.shields.io/github/v/release/eigger/imagespec-designer?style=flat&sort=date&display_name=tag)](https://github.com/eigger/imagespec-designer/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/imagespec-designer/latest/total?style=flat&label=Downloads)](https://github.com/eigger/imagespec-designer/releases) | [![Stars](https://img.shields.io/github/stars/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/forks) |
 | 26 | [blesession](https://github.com/eigger/blesession) | [![Release](https://img.shields.io/github/v/release/eigger/blesession?style=flat&sort=date&display_name=tag)](https://github.com/eigger/blesession/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/blesession/latest/total?style=flat&label=Downloads)](https://github.com/eigger/blesession/releases) | [![Stars](https://img.shields.io/github/stars/eigger/blesession?style=flat)](https://github.com/eigger/blesession/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/blesession?style=flat)](https://github.com/eigger/blesession/forks) |
 | 27 | [imagespec](https://github.com/eigger/imagespec) | [![Release](https://img.shields.io/github/v/release/eigger/imagespec?style=flat&sort=date&display_name=tag)](https://github.com/eigger/imagespec/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/imagespec/latest/total?style=flat&label=Downloads)](https://github.com/eigger/imagespec/releases) | [![Stars](https://img.shields.io/github/stars/eigger/imagespec?style=flat)](https://github.com/eigger/imagespec/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/imagespec?style=flat)](https://github.com/eigger/imagespec/forks) |
+
+### 대시보드 카드
+
+| 리포 | 릴리스 | 다운로드 |
+|---|---|---|
+| [hass-compact-cards](https://github.com/eigger/hass-compact-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-compact-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-compact-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-compact-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-compact-cards/releases) |
+| [hass-overview-cards](https://github.com/eigger/hass-overview-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-overview-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-overview-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-overview-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-overview-cards/releases) |
+
+다운로드는 GitHub의 최신 정식 릴리스에 첨부된 파일의 다운로드 합계입니다.
 
 ## 문서
 
