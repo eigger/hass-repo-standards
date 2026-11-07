@@ -72,8 +72,8 @@ class CardWorkflowTests(unittest.TestCase):
     def test_release_job_wiring(self):
         jobs = self.release["jobs"]
         first_run = jobs["validate"]["steps"][0]
-        self.assertIn("ref_type", first_run["env"]["REF_TYPE"] + str(first_run["env"]))
-        self.assertIn("tag", first_run["run"])
+        self.assertEqual("${{ github.ref_type }}", first_run["env"]["REF_TYPE"])
+        self.assertIn('[ "$REF_TYPE" = tag ]', first_run["run"])
         uploads = [s for s in jobs["validate"]["steps"] if "upload-artifact" in s.get("uses", "")]
         self.assertEqual("card-bundle", uploads[0]["with"]["name"])
         downloads = [
@@ -90,8 +90,12 @@ class CardWorkflowTests(unittest.TestCase):
             run = job["steps"][0]["run"]
             self.assertIn('[ -n "$CHECK$LINT" ]', run)
             self.assertIn('[ -n "$TEST" ]', run)
-            self.assertIn('[[ "$script" =~ ^[A-Za-z0-9][A-Za-z0-9:_-]*$ ]]', run)
-            self.assertIn("!= .*", run)
+            self.assertIn('for script in "$CHECK" "$LINT" "$TEST" "$BUILD"', run)
+            self.assertIn(
+                '[ -z "$script" ] || [[ "$script" =~ ^[A-Za-z0-9][A-Za-z0-9:_-]*$ ]]', run
+            )
+            for rule in ("!= /*", "!= .*", "!= */.*", "!= *..*", "!= */"):
+                self.assertIn(rule, run)
 
     def test_caller_templates(self):
         base = ROOT / "templates/card/.github/workflows"
