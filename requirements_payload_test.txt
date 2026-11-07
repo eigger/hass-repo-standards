@@ -1,5 +1,5 @@
 # Tool runtime fixture, not an integration support-minimum policy.
-# imagespec 1.1.0 distribution and Python>=3.13 verified from PyPI JSON 2026-10-30.
+# imagespec 1.1.1 distribution and Python>=3.13 verified from PyPI JSON 2026-11-07.
 -r templates/integration/requirements_test.txt
 imagespec==1.1.1
 packaging==26.3
