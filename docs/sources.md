@@ -122,7 +122,7 @@
 
 ## 대시보드 카드 재확인
 
-CARD-02~03의 HACS plugin 배포 조건(`filename`, 릴리스 asset, `content_in_root`)은 아래 원문을 기준으로 하며, **2026-11-07** plugin 안내를 확인했습니다. HACS는 `dist/` → 최신 릴리스 → 저장소 루트 순으로 찾으며 파일명은 저장소 이름(`lovelace-` 접두사 예외)과 같아야 합니다. 릴리스 asset은 필수가 아닙니다(없으면 기본 브랜치 탐색). plugin 안내에는 hacs.json 키 설명이 없으므로 `filename` 재정의와 `render_readme`의 현재 지원 여부는 [start#hacsjson](https://www.hacs.xyz/docs/publish/start/#hacsjson)로 재확인이 필요합니다(미확인). 따라서 CARD의 asset 첨부는 프로젝트 정책이고 HACS 필수 조건으로 표현하지 않습니다. `start`·`include` 문서는 이번에 확인하지 않았습니다. 기준 사례 리포의 실제 구조는 [cards.md](cards.md)에 연결합니다.
+CARD-02~03의 HACS plugin 배포 조건(`filename`, 릴리스 asset, `content_in_root`)은 아래 원문을 기준으로 하며, **2026-11-07** plugin 안내를 확인했습니다. HACS는 `dist/` → 최신 릴리스 → 저장소 루트 순으로 찾으며 파일명은 저장소 이름(`lovelace-` 접두사 예외)과 같아야 합니다. 릴리스 asset은 필수가 아닙니다(없으면 기본 브랜치 탐색). plugin 안내에는 hacs.json 키 설명이 없습니다. 같은 날 [start#hacsjson](https://www.hacs.xyz/docs/publish/start/#hacsjson) 키 표를 확인했습니다: `filename`은 찾을 파일 이름이며 plugin·theme·template·python_scripts·zip_release에 적용되므로 저장소 이름과 다른 번들도 `filename`으로 지정할 수 있습니다. `content_in_root`·`homeassistant`(최소 HA, 선택)·`hacs`·`hide_default_branch`·`country`도 표에 있고 `zip_release`는 통합 전용으로 표시됩니다. `render_readme`는 표에 없으나 폐기·제거 여부는 이 페이지로 판단할 수 없습니다. 따라서 CARD의 asset 첨부는 프로젝트 정책이고 HACS 필수 조건으로 표현하지 않습니다. `include` 문서는 이번에 확인하지 않았습니다. 기준 사례 리포의 실제 구조는 [cards.md](cards.md)에 연결합니다.
 
 | 자료 | 확인 범위 |
 |---|---|
