@@ -122,11 +122,11 @@
 
 ## 대시보드 카드 재확인
 
-CARD-02~03의 HACS plugin 배포 조건(`filename`, 릴리스 asset, `content_in_root`)은 아래 원문을 기준으로 하며, 작성 시점에 원문을 다시 열어 확인하지 않았습니다. **상태: 원문 재확인 대기.** 확인 후 확인일을 이 절에 기록하고, 확인 전에는 CARD 규칙을 HACS 필수 조건으로 표현하지 않습니다. 기준 사례 리포의 실제 구조는 [cards.md](cards.md)에 연결합니다.
+CARD-02~03의 HACS plugin 배포 조건(`filename`, 릴리스 asset, `content_in_root`)은 아래 원문을 기준으로 하며, **2026-11-07** plugin 안내를 확인했습니다. HACS는 `dist/` → 최신 릴리스 → 저장소 루트 순으로 찾으며 파일명은 저장소 이름(`lovelace-` 접두사 예외)과 같아야 하고 `filename`으로 재정의합니다. 릴리스 asset은 필수가 아니며(없으면 기본 브랜치 탐색) `render_readme`는 hacs.json 키 표에 없습니다. 따라서 CARD의 asset 첨부는 프로젝트 정책이고 HACS 필수 조건으로 표현하지 않습니다. `start`·`include` 문서는 이번에 다시 확인하지 않았습니다. 기준 사례 리포의 실제 구조는 [cards.md](cards.md)에 연결합니다.
 
 | 자료 | 확인 범위 |
 |---|---|
-| [HACS plugin 게시 안내](https://www.hacs.xyz/docs/publish/plugin/) | 번들 위치·`filename`·릴리스 asset 탐색 순서 |
+| [HACS plugin 게시 안내](https://www.hacs.xyz/docs/publish/plugin/) | 번들 탐색 순서(dist → 최신 릴리스 → 루트)·`filename` |
 | [HACS 요구사항](https://www.hacs.xyz/docs/publish/start/) | 공통 리포 요구사항(`hacs.json`, README, 릴리스) |
 | [HACS hacs.json 설명](https://www.hacs.xyz/docs/publish/include/#hacsjson) | `render_readme` 등 필드의 현재 지원 여부 |
 
