@@ -8,7 +8,7 @@ Lovelace/대시보드 카드처럼 HACS `plugin`(프런트엔드 리소스 번�
 
 **CARD-01 필수**: 이 문서는 `custom_components/<domain>`이 없는 카드 리포에만 적용합니다. 카드 리포에는 manifest, Hassfest, HA pytest fixture, Ruff, 제품 categories, imagespec/blesession 계약, 통합 ZIP 릴리스, `check_integration.py`, 통합 템플릿(`.hass-standards.json`, README 관리 영역)을 강제하거나 인위적인 manifest·domain으로 우회하지 않습니다. 통합 프로필과 공통인 [GOV-01](adoption.md#중앙-템플릿과-예외) 예외 기록·[GOV-04](adoption.md#채택) 현황 갱신 원칙은 그대로 적용합니다.
 
-중앙 통합 프로필의 workflow 이름·입력·템플릿 경로는 카드 지원 때문에 변경하지 않습니다. 카드 전용 자산은 별도 파일로 추가하고 기존 통합 소비자의 갱신을 요구하지 않습니다.
+중앙 통합 프로필의 workflow 이름·입력·템플릿 경로는 카드 지원 때문에 변경하지 않습니다. 카드 전용 자산은 별도 파일로 추가하며 통합 소비자의 규칙·workflow 내용 변경을 요구하지 않습니다. 중앙 릴리스에 따른 중앙 참조 갱신 PR은 일반 [REL-06](releases.md#중앙-표준-릴리스-rel-06) 절차이며 아래 CARD-08에서 영향을 다룹니다.
 
 ## 배포
 
@@ -32,6 +32,17 @@ CI는 [CI-01](ci.md)처럼 읽기 전용 권한, 외부 action의 전체 SHA pin
 
 **CARD-07 필수**: 카드 리포는 `STANDARDS.md`에 새 채택은 검토한 중앙 exact 릴리스(및 resolved full SHA)를, 비릴리스 full SHA는 기존 참조 호환으로만 유지하며 적용·제외 규칙과 사유를 기록하고 `ADOPTION_CHECKLIST.md`에 대상 커밋·명령·실제 Node/npm 버전·결과·CI를 남깁니다. 미실행·원격 CI 미확인·실제 HA 미검증은 TODO로 유지합니다. 중앙 [적용 현황](adoption-status.md)은 GOV-04 항목 전체(담당자/세션, 적용 내용, 기준 SHA·대상 커밋·체크리스트·CI·리뷰 근거, 남은 작업, 갱신일)를 카드 리포에도 동일하게 기록하되 통합 적용 실적에는 포함하지 않으며, 상태는 현황표에 정의된 값만 씁니다. 중앙 재사용 workflow가 추가되기 전에는 로컬 workflow를 유지하고, 전환은 별도 PR로 수행합니다.
 
+## 중앙 재사용 workflow
+
+**CARD-08 권장**: 카드 리포는 로컬 복사본 대신 중앙 [card-check.yml](../.github/workflows/card-check.yml)과 [card-release.yml](../.github/workflows/card-release.yml)을 호출할 수 있습니다. caller 예시는 [templates/card](../templates/card/.github/workflows)이며 중앙 참조는 REL-06의 exact 릴리스 full SHA(버전 주석 포함)로 고정합니다. `main`·moving tag는 초안 placeholder일 뿐 채택 값이 아닙니다.
+
+- 입력: `bundle-path`(필수), `node-version`(기본 22), `check-script`·`test-script`(기본 `check`·`test`), `lint-script`·`build-script`(선택, 기본 빈 값은 생략). 셸 단계에는 입력이 환경 변수로만 전달되고, npm script 이름·번들 경로(숨김 경로·`..`·디렉터리 제외)·Node major는 사용 전에 형식 검사를 통과해야 합니다. CARD-04에 따라 `check-script` 또는 `lint-script` 중 하나와 `test-script`는 비울 수 없고 `build-script`만 선택입니다.
+- card-release는 안정 SemVer 태그 push에서만 동작하며, CARD-03의 prerelease 게시는 이 workflow의 범위 밖이라 수동 절차로 처리합니다. `validate`(읽기)가 `package.json` 버전과 태그를 대조하고 번들을 artifact로 넘기면 `release`(쓰기)가 같은 파일을 asset으로 첨부합니다. 기존 릴리스를 덮어쓰거나 `--clobber`를 쓰지 않습니다.
+- 호출하는 caller의 job에 `contents: write`를 줘야 release가 동작합니다. 재사용 workflow로 전환하면 required status check 이름이 `<caller job> / <called job>` 형태로 바뀌므로 branch protection의 필수 check를 같은 PR에서 함께 갱신합니다.
+- 전환은 카드 리포별 별도 PR로 수행하며 기존 `check.yml`·`release.yml`의 동작(필수 check, 태그 트리거)을 보존합니다. 중앙 릴리스가 발행되기 전에는 전환하지 않습니다.
+
+중앙에 workflow를 추가·변경하면 배포 단위가 바뀌므로 [REL-06](releases.md#중앙-표준-릴리스-rel-06) 릴리스가 필요하고, 통합 소비자의 Dependabot이 중앙 참조 갱신 PR을 만듭니다. 문서·현황 변경은 릴리스를 강제하지 않으므로 카드 workflow 변경은 다른 중앙 변경과 묶어 릴리스합니다.
+
 ## 후속 범위
 
-중앙 카드 검사기(`check_card.py`), 카드 템플릿, 재사용 Node workflow는 아직 없습니다. 도입 전에 카드 소비자 수·반복 중복·릴리스 갱신 부담을 확인하며, 통합 소비자에게 불필요한 갱신을 만들지 않는 릴리스 방식을 먼저 검증합니다.
+중앙 카드 검사기(`check_card.py`)와 카드 scaffold는 아직 없습니다. 도입 전에 카드 소비자 수와 반복 중복을 확인합니다. 통합 소비자의 갱신 PR 부담은 문서(updater가 중앙 참조 변경만 검사하고 자동 머지)로만 추정했으며 실제 릴리스에서 측정한 값이 아닙니다. 첫 카드 workflow 릴리스에서 소비자 PR 수와 CI 소요를 기록해 확인합니다.

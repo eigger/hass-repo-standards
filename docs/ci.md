@@ -13,7 +13,8 @@
 | manifest·HA 의존성 설치 | actions/python-environment | domain, 최소 패키지, HA 구성요소 |
 | imagespec·blesession 업데이트 | dependency-update.yml | 패키지 목록, schedule, 검증 명령 |
 | UI/browser | 로컬 job + python-environment | Node/Playwright, demo 서버 |
-| 카드·Android·앱 | 로컬 workflow | 빌드 산출물·서명·이미지 검증 |
+| 카드 | card-check.yml·card-release.yml 또는 로컬 workflow | [CARD-08](cards.md#중앙-재사용-workflow): Node script·번들 경로 |
+| Android·앱 | 로컬 workflow | 빌드 산출물·서명·이미지 검증 |
 
 ## 실행과 결과
 

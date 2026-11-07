@@ -384,6 +384,7 @@ def check():
     workflows = [
         *sorted((ROOT / ".github/workflows").glob("*.yml")),
         *sorted((ROOT / "templates/integration/.github/workflows").glob("*.yml")),
+        *sorted((ROOT / "templates/card/.github/workflows").glob("*.yml")),
     ]
     for file in workflows:
         data = yaml.load(file.read_text(encoding="utf-8"), Loader=Loader)

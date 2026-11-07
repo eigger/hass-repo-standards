@@ -41,7 +41,7 @@ jobs:
 
         tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
 
-        "$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes= .github/workflows/*.yml templates/integration/.github/workflows/*.yml'
+        "$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes= .github/workflows/*.yml templates/integration/.github/workflows/*.yml templates/card/.github/workflows/*.yml'
   environment-smoke:
     name: Environment action / ${{ matrix.mode }}
     runs-on: ubuntu-latest

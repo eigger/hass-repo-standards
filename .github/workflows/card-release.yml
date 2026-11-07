@@ -1,0 +1,124 @@
+# Shared standards for dashboard card repositories (CARD-03); action SHAs verified 2026-11-07.
+# Call from a tag push (`v*`). The caller job must grant `contents: write`.
+# Stable SemVer tags only; prereleases need a manual path (CARD-03).
+name: Card release
+'on':
+  workflow_call:
+    inputs:
+      node-version:
+        description: Node.js major version (minimum of the card's engines.node range)
+        required: false
+        type: string
+        default: '22'
+      check-script:
+        description: npm script for syntax checks; check-script or lint-script is required
+        required: false
+        type: string
+        default: check
+      lint-script:
+        description: npm script for lint; check-script or lint-script is required
+        required: false
+        type: string
+        default: ''
+      test-script:
+        description: npm script for tests (required)
+        required: false
+        type: string
+        default: test
+      build-script:
+        description: npm script that builds the bundle; empty for cards without a build
+        required: false
+        type: string
+        default: ''
+      bundle-path:
+        description: Repository-relative bundle path attached as the release asset
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Validate inputs and tag
+        env:
+          NODE_VERSION: ${{ inputs.node-version }}
+          CHECK: ${{ inputs.check-script }}
+          LINT: ${{ inputs.lint-script }}
+          TEST: ${{ inputs.test-script }}
+          BUILD: ${{ inputs.build-script }}
+          BUNDLE_PATH: ${{ inputs.bundle-path }}
+          REF_TYPE: ${{ github.ref_type }}
+        run: |
+          [ "$REF_TYPE" = tag ] || { echo "run from a tag push"; exit 1; }
+          [[ "$NODE_VERSION" =~ ^[0-9]+$ ]] || { echo "node-version must be a major number"; exit 1; }
+          [ -n "$CHECK$LINT" ] || { echo "check-script or lint-script is required (CARD-04)"; exit 1; }
+          [ -n "$TEST" ] || { echo "test-script is required (CARD-04)"; exit 1; }
+          for script in "$CHECK" "$LINT" "$TEST" "$BUILD"; do
+            [ -z "$script" ] || [[ "$script" =~ ^[A-Za-z0-9][A-Za-z0-9:_-]*$ ]] || { echo "invalid npm script name"; exit 1; }
+          done
+          [[ "$BUNDLE_PATH" =~ ^[A-Za-z0-9._/-]+$ && "$BUNDLE_PATH" != /* && "$BUNDLE_PATH" != .* && "$BUNDLE_PATH" != */.* && "$BUNDLE_PATH" != *..* && "$BUNDLE_PATH" != */ ]] || { echo "bundle-path must be a safe relative path"; exit 1; }
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+      - run: npm ci
+      - name: Check
+        if: inputs.check-script != ''
+        env:
+          SCRIPT: ${{ inputs.check-script }}
+        run: npm run "$SCRIPT"
+      - name: Lint
+        if: inputs.lint-script != ''
+        env:
+          SCRIPT: ${{ inputs.lint-script }}
+        run: npm run "$SCRIPT"
+      - name: Test
+        if: inputs.test-script != ''
+        env:
+          SCRIPT: ${{ inputs.test-script }}
+        run: npm run "$SCRIPT"
+      - name: Build
+        if: inputs.build-script != ''
+        env:
+          SCRIPT: ${{ inputs.build-script }}
+        run: npm run "$SCRIPT"
+      - name: Check release version
+        env:
+          BUNDLE_PATH: ${{ inputs.bundle-path }}
+        run: |
+          node -e "const v = require('./package.json').version; if (!/^\d+\.\d+\.\d+$/.test(v) || process.env.GITHUB_REF_NAME !== 'v' + v) { console.error('tag must be v<package.json version> (stable SemVer)'); process.exit(1); }"
+          test -f "$BUNDLE_PATH" && test -s "$BUNDLE_PATH"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: card-bundle
+          path: ${{ inputs.bundle-path }}
+          if-no-files-found: error
+          retention-days: 1
+  release:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: card-bundle
+          path: bundle
+      - name: Publish card bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BUNDLE_PATH: ${{ inputs.bundle-path }}
+        run: |
+          asset="bundle/$(basename "$BUNDLE_PATH")"
+          test -s "$asset"
+          gh release create "$GITHUB_REF_NAME" "$asset" --verify-tag --title "$GITHUB_REF_NAME" --generate-notes

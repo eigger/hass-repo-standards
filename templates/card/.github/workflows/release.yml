@@ -1,0 +1,22 @@
+# Shared standards; replace main with the reviewed exact release's full SHA (CARD-03).
+name: Release
+'on':
+  push:
+    tags:
+    - v*
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  release:
+    permissions:
+      contents: write
+    uses: eigger/hass-repo-standards/.github/workflows/card-release.yml@main
+    with:
+      node-version: '22'
+      check-script: check
+      test-script: test
+      build-script: ''
+      bundle-path: example-card.js
