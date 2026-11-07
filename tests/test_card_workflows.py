@@ -69,6 +69,40 @@ class CardWorkflowTests(unittest.TestCase):
         download = [s for s in self.steps(self.release) if "download-artifact" in s.get("uses", "")]
         self.assertEqual(1, len(download))
 
+    def test_release_job_wiring(self):
+        jobs = self.release["jobs"]
+        first_run = jobs["validate"]["steps"][0]
+        self.assertIn("ref_type", first_run["env"]["REF_TYPE"] + str(first_run["env"]))
+        self.assertIn("tag", first_run["run"])
+        uploads = [s for s in jobs["validate"]["steps"] if "upload-artifact" in s.get("uses", "")]
+        self.assertEqual("card-bundle", uploads[0]["with"]["name"])
+        downloads = [
+            s for s in jobs["release"]["steps"] if "download-artifact" in s.get("uses", "")
+        ]
+        self.assertEqual("card-bundle", downloads[0]["with"]["name"])
+        self.assertEqual("bundle", downloads[0]["with"]["path"])
+        publish = jobs["release"]["steps"][-1]["run"]
+        self.assertIn('"bundle/', publish)
+
+    def test_validation_requires_check_or_lint_and_test(self):
+        for workflow in (self.check, self.release):
+            job = next(iter(workflow["jobs"].values()))
+            run = job["steps"][0]["run"]
+            self.assertIn('[ -n "$CHECK$LINT" ]', run)
+            self.assertIn('[ -n "$TEST" ]', run)
+            self.assertIn('[[ "$script" =~ ^[A-Za-z0-9][A-Za-z0-9:_-]*$ ]]', run)
+            self.assertIn("!= .*", run)
+
+    def test_caller_templates(self):
+        base = ROOT / "templates/card/.github/workflows"
+        release = load(base / "release.yml")
+        job = release["jobs"]["release"]
+        self.assertEqual({"contents": "write"}, job["permissions"])
+        self.assertIs(release["concurrency"]["cancel-in-progress"], False)
+        self.assertEqual(["v*"], release["on"]["push"]["tags"])
+        check = load(base / "check.yml")
+        self.assertEqual({"contents": "read"}, check["permissions"])
+
     def test_jobs_have_timeouts(self):
         for workflow in (self.check, self.release):
             for job in workflow["jobs"].values():

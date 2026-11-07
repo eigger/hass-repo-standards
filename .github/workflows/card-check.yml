@@ -9,17 +9,17 @@ name: Card check
         type: string
         default: '22'
       check-script:
-        description: npm script for syntax checks; empty skips
+        description: npm script for syntax checks; check-script or lint-script is required
         required: false
         type: string
         default: check
       lint-script:
-        description: npm script for lint; empty skips
+        description: npm script for lint; check-script or lint-script is required
         required: false
         type: string
         default: ''
       test-script:
-        description: npm script for tests; empty skips
+        description: npm script for tests (required)
         required: false
         type: string
         default: test
@@ -42,14 +42,19 @@ jobs:
       - name: Validate inputs
         env:
           NODE_VERSION: ${{ inputs.node-version }}
-          SCRIPTS: ${{ inputs.check-script }} ${{ inputs.lint-script }} ${{ inputs.test-script }} ${{ inputs.build-script }}
+          CHECK: ${{ inputs.check-script }}
+          LINT: ${{ inputs.lint-script }}
+          TEST: ${{ inputs.test-script }}
+          BUILD: ${{ inputs.build-script }}
           BUNDLE_PATH: ${{ inputs.bundle-path }}
         run: |
           [[ "$NODE_VERSION" =~ ^[0-9]+$ ]] || { echo "node-version must be a major number"; exit 1; }
-          for script in $SCRIPTS; do
-            [[ "$script" =~ ^[A-Za-z0-9:_-]+$ ]] || { echo "invalid npm script name"; exit 1; }
+          [ -n "$CHECK$LINT" ] || { echo "check-script or lint-script is required (CARD-04)"; exit 1; }
+          [ -n "$TEST" ] || { echo "test-script is required (CARD-04)"; exit 1; }
+          for script in $CHECK $LINT $TEST $BUILD; do
+            [[ "$script" =~ ^[A-Za-z0-9][A-Za-z0-9:_-]*$ ]] || { echo "invalid npm script name"; exit 1; }
           done
-          [[ "$BUNDLE_PATH" =~ ^[A-Za-z0-9._/-]+$ && "$BUNDLE_PATH" != /* && "$BUNDLE_PATH" != *..* ]] || { echo "bundle-path must be a safe relative path"; exit 1; }
+          [[ "$BUNDLE_PATH" =~ ^[A-Za-z0-9._/-]+$ && "$BUNDLE_PATH" != /* && "$BUNDLE_PATH" != .* && "$BUNDLE_PATH" != */.* && "$BUNDLE_PATH" != *..* && "$BUNDLE_PATH" != */ ]] || { echo "bundle-path must be a safe relative path"; exit 1; }
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -81,4 +86,4 @@ jobs:
       - name: Assert bundle exists
         env:
           BUNDLE_PATH: ${{ inputs.bundle-path }}
-        run: test -s "$BUNDLE_PATH"
+        run: test -f "$BUNDLE_PATH" && test -s "$BUNDLE_PATH"
