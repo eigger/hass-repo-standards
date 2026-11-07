@@ -66,10 +66,12 @@ hass-ble-esl은 기본 브랜치 `5137b9d`에서 [후속 PR #277](https://github
 
 ## 다른 유형의 리포
 
-HA 통합 전용 구조·테스트는 강제하지 않습니다. 아래 네 리포는 공통 문서·CI 범위 채택 기록이 없어 미착수로 유지합니다.
+HA 통합 전용 구조·테스트는 강제하지 않습니다. 카드는 [CARD 규칙](cards.md)을 기준으로 합니다. 아래 리포 중 compact·overview 카드는 각 리포의 STANDARDS.md 기록이 있고 나머지는 공통 문서·CI 범위 채택 기록이 없어 미착수로 유지합니다.
 
 | 리포 / 기본 브랜치 | 적용 범위 | 상태 |
 |---|---|---|
+| [hass-compact-cards](https://github.com/eigger/hass-compact-cards) / `main` | 카드 규칙(CARD) | 선택 참조 완료(수동), 중앙 채택 아님: 리포 STANDARDS.md 기준 `ef7762d` 참조, dependabot-auto-merge v1.1.4 재사용, 실제 HA·브라우저 검증 TODO |
+| [hass-overview-cards](https://github.com/eigger/hass-overview-cards) / `main` | 카드 규칙(CARD) | 선택 참조 완료(수동), 중앙 채택 아님: compact-cards와 동일 구조, 동일 TODO |
 | [hass-imagespec-card](https://github.com/eigger/hass-imagespec-card) / `main` | 카드 문서·CI | 미착수 |
 | [hassble-android](https://github.com/eigger/hassble-android) / `main` | Android 문서·CI | 미착수 |
 | [hassble-config](https://github.com/eigger/hassble-config) / `main` | YAML 문서·CI | 미착수 |

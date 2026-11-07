@@ -2,7 +2,7 @@
 
 ## 범위와 우선순위
 
-이 규칙의 주 대상은 `custom_components/<domain>`이 있는 hass 리포입니다. 카드·Android·YAML 설정·애드온에는 문서·CI 보안·버전 관리 원칙만 적용하며 HA 통합 전용 검사를 강제하지 않습니다.
+이 규칙의 주 대상은 `custom_components/<domain>`이 있는 hass 리포입니다. 카드는 [대시보드 카드 규칙](cards.md)을, Android·YAML 설정·애드온에는 문서·CI 보안·버전 관리 원칙만 적용하며 HA 통합 전용 검사를 강제하지 않습니다.
 
 - **공식**: 링크한 HA/HACS/GitHub 규격. 사용 API와 배포 방식에 적용됩니다.
 - **필수**: 이 표준을 채택하는 리포의 프로젝트 정책입니다.

@@ -19,6 +19,7 @@ Home Assistant 커스텀 통합의 공통 규칙·템플릿·도구·CI를 관�
 |---|---|
 | 통합 생성·채택 | [사용 안내](docs/template-skill-usage.md), [템플릿](templates/integration/USAGE.md) |
 | 구현·테스트 | [HA 구조·제품 categories](docs/home-assistant.md), [실제 HA fixture·로딩·최소/current 검증](docs/testing.md) |
+| 대시보드 카드 | [카드 규칙 CARD-01~07](docs/cards.md) |
 | README·배지 | [양언어·관리 영역·본문 보존](docs/documentation.md) |
 | CI·의존성 | [공용 CI](docs/ci.md), [선언·지원 환경](docs/dependencies.md) |
 | Bluetooth·blesession | [DOC-07](docs/bluetooth-documentation.md) |

@@ -24,6 +24,7 @@
 | [Bluetooth 문서 작성 규칙](bluetooth-documentation.md) | DOC-07과 blesession 사용자 안내 연결 |
 | [Payload 문서 작성 규칙](payload-documentation.md) | DOC-08과 imagespec 실행 계약 |
 | [릴리스·유지보수](releases.md) | 통합 유지보수와 중앙 immutable release 절차 |
+| [대시보드 카드 규칙](cards.md) | HACS plugin 카드 리포의 배포·CI·문서·채택 기록(CARD-01~07) |
 
 ## 도구와 템플릿
 
