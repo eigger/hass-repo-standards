@@ -38,10 +38,10 @@ eigger의 Home Assistant 커스텀 통합과 대시보드 카드를 위한 공�
 
 ### 대시보드 카드
 
-| 리포 | 릴리스 | 다운로드 |
-|---|---|---|
-| [hass-compact-cards](https://github.com/eigger/hass-compact-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-compact-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-compact-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-compact-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-compact-cards/releases) |
-| [hass-overview-cards](https://github.com/eigger/hass-overview-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-overview-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-overview-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-overview-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-overview-cards/releases) |
+| # | 리포 | 릴리스 | 다운로드 | 스타 | 포크 |
+|---|---|---|---|---|---|
+| 1 | [hass-compact-cards](https://github.com/eigger/hass-compact-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-compact-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-compact-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-compact-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-compact-cards/releases) | [![Stars](https://img.shields.io/github/stars/eigger/hass-compact-cards?style=flat)](https://github.com/eigger/hass-compact-cards/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/hass-compact-cards?style=flat)](https://github.com/eigger/hass-compact-cards/forks) |
+| 2 | [hass-overview-cards](https://github.com/eigger/hass-overview-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-overview-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-overview-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-overview-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-overview-cards/releases) | [![Stars](https://img.shields.io/github/stars/eigger/hass-overview-cards?style=flat)](https://github.com/eigger/hass-overview-cards/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/hass-overview-cards?style=flat)](https://github.com/eigger/hass-overview-cards/forks) |
 
 다운로드는 GitHub의 최신 정식 릴리스에 첨부된 파일의 다운로드 합계입니다.
 
