@@ -43,7 +43,7 @@ Shared rules, templates and reusable workflows for eigger's Home Assistant custo
 | [hass-compact-cards](https://github.com/eigger/hass-compact-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-compact-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-compact-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-compact-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-compact-cards/releases) |
 | [hass-overview-cards](https://github.com/eigger/hass-overview-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-overview-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-overview-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-overview-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-overview-cards/releases) |
 
-Downloads counts attached files from the latest stable GitHub release.
+The Downloads badge shows total asset downloads for the latest stable GitHub release.
 
 ## Documentation
 
