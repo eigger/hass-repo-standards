@@ -49,4 +49,4 @@ CI는 [CI-01](ci.md)처럼 읽기 전용 권한, 외부 action의 전체 SHA pin
 
 ### v1.2.0 발행 직후 관측
 
-[immutable v1.2.0](https://github.com/eigger/hass-repo-standards/releases/tag/v1.2.0) 발행(2026-11-07 23:10:25 KST)부터 2026-11-07 23:22:47 KST까지 [등록된 통합 23개](../standards-consumers.json)의 GitHub Pulls API에서 모든 상태의 PR을 조회했습니다. 발행 후 새로 생성된 Dependabot PR과 기존 `central-standards` Dependabot PR의 발행 후 메타데이터 갱신이 각각 **0건**이었습니다. CI 실행 표본은 **0건**으로 소요 시간은 산출할 수 없었습니다. 23개 모두 매일 검사하도록 설정되어 있으며, 이 초기 관측 구간은 하루보다 짧습니다. 발행 후 첫 갱신 주기의 PR 수와 해당 PR의 CI 소요는 후속 관측에 남겨 둡니다.
+[immutable v1.2.0](https://github.com/eigger/hass-repo-standards/releases/tag/v1.2.0) 발행(2026-11-07 23:10:25 KST)부터 2026-11-07 23:22:47 KST까지 [등록된 통합 23개](../standards-consumers.json)의 GitHub Pulls API에서 모든 상태의 PR을 조회했습니다. 발행 후 새로 생성된 Dependabot PR과 기존 `central-standards` Dependabot PR의 발행 후 메타데이터 갱신이 각각 **0건**이었습니다. CI 실행 표본은 **0건**으로 소요 시간은 산출할 수 없었습니다. 23개 모두 GitHub Actions 업데이트를 `daily`로 설정했습니다. 이 설정의 [정기 검사일은 월요일부터 금요일까지](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#interval)이며, 이번 관측은 토요일 발행 직후에 끝났습니다. 발행 후 첫 갱신 주기의 PR 수와 해당 PR의 CI 소요는 후속 관측에 남겨 둡니다.
