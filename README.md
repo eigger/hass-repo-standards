@@ -38,10 +38,10 @@ Shared rules, templates and reusable workflows for eigger's Home Assistant custo
 
 ### Dashboard cards
 
-| Repository | Release | Downloads |
-|---|---|---|
-| [hass-compact-cards](https://github.com/eigger/hass-compact-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-compact-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-compact-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-compact-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-compact-cards/releases) |
-| [hass-overview-cards](https://github.com/eigger/hass-overview-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-overview-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-overview-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-overview-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-overview-cards/releases) |
+| # | Repository | Release | Downloads | Stars | Forks |
+|---|---|---|---|---|---|
+| 1 | [hass-compact-cards](https://github.com/eigger/hass-compact-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-compact-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-compact-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-compact-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-compact-cards/releases) | [![Stars](https://img.shields.io/github/stars/eigger/hass-compact-cards?style=flat)](https://github.com/eigger/hass-compact-cards/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/hass-compact-cards?style=flat)](https://github.com/eigger/hass-compact-cards/forks) |
+| 2 | [hass-overview-cards](https://github.com/eigger/hass-overview-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-overview-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-overview-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-overview-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-overview-cards/releases) | [![Stars](https://img.shields.io/github/stars/eigger/hass-overview-cards?style=flat)](https://github.com/eigger/hass-overview-cards/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/hass-overview-cards?style=flat)](https://github.com/eigger/hass-overview-cards/forks) |
 
 The Downloads badge shows total asset downloads for the latest stable GitHub release.
 
