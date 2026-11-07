@@ -66,7 +66,7 @@ hass-ble-esl은 기본 브랜치 `5137b9d`에서 [후속 PR #277](https://github
 
 ## 다른 유형의 리포
 
-HA 통합 전용 구조·테스트는 강제하지 않습니다. 카드는 [CARD 규칙](cards.md)을 기준으로 합니다. compact·overview 카드는 v1.2.0 공유 workflow 전환 PR을 진행 중입니다. 다른 리포의 기록은 이전 상태를 유지합니다.
+HA 통합 전용 구조·테스트는 강제하지 않습니다. 카드는 [CARD 규칙](cards.md)을 기준으로 합니다. compact·overview 카드는 v1.2.0 공유 workflow와 양언어 README 개편을 기본 브랜치에 적용했습니다. 다른 리포의 기록은 이전 상태를 유지합니다.
 
 | 리포 / 기본 브랜치 | 적용 범위 | 상태 |
 |---|---|---|
@@ -81,10 +81,10 @@ HA 통합 전용 구조·테스트는 강제하지 않습니다. 카드는 [CARD
 
 담당 root, 독립 리뷰 review. 중앙 [v1.2.0](https://github.com/eigger/hass-repo-standards/releases/tag/v1.2.0) immutable 태그(기준 SHA `66ab62181edb0a4a1bc0fe53209905b8f637633c`)로 검사·릴리스 workflow를 호출합니다. 기존 Dependabot 참조도 같은 커밋을 가리키는 immutable `@v1.1.5`로 표기합니다. 두 리포에서 GitHub Actions의 엄격한 필수 검사 `check / test` 설정을 확인했습니다.
 
-- hass-compact-cards의 [PR #44](https://github.com/eigger/hass-compact-cards/pull/44)은 `43440d3`에서 시작했습니다. 대상 [`2a6229c`](https://github.com/eigger/hass-compact-cards/commit/2a6229c6eb2ae64413281412341bf23dab68071b)의 [체크리스트](https://github.com/eigger/hass-compact-cards/blob/2a6229c6eb2ae64413281412341bf23dab68071b/ADOPTION_CHECKLIST.md) · [기준](https://github.com/eigger/hass-compact-cards/blob/2a6229c6eb2ae64413281412341bf23dab68071b/STANDARDS.md) · [PR CI](https://github.com/eigger/hass-compact-cards/actions/runs/42381257769)를 확인했습니다. 독립 리뷰와 보호 규칙 조회 결과는 PR 본문에 기록했습니다.
-- hass-overview-cards의 [PR #4](https://github.com/eigger/hass-overview-cards/pull/4)은 `f4f6195`에서 시작했습니다. 대상 [`28363ad`](https://github.com/eigger/hass-overview-cards/commit/28363adbb05495e716ab509fcbd4471fe7fe0446)의 [체크리스트](https://github.com/eigger/hass-overview-cards/blob/28363adbb05495e716ab509fcbd4471fe7fe0446/ADOPTION_CHECKLIST.md) · [기준](https://github.com/eigger/hass-overview-cards/blob/28363adbb05495e716ab509fcbd4471fe7fe0446/STANDARDS.md) · [PR CI](https://github.com/eigger/hass-overview-cards/actions/runs/42381257162)를 확인했습니다. 독립 리뷰와 보호 규칙 조회 결과는 PR 본문에 기록했습니다.
+- hass-compact-cards의 [PR #44](https://github.com/eigger/hass-compact-cards/pull/44)에 공유 workflow와 양언어 README를 함께 반영했습니다. PR head `96778ef`의 [CI](https://github.com/eigger/hass-compact-cards/actions/runs/42382553161) 통과 후 [`22ba20e`](https://github.com/eigger/hass-compact-cards/commit/22ba20e1ed9d6f761c577762f58cf64dbe0008c8)로 스쿼시 병합했고, 병합 커밋의 [push CI](https://github.com/eigger/hass-compact-cards/actions/runs/42382611188)도 통과했습니다. [체크리스트](https://github.com/eigger/hass-compact-cards/blob/22ba20e1ed9d6f761c577762f58cf64dbe0008c8/ADOPTION_CHECKLIST.md) · [기준](https://github.com/eigger/hass-compact-cards/blob/22ba20e1ed9d6f761c577762f58cf64dbe0008c8/STANDARDS.md)
+- hass-overview-cards의 [PR #4](https://github.com/eigger/hass-overview-cards/pull/4)에 공유 workflow와 양언어 README를 함께 반영했습니다. PR head `7fb3343`의 [CI](https://github.com/eigger/hass-overview-cards/actions/runs/42382551984) 통과 후 [`37f0b4a`](https://github.com/eigger/hass-overview-cards/commit/37f0b4af2f0036e5f01ee6e4cd1396401af95837)로 스쿼시 병합했고, 병합 커밋의 [push CI](https://github.com/eigger/hass-overview-cards/actions/runs/42382611138)도 통과했습니다. [체크리스트](https://github.com/eigger/hass-overview-cards/blob/37f0b4af2f0036e5f01ee6e4cd1396401af95837/ADOPTION_CHECKLIST.md) · [기준](https://github.com/eigger/hass-overview-cards/blob/37f0b4af2f0036e5f01ee6e4cd1396401af95837/STANDARDS.md)
 
-공통 TODO는 PR 병합과 병합 커밋 CI, 실제 태그 배포, HACS 설치·HA 화면·최소 HA 확인, 소유자의 라이선스 결정입니다.
+공통 TODO는 실제 태그 배포, 마켓플레이스·HACS 설치, HA 화면·최소 HA 확인, 소유자의 라이선스 결정입니다. 이 항목이 남아 두 카드의 전체 상태는 진행 중입니다.
 
 ## 로컬 checkout 참고
 
