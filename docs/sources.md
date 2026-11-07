@@ -120,6 +120,16 @@
 
 중앙 snapshot은 검토 당시 원본이며 실시간 upstream 전체를 대신하지 않습니다. 새 분류는 실제 Core/HACS 원본·SHA·확인일과 테스트를 함께 재검토합니다. 실제 지원 최소 HA 로딩·원격 HACS action·제품 분류 의미는 별도 검증이며 이 변경으로 수행했다고 주장하지 않습니다.
 
+## 대시보드 카드 재확인
+
+CARD-02~03의 HACS plugin 배포 조건(`filename`, 릴리스 asset, `content_in_root`)은 아래 원문을 기준으로 하며, **2026-11-07** plugin 안내를 확인했습니다. HACS는 `dist/` → 최신 릴리스 → 저장소 루트 순으로 찾으며 파일명은 저장소 이름(`lovelace-` 접두사 예외)과 같아야 합니다. 릴리스 asset은 필수가 아닙니다(없으면 기본 브랜치 탐색). plugin 안내에는 hacs.json 키 설명이 없습니다. 같은 날 [start#hacsjson](https://www.hacs.xyz/docs/publish/start/#hacsjson) 키 표를 확인했습니다: `filename`은 찾을 파일 이름이며 plugin·theme·template·python_scripts·zip_release에 적용되므로 저장소 이름과 다른 번들도 `filename`으로 지정할 수 있습니다. `content_in_root`·`homeassistant`(최소 HA, 선택)·`hacs`·`hide_default_branch`·`country`도 표에 있고 `zip_release`는 통합 전용으로 표시됩니다. `render_readme`는 표에 없으나 폐기·제거 여부는 이 페이지로 판단할 수 없습니다. 따라서 CARD의 asset 첨부는 프로젝트 정책이고 HACS 필수 조건으로 표현하지 않습니다. `include` 문서는 이번에 확인하지 않았습니다. 기준 사례 리포의 실제 구조는 [cards.md](cards.md)에 연결합니다.
+
+| 자료 | 확인 범위 |
+|---|---|
+| [HACS plugin 게시 안내](https://www.hacs.xyz/docs/publish/plugin/) | 번들 탐색 순서(dist → 최신 릴리스 → 루트)·`filename` |
+| [HACS 요구사항](https://www.hacs.xyz/docs/publish/start/) | 공통 리포 요구사항(`hacs.json`, README, 릴리스) |
+| [HACS hacs.json 설명](https://www.hacs.xyz/docs/publish/start/#hacsjson) | `render_readme` 등 필드의 현재 지원 여부 |
+
 ## 2026-10-23 ZIP 릴리스 지원
 
 [HACS 공식 hacs.json 계약](https://www.hacs.xyz/docs/publish/start/#hacsjson)은 통합의 zip_release와 filename을 함께 사용합니다. [HACS 실제 다운로드 분기](https://github.com/hacs/integration/blob/a15e87ec0d1c82e58f1ddbaf17669d3eaa261eb8/custom_components/hacs/repositories/base.py)는 ZIP 설치 설정과 asset 다운로드 수 읽기를 별도로 처리합니다. ZIP 첨부만으로 HACS에 카운트가 표시될 수 있지만 실제 소스 설치 수가 그 asset 카운트에 더해지는 것은 아닙니다. 이전 대화의 두 조건 혼동을 정정합니다.
