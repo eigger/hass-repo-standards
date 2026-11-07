@@ -1,5 +1,9 @@
 # Changelog
 
+## 미발행
+
+- 2026-11-07 CARD-08의 신규 카드 caller를 검증된 immutable 릴리스 exact 태그 방식으로 통일합니다. 카드 템플릿은 `@v1.2.0`을 예시로 사용하며, resolved SHA는 리포의 `STANDARDS.md`에 기록합니다. 기존 full SHA caller는 다음 전환 PR에서 같은 릴리스의 exact 태그로 바꿀 수 있습니다.
+
 ## v1.2.0 — 대시보드 카드 규칙·재사용 workflow와 README 구조
 
 ### 대시보드 카드 지원 (추가, 통합 영향 없음)

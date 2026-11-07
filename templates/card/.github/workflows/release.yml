@@ -1,4 +1,4 @@
-# Shared standards; replace main with the reviewed exact release's full SHA (CARD-03).
+# Shared standards; use the reviewed immutable release's exact version tag (CARD-03).
 name: Release
 'on':
   push:
@@ -13,7 +13,7 @@ jobs:
   release:
     permissions:
       contents: write
-    uses: eigger/hass-repo-standards/.github/workflows/card-release.yml@main
+    uses: eigger/hass-repo-standards/.github/workflows/card-release.yml@v1.2.0
     with:
       node-version: '22'
       check-script: check
