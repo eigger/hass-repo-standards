@@ -34,7 +34,7 @@ CI는 [CI-01](ci.md)처럼 읽기 전용 권한, 외부 action의 전체 SHA pin
 
 ## 중앙 재사용 workflow
 
-**CARD-08 권장**: 카드 리포는 로컬 복사본 대신 중앙 [card-check.yml](../.github/workflows/card-check.yml)과 [card-release.yml](../.github/workflows/card-release.yml)을 호출할 수 있습니다. caller 예시는 [templates/card](../templates/card/.github/workflows)이며 중앙 참조는 REL-06의 exact 릴리스 full SHA(버전 주석 포함)로 고정합니다. `main`·moving tag는 초안 placeholder일 뿐 채택 값이 아닙니다.
+**CARD-08 권장**: 카드 리포는 로컬 복사본 대신 중앙 [card-check.yml](../.github/workflows/card-check.yml)과 [card-release.yml](../.github/workflows/card-release.yml)을 호출할 수 있습니다. caller 예시는 [templates/card](../templates/card/.github/workflows)이며 새 카드 caller의 `uses`에는 REL-06의 검증된 immutable 릴리스 exact 태그(예를 들어 `@v1.2.0`)를 쓰고, `STANDARDS.md`에 해당 태그와 resolved full SHA를 함께 기록합니다. 이전에 검증한 full SHA와 버전 주석을 함께 쓰는 기존 caller는 호환됩니다. 브랜치·moving tag는 사용하지 않습니다.
 
 - 입력: `bundle-path`(필수), `node-version`(기본 22), `check-script`·`test-script`(기본 `check`·`test`), `lint-script`·`build-script`(선택, 기본 빈 값은 생략). 셸 단계에는 입력이 환경 변수로만 전달되고, npm script 이름·번들 경로(숨김 경로·`..`·디렉터리 제외)·Node major는 사용 전에 형식 검사를 통과해야 합니다. CARD-04에 따라 `check-script` 또는 `lint-script` 중 하나와 `test-script`는 비울 수 없고 `build-script`만 선택입니다.
 - card-release는 안정 SemVer 태그 push에서만 동작하며, CARD-03의 prerelease 게시는 이 workflow의 범위 밖이라 수동 절차로 처리합니다. `validate`(읽기)가 `package.json` 버전과 태그를 대조하고 번들을 artifact로 넘기면 `release`(쓰기)가 같은 파일을 asset으로 첨부합니다. 기존 릴리스를 덮어쓰거나 `--clobber`를 쓰지 않습니다.
@@ -45,4 +45,8 @@ CI는 [CI-01](ci.md)처럼 읽기 전용 권한, 외부 action의 전체 SHA pin
 
 ## 후속 범위
 
-중앙 카드 검사기(`check_card.py`)와 카드 scaffold는 아직 없습니다. 도입 전에 카드 소비자 수와 반복 중복을 확인합니다. 통합 소비자의 갱신 PR 부담은 문서(updater가 중앙 참조 변경만 검사하고 자동 머지)로만 추정했으며 실제 릴리스에서 측정한 값이 아닙니다. 첫 카드 workflow 릴리스에서 소비자 PR 수와 CI 소요를 기록해 확인합니다.
+중앙 카드 검사기(`check_card.py`)와 카드 scaffold는 아직 없습니다. 도입 전에 카드 소비자 수와 반복 중복을 확인합니다.
+
+### v1.2.0 발행 직후 관측
+
+[immutable v1.2.0](https://github.com/eigger/hass-repo-standards/releases/tag/v1.2.0) 발행(2026-11-07 23:10:25 KST)부터 2026-11-07 23:22:47 KST까지 [등록된 통합 23개](../standards-consumers.json)의 GitHub Pulls API에서 모든 상태의 PR을 조회했습니다. 발행 후 새로 생성된 Dependabot PR과 기존 `central-standards` Dependabot PR의 발행 후 메타데이터 갱신이 각각 **0건**이었습니다. CI 실행 표본은 **0건**으로 소요 시간은 산출할 수 없었습니다. 23개 모두 매일 검사하도록 설정되어 있으며, 이 초기 관측 구간은 하루보다 짧습니다. 발행 후 첫 갱신 주기의 PR 수와 해당 PR의 CI 소요는 후속 관측에 남겨 둡니다.

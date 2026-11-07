@@ -66,22 +66,25 @@ hass-ble-esl은 기본 브랜치 `5137b9d`에서 [후속 PR #277](https://github
 
 ## 다른 유형의 리포
 
-HA 통합 전용 구조·테스트는 강제하지 않습니다. 카드는 [CARD 규칙](cards.md)을 기준으로 합니다. compact·overview 카드는 리포 STANDARDS.md에 선택 참조 기록만 있으며 중앙 채택은 아닙니다. 나머지 리포는 공통 문서·CI 범위 채택 기록이 없어 미착수로 유지합니다.
+HA 통합 전용 구조·테스트는 강제하지 않습니다. 카드는 [CARD 규칙](cards.md)을 기준으로 합니다. compact·overview 카드는 v1.2.0 공유 workflow 전환 PR을 진행 중입니다. 다른 리포의 기록은 이전 상태를 유지합니다.
 
 | 리포 / 기본 브랜치 | 적용 범위 | 상태 |
 |---|---|---|
-| [hass-compact-cards](https://github.com/eigger/hass-compact-cards) / `main` | 카드 규칙(CARD) | 미착수 |
-| [hass-overview-cards](https://github.com/eigger/hass-overview-cards) / `main` | 카드 규칙(CARD) | 미착수 |
+| [hass-compact-cards](https://github.com/eigger/hass-compact-cards) / `main` | 카드 규칙(CARD) | 진행 중 |
+| [hass-overview-cards](https://github.com/eigger/hass-overview-cards) / `main` | 카드 규칙(CARD) | 진행 중 |
 | [hass-imagespec-card](https://github.com/eigger/hass-imagespec-card) / `main` | 카드 문서·CI | 미착수 |
 | [hassble-android](https://github.com/eigger/hassble-android) / `main` | Android 문서·CI | 미착수 |
 | [hassble-config](https://github.com/eigger/hassble-config) / `main` | YAML 문서·CI | 미착수 |
 | [hassio-apps](https://github.com/eigger/hassio-apps) / `master` | 앱 문서·CI | 미착수 |
 
-카드 리포 기록(2026-11-07 갱신, 중앙 채택 아님):
+### 카드 전환 기록 (2026-11-07 KST)
 
-- hass-compact-cards [`43440d3`](https://github.com/eigger/hass-compact-cards/commit/43440d3): [STANDARDS.md](https://github.com/eigger/hass-compact-cards/blob/43440d3/STANDARDS.md)·[체크리스트](https://github.com/eigger/hass-compact-cards/blob/43440d3/ADOPTION_CHECKLIST.md)에 기준 `ef7762d` 선택 참조(2026-10-30) 기록, 담당 eigger.
-- hass-overview-cards [`f4f6195`](https://github.com/eigger/hass-overview-cards/commit/f4f6195): [STANDARDS.md](https://github.com/eigger/hass-overview-cards/blob/f4f6195/STANDARDS.md)·[체크리스트](https://github.com/eigger/hass-overview-cards/blob/f4f6195/ADOPTION_CHECKLIST.md)에 같은 기준 `ef7762d` 선택 참조 기록, 담당 eigger.
-- 공통 남은 작업: dependabot-auto-merge는 v1.1.5(`f56987f`)를 쓰나 리포 주석·STANDARDS는 v1.1.4로 남음, LICENSE 미정, 원격 CI·실제 HA/브라우저 검증 미확인. 중앙 CI 실행·리뷰 근거는 아직 없습니다.
+담당 root, 독립 리뷰 review. 중앙 [v1.2.0](https://github.com/eigger/hass-repo-standards/releases/tag/v1.2.0) immutable 태그(기준 SHA `66ab62181edb0a4a1bc0fe53209905b8f637633c`)로 검사·릴리스 workflow를 호출합니다. 기존 Dependabot 참조도 같은 커밋을 가리키는 immutable `@v1.1.5`로 표기합니다. 두 리포에서 GitHub Actions의 엄격한 필수 검사 `check / test` 설정을 확인했습니다.
+
+- hass-compact-cards의 [PR #44](https://github.com/eigger/hass-compact-cards/pull/44)은 `43440d3`에서 시작했습니다. 대상 [`2a6229c`](https://github.com/eigger/hass-compact-cards/commit/2a6229c6eb2ae64413281412341bf23dab68071b)의 [체크리스트](https://github.com/eigger/hass-compact-cards/blob/2a6229c6eb2ae64413281412341bf23dab68071b/ADOPTION_CHECKLIST.md) · [기준](https://github.com/eigger/hass-compact-cards/blob/2a6229c6eb2ae64413281412341bf23dab68071b/STANDARDS.md) · [PR CI](https://github.com/eigger/hass-compact-cards/actions/runs/42381257769)를 확인했습니다. 독립 리뷰와 보호 규칙 조회 결과는 PR 본문에 기록했습니다.
+- hass-overview-cards의 [PR #4](https://github.com/eigger/hass-overview-cards/pull/4)은 `f4f6195`에서 시작했습니다. 대상 [`28363ad`](https://github.com/eigger/hass-overview-cards/commit/28363adbb05495e716ab509fcbd4471fe7fe0446)의 [체크리스트](https://github.com/eigger/hass-overview-cards/blob/28363adbb05495e716ab509fcbd4471fe7fe0446/ADOPTION_CHECKLIST.md) · [기준](https://github.com/eigger/hass-overview-cards/blob/28363adbb05495e716ab509fcbd4471fe7fe0446/STANDARDS.md) · [PR CI](https://github.com/eigger/hass-overview-cards/actions/runs/42381257162)를 확인했습니다. 독립 리뷰와 보호 규칙 조회 결과는 PR 본문에 기록했습니다.
+
+공통 TODO는 PR 병합과 병합 커밋 CI, 실제 태그 배포, HACS 설치·HA 화면·최소 HA 확인, 소유자의 라이선스 결정입니다.
 
 ## 로컬 checkout 참고
 
