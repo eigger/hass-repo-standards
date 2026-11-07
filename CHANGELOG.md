@@ -1,8 +1,28 @@
 # Changelog
 
-## 미출시 — README 구조와 마켓플레이스 안내
+## v1.2.0 — 대시보드 카드 규칙·재사용 workflow와 README 구조
 
-- DOC-01·DOC-02의 본문 정보 보존을 유지하면서 제목·순서·문체 정리를 허용하고 양언어 공통 구조를 정의합니다. 2026.11 이상 마켓플레이스와 이전 지원 버전 HACS 설치를 구분합니다. 설치 관리 블록은 배지만 소유합니다. 관련 프로젝트 관리 제목은 기존 릴리스와 동일한 Related Projects를 유지합니다. 기존 통합은 별도 계획과 검증 후 적용합니다.
+### 대시보드 카드 지원 (추가, 통합 영향 없음)
+
+- HACS `plugin` 카드 리포의 배포·릴리스·빌드/CI·문서·채택 기록 규칙 CARD-01~08을 [docs/cards.md](docs/cards.md)에 추가합니다. 카드는 통합 전용 검사(manifest, Hassfest, categories, `check_integration.py`, 통합 템플릿)를 받지 않습니다.
+- 재사용 workflow `card-check.yml`·`card-release.yml`과 caller 템플릿 `templates/card/`를 추가합니다. 통합용 workflow의 이름·입력·출력은 변경하지 않으며, 카드 리포의 required status check 이름은 재사용 workflow 전환 시 `<caller job> / <called job>` 형태로 바뀝니다.
+- 중앙 현황표에 hass-compact-cards·hass-overview-cards를 등록합니다. 모두 부분 참조 기록일 뿐 중앙 채택이 아닙니다.
+
+### 통합 소비자 영향
+
+- 참조를 v1.2.0으로 올리면 통합은 갱신 PR을 받습니다. 변경은 Hassfest action SHA(상위 저장소의 `helpers/version-push` 커밋 1개 차이로 Hassfest 코드 변경 없음), `update-manifest` 구현 참조(동작 변화는 PyPI 요청 User-Agent 문자열뿐), 그리고 `Integration Name for Home Assistant` 제목도 미완성 placeholder로 판정하는 검사 보정입니다. 실제 이름을 쓴 통합에는 영향이 없습니다.
+- README 템플릿의 제목·본문 placeholder 주석, `.hass-standards.json` 제목과 `requirements_test.txt`의 pytest 플러그인 pin(0.13.375)은 템플릿을 새로 적용할 때만 반영되며 기존 README를 자동으로 바꾸지 않습니다.
+
+### 릴리스 메타데이터·검증
+
+- 확정 SHA·contract·내부 action SHA는 발행 draft의 `release-metadata.json`에 기록되며 `central_release_operator.py`와 `verify-release`로 확인합니다. 이 항목은 발행 전 초안이라 발행된 SHA를 적지 않습니다.
+- 내부 action 의존: `actions/update-manifest@77743df978f27810d0ec3e1e398c4eb8d195c6fa`, `actions/python-environment@d428ba5e0ef532cfad95d20a767d5f9553dd2855`.
+- 검증 명령: `python3 scripts/check_repository.py`, `python3 -m unittest discover -s tests`, `.github/workflows`·`templates/integration`·`templates/card` 대상 actionlint 1.7.12. 원격 CI URL은 발행 시 릴리스 노트에 연결합니다.
+- 알려진 제한: 카드 리포 중 card-check/card-release를 채택한 곳은 아직 없고(compact·overview는 미착수), card-release는 prerelease 게시를 다루지 않습니다. README 구조 개편은 기존 통합에 적용·검증하지 않았습니다. Hassfest는 태그가 아닌 master 스냅샷에 고정됩니다.
+
+### README 구조와 마켓플레이스 안내
+
+- DOC-01은 공통 제목 `# {표시 이름} for Home Assistant`와 제목·순서·문체의 양언어 공통 구조를 요구하고 DOC-02의 본문 정보 보존은 유지합니다. 검증기는 새 제목을 강제하지 않고 placeholder 문자열만 거부하며, 기존 통합은 별도 계획에서 앵커·링크를 갱신하며 적용합니다. 2026.11 이상 마켓플레이스와 이전 지원 버전 HACS 설치를 구분합니다. 설치 관리 블록은 배지만 소유합니다. 관련 프로젝트 관리 제목은 기존 릴리스와 동일한 Related Projects를 유지합니다.
 
 ## v1.1.5 — Downloads 배지 범위 변경
 
