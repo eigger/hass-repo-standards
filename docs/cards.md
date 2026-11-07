@@ -2,7 +2,7 @@
 
 Lovelace/대시보드 카드처럼 HACS `plugin`(프런트엔드 리소스 번들)으로 배포하는 리포의 규칙입니다. 공식 근거는 [HACS plugin 게시 안내](https://www.hacs.xyz/docs/publish/plugin/)와 [HACS 요구사항](https://www.hacs.xyz/docs/publish/start/)이며([sources](sources.md#대시보드-카드-재확인) 참고), 아래 필수 표기는 프로젝트 정책입니다.
 
-참조 구조는 [hass-compact-cards](https://github.com/eigger/hass-compact-cards)(빌드 없는 단일 JS), [hass-overview-cards](https://github.com/eigger/hass-overview-cards)(동일 구조), [hass-imagespec-card](https://github.com/eigger/hass-imagespec-card)(TypeScript·Lit·Vite 빌드)입니다. 이는 번들 배치·빌드 방식의 참조일 뿐 CARD 규칙을 모두 충족한 준수 사례가 아닙니다. 알려진 차이: 세 리포 모두 루트 LICENSE가 없고(라이선스를 임의로 정하지 않음), imagespec-card는 README.ko.md·CHANGELOG·STANDARDS.md·`engines.node`가 없으며 CI가 tag pin·단일 release job을 사용합니다. compact·overview의 번들 이름은 저장소 이름과 달라 `hacs.json`의 `filename`에 의존합니다(HACS 문서가 plugin의 `filename`을 지원). 규칙과 다른 구조는 근거를 STANDARDS.md에 기록하고 예외로 관리합니다.
+참조 구조는 [hass-compact-cards](https://github.com/eigger/hass-compact-cards)(빌드 없는 단일 JS), [hass-overview-cards](https://github.com/eigger/hass-overview-cards)(동일 구조), [hass-imagespec-card](https://github.com/eigger/hass-imagespec-card)(TypeScript·Lit·Vite 빌드)입니다. 이는 번들 배치·빌드 방식의 참조일 뿐 CARD 규칙을 모두 충족한 준수 사례가 아닙니다. compact·overview는 2026-11-08 소유자 결정에 따라 MIT LICENSE를 추가했습니다. 기준 조사 당시 imagespec-card는 루트 LICENSE·README.ko.md·CHANGELOG·STANDARDS.md·`engines.node`가 없었으며 CI가 tag pin·단일 release job을 사용했습니다. compact·overview의 번들 이름은 저장소 이름과 달라 `hacs.json`의 `filename`에 의존합니다(HACS 문서가 plugin의 `filename`을 지원). 규칙과 다른 구조는 근거를 STANDARDS.md에 기록하고 예외로 관리합니다.
 
 ## 적용 범위
 
