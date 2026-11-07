@@ -1,6 +1,6 @@
 # Home Assistant Repository Standards
 
-Shared rules, templates and reusable workflows for eigger's Home Assistant custom integrations.
+Shared rules, templates and reusable workflows for eigger's Home Assistant custom integrations and dashboard cards.
 
 **English** | [한국어](README.ko.md)
 
@@ -35,6 +35,15 @@ Shared rules, templates and reusable workflows for eigger's Home Assistant custo
 | 25 | [imagespec-designer](https://github.com/eigger/imagespec-designer) | [![Release](https://img.shields.io/github/v/release/eigger/imagespec-designer?style=flat&sort=date&display_name=tag)](https://github.com/eigger/imagespec-designer/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/imagespec-designer/latest/total?style=flat&label=Downloads)](https://github.com/eigger/imagespec-designer/releases) | [![Stars](https://img.shields.io/github/stars/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/imagespec-designer?style=flat)](https://github.com/eigger/imagespec-designer/forks) |
 | 26 | [blesession](https://github.com/eigger/blesession) | [![Release](https://img.shields.io/github/v/release/eigger/blesession?style=flat&sort=date&display_name=tag)](https://github.com/eigger/blesession/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/blesession/latest/total?style=flat&label=Downloads)](https://github.com/eigger/blesession/releases) | [![Stars](https://img.shields.io/github/stars/eigger/blesession?style=flat)](https://github.com/eigger/blesession/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/blesession?style=flat)](https://github.com/eigger/blesession/forks) |
 | 27 | [imagespec](https://github.com/eigger/imagespec) | [![Release](https://img.shields.io/github/v/release/eigger/imagespec?style=flat&sort=date&display_name=tag)](https://github.com/eigger/imagespec/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/imagespec/latest/total?style=flat&label=Downloads)](https://github.com/eigger/imagespec/releases) | [![Stars](https://img.shields.io/github/stars/eigger/imagespec?style=flat)](https://github.com/eigger/imagespec/stargazers) | [![Forks](https://img.shields.io/github/forks/eigger/imagespec?style=flat)](https://github.com/eigger/imagespec/forks) |
+
+### Dashboard cards
+
+| Repository | Release | Downloads |
+|---|---|---|
+| [hass-compact-cards](https://github.com/eigger/hass-compact-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-compact-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-compact-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-compact-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-compact-cards/releases) |
+| [hass-overview-cards](https://github.com/eigger/hass-overview-cards) | [![Release](https://img.shields.io/github/v/release/eigger/hass-overview-cards?style=flat&sort=date&display_name=tag)](https://github.com/eigger/hass-overview-cards/releases) | [![Downloads](https://img.shields.io/github/downloads/eigger/hass-overview-cards/latest/total?style=flat&label=Downloads)](https://github.com/eigger/hass-overview-cards/releases) |
+
+The Downloads badge shows total asset downloads for the latest stable GitHub release.
 
 ## Documentation
 
