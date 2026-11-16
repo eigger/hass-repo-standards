@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.3.1 — 2026-11-16
+
+- 새 exact-head validator 성공 뒤에도 GitHub의 PR 병합 준비 상태를 기다립니다. test merge commit에 연결된 필수 PR 검사가 늦게 완료되던 실제 niimbot 실행에서 보호 규칙을 지키면서 병합이 거절된 경합을 수정합니다.
+- 병합 API 거절 본문을 기록하고 HTTP405/409의 준비 상태 경합만 제한 시간 안에서 재검사합니다. 권한 오류는 즉시 실패하며 보호 설정·검사·리뷰 요건을 완화하지 않습니다. 기존 caller 입력·권한은 그대로 사용하고 중앙 release 참조만 갱신합니다.
+
 ## v1.3.0 — 2026-11-16
 
 - 선택형 중앙 manifest dependency controller와 얇은 caller·최초 설치기를 추가합니다. 기존 updater의 권한과 기본 동작을 유지하며 blesession/imagespec same-major bot PR만 새 exact-head 필수 CI 후 squash merge하고 lease로 branch를 정리합니다.

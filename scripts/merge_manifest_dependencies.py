@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
+import sys
 
 from standards import manifest_merge as automation
 from standards import update
@@ -34,4 +36,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except subprocess.CalledProcessError as error:
+        # Preserve GitHub's actual rejection reason in Actions logs.
+        print(error.stderr or error.stdout or str(error), file=sys.stderr, flush=True)
+        raise

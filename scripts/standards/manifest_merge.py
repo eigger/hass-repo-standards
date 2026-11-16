@@ -268,18 +268,50 @@ def validate_and_merge(
         if clock() >= deadline:
             raise TimeoutError("Exact-head validation did not complete; leave PR open")
         sleep(15)
-    # Reject observed drift after waiting. REST merge atomically binds only
-    # the head, not the base; strict up-to-date branch rules close the residual
-    # base-push race. All existing GitHub merge requirements still apply.
-    latest = proposal(repository, number, domain, packages, api=api, listing=listing)
-    if latest != bound:
-        raise ValueError("Proposal changed during validation; rerun updater")
-    result = api(
-        f"repos/{repository}/pulls/{number}/merge",
-        method="PUT",
-        payload={"merge_method": "squash", "sha": head},
-    )
-    if not result.get("merged"):
-        raise ValueError("GitHub refused squash merge; branch requirements remain authoritative")
-    cleanup(repository, api=api, listing=listing, delete=delete)
-    return {**bound, "pr": number, "merge": result["sha"]}
+    # Required PR checks can be attached to GitHub's test merge commit,
+    # independently of successful dispatches on the exact source head.
+    while True:
+        owner, name = repository.split("/")
+        state = api(
+            "graphql",
+            method="POST",
+            payload={
+                "query": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){state headRefOid baseRefOid mergeStateStatus}}}",
+                "variables": {"owner": owner, "name": name, "number": number},
+            },
+        )["data"]["repository"]["pullRequest"]
+        if (
+            state["state"] != "OPEN"
+            or state["headRefOid"] != head
+            or state["baseRefOid"] != bound["base"]
+        ):
+            raise ValueError("PR identity or base changed while waiting for required checks")
+        if state["mergeStateStatus"] == "CLEAN":
+            # REST atomically binds only the head, not the base. Existing
+            # strict up-to-date branch rules remain authoritative at merge.
+            latest = proposal(repository, number, domain, packages, api=api, listing=listing)
+            if latest != bound:
+                raise ValueError("Proposal changed during validation; rerun updater")
+            try:
+                result = api(
+                    f"repos/{repository}/pulls/{number}/merge",
+                    method="PUT",
+                    payload={"merge_method": "squash", "sha": head},
+                )
+            except subprocess.CalledProcessError as error:
+                detail = (error.stderr or error.stdout or str(error)).strip()
+                # Readiness is eventually consistent. Retry only explicit
+                # merge-condition/head conflicts; never bypass auth or rules.
+                if not any(code in detail for code in ("HTTP 405", "HTTP 409")):
+                    raise RuntimeError("GitHub merge request failed: " + detail) from error
+                print("GitHub merge conditions changed; waiting: " + detail, flush=True)
+            else:
+                if not result.get("merged"):
+                    raise ValueError(
+                        "GitHub refused squash merge; branch requirements remain authoritative"
+                    )
+                cleanup(repository, api=api, listing=listing, delete=delete)
+                return {**bound, "pr": number, "merge": result["sha"]}
+        if clock() >= deadline:
+            raise TimeoutError("Required PR merge conditions did not become ready; leave PR open")
+        sleep(15)
