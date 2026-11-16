@@ -52,14 +52,36 @@ class GitHub:
         self.branch_tip = "head"
         self.workflow_text = WORKFLOW
         self.merge_result = True
+        self.merge_states = ["CLEAN"]
+        self.merge_error = None
+        self.sleeps = []
 
     def api(self, endpoint, *, method=None, payload=None):
         p = endpoint.removeprefix("repos/" + REPO + "/")
+        if endpoint == "graphql":
+            gate = self.merge_states[0]
+            if len(self.merge_states) > 1:
+                self.merge_states.pop(0)
+            return {
+                "data": {
+                    "repository": {
+                        "pullRequest": {
+                            "state": self.pr["state"].upper(),
+                            "headRefOid": self.pr["head"]["sha"],
+                            "baseRefOid": self.base,
+                            "mergeStateStatus": gate,
+                        }
+                    }
+                }
+            }
         if method:
             self.writes.append((method, p, payload))
             if p.endswith("/dispatches"):
                 self.dispatched.add(p.split("/")[2])
             if p == "pulls/1/merge":
+                if self.merge_error is not None:
+                    message, self.merge_error = self.merge_error, None
+                    raise subprocess.CalledProcessError(1, ["gh", "api"], stderr=message)
                 if self.merge_result:
                     self.merged = True
                     self.pr.update(state="closed", merged_at="today")
@@ -140,7 +162,7 @@ class GitHub:
             listing=self.pages,
             delete=lambda repo, ref, head: self.deleted.append((ref, head)),
             validation_ref="hass-dependency-validation/test",
-            sleep=lambda _: None,
+            sleep=self.sleeps.append,
             **kwargs,
         )
 
@@ -305,6 +327,82 @@ class Controller(unittest.TestCase):
                     )
                 )
             self.assertFalse(gh.writes)
+
+    def test_successful_head_checks_wait_for_required_pr_merge_checks(self):
+        gh = GitHub()
+        gh.merge_states = ["BLOCKED", "UNKNOWN", "CLEAN"]
+        gh.run()
+        self.assertEqual(gh.sleeps, [15, 15])
+        self.assertEqual(len([w for w in gh.writes if w[0] == "PUT"]), 1)
+
+    def test_blocked_pr_conditions_timeout_without_merge(self):
+        gh = GitHub()
+        gh.merge_states = ["BLOCKED"]
+        times = iter([0, 2])
+        with self.assertRaisesRegex(TimeoutError, "Required PR merge"):
+            gh.run(clock=lambda: next(times), timeout=1)
+        self.assertFalse(gh.merged)
+
+    def test_merge_readiness_race_is_rechecked_without_bypassing_requirements(self):
+        gh = GitHub()
+        gh.merge_error = "gh: required status check still pending (HTTP 405)"
+        gh.run()
+        self.assertEqual(gh.sleeps, [15])
+        writes = [w for w in gh.writes if w[0] == "PUT"]
+        self.assertEqual(len(writes), 2)
+        self.assertTrue(all(w[2]["sha"] == "head" for w in writes))
+
+    def test_pr_head_or_base_drift_while_blocked_aborts_without_merge(self):
+        for field in ["head", "base"]:
+            gh = GitHub()
+            gh.merge_states = ["BLOCKED", "CLEAN"]
+            original = gh.api
+            polls = 0
+
+            def api(endpoint, **kwargs):
+                nonlocal polls
+                if endpoint == "graphql":
+                    polls += 1
+                    if polls == 2:
+                        if field == "head":
+                            gh.pr["head"]["sha"] = "advanced"
+                        else:
+                            gh.base = "advanced"
+                return original(endpoint, **kwargs)
+
+            gh.api = api
+            with (
+                self.subTest(field=field),
+                self.assertRaisesRegex(ValueError, "identity or base changed"),
+            ):
+                gh.run()
+            self.assertFalse(gh.merged)
+
+    def test_conflict_then_new_head_is_never_retried_with_new_sha(self):
+        gh = GitHub()
+        gh.merge_error = "gh: Head branch was modified (HTTP 409)"
+        original = gh.api
+
+        def api(endpoint, **kwargs):
+            try:
+                return original(endpoint, **kwargs)
+            except subprocess.CalledProcessError:
+                gh.pr["head"]["sha"] = "advanced"
+                raise
+
+        gh.api = api
+        with self.assertRaisesRegex(ValueError, "identity or base changed"):
+            gh.run()
+        self.assertFalse(gh.merged)
+        self.assertEqual(len([w for w in gh.writes if w[0] == "PUT"]), 1)
+
+    def test_merge_permission_error_is_reported_without_retry(self):
+        gh = GitHub()
+        gh.merge_error = "gh: Resource not accessible by integration (HTTP 403)"
+        with self.assertRaisesRegex(RuntimeError, "HTTP 403"):
+            gh.run()
+        self.assertFalse(gh.merged)
+        self.assertEqual(gh.sleeps, [])
 
     def test_delete_ref_uses_atomic_lease_and_propagates_rejection(self):
         calls = []

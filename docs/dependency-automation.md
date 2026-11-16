@@ -21,7 +21,7 @@ python scripts/install_dependency_automation.py /absolute/consumer --release v1.
 
 controller는 신뢰하는 기본 브랜치와 descriptor의 resolved full SHA 중앙 tools만 checkout합니다. PR 코드는 실행하거나 import하지 않습니다. 같은 저장소·기본 브랜치 대상·`github-actions[bot]` 작성·`bot/manifest-dependencies` branch의 열린 PR만 허용합니다. 현재 기본 브랜치 위 한 commit이어야 하며, 고정 Git tree 전체를 비교해 해당 domain의 기존 일반 파일 manifest 외 변경을 거부합니다. requirement의 순서·패키지·extras·operator·marker·나머지 manifest 값은 보존하고 선택된 패키지의 stable same-major 버전 증가만 허용합니다. major·downgrade·임의 파일·symlink·부분 tree 조회는 실패합니다.
 
-검사한 head에 고유한 임시 validation branch를 만들고 거기서 모든 `pull_request` validator를 명시 dispatch합니다. 각 validator는 workflow_dispatch를 지원해야 하며 Standards·Tests·Validate가 모두 필요합니다. 이전 성공을 재사용하지 않고 새 run ID·head SHA·validation ref·event가 일치하는 실행의 실제 success를 기다립니다. dispatch 실패·timeout·실패·skip은 병합하지 않고 PR을 남깁니다. 대기 후 PR head와 관측한 기본 브랜치가 바뀌면 중단합니다.
+검사한 head에 고유한 임시 validation branch를 만들고 거기서 모든 `pull_request` validator를 명시 dispatch합니다. 각 validator는 workflow_dispatch를 지원해야 하며 Standards·Tests·Validate가 모두 필요합니다. 이전 성공을 재사용하지 않고 새 run ID·head SHA·validation ref·event가 일치하는 실행의 실제 success를 기다립니다. dispatch 실패·timeout·실패·skip은 병합하지 않고 PR을 남깁니다. head 검증이 성공해도 GitHub가 PR의 test merge commit에 연결한 필수 검사는 아직 진행 중일 수 있으므로, GraphQL mergeStateStatus가 CLEAN이 될 때까지 같은 제한 시간 안에서 기다립니다. 권한 오류는 상세 응답을 남기고 즉시 실패하며 HTTP405/409 경합만 준비 상태를 재검사합니다. 대기 후 PR head와 관측한 기본 브랜치가 바뀌면 중단합니다.
 
 GitHub REST merge는 expected head SHA만 원자적으로 고정하며 expected base SHA 입력은 없습니다. 마지막 재검사와 merge 사이의 기본 브랜치 push까지 엄격히 차단하려면 저장소의 strict up-to-date required checks/merge queue 정책이 필요합니다. controller는 이 설정을 임의 변경하거나 관리자 우회를 사용하지 않으며 기존 GitHub 병합 요건을 그대로 따릅니다. 테스트 성공은 검증한 PR head에 대한 증거이고 미래 base 변경이나 실물 동작의 보장이 아닙니다.
 
