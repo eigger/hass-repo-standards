@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.3.0 — 2026-11-16
+
+- 선택형 중앙 manifest dependency controller와 얇은 caller·최초 설치기를 추가합니다. 기존 updater의 권한과 기본 동작을 유지하며 blesession/imagespec same-major bot PR만 새 exact-head 필수 CI 후 squash merge하고 lease로 branch를 정리합니다.
+- v1.3.0 채택 후 `install_dependency_automation.py`로 입력·권한·caller를 최초 설치합니다. 이후 중앙 release 참조 갱신은 기존 Dependabot 경로를 유지합니다. 지원 최소·integration version·tag·release는 변경하지 않습니다.
+- CI-09/10의 명시 opt-in 경계·검증 ref·기본 브랜치 경합 한계와 운영 절차를 docs/dependency-automation.md에 기록합니다.
+
 ## 미발행
 
 - 2026-11-07 CARD-08의 신규 카드 caller를 검증된 immutable 릴리스 exact 태그 방식으로 통일합니다. 카드 템플릿은 `@v1.2.0`을 예시로 사용하며, resolved SHA는 리포의 `STANDARDS.md`에 기록합니다. 기존 full SHA caller는 다음 전환 PR에서 같은 릴리스의 exact 태그로 바꿀 수 있습니다.

@@ -1,0 +1,77 @@
+name: Merge validated manifest dependencies
+'on':
+  workflow_call:
+    inputs:
+      domain:
+        required: true
+        type: string
+      packages:
+        description: JSON array containing only opted-in blesession/imagespec packages
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    concurrency:
+      # Serialize with the existing dependency updater, including branch cleanup.
+      group: manifest-dependencies-${{ github.repository }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - name: Resolve trusted default branch
+        id: repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch=$(gh api "repos/$GITHUB_REPOSITORY" --jq .default_branch)
+          printf 'branch=%s\n' "$branch" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ steps.repository.outputs.branch }}
+          persist-credentials: false
+      - name: Read recorded central tools SHA
+        id: reference
+        run: |
+          python - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          config = json.loads(Path('.hass-standards.json').read_text())
+          descriptor = config['standards']
+          if descriptor.get('kind') != 'release' or not re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+', descriptor.get('tag', '')):
+              raise ValueError('An exact central release descriptor is required')
+          sha = descriptor['resolved_sha']
+          if not re.fullmatch(r'[0-9a-f]{40}', sha):
+              raise ValueError('Recorded tools SHA must be a full SHA')
+          path = Path('.hass-manifest-merge-tools')
+          if path.exists() or path.is_symlink():
+              raise ValueError('Reserved central tools path exists')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as stream:
+              stream.write('sha=' + sha + '\n')
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: eigger/hass-repo-standards
+          ref: ${{ steps.reference.outputs.sha }}
+          path: .hass-manifest-merge-tools
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: '3.14'
+      - name: Verify central checkout and install controller dependencies
+        env:
+          TOOLS_SHA: ${{ steps.reference.outputs.sha }}
+        run: |
+          test "$TOOLS_SHA" = "$(git -C .hass-manifest-merge-tools rev-parse HEAD)"
+          python -m pip install -r .hass-manifest-merge-tools/actions/check-standards/requirements.txt
+      - name: Validate bot proposal, dispatch checks, squash merge and clean branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DOMAIN: ${{ inputs.domain }}
+          PACKAGES: ${{ inputs.packages }}
+        run: python .hass-manifest-merge-tools/scripts/merge_manifest_dependencies.py --domain "$DOMAIN" --packages "$PACKAGES"
