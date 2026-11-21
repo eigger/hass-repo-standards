@@ -81,7 +81,7 @@ jobs:
         ref: ${{ steps.repository.outputs.branch }}
         persist-credentials: false
     - id: update
-      uses: eigger/hass-repo-standards/actions/update-manifest@3e459e2f992681df9b2b82fb6d838a9a8f89fbe2 # validated updater implementation
+      uses: eigger/hass-repo-standards/actions/update-manifest@03f82315fa692c4e254cd243c01e7db738f5ac32 # validated updater implementation
       with:
         domain: ${{ inputs.domain }}
         packages: ${{ inputs.packages }}
