@@ -84,9 +84,18 @@ jobs:
         cache: pip
         cache-dependency-path: |
           requirements_payload_test.txt
+          requirements_tools.txt
           templates/integration/requirements_test.txt
-    - run: python -m pip install -r requirements_payload_test.txt
-    - run: |
-        python -m pip check
+          tests/fixtures/payload_integration/custom_components/payload_sample/manifest.json
+    - run: python -m pip install -r requirements_tools.txt
+    - name: Install payload fixture and test runner requirements
+      working-directory: tests/fixtures/payload_integration
+      env:
+        INPUT_DOMAIN: payload_sample
+        INPUT_REQUIREMENTS: ${{ github.workspace }}/requirements_payload_test.txt
+        INPUT_TEST_PROFILE: ha
+      run: python "$GITHUB_WORKSPACE/actions/python-environment/install.py"
+    - name: Run the actual HA payload contract tests
+      run: |
         python -c "import homeassistant, pytest_homeassistant_custom_component, imagespec; from importlib.metadata import version; print({name: version(name) for name in ('homeassistant', 'pytest-homeassistant-custom-component', 'imagespec')})"
         python -m unittest discover -s tests -p test_payload_runtime.py -v
