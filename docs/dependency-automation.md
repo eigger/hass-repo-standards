@@ -25,6 +25,8 @@ controller는 신뢰하는 기본 브랜치와 descriptor의 resolved full SHA �
 
 GitHub REST merge는 expected head SHA만 원자적으로 고정하며 expected base SHA 입력은 없습니다. 마지막 재검사와 merge 사이의 기본 브랜치 push까지 엄격히 차단하려면 저장소의 strict up-to-date required checks/merge queue 정책이 필요합니다. controller는 이 설정을 임의 변경하거나 관리자 우회를 사용하지 않으며 기존 GitHub 병합 요건을 그대로 따릅니다. 테스트 성공은 검증한 PR head에 대한 증거이고 미래 base 변경이나 실물 동작의 보장이 아닙니다.
 
+기본 `GITHUB_TOKEN`으로 열린 PR의 `pull_request` 워크플로는 GitHub에서 실행 승인을 요구할 수 있습니다. controller는 임시 검증 브랜치를 만들기 전과 PR 병합 조건을 기다리는 동안, 현재 PR head의 validator 실행이 `action_required`인지 확인합니다. GitHub가 아직 병합 준비 상태를 보고하지 않았고 승인 대기가 확인되면 실행 링크를 `deferred` 결과에 `approval_pending`으로 기록하고 PR과 bot branch를 보존합니다. PR에서 **Approve workflows to run**을 선택한 뒤 다음 예약 또는 수동 실행에서 병합 조건을 다시 확인합니다. 별도 검증 실패와 승인 대기가 확인되지 않은 병합 조건의 timeout은 계속 실패로 기록합니다. [GitHub의 `GITHUB_TOKEN` 이벤트 동작](https://docs.github.com/en/actions/concepts/security/github_token#when-github_token-triggers-workflow-runs)
+
 임시 validation ref와 병합된 bot branch는 관측 SHA를 지정한 `git push --force-with-lease ... :ref`로 정리합니다. 병합된 같은 저장소 bot PR head와 tip이 같고 열린 PR이 없을 때만 bot branch를 삭제합니다. 다른 작업이 tip을 이동하면 삭제가 실패하며 새 작업을 지우지 않습니다. 임시 ref는 검증 실패 때도 정리하며, 강제 취소로 남은 임시 ref는 운영자가 확인할 수 있습니다. 재사용 bot branch의 과거 병합 잔여물은 daily 정리가 처리합니다.
 
 공식 근거: [workflow dispatch](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event), [workflow run 조회](https://docs.github.com/en/rest/actions/workflow-runs#list-workflow-runs-for-a-workflow), [expected SHA squash merge](https://docs.github.com/en/rest/pulls/pulls#merge-a-pull-request), [git force-with-lease](https://git-scm.com/docs/git-push#Documentation/git-push.txt---force-with-leaseltrefnamegtltexpectgt).

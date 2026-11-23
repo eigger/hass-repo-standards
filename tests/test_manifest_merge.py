@@ -55,6 +55,21 @@ class GitHub:
         self.merge_states = ["CLEAN"]
         self.merge_error = None
         self.sleeps = []
+        self.pr_runs = {}
+
+    def pr_run(self, **overrides):
+        return {
+            "id": 1,
+            "head_sha": self.head,
+            "head_branch": merge.BRANCH,
+            "head_repository": {"full_name": REPO},
+            "event": "pull_request",
+            "pull_requests": [],
+            "status": "completed",
+            "conclusion": "action_required",
+            "html_url": "https://github.com/pr-check",
+            **overrides,
+        }
 
     def api(self, endpoint, *, method=None, payload=None):
         p = endpoint.removeprefix("repos/" + REPO + "/")
@@ -126,6 +141,9 @@ class GitHub:
                 "workflow": self.workflow_text,
             }[p.split("/")[-1]]
             return {"encoding": "base64", "content": base64.b64encode(content.encode()).decode()}
+        if "/runs?event=pull_request" in p:
+            assert "&branch=bot%2Fmanifest-dependencies&head_sha=head&" in p, p
+            return {"workflow_runs": self.pr_runs.get(p.split("/")[2], [])}
         if "/runs?" in p:
             dispatched = p.split("/")[2] in self.dispatched and self.fresh
             return {
@@ -209,6 +227,66 @@ class Controller(unittest.TestCase):
         self.assertEqual(
             gh.deleted, [(merge.BRANCH, "head"), ("hass-dependency-validation/test", "head")]
         )
+
+    def test_approval_required_defers_before_dispatch_or_merge(self):
+        gh = GitHub()
+        gh.merge_states = ["BLOCKED"]
+        gh.pr_runs["tests.yml"] = [gh.pr_run()]
+        self.assertEqual(
+            gh.run(),
+            {
+                "pr": 1,
+                "head": "head",
+                "status": "approval_pending",
+                "runs": [{"workflow": "tests.yml", "url": "https://github.com/pr-check"}],
+            },
+        )
+        self.assertEqual(gh.pr["state"], "open")
+        self.assertFalse(gh.writes or gh.deleted or gh.sleeps)
+
+    def test_optional_approval_does_not_defer_a_clean_pr(self):
+        gh = GitHub()
+        gh.pr_runs["tests.yml"] = [gh.pr_run()]
+        self.assertEqual(gh.run()["merge"], "squash")
+
+    def test_approval_appearing_during_merge_poll_cleans_only_validation_ref(self):
+        gh = GitHub()
+        gh.merge_states = ["BLOCKED"]
+        original = gh.api
+
+        def api(endpoint, **kwargs):
+            if endpoint == "graphql":
+                gh.pr_runs["tests.yml"] = [gh.pr_run()]
+            return original(endpoint, **kwargs)
+
+        gh.api = api
+        self.assertEqual(gh.run()["status"], "approval_pending")
+        self.assertEqual(len(gh.dispatched), 3)
+        self.assertEqual(gh.deleted, [("hass-dependency-validation/test", "head")])
+        self.assertFalse(gh.merged or gh.sleeps)
+
+    def test_unrelated_or_superseded_approval_does_not_defer(self):
+        gh = GitHub()
+        gh.pr_runs["tests.yml"] = [
+            gh.pr_run(),
+            gh.pr_run(id=2, status="in_progress", conclusion=None),
+            gh.pr_run(id=3, head_sha="old"),
+            gh.pr_run(id=4, head_branch="other"),
+            gh.pr_run(id=5, head_repository={"full_name": "fork/sample"}),
+            gh.pr_run(id=6, pull_requests=[{"number": 2}]),
+            gh.pr_run(id=7, event="workflow_dispatch"),
+        ]
+        self.assertEqual(gh.run()["merge"], "squash")
+
+    def test_pr_validator_failure_is_not_hidden_by_other_approval_wait(self):
+        gh = GitHub()
+        gh.pr_runs["standards.yml"] = [gh.pr_run()]
+        gh.pr_runs["tests.yml"] = [gh.pr_run(conclusion="failure")]
+        gh.merge_states = ["BLOCKED"]
+        times = iter([0, 2])
+        with self.assertRaisesRegex(TimeoutError, "Required PR merge"):
+            gh.run(clock=lambda: next(times), timeout=1)
+        self.assertFalse(gh.merged)
 
     def test_identity_guards_never_dispatch_or_merge(self):
         for field, value in [("user", {"login": "human"}), ("draft", True), ("state", "closed")]:

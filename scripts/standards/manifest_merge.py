@@ -176,6 +176,64 @@ def cleanup(repository, *, api=update.gh, listing=update.pages, delete=delete_re
     return True
 
 
+def approval_pending(repository, number, bound, *, api):
+    """Identify current PR validator runs awaiting GitHub's execution approval."""
+    head = bound["head"]
+    pending = []
+    for workflow in bound["validators"]:
+        endpoint = (
+            f"repos/{repository}/actions/workflows/{workflow}/runs?event=pull_request"
+            f"&branch={quote(BRANCH, safe='')}&head_sha={head}&per_page=100"
+        )
+        runs = [
+            run
+            for run in api(endpoint)["workflow_runs"]
+            if run["event"] == "pull_request"
+            and run["head_branch"] == BRANCH
+            and run["head_sha"] == head
+            and (run.get("head_repository") or {}).get("full_name") == repository
+            and (
+                not run["pull_requests"]
+                or any(pr["number"] == number for pr in run["pull_requests"])
+            )
+        ]
+        if not runs:
+            continue
+        # The list shows the latest attempt for each run ID. Superseded runs
+        # must not keep deferring a PR whose workflows have since started.
+        latest = max(runs, key=lambda run: run["id"])
+        if latest["status"] != "completed":
+            continue
+        if latest["conclusion"] == "action_required":
+            pending.append({"workflow": workflow, "url": latest["html_url"]})
+        elif latest["conclusion"] not in {"success", "neutral", "skipped"}:
+            # Preserve the normal validation and merge checks when a PR
+            # workflow already has an unsuccessful result.
+            return None
+    if pending:
+        return {"pr": number, "head": head, "status": "approval_pending", "runs": pending}
+    return None
+
+
+def merge_state(repository, number, bound, *, api):
+    owner, name = repository.split("/")
+    state = api(
+        "graphql",
+        method="POST",
+        payload={
+            "query": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){state headRefOid baseRefOid mergeStateStatus}}}",
+            "variables": {"owner": owner, "name": name, "number": number},
+        },
+    )["data"]["repository"]["pullRequest"]
+    if (
+        state["state"] != "OPEN"
+        or state["headRefOid"] != bound["head"]
+        or state["baseRefOid"] != bound["base"]
+    ):
+        raise ValueError("PR identity or base changed while waiting for required checks")
+    return state["mergeStateStatus"]
+
+
 def merge(
     repository,
     number,
@@ -191,6 +249,9 @@ def merge(
     validation_ref=None,
 ):
     bound = proposal(repository, number, domain, packages, api=api, listing=listing)
+    pending = approval_pending(repository, number, bound, api=api)
+    if pending is not None and merge_state(repository, number, bound, api=api) != "CLEAN":
+        return pending
     head = bound["head"]
     # A unique ref isolates execution from updates to the reusable bot branch.
     validation_ref = validation_ref or "hass-dependency-validation/" + uuid.uuid4().hex
@@ -271,22 +332,7 @@ def validate_and_merge(
     # Required PR checks can be attached to GitHub's test merge commit,
     # independently of successful dispatches on the exact source head.
     while True:
-        owner, name = repository.split("/")
-        state = api(
-            "graphql",
-            method="POST",
-            payload={
-                "query": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){state headRefOid baseRefOid mergeStateStatus}}}",
-                "variables": {"owner": owner, "name": name, "number": number},
-            },
-        )["data"]["repository"]["pullRequest"]
-        if (
-            state["state"] != "OPEN"
-            or state["headRefOid"] != head
-            or state["baseRefOid"] != bound["base"]
-        ):
-            raise ValueError("PR identity or base changed while waiting for required checks")
-        if state["mergeStateStatus"] == "CLEAN":
+        if merge_state(repository, number, bound, api=api) == "CLEAN":
             # REST atomically binds only the head, not the base. Existing
             # strict up-to-date branch rules remain authoritative at merge.
             latest = proposal(repository, number, domain, packages, api=api, listing=listing)
@@ -312,6 +358,10 @@ def validate_and_merge(
                     )
                 cleanup(repository, api=api, listing=listing, delete=delete)
                 return {**bound, "pr": number, "merge": result["sha"]}
+        else:
+            pending = approval_pending(repository, number, bound, api=api)
+            if pending is not None:
+                return pending
         if clock() >= deadline:
             raise TimeoutError("Required PR merge conditions did not become ready; leave PR open")
         sleep(15)

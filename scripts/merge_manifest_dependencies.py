@@ -24,11 +24,16 @@ def main():
     prs = update.pages(
         f"repos/{args.repository}/pulls?state=open&head={owner}:{automation.BRANCH}&per_page=100"
     )
-    results = []
+    merged = []
+    deferred = []
     for pr in prs:
-        results.append(automation.merge(args.repository, pr["number"], args.domain, args.packages))
+        result = automation.merge(args.repository, pr["number"], args.domain, args.packages)
+        if result.get("status") == "approval_pending":
+            deferred.append(result)
+        else:
+            merged.append(result)
     cleaned = automation.cleanup(args.repository)
-    report = json.dumps({"merged": results, "cleaned": cleaned}, indent=2)
+    report = json.dumps({"merged": merged, "deferred": deferred, "cleaned": cleaned}, indent=2)
     print(report)
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as stream:
