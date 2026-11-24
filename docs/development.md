@@ -31,6 +31,25 @@ Run the local integration checker with Python matching or newer than the target 
 For imagespec integrations, DOC-08 requires the actual HA/renderer contract in the [payload authoring rules](payload-documentation.md); static Validate checks do not replace execution. Each HA job uses its resolver-installed current or exact minimum package unchanged. `actions/check-payload` installs no packages. For local reproduction, connect the reviewed central scripts through PYTHONPATH and run the domain scaffold with the `hass_standards_payload` plugin in that same environment, using the variables and command in the authoring rules. Do not replace the scaffold with a passing plain-pytest test. Publish common guides to imagespec’s actual default branch and verify their URLs before publishing central policy. Local drafts, central-tool tests and hardware validation are separate evidence.
 
 
+## Local central payload runtime test
+
+Run this from the central repository root in a fresh Python 3.14 virtual environment. The installer reads `imagespec` from the sample integration's manifest and resolves it together with the test runner dependencies. The direct test command fails if the runtime is missing.
+
+```bash
+(
+  set -e
+  repo_root="$(pwd)"
+  runner_temp="$(mktemp -d)"
+  python -m pip install -r requirements_tools.txt
+  cd tests/fixtures/payload_integration
+  RUNNER_TEMP="$runner_temp" INPUT_DOMAIN=payload_sample INPUT_TEST_PROFILE=ha \
+    INPUT_REQUIREMENTS="$repo_root/requirements_payload_test.txt" \
+    python "$repo_root/actions/python-environment/install.py"
+  cd "$repo_root"
+  python tests/test_payload_runtime.py -v
+)
+```
+
 ## Manifest dependency automation validation (2026-11-16)
 
 Codex root implements the opt-in controller/caller/installer on base `9ef8dd408d36602aaa3d97024fe6dc54a836b3c5`; no existing updater input or permission is changed. The implementation plan is to centralize same-major manifest-only bot validation, test and independently review the privileged boundary, publish REL-06 v1.3.0, then bootstrap the 12 detected consumers. This is a scoped CI feature, not an integration support-minimum change.

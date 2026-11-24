@@ -98,4 +98,4 @@ jobs:
     - name: Run the actual HA payload contract tests
       run: |
         python -c "import homeassistant, pytest_homeassistant_custom_component, imagespec; from importlib.metadata import version; print({name: version(name) for name in ('homeassistant', 'pytest-homeassistant-custom-component', 'imagespec')})"
-        python -m unittest discover -s tests -p test_payload_runtime.py -v
+        python tests/test_payload_runtime.py -v

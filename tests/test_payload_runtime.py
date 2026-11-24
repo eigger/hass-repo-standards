@@ -182,4 +182,9 @@ class PayloadRuntime(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    if not AVAILABLE:
+        raise SystemExit(
+            "Payload runtime dependencies are missing. Install the sample integration and test "
+            "runner requirements as described in docs/development.md."
+        )
     unittest.main()
