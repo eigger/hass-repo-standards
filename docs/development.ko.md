@@ -29,3 +29,22 @@ python3 scripts/check_integration.py ../hass-example
 로컬 통합 검사기는 대상 통합의 문법과 같거나 더 최신인 Python으로 실행하세요. standalone standards caller 예제는 현재 통합·테스트 소스를 파싱하기 위해 Python 3.14를 사용합니다. 이는 도구 실행 환경이며 지원 최소 HA/Python을 올리거나 최소 검증 환경을 제거하지 않습니다. 중앙 도구 자체의 Python 3.9 단위 테스트 호환성과 구분합니다.
 
 DOC-08의 imagespec 사용 통합은 [payload 작성 규칙](payload-documentation.md)의 실제 HA·renderer 계약을 실행합니다. Validate의 정적 검사만으로 예제 실행을 대체하지 않습니다. 각 HA job에서 resolver가 설치한 current/정확한 하한을 그대로 사용하고 `actions/check-payload`는 추가 패키지를 설치하지 않습니다. 로컬 재현도 같은 환경에서 검토한 중앙 scripts를 PYTHONPATH에 연결해 `hass_standards_payload` plugin으로 domain의 중앙 scaffold를 실행합니다. 환경 변수·명령은 작성 규칙을 따르며 일반 pytest만으로 scaffold를 PASS로 고치지 않습니다. 공통 원본은 imagespec의 실제 기본 브랜치에 먼저 공개하고 URL을 확인합니다. 로컬 작성·중앙 도구 테스트·실물 검증은 구분합니다.
+
+## 중앙 payload 런타임 테스트 로컬 실행
+
+새 Python 3.14 가상 환경에서 중앙 리포 루트로 이동해 실행합니다. 설치기는 샘플 통합의 매니페스트에서 `imagespec`을 읽고 테스트 러너 의존성과 함께 설치합니다. 런타임 의존성이 빠져 있으면 직접 실행 명령은 실패합니다.
+
+```bash
+(
+  set -e
+  repo_root="$(pwd)"
+  runner_temp="$(mktemp -d)"
+  python -m pip install -r requirements_tools.txt
+  cd tests/fixtures/payload_integration
+  RUNNER_TEMP="$runner_temp" INPUT_DOMAIN=payload_sample INPUT_TEST_PROFILE=ha \
+    INPUT_REQUIREMENTS="$repo_root/requirements_payload_test.txt" \
+    python "$repo_root/actions/python-environment/install.py"
+  cd "$repo_root"
+  python tests/test_payload_runtime.py -v
+)
+```

@@ -13,7 +13,10 @@ import unittest
 from importlib.metadata import version
 from pathlib import Path
 
+from packaging.requirements import Requirement
+
 ROOT = Path(__file__).resolve().parent.parent
+FIXTURE = ROOT / "tests/fixtures/payload_integration"
 AVAILABLE = all(
     importlib.util.find_spec(package) is not None
     for package in ("homeassistant", "pytest_homeassistant_custom_component", "imagespec")
@@ -24,24 +27,20 @@ AVAILABLE = all(
     AVAILABLE, "Requires the real compatible HA/plugin/imagespec runtime environment"
 )
 class PayloadRuntime(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        manifest = FIXTURE / "custom_components/payload_sample/manifest.json"
+        for text in json.loads(manifest.read_text(encoding="utf-8"))["requirements"]:
+            requirement = Requirement(text)
+            installed = version(requirement.name)
+            if installed not in requirement.specifier:
+                raise RuntimeError(f"Payload fixture requires {requirement}, found {installed}")
+
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
-        shutil.copytree(ROOT / "tests/fixtures/payload_integration", self.root, dirs_exist_ok=True)
-        (self.root / "custom_components/payload_sample/manifest.json").write_text(
-            json.dumps(
-                {
-                    "domain": "payload_sample",
-                    "name": "Offline payload fixture",
-                    "version": "0.0.0",
-                    "requirements": ["imagespec==" + version("imagespec")],
-                    "codeowners": [],
-                    "integration_type": "device",
-                    "iot_class": "local_push",
-                }
-            )
-        )
+        shutil.copytree(FIXTURE, self.root, dirs_exist_ok=True)
         (self.root / "custom_components/__init__.py").touch()
         shutil.copyfile(
             ROOT / "templates/integration/tests/components/example/test_payload_examples.py",
@@ -183,4 +182,9 @@ class PayloadRuntime(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    if not AVAILABLE:
+        raise SystemExit(
+            "Payload runtime dependencies are missing. Install the sample integration and test "
+            "runner requirements as described in docs/development.md."
+        )
     unittest.main()

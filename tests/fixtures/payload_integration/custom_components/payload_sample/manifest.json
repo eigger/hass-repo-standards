@@ -1,0 +1,9 @@
+{
+  "domain": "payload_sample",
+  "name": "Offline payload fixture",
+  "version": "0.0.0",
+  "requirements": ["imagespec==1.2.0"],
+  "codeowners": [],
+  "integration_type": "device",
+  "iot_class": "local_push"
+}
