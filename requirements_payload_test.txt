@@ -1,4 +1,4 @@
 # Test runner dependencies. The sample integration declares its own requirements.
 -r templates/integration/requirements_test.txt
 -r requirements_tools.txt
-PyYAML==6.0.3
+PyYAML==6.0.4
